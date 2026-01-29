@@ -475,55 +475,6 @@ export default function HomePage() {
         İletişime geçe atla
       </a>
 
-      {/* Arka plan InteractiveGradient içinde yönetiliyor */}
-      
-      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
-          <HeaderLogo />
-
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
-            {sections.slice(1).map((s) => {
-              const isActive = active === s.id;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => scrollToId(s.id)}
-                  className={
-                    "rounded-2xl px-3 py-2 text-sm transition " +
-                    (isActive
-                      ? "bg-card shadow-soft"
-                      : "text-muted-foreground hover:bg-card")
-                  }
-                  data-testid={`button-nav-${s.id}`}
-                >
-                  {s.label}
-                </button>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <MagneticButton
-              variant="secondary"
-              className="hidden rounded-2xl md:inline-flex"
-              onClick={() => scrollToId("contact")}
-              data-testid="button-cta-quote"
-            >
-              Teklif iste
-            </MagneticButton>
-            <MagneticButton
-              className="rounded-2xl"
-              onClick={() => scrollToId("contact")}
-              data-testid="button-cta-contact"
-            >
-              İletişim
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </MagneticButton>
-          </div>
-        </div>
-      </header>
-
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
           <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
