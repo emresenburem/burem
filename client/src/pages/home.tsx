@@ -627,7 +627,7 @@ export default function HomePage() {
             {SERVICES.map((s) => (
               <Card
                 key={s.title}
-                className="group rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
+                className="group relative overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition-all duration-300 hover:shadow-elevated hover:border-primary/50 charge-up impulse-shock energy-sweep"
                 data-testid={`card-service-${s.title}`}
               >
                 <div className="flex items-start gap-3">
