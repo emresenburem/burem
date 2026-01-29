@@ -23,7 +23,7 @@ function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; 
         <img
           src={brand.logo}
           alt=""
-          className="w-[75vw] max-w-[900px] h-auto object-contain"
+          className="w-[85vw] max-w-[1100px] h-auto object-contain"
           style={{ 
             opacity: 0.15,
             filter: "grayscale(0.3) contrast(1.2)" 
