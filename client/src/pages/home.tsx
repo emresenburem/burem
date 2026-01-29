@@ -95,14 +95,30 @@ function BrandsPopup() {
                 style={{ backgroundColor: "#FFFFFF" }}
                 data-testid={`brand-item-${brand.name}`}
               >
+                {/* Multiple rows of sliding logos */}
                 <img 
                   src={brand.logo} 
                   alt=""
-                  className={`absolute h-full w-full object-contain opacity-10 transition-all duration-700 ease-out group-hover:opacity-25 ${
-                    isEvenRow 
-                      ? "-left-full group-hover:left-full" 
-                      : "left-full group-hover:-left-full"
-                  }`}
+                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-500 ease-out -left-full group-hover:left-full group-hover:opacity-20"
+                  style={{ top: '0%' }}
+                />
+                <img 
+                  src={brand.logo} 
+                  alt=""
+                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-600 ease-out left-full group-hover:-left-full group-hover:opacity-20"
+                  style={{ top: '25%', transitionDelay: '50ms' }}
+                />
+                <img 
+                  src={brand.logo} 
+                  alt=""
+                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-700 ease-out -left-full group-hover:left-full group-hover:opacity-20"
+                  style={{ top: '50%', transitionDelay: '100ms' }}
+                />
+                <img 
+                  src={brand.logo} 
+                  alt=""
+                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-800 ease-out left-full group-hover:-left-full group-hover:opacity-20"
+                  style={{ top: '75%', transitionDelay: '150ms' }}
                 />
                 <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
                   <img 
