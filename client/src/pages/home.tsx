@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
+import { useQuery } from "@tanstack/react-query";
+import type { Product } from "@shared/schema";
 import useSound from "use-sound";
 import {
   ArrowRight,
@@ -24,7 +26,10 @@ import {
   Flame,
   PenLine,
   PackageCheck,
+  Package,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const BRANDS = [
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
@@ -177,10 +182,8 @@ function WhatsAppButton() {
   );
 }
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 
 const SERVICES = [
   {
@@ -315,6 +318,111 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
   );
 }
 
+function ProductsShowcase() {
+  const [, setLocation] = useLocation();
+  const { data: products = [], isLoading } = useQuery<Product[]>({
+    queryKey: ["/api/products"],
+    queryFn: async () => {
+      const res = await fetch("/api/products");
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    },
+  });
+
+  const featuredProducts = products.slice(0, 6);
+
+  if (isLoading) {
+    return (
+      <section id="products" className="mx-auto w-full max-w-6xl px-4 py-16 md:px-6">
+        <div className="flex items-center gap-3 mb-8">
+          <Package className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+            Yedek Parça Mağazası
+          </h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="rounded-2xl border bg-card p-4 animate-pulse">
+              <div className="h-32 bg-muted rounded-xl mb-4" />
+              <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </Card>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="products" className="mx-auto w-full max-w-6xl px-4 py-16 md:px-6" data-testid="products-showcase">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <Package className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+            Yedek Parça Mağazası
+          </h2>
+        </div>
+      </div>
+
+      {featuredProducts.length === 0 ? (
+        <Card className="rounded-2xl border bg-card/50 p-8 text-center">
+          <Package className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+          <p className="text-muted-foreground">
+            Henüz yedek parça eklenmemiş.
+          </p>
+          <p className="text-sm text-muted-foreground/70 mt-2">
+            Yakında burada ürünlerimizi görebileceksiniz.
+          </p>
+        </Card>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {featuredProducts.map((product) => (
+            <motion.div
+              key={product.id}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Card
+                className="rounded-2xl border bg-card p-4 hover:shadow-lg transition-shadow cursor-pointer h-full"
+                onClick={() => setLocation(`/brand/${encodeURIComponent(product.brand)}`)}
+                data-testid={`card-product-${product.id}`}
+              >
+                {product.imageUrl && (
+                  <div className="h-32 mb-4 rounded-xl overflow-hidden bg-muted">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <h4 className="font-semibold text-sm">{product.name}</h4>
+                    {product.inStock ? (
+                      <Badge variant="secondary" className="text-xs shrink-0">Stokta</Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-xs shrink-0">Sipariş</Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{product.brand} · {product.category}</p>
+                  {product.description && (
+                    <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
+                  )}
+                  {product.price && (
+                    <p className="font-bold text-primary">
+                      {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(product.price / 100)}
+                    </p>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
@@ -730,6 +838,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <ProductsShowcase />
 
         <section
           id="contact"

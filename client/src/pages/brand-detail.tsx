@@ -1,11 +1,13 @@
 import { useRoute, useLocation } from "wouter";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeaderLogo } from "@/components/header-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import type { Product } from "@shared/schema";
 
 const BRANDS = [
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
@@ -23,6 +25,89 @@ const BRANDS = [
   { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
   { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
 ];
+
+function ProductsSection({ brandName }: { brandName: string }) {
+  const { data: products = [], isLoading } = useQuery<Product[]>({
+    queryKey: ["/api/products/brand", brandName],
+    queryFn: async () => {
+      const res = await fetch(`/api/products/brand/${encodeURIComponent(brandName)}`);
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    },
+  });
+
+  return (
+    <div className="mt-16 space-y-6" data-testid="products-section">
+      <div className="flex items-center gap-3">
+        <Package className="h-6 w-6 text-primary" />
+        <h3 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+          {brandName} Yedek Parçaları
+        </h3>
+      </div>
+
+      {isLoading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="rounded-2xl border bg-card p-4 animate-pulse">
+              <div className="h-32 bg-muted rounded-xl mb-4" />
+              <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </Card>
+          ))}
+        </div>
+      ) : products.length === 0 ? (
+        <Card className="rounded-2xl border bg-card/50 p-8 text-center">
+          <Package className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+          <p className="text-muted-foreground">
+            Bu marka için henüz yedek parça eklenmemiş.
+          </p>
+          <p className="text-sm text-muted-foreground/70 mt-2">
+            Aradığınız parça için bizimle iletişime geçebilirsiniz.
+          </p>
+        </Card>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {products.map((product) => (
+            <Card
+              key={product.id}
+              className="rounded-2xl border bg-card p-4 hover:shadow-lg transition-shadow"
+              data-testid={`card-product-${product.id}`}
+            >
+              {product.imageUrl && (
+                <div className="h-32 mb-4 rounded-xl overflow-hidden bg-muted">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <h4 className="font-semibold text-sm">{product.name}</h4>
+                  {product.inStock ? (
+                    <Badge variant="secondary" className="text-xs shrink-0">Stokta</Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs shrink-0">Sipariş</Badge>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">{product.category}</p>
+                {product.description && (
+                  <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
+                )}
+                {product.price && (
+                  <p className="font-bold text-primary">
+                    {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(product.price / 100)}
+                  </p>
+                )}
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; color?: string } | null }) {
   if (!brand?.logo) return null;
@@ -195,6 +280,8 @@ export default function BrandPage() {
               ))}
             </div>
           </div>
+
+          <ProductsSection brandName={brandName} />
         </motion.div>
       </main>
 
