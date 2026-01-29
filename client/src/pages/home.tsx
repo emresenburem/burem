@@ -250,11 +250,11 @@ export default function HomePage() {
       </div>
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
           <button
             type="button"
             onClick={() => scrollToId("top")}
-            className="group flex items-center gap-3 rounded-2xl px-2 py-1 text-left"
+            className="group flex items-center gap-3 rounded-2xl py-1 text-left"
             data-testid="button-logo-home"
           >
             <div className="h-40 w-80 flex items-center justify-center overflow-hidden" aria-hidden="true">
