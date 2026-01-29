@@ -1,22 +1,59 @@
 import { useRoute } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { BRANDS } from "./home";
 
-function LightningEffect() {
-  return null;
+function BrandWatermark({ logo }: { logo?: string }) {
+  const watermarks = useMemo(() => {
+    return Array.from({ length: 12 }).map((_, i) => ({
+      id: i,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      rotate: Math.random() * 360,
+      scale: 0.5 + Math.random() * 0.5,
+      opacity: 0.03 + Math.random() * 0.05,
+    }));
+  }, []);
+
+  if (!logo) return null;
+
+  return (
+    <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
+      {watermarks.map((w) => (
+        <motion.img
+          key={w.id}
+          src={logo}
+          alt=""
+          className="absolute h-16 w-16 grayscale"
+          style={{
+            top: w.top,
+            left: w.left,
+            rotate: w.rotate,
+            scale: w.scale,
+            opacity: w.opacity,
+            filter: "contrast(0) brightness(1.5)",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: w.opacity }}
+          transition={{ duration: 1 }}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default function BrandPage() {
   const [, params] = useRoute("/brand/:name");
   const brandName = params?.name ? decodeURIComponent(params.name) : "";
+  const brand = BRANDS.find(b => b.name === brandName);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <LightningEffect />
+      <BrandWatermark logo={brand?.logo} />
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-[0.2]" />
         <div className="absolute inset-0 bg-noise opacity-[0.2]" />

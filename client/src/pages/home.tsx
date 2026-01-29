@@ -25,7 +25,7 @@ import {
   PackageCheck,
 } from "lucide-react";
 
-const BRANDS = [
+export const BRANDS = [
   { name: "Siemens", color: "#009999", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Siemens-logo.svg" },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
   { name: "Schneider", color: "#3dcd58", logo: "https://upload.wikimedia.org/wikipedia/commons/9/95/Schneider_Electric_2007.svg" },
