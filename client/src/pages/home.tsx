@@ -303,7 +303,7 @@ function HeaderLogo() {
       data-testid="button-logo-home"
     >
       <motion.div 
-        className="h-40 w-80 flex items-center justify-center overflow-hidden" 
+        className="h-32 w-48 flex items-center justify-center overflow-hidden" 
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
@@ -318,41 +318,6 @@ function HeaderLogo() {
       >
         <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
       </motion.div>
-      <span className="leading-tight -ml-16">
-        <motion.span
-          initial={{ opacity: 1, color: "#0a1122" }}
-          animate={isFlickering ? {
-            opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
-            color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
-            textShadow: [
-              "0 0 0px rgba(59,130,246,0)",
-              "0 0 30px rgba(59,130,246,1)",
-              "0 0 0px rgba(59,130,246,0)",
-              "0 0 40px rgba(59,130,246,1)",
-              "0 0 0px rgba(59,130,246,0)",
-              "0 0 50px rgba(59,130,246,1)",
-              "0 0 0px rgba(59,130,246,0)"
-            ]
-          } : { opacity: 1, color: "#0a1122" }}
-          transition={{
-            duration: 2.5,
-            times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
-            repeat: 0,
-            ease: "easeInOut"
-          }}
-          className="block font-bold tracking-tight text-[#0a1122] text-xl md:text-2xl"
-          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-          data-testid="text-brand-name"
-        >
-          Inductra Elektronik
-        </motion.span>
-        <span
-          className="block text-xs text-muted-foreground"
-          data-testid="text-brand-tagline"
-        >
-          Sürücü Tamir Merkezi
-        </span>
-      </span>
     </button>
   );
 }
@@ -393,12 +358,12 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="flex w-full items-center justify-between gap-3 px-4 py-1 md:px-6">
-          <div className="-ml-12 -mt-4 mb-[-1rem]">
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
+          <div className="-ml-12 -mt-8 mb-[-2rem]">
             <HeaderLogo />
           </div>
 
-          <nav className="hidden items-center gap-1 md:flex -mt-6" aria-label="Ana menü">
+          <nav className="hidden items-center gap-1 md:flex -mt-10" aria-label="Ana menü">
             {sections.slice(1).map((s) => {
               const isActive = active === s.id;
               return (
