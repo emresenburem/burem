@@ -204,37 +204,71 @@ function scrollToId(id: string) {
 }
 
 function InteractiveGradient() {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 100;
-      const y = (e.clientY / window.innerHeight) * 100;
-      setMousePos({ x, y });
+      setMousePos({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-[0.4]" />
-      <div className="absolute inset-0 bg-noise opacity-[0.4]" />
-      <motion.div
-        className="absolute inset-0 opacity-30"
-        animate={{
-          background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, hsl(var(--primary) / 0.4) 0%, transparent 50%), 
-                       radial-gradient(circle at ${100 - mousePos.x}% ${100 - mousePos.y}%, hsl(var(--accent) / 0.3) 0%, transparent 50%)`,
-        }}
-        transition={{ type: "tween", ease: "linear", duration: 0.2 }}
-      />
-      <div
-        className="absolute -left-28 top-[-120px] h-[620px] w-[620px] rounded-full blur-3xl opacity-20"
-        style={{
-          background: "radial-gradient(closest-side, hsl(var(--primary)), transparent 70%)",
-        }}
-      />
-    </div>
+    <>
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-grid opacity-[0.15]" />
+        <div className="absolute inset-0 bg-noise opacity-[0.2]" />
+        
+        {/* Mouse follow glow */}
+        <motion.div
+          className="absolute h-[600px] w-[600px] rounded-full blur-[120px] opacity-40 pointer-events-none"
+          animate={{
+            x: mousePos.x - 300,
+            y: mousePos.y - 300,
+          }}
+          transition={{ type: "spring", damping: 30, stiffness: 80, mass: 0.5 }}
+          style={{
+            background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%)",
+          }}
+        />
+      </div>
+    </>
+  );
+}
+
+function MagneticButton({ children, className, onClick, ...props }: any) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+    
+    // Magnetic pull strength
+    const strength = 0.35;
+    setPosition({ x: distanceX * strength, y: distanceY * strength });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
+      className="inline-block"
+    >
+      <Button className={className} onClick={onClick} {...props}>
+        {children}
+      </Button>
+    </motion.div>
   );
 }
 
@@ -352,22 +386,22 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button
+            <MagneticButton
               variant="secondary"
               className="hidden rounded-2xl md:inline-flex"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
             >
               Teklif iste
-            </Button>
-            <Button
+            </MagneticButton>
+            <MagneticButton
               className="rounded-2xl"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
             >
               İletişim
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
+            </MagneticButton>
           </div>
         </div>
       </header>
@@ -408,23 +442,23 @@ export default function HomePage() {
               </p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Button
+                <MagneticButton
                   className="h-11 rounded-2xl"
                   onClick={() => scrollToId("contact")}
                   data-testid="button-hero-contact"
                 >
                   Hemen iletişime geç
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Button>
+                </MagneticButton>
 
-                <Button
+                <MagneticButton
                   variant="secondary"
                   className="h-11 rounded-2xl"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
                   Hizmetleri gör
-                </Button>
+                </MagneticButton>
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
