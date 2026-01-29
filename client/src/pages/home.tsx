@@ -257,7 +257,7 @@ export default function HomePage() {
             className="group flex items-center gap-3 rounded-2xl px-2 py-1 text-left"
             data-testid="button-logo-home"
           >
-            <div className="h-20 w-40 flex items-center justify-center overflow-hidden" aria-hidden="true">
+            <div className="h-40 w-80 flex items-center justify-center overflow-hidden" aria-hidden="true">
               <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
             </div>
             <span className="leading-tight">
