@@ -25,7 +25,9 @@ const BRANDS = [
   { name: "Danfoss", color: "#E2000F" },
   { name: "Delta", color: "#003A8C" },
   { name: "Beckhoff", color: "#E30613" },
-  { name: "Allen Bradley", color: "#000000" }
+  { name: "Allen Bradley", color: "#000000" },
+  { name: "Fuji", color: "#E60012" },
+  { name: "Eaton", color: "#005EB8" }
 ];
 
 function BrandsPopup() {
