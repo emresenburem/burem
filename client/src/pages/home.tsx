@@ -97,8 +97,8 @@ function BrandsPopup() {
                     alt={brand.name}
                     className="object-contain"
                     style={{ 
-                      width: brand.name === "ABB" ? "100%" : "170%",
-                      height: brand.name === "ABB" ? "100%" : "170%"
+                      width: brand.name === "ABB" ? "100%" : "250%",
+                      height: brand.name === "ABB" ? "100%" : "250%"
                     }}
                   />
                 </div>
