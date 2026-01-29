@@ -55,7 +55,7 @@ export default function BrandPage() {
       { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
       { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
       { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
-      { name: "Eaton", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Eaton_Corporation/Eaton_Corporation-Logo.wine.svg" },
+      { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
     ];
 
     return brands.find((b) => b.name.toLowerCase() === normalized) ?? null;
