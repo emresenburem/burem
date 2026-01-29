@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
@@ -9,7 +9,82 @@ import {
   ShieldCheck,
   Timer,
   Wrench,
+  MessageCircle,
 } from "lucide-react";
+
+const BRANDS = [
+  "Siemens", "ABB", "Schneider", "Fanuc", "Yaskawa", "Omron", 
+  "Lenze", "Mitsubishi", "Danfoss", "Allen Bradley", "Delta", "Beckhoff"
+];
+
+function BrandsPopup() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientX < 50) {
+        setIsOpen(true);
+      } else if (e.clientX > 320) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ x: -300, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -300, opacity: 0 }}
+          transition={{ type: "spring", damping: 20, stiffness: 100 }}
+          className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl"
+          data-testid="popup-brands"
+        >
+          <h3 className="mb-6 font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+            Tamir Ettiğimiz Markalar
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {BRANDS.map((brand) => (
+              <div
+                key={brand}
+                className="flex items-center justify-center rounded-xl border bg-background p-3 text-center text-xs font-medium shadow-sm transition hover:border-primary/50"
+                data-testid={`brand-item-${brand}`}
+              >
+                {brand}
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
+            <p className="text-xs text-muted-foreground">
+              Ve daha fazlası... Listenizde olmayan markalar için bize danışın.
+            </p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function WhatsAppButton() {
+  return (
+    <motion.a
+      href="https://wa.me/905000000000"
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/20 transition-transform"
+      data-testid="button-whatsapp"
+    >
+      <MessageCircle className="h-7 w-7 fill-white" />
+    </motion.a>
+  );
+}
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -108,6 +183,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <WhatsAppButton />
+      <BrandsPopup />
       <a
         href="#contact"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:shadow-soft"
