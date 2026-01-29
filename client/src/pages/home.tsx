@@ -203,74 +203,38 @@ function scrollToId(id: string) {
   el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function LightningEffect() {
-  const [bolt, setBolt] = useState<{ x1: number; y1: number; x2: number; y2: number; opacity: number } | null>(null);
+function InteractiveGradient() {
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
 
   useEffect(() => {
-    let lastPos = { x: 0, y: 0 };
-    let frame = 0;
-
     const handleMouseMove = (e: MouseEvent) => {
-      const x1 = lastPos.x;
-      const y1 = lastPos.y;
-      const x2 = e.clientX;
-      const y2 = e.clientY;
-
-      // Calculate distance moved
-      const dist = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-
-      // Only show bolt if mouse actually moved
-      if (dist > 2) {
-        setBolt({ x1, y1, x2, y2, opacity: 1 });
-        
-        // Clear bolt very quickly to keep up with movement
-        setTimeout(() => setBolt(null), 30);
-      }
-      lastPos = { x: e.clientX, y: e.clientY };
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMousePos({ x, y });
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  if (!bolt) return null;
-
   return (
-    <svg className="pointer-events-none fixed inset-0 z-[60] h-full w-full">
-      <defs>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      <motion.line
-        x1={bolt.x1}
-        y1={bolt.y1}
-        x2={bolt.x2}
-        y2={bolt.y2}
-        stroke="#60a5fa"
-        strokeWidth="2.5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0.8, 1, 0] }}
-        transition={{ duration: 0.1 }}
-        style={{ filter: "url(#glow)" }}
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-[0.4]" />
+      <div className="absolute inset-0 bg-noise opacity-[0.4]" />
+      <motion.div
+        className="absolute inset-0 opacity-30"
+        animate={{
+          background: `radial-gradient(circle at ${mousePos.x}% ${mousePos.y}%, hsl(var(--primary) / 0.4) 0%, transparent 50%), 
+                       radial-gradient(circle at ${100 - mousePos.x}% ${100 - mousePos.y}%, hsl(var(--accent) / 0.3) 0%, transparent 50%)`,
+        }}
+        transition={{ type: "tween", ease: "linear", duration: 0.2 }}
       />
-      {/* İkincil daha ince parlak hat */}
-      <motion.line
-        x1={bolt.x1}
-        y1={bolt.y1}
-        x2={bolt.x2}
-        y2={bolt.y2}
-        stroke="#ffffff"
-        strokeWidth="1"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0] }}
-        transition={{ duration: 0.1 }}
+      <div
+        className="absolute -left-28 top-[-120px] h-[620px] w-[620px] rounded-full blur-3xl opacity-20"
+        style={{
+          background: "radial-gradient(closest-side, hsl(var(--primary)), transparent 70%)",
+        }}
       />
-    </svg>
+    </div>
   );
 }
 
@@ -291,7 +255,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <LightningEffect />
+      <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
       <a
@@ -302,25 +266,8 @@ export default function HomePage() {
         İletişime geçe atla
       </a>
 
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-[0.55]" />
-        <div className="absolute inset-0 bg-noise opacity-[0.55]" />
-        <div
-          className="absolute -left-28 top-[-120px] h-[520px] w-[520px] rounded-full blur-3xl"
-          style={{
-            background:
-              "radial-gradient(closest-side, hsl(var(--primary) / .24), transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute -right-28 top-[140px] h-[520px] w-[520px] rounded-full blur-3xl"
-          style={{
-            background:
-              "radial-gradient(closest-side, hsl(var(--accent) / .22), transparent 70%)",
-          }}
-        />
-      </div>
-
+      {/* Arka plan InteractiveGradient içinde yönetiliyor */}
+      
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
           <button
