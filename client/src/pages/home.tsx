@@ -254,13 +254,25 @@ export default function HomePage() {
           <button
             type="button"
             onClick={() => scrollToId("top")}
-            className="group flex items-center gap-3 rounded-2xl py-1 text-left"
+            className="group flex items-center gap-0 rounded-2xl py-1 text-left"
             data-testid="button-logo-home"
           >
-            <div className="h-40 w-80 flex items-center justify-center overflow-hidden" aria-hidden="true">
+            <motion.div 
+              className="h-40 w-80 flex items-center justify-center overflow-hidden" 
+              aria-hidden="true"
+              initial={{ opacity: 1 }}
+              animate={{
+                opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+              }}
+              transition={{
+                duration: 2.5,
+                times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+                ease: "easeInOut",
+              }}
+            >
               <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
-            </div>
-            <span className="leading-tight">
+            </motion.div>
+            <span className="leading-tight -ml-8">
               <motion.span
                 initial={{ opacity: 1, color: "#0a1122" }}
                 animate={{
