@@ -58,20 +58,32 @@ function BrandsPopup() {
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {BRANDS.map((brand) => (
-              <div
+              <motion.div
                 key={brand.name}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition hover:border-primary/50 group shadow-sm"
+                whileHover={{ scale: 1.05, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-default"
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-8 w-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <span className="font-bold tracking-tighter text-[11px]" style={{ color: brand.color }}>
+                <div className="h-8 w-full flex items-center justify-center">
+                  <span 
+                    className="font-bold tracking-tighter text-[12px] italic" 
+                    style={{ 
+                      color: brand.color,
+                      fontFamily: "Space Grotesk, sans-serif",
+                      letterSpacing: "-0.05em"
+                    }}
+                  >
                     {brand.name}
                   </span>
                 </div>
-                <span className="text-[10px] font-bold text-foreground/80 uppercase tracking-widest">
+                <span 
+                  className="text-[9px] font-bold text-foreground/60 uppercase tracking-[0.2em]"
+                  style={{ fontFamily: "Space Grotesk, sans-serif" }}
+                >
                   {brand.name}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
           <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
