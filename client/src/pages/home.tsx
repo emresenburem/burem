@@ -213,10 +213,187 @@ function InteractiveGradient() {
 }
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+    
+    // Magnetic pull strength
+    const strength = 0.35;
+    setPosition({ x: distanceX * strength, y: distanceY * strength });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
   return (
-    <Button className={className} onClick={onClick} {...props}>
-      {children}
-    </Button>
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
+      className="inline-block"
+    >
+      <Button className={className} onClick={onClick} {...props}>
+        {children}
+      </Button>
+    </motion.div>
+  );
+}
+
+function HeaderLogo() {
+  const [isFlickering, setIsFlickering] = useState(false);
+  const [triggerCount, setTriggerCount] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isFlickering) {
+      setIsFlickering(true);
+      setTriggerCount(prev => prev + 1);
+      setTimeout(() => setIsFlickering(false), 2500);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={() => scrollToId("top")}
+      onMouseMove={handleMouseMove}
+      className="group flex items-center gap-0 rounded-2xl py-1 text-left"
+      data-testid="button-logo-home"
+    >
+      <motion.div 
+        className="h-40 w-80 flex items-center justify-center overflow-hidden" 
+        aria-hidden="true"
+        initial={{ opacity: 1 }}
+        animate={isFlickering ? {
+          opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+        } : { opacity: 1 }}
+        key={`logo-flicker-${triggerCount}`}
+        transition={{
+          duration: 2.5,
+          times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          ease: "easeInOut",
+        }}
+      >
+        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
+      </motion.div>
+      <span className="leading-tight -ml-16">
+        <motion.span
+          initial={{ opacity: 1, color: "#ffffff" }}
+          animate={isFlickering ? {
+            opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+            color: ["#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff"],
+            textShadow: [
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 30px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 40px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 50px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)"
+            ]
+          } : { opacity: 1, color: "#ffffff" }}
+          transition={{
+            duration: 2.5,
+            times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
+            repeat: 0,
+            ease: "easeInOut"
+          }}
+          className="block font-bold tracking-tight text-white text-xl md:text-2xl"
+          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+          data-testid="text-brand-name"
+        >
+          Inductra Elektronik
+        </motion.span>
+        <span
+          className="block text-xs text-muted-foreground"
+          data-testid="text-brand-tagline"
+        >
+          Sürücü Tamir Merkezi
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function HeaderLogo() {
+  const [isFlickering, setIsFlickering] = useState(false);
+  const [triggerCount, setTriggerCount] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isFlickering) {
+      setIsFlickering(true);
+      setTriggerCount(prev => prev + 1);
+      setTimeout(() => setIsFlickering(false), 2500);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={() => scrollToId("top")}
+      onMouseMove={handleMouseMove}
+      className="group flex items-center gap-0 rounded-2xl py-1 text-left"
+      data-testid="button-logo-home"
+    >
+      <motion.div 
+        className="h-40 w-80 flex items-center justify-center overflow-hidden" 
+        aria-hidden="true"
+        initial={{ opacity: 1 }}
+        animate={isFlickering ? {
+          opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+        } : { opacity: 1 }}
+        key={`logo-flicker-${triggerCount}`}
+        transition={{
+          duration: 2.5,
+          times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          ease: "easeInOut",
+        }}
+      >
+        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
+      </motion.div>
+      <span className="leading-tight -ml-16">
+        <motion.span
+          initial={{ opacity: 1, color: "#ffffff" }}
+          animate={isFlickering ? {
+            opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+            color: ["#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff"],
+            textShadow: [
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 30px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 40px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)",
+              "0 0 50px rgba(59,130,246,1)",
+              "0 0 0px rgba(59,130,246,0)"
+            ]
+          } : { opacity: 1, color: "#ffffff" }}
+          transition={{
+            duration: 2.5,
+            times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
+            repeat: 0,
+            ease: "easeInOut"
+          }}
+          className="block font-bold tracking-tight text-white text-xl md:text-2xl"
+          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+          data-testid="text-brand-name"
+        >
+          Inductra Elektronik
+        </motion.span>
+        <span
+          className="block text-xs text-muted-foreground"
+          data-testid="text-brand-tagline"
+        >
+          Sürücü Tamir Merkezi
+        </span>
+      </span>
+    </button>
   );
 }
 
@@ -252,64 +429,7 @@ export default function HomePage() {
       
       <header className="sticky top-0 z-40 border-b border-white/10 bg-background/75 backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
-          <button
-            type="button"
-            onClick={() => scrollToId("top")}
-            className="group flex items-center gap-0 rounded-2xl py-1 text-left"
-            data-testid="button-logo-home"
-          >
-            <motion.div 
-              className="h-40 w-80 flex items-center justify-center overflow-hidden" 
-              aria-hidden="true"
-              initial={{ opacity: 1 }}
-              animate={{
-                opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
-              }}
-              transition={{
-                duration: 2.5,
-                times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-                ease: "easeInOut",
-              }}
-            >
-              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-screen brightness-125" />
-            </motion.div>
-            <span className="leading-tight -ml-16">
-              <motion.span
-                initial={{ opacity: 1, color: "#ffffff" }}
-                animate={{
-                  opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
-                  color: ["#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff"],
-                  textShadow: [
-                    "0 0 0px rgba(59,130,246,0)",
-                    "0 0 30px rgba(59,130,246,1)",
-                    "0 0 0px rgba(59,130,246,0)",
-                    "0 0 40px rgba(59,130,246,1)",
-                    "0 0 0px rgba(59,130,246,0)",
-                    "0 0 50px rgba(59,130,246,1)",
-                    "0 0 0px rgba(59,130,246,0)"
-                  ]
-                }}
-                transition={{
-                  duration: 2.5,
-                  times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
-                  repeat: 0,
-                  delay: 0.5,
-                  ease: "easeInOut"
-                }}
-                className="block font-bold tracking-tight text-white text-xl md:text-2xl"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                data-testid="text-brand-name"
-              >
-                Inductra Elektronik
-              </motion.span>
-              <span
-                className="block text-xs text-muted-foreground"
-                data-testid="text-brand-tagline"
-              >
-                Sürücü Tamir Merkezi
-              </span>
-            </span>
-          </button>
+          <HeaderLogo />
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
             {sections.slice(1).map((s) => {
