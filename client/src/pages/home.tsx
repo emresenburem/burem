@@ -237,8 +237,8 @@ export default function HomePage() {
             className="group flex items-center gap-3 rounded-2xl px-2 py-1 text-left"
             data-testid="button-logo-home"
           >
-            <div className="h-10 w-10 flex items-center justify-center overflow-hidden rounded-xl border bg-card shadow-soft" aria-hidden="true">
-              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-cover p-1.5" />
+            <div className="h-10 w-24 flex items-center justify-center overflow-hidden rounded-xl border bg-white shadow-soft" aria-hidden="true">
+              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain p-1" />
             </div>
             <span className="leading-tight">
               <span
