@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home";
 import BrandPage from "@/pages/brand-detail";
+import { useGlobalClickSound } from "@/hooks/use-click-sound";
 
 function Router() {
   return (
@@ -17,12 +18,19 @@ function Router() {
   );
 }
 
+function ClickSoundProvider({ children }: { children: React.ReactNode }) {
+  useGlobalClickSound();
+  return <>{children}</>;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Router />
+        <ClickSoundProvider>
+          <Toaster />
+          <Router />
+        </ClickSoundProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
