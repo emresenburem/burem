@@ -222,16 +222,11 @@ function InteractiveGradient() {
         
         {/* Mouse follow glow */}
         <motion.div
-          className="absolute h-[600px] w-[600px] rounded-full blur-[100px] opacity-70 pointer-events-none"
+          className="pointer-events-none fixed inset-0 z-0"
           animate={{
-            x: mousePos.x - 300,
-            y: mousePos.y - 300,
+            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(59, 130, 246, 0.45), transparent 80%)`,
           }}
-          transition={{ type: "spring", damping: 35, stiffness: 100, mass: 0.2 }}
-          style={{
-            background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
-            zIndex: 0
-          }}
+          transition={{ type: "tween", ease: "linear", duration: 0 }}
         />
       </div>
     </>
