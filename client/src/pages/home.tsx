@@ -88,11 +88,17 @@ function BrandsPopup() {
                 whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 12 }}
                 onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                className="flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
+                className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10 overflow-hidden"
                 style={{ backgroundColor: "#FFFFFF" }}
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-12 w-full flex items-center justify-center p-1">
+                <img 
+                  src={brand.logo} 
+                  alt=""
+                  className="absolute h-4 w-4 object-contain opacity-30 -left-6 top-1/2 -translate-y-1/2 transition-all duration-500 group-hover:left-[calc(100%+1.5rem)] group-hover:opacity-50"
+                  style={brand.scale ? { transform: `translateY(-50%) scale(${brand.scale})` } : undefined}
+                />
+                <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
                   <img 
                     src={brand.logo} 
                     alt={brand.name} 
