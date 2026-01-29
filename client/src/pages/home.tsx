@@ -135,18 +135,28 @@ const SERVICES = [
     icon: Wrench,
     animation: (
       <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600/30 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* PCB Traces */}
           <motion.path
-            d="M10 50 Q 25 20, 40 50 T 70 50 T 100 50"
+            d="M0 20 L30 20 L30 50 L60 50 L60 80 L100 80"
             fill="none"
             stroke="currentColor"
-            strokeWidth="3"
-            animate={{ strokeDasharray: ["0, 100", "100, 0"] }}
+            strokeWidth="2"
+            animate={{ pathLength: [0, 1], opacity: [0.2, 1, 0.2] }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
-          <circle cx="10" cy="50" r="4" fill="currentColor" />
-          <circle cx="40" cy="50" r="4" fill="currentColor" />
-          <circle cx="70" cy="50" r="4" fill="currentColor" />
+          <motion.path
+            d="M0 80 L40 80 L40 40 L70 40 L70 10 L100 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            animate={{ pathLength: [0, 1], opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: 1.5 }}
+          />
+          <circle cx="30" cy="20" r="2" fill="currentColor" />
+          <circle cx="60" cy="50" r="2" fill="currentColor" />
+          <circle cx="40" cy="80" r="2" fill="currentColor" />
+          <circle cx="70" cy="40" r="2" fill="currentColor" />
         </svg>
       </div>
     )
@@ -157,15 +167,21 @@ const SERVICES = [
     icon: ShieldCheck,
     animation: (
       <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600/30 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* Oscilloscope Waveform */}
           <motion.path
-            d="M0 50 L 20 50 L 25 20 L 35 80 L 40 50 L 60 50 L 65 10 L 75 90 L 80 50 L 100 50"
+            d="M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50"
             fill="none"
             stroke="currentColor"
-            strokeWidth="3"
-            animate={{ pathLength: [0, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            strokeWidth="2.5"
+            animate={{ d: [
+              "M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50",
+              "M0 50 Q 10 90, 20 50 T 40 50 T 60 50 T 80 50 T 100 50",
+              "M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50"
+            ]}}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
+          <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
         </svg>
       </div>
     )
@@ -176,11 +192,13 @@ const SERVICES = [
     icon: Timer,
     animation: (
       <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600/30 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <motion.rect x="10" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} />
-          <motion.rect x="40" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.4, ease: "easeInOut" }} />
-          <motion.rect x="70" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.8, ease: "easeInOut" }} />
-          <path d="M30 20 L 40 20 M 60 20 L 70 20" stroke="currentColor" strokeWidth="3" />
+        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* Animated PLC Logic Blocks */}
+          <motion.rect x="10" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity }} />
+          <motion.rect x="42" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity, delay: 0.3 }} />
+          <motion.rect x="75" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity, delay: 0.6 }} />
+          <motion.path d="M25 37 L42 37" stroke="currentColor" strokeWidth="2" animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.15 }} />
+          <motion.path d="M57 37 L75 37" stroke="currentColor" strokeWidth="2" animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.45 }} />
         </svg>
       </div>
     )
