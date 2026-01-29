@@ -27,6 +27,7 @@ import {
   PenLine,
   PackageCheck,
   Package,
+  ChevronRight,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -74,16 +75,38 @@ function BrandsPopup() {
   }, []);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ x: -300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -300, opacity: 0 }}
-          transition={{ type: "spring", damping: 20, stiffness: 100 }}
-          className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl"
-          data-testid="popup-brands"
-        >
+    <>
+      {/* Side Tab Indicator */}
+      <motion.div
+        className="fixed left-0 top-1/2 -translate-y-1/2 z-[99] cursor-pointer"
+        initial={{ x: 0 }}
+        animate={{ x: isOpen ? -100 : 0 }}
+        transition={{ type: "spring", damping: 20, stiffness: 200 }}
+        onClick={() => setIsOpen(true)}
+        onMouseEnter={() => setIsOpen(true)}
+        data-testid="brands-tab-indicator"
+      >
+        <div className="flex items-center">
+          <div className="bg-gradient-to-r from-primary to-primary/80 text-white px-2 py-4 rounded-r-xl shadow-lg flex flex-col items-center gap-1 hover:px-3 transition-all">
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-[10px] font-medium tracking-tight [writing-mode:vertical-rl] rotate-180">
+              MARKALAR
+            </span>
+            <ChevronRight className="h-4 w-4" />
+          </div>
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            transition={{ type: "spring", damping: 20, stiffness: 100 }}
+            className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl"
+            data-testid="popup-brands"
+          >
           <h3 className="mb-6 font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
             Tamir Ettiğimiz Markalar
           </h3>
@@ -160,7 +183,8 @@ function BrandsPopup() {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   );
 }
 
