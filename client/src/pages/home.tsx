@@ -95,8 +95,7 @@ function BrandsPopup() {
                 <img 
                   src={brand.logo} 
                   alt=""
-                  className="absolute h-4 w-4 object-contain opacity-30 -left-6 top-1/2 -translate-y-1/2 transition-all duration-500 group-hover:left-[calc(100%+1.5rem)] group-hover:opacity-50"
-                  style={brand.scale ? { transform: `translateY(-50%) scale(${brand.scale})` } : undefined}
+                  className="absolute h-8 w-8 object-contain opacity-20 -left-10 top-1/2 -translate-y-1/2 transition-all duration-700 ease-out group-hover:left-[calc(100%+2rem)] group-hover:opacity-40"
                 />
                 <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
                   <img 
