@@ -359,11 +359,11 @@ export default function HomePage() {
       
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
-          <div className="-ml-12 -mt-8 mb-[-2rem]">
+          <div className="-ml-8 -mt-8 mb-[-2rem]">
             <HeaderLogo />
           </div>
 
-          <nav className="hidden items-center gap-1 md:flex -mt-10" aria-label="Ana menü">
+          <nav className="hidden items-center gap-1 md:flex -mt-2" aria-label="Ana menü">
             {sections.slice(1).map((s) => {
               const isActive = active === s.id;
               return (
