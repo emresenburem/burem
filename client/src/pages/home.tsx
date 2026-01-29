@@ -60,9 +60,9 @@ function BrandsPopup() {
             {BRANDS.map((brand) => (
               <motion.div
                 key={brand.name}
-                whileHover={{ scale: 1.05, y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-default"
+                whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-default hover:shadow-xl hover:z-10"
                 data-testid={`brand-item-${brand.name}`}
               >
                 <div className="h-8 w-full flex items-center justify-center">
