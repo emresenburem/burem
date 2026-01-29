@@ -78,7 +78,7 @@ function BrandsPopup() {
     <>
       {/* Side Tab Indicator */}
       <motion.div
-        className="fixed left-0 top-1/2 -translate-y-1/2 z-[99] cursor-pointer"
+        className="fixed left-0 top-0 h-screen z-[99] cursor-pointer flex items-center"
         initial={{ x: 0 }}
         animate={{ x: isOpen ? -100 : 0 }}
         transition={{ type: "spring", damping: 20, stiffness: 200 }}
@@ -86,29 +86,27 @@ function BrandsPopup() {
         onMouseEnter={() => setIsOpen(true)}
         data-testid="brands-tab-indicator"
       >
-        <div className="flex items-center">
-          <div className="bg-white px-1.5 py-3 rounded-r-xl shadow-lg flex flex-col items-center gap-2 hover:px-2.5 transition-all border-r border-y border-gray-200">
-            <ChevronRight className="h-3 w-3 text-primary" />
-            <div className="flex flex-col gap-1.5 py-1">
-              {BRANDS.slice(0, 6).map((brand) => (
-                <div key={brand.name} className="w-6 h-4 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name}
-                    className="object-contain"
-                    style={{ 
-                      width: brand.name === "ABB" ? "100%" : "250%",
-                      height: brand.name === "ABB" ? "100%" : "250%"
-                    }}
-                  />
-                </div>
-              ))}
-              <div className="w-6 h-4 bg-gray-100 rounded-sm flex items-center justify-center">
-                <span className="text-[8px] text-gray-500">+{BRANDS.length - 6}</span>
+        <div className="bg-white px-1.5 py-4 rounded-r-xl shadow-lg flex flex-col items-center justify-between h-full max-h-[90vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
+          <ChevronRight className="h-3 w-3 text-primary" />
+          <div className="flex flex-col gap-2 py-2 flex-1 justify-center">
+            {BRANDS.slice(0, 6).map((brand) => (
+              <div key={brand.name} className="w-7 h-5 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name}
+                  className="object-contain"
+                  style={{ 
+                    width: brand.name === "ABB" ? "100%" : "250%",
+                    height: brand.name === "ABB" ? "100%" : "250%"
+                  }}
+                />
               </div>
+            ))}
+            <div className="w-7 h-5 bg-gray-100 rounded-sm flex items-center justify-center">
+              <span className="text-[8px] text-gray-500">+{BRANDS.length - 6}</span>
             </div>
-            <ChevronRight className="h-3 w-3 text-primary" />
           </div>
+          <ChevronRight className="h-3 w-3 text-primary" />
         </div>
       </motion.div>
 
