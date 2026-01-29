@@ -74,7 +74,7 @@ function BrandsPopup() {
                   <img 
                     src={brand.logo} 
                     alt={brand.name} 
-                    className="h-full w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                    className="h-full w-full object-contain transition-all duration-300"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                       (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
