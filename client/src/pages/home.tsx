@@ -134,18 +134,18 @@ const SERVICES = [
     desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti + onarım + test.",
     icon: Wrench,
     animation: (
-      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-30 text-[#0a1122]" viewBox="0 0 100 100">
+      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-[#0a1122]" viewBox="0 0 100 100">
         <motion.path
           d="M10 50 Q 25 20, 40 50 T 70 50 T 100 50"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
+          stroke="#0a1122"
+          strokeWidth="2"
           animate={{ strokeDasharray: ["0, 100", "100, 0"] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        <circle cx="10" cy="50" r="2.5" fill="currentColor" />
-        <circle cx="40" cy="50" r="2.5" fill="currentColor" />
-        <circle cx="70" cy="50" r="2.5" fill="currentColor" />
+        <circle cx="10" cy="50" r="3" fill="#0a1122" />
+        <circle cx="40" cy="50" r="3" fill="#0a1122" />
+        <circle cx="70" cy="50" r="3" fill="#0a1122" />
       </svg>
     )
   },
@@ -154,12 +154,12 @@ const SERVICES = [
     desc: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları.",
     icon: ShieldCheck,
     animation: (
-      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-30 text-[#0a1122]" viewBox="0 0 100 100">
+      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-[#0a1122]" viewBox="0 0 100 100">
         <motion.path
           d="M0 50 L 20 50 L 25 20 L 35 80 L 40 50 L 60 50 L 65 10 L 75 90 L 80 50 L 100 50"
           fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
+          stroke="#0a1122"
+          strokeWidth="2"
           animate={{ pathLength: [0, 1] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         />
@@ -171,11 +171,11 @@ const SERVICES = [
     desc: "Blok diyagramları, kontrol mantığı ve çevre birim optimizasyonu.",
     icon: Timer,
     animation: (
-      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-30 text-[#0a1122]" viewBox="0 0 100 100">
-        <motion.rect x="10" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity }} />
-        <motion.rect x="40" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.3 }} />
-        <motion.rect x="70" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.6 }} />
-        <path d="M30 20 L 40 20 M 60 20 L 70 20" stroke="currentColor" strokeWidth="1.5" />
+      <svg className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-[#0a1122]" viewBox="0 0 100 100">
+        <motion.rect x="10" y="10" width="20" height="20" rx="2" fill="none" stroke="#0a1122" strokeWidth="2" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity }} />
+        <motion.rect x="40" y="10" width="20" height="20" rx="2" fill="none" stroke="#0a1122" strokeWidth="2" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.3 }} />
+        <motion.rect x="70" y="10" width="20" height="20" rx="2" fill="none" stroke="#0a1122" strokeWidth="2" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.6 }} />
+        <path d="M30 20 L 40 20 M 60 20 L 70 20" stroke="#0a1122" strokeWidth="2" />
       </svg>
     )
   },
