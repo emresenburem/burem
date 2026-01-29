@@ -1,10 +1,27 @@
-import { useRoute } from "wouter";
+import { useRoute, useLocation } from "wouter";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+const BRANDS = [
+  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
+  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
+  { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
+  { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
+  { name: "Yaskawa", color: "#004098", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
+  { name: "Omron", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg" },
+  { name: "Lenze", color: "#0046AD", logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png" },
+  { name: "Mitsubishi", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
+  { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
+  { name: "Delta", color: "#003A8C", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png" },
+  { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
+  { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
+  { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
+  { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
+];
 
 function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; color?: string } | null }) {
   if (!brand?.logo) return null;
@@ -37,28 +54,25 @@ function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; 
 
 export default function BrandPage() {
   const [, params] = useRoute("/brand/:name");
+  const [, setLocation] = useLocation();
   const brandName = params?.name ? decodeURIComponent(params.name) : "";
 
-  const brand = useMemo(() => {
+  const { brand, prevBrand, nextBrand } = useMemo(() => {
     const normalized = brandName.trim().toLowerCase();
-    const brands = [
-      { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
-      { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
-      { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
-      { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
-      { name: "Yaskawa", color: "#004098", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
-      { name: "Omron", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg" },
-      { name: "Lenze", color: "#0046AD", logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png" },
-      { name: "Mitsubishi", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
-      { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
-      { name: "Delta", color: "#003A8C", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png" },
-      { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
-      { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
-      { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
-      { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
-    ];
-
-    return brands.find((b) => b.name.toLowerCase() === normalized) ?? null;
+    const currentIndex = BRANDS.findIndex((b) => b.name.toLowerCase() === normalized);
+    
+    if (currentIndex === -1) {
+      return { brand: null, prevBrand: null, nextBrand: null };
+    }
+    
+    const prevIndex = currentIndex === 0 ? BRANDS.length - 1 : currentIndex - 1;
+    const nextIndex = currentIndex === BRANDS.length - 1 ? 0 : currentIndex + 1;
+    
+    return {
+      brand: BRANDS[currentIndex],
+      prevBrand: BRANDS[prevIndex],
+      nextBrand: BRANDS[nextIndex],
+    };
   }, [brandName]);
 
   return (
@@ -148,6 +162,45 @@ export default function BrandPage() {
           </div>
         </motion.div>
       </main>
+
+      {/* Navigation Buttons */}
+      {prevBrand && (
+        <motion.button
+          className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-center w-16 h-20 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all group"
+          whileHover={{ scale: 1.1, x: -5 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setLocation(`/brand/${encodeURIComponent(prevBrand.name)}`)}
+          data-testid="btn-prev-brand"
+        >
+          <img 
+            src={prevBrand.logo} 
+            alt={prevBrand.name}
+            className="w-10 h-10 object-contain"
+          />
+          <span className="text-[8px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+            {prevBrand.name}
+          </span>
+        </motion.button>
+      )}
+
+      {nextBrand && (
+        <motion.button
+          className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center justify-center w-16 h-20 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all group"
+          whileHover={{ scale: 1.1, x: 5 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setLocation(`/brand/${encodeURIComponent(nextBrand.name)}`)}
+          data-testid="btn-next-brand"
+        >
+          <img 
+            src={nextBrand.logo} 
+            alt={nextBrand.name}
+            className="w-10 h-10 object-contain"
+          />
+          <span className="text-[8px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+            {nextBrand.name}
+          </span>
+        </motion.button>
+      )}
     </div>
   );
 }
