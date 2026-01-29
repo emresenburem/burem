@@ -81,66 +81,58 @@ function BrandsPopup() {
           <h3 className="mb-6 font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
             Tamir Ettiğimiz Markalar
           </h3>
-          <div className="grid grid-cols-2 gap-3">
-            {BRANDS.map((brand, index) => {
-              const row = Math.floor(index / 2);
-              const isEvenRow = row % 2 === 0;
-              return (
-              <motion.div
-                key={brand.name}
-                whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-colors group shadow-sm cursor-pointer hover:z-10 overflow-hidden electric-glow"
-                style={{ backgroundColor: "#FFFFFF" }}
-                data-testid={`brand-item-${brand.name}`}
-              >
-                {/* Multiple rows of sliding logos with continuous animation */}
-                <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
-                    style={{ top: '0%', animationDelay: '0ms' }}
-                  />
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-left"
-                    style={{ top: '33%', animationDelay: '200ms' }}
-                  />
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
-                    style={{ top: '66%', animationDelay: '400ms' }}
-                  />
-                </div>
-                <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="h-full w-full object-contain transition-all duration-300"
-                    style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+          
+          {/* 3D Carousel */}
+          <div className="relative h-[280px] w-full" style={{ perspective: '1000px' }}>
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ transformStyle: 'preserve-3d' }}
+              animate={{ rotateY: [0, 360] }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            >
+              {BRANDS.map((brand, index) => {
+                const angle = (360 / BRANDS.length) * index;
+                const radius = 140;
+                return (
+                  <motion.div
+                    key={brand.name}
+                    className="absolute w-24 h-24 flex flex-col items-center justify-center rounded-xl border bg-white p-2 text-center shadow-lg cursor-pointer electric-glow group"
+                    style={{
+                      transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+                      backfaceVisibility: 'hidden',
                     }}
-                  />
-                  <span 
-                    className="font-bold tracking-tighter text-[18px] hidden" 
-                    style={{ 
-                      color: brand.color,
-                      fontFamily: "Space Grotesk, sans-serif",
-                      letterSpacing: "-0.05em"
-                    }}
+                    whileHover={{ scale: 1.3, zIndex: 50 }}
+                    onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
+                    data-testid={`brand-item-${brand.name}`}
                   >
-                    {brand.name}
-                  </span>
-                </div>
-              </motion.div>
-              )
-            })}
+                    <div className="h-12 w-full flex items-center justify-center p-1">
+                      <img 
+                        src={brand.logo} 
+                        alt={brand.name} 
+                        className="h-full w-full object-contain"
+                        style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                      <span 
+                        className="font-bold tracking-tighter text-sm hidden" 
+                        style={{ 
+                          color: brand.color,
+                          fontFamily: "Space Grotesk, sans-serif",
+                        }}
+                      >
+                        {brand.name}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-medium text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+                      {brand.name}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
           <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
             <p className="text-xs text-muted-foreground">
