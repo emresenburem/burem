@@ -264,24 +264,26 @@ export default function HomePage() {
               <motion.span
                 initial={{ opacity: 1 }}
                 animate={{
-                  opacity: [1, 0, 1, 0, 1, 0.2, 1],
-                  color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
+                  opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+                  color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
                   textShadow: [
                     "0 0 0px rgba(59,130,246,0)",
-                    "0 0 20px rgba(59,130,246,0.8)",
+                    "0 0 30px rgba(59,130,246,1)",
                     "0 0 0px rgba(59,130,246,0)",
-                    "0 0 20px rgba(59,130,246,0.8)",
+                    "0 0 40px rgba(59,130,246,1)",
+                    "0 0 0px rgba(59,130,246,0)",
+                    "0 0 50px rgba(59,130,246,1)",
                     "0 0 0px rgba(59,130,246,0)"
                   ]
                 }}
                 transition={{
-                  duration: 0.8,
-                  times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
+                  duration: 2.5,
+                  times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
                   repeat: 0,
                   delay: 0.5,
-                  ease: "linear"
+                  ease: "easeInOut"
                 }}
-                className="block font-semibold tracking-tight text-[#0a1122]"
+                className="block font-bold tracking-tight text-[#0a1122] text-xl md:text-2xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-brand-name"
               >
