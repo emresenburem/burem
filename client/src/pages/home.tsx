@@ -13,8 +13,18 @@ import {
 } from "lucide-react";
 
 const BRANDS = [
-  "Siemens", "ABB", "Schneider", "Fanuc", "Yaskawa", "Omron", 
-  "Lenze", "Mitsubishi", "Danfoss", "Allen Bradley", "Delta", "Beckhoff"
+  { name: "Siemens", color: "#009999" },
+  { name: "ABB", color: "#FF0000" },
+  { name: "Schneider", color: "#3dcd58" },
+  { name: "Fanuc", color: "#FFD700" },
+  { name: "Yaskawa", color: "#004098" },
+  { name: "Omron", color: "#005EB8" },
+  { name: "Lenze", color: "#0046AD" },
+  { name: "Mitsubishi", color: "#E60012" },
+  { name: "Danfoss", color: "#E2000F" },
+  { name: "Delta", color: "#003A8C" },
+  { name: "Beckhoff", color: "#E30613" },
+  { name: "Allen Bradley", color: "#000000" }
 ];
 
 function BrandsPopup() {
@@ -49,11 +59,19 @@ function BrandsPopup() {
           <div className="grid grid-cols-2 gap-3">
             {BRANDS.map((brand) => (
               <div
-                key={brand}
-                className="flex items-center justify-center rounded-xl border bg-background p-3 text-center text-xs font-medium shadow-sm transition hover:border-primary/50"
-                data-testid={`brand-item-${brand}`}
+                key={brand.name}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-background p-3 text-center transition hover:border-primary/50 group"
+                data-testid={`brand-item-${brand.name}`}
               >
-                {brand}
+                <div 
+                  className="flex h-8 w-full items-center justify-center font-bold italic tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity"
+                  style={{ color: brand.color, fontSize: '10px' }}
+                >
+                  {brand.name.toUpperCase()}
+                </div>
+                <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+                  {brand.name}
+                </span>
               </div>
             ))}
           </div>
