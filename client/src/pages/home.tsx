@@ -289,7 +289,7 @@ export default function HomePage() {
                 ease: "easeInOut",
               }}
             >
-              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
+              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-screen brightness-125" />
             </motion.div>
             <span className="leading-tight -ml-16">
               <motion.span
