@@ -14,8 +14,8 @@ function BrandWatermark({ logo }: { logo?: string }) {
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
       rotate: Math.random() * 360,
-      scale: 0.5 + Math.random() * 0.5,
-      opacity: 0.03 + Math.random() * 0.05,
+      scale: 0.8 + Math.random() * 0.4,
+      opacity: 0.15 + Math.random() * 0.15,
     }));
   }, []);
 
@@ -28,14 +28,14 @@ function BrandWatermark({ logo }: { logo?: string }) {
           key={w.id}
           src={logo}
           alt=""
-          className="absolute h-16 w-16 grayscale"
+          className="absolute h-24 w-24"
           style={{
             top: w.top,
             left: w.left,
             rotate: w.rotate,
             scale: w.scale,
             opacity: w.opacity,
-            filter: "contrast(0) brightness(1.5)",
+            filter: "grayscale(1) brightness(1.2) contrast(1.1)",
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: w.opacity }}
