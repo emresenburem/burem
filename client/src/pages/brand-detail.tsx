@@ -6,96 +6,35 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-function BrandCursorLogo({ brand, active = true }: { brand: { name: string; logo?: string; color?: string } | null; active?: boolean }) {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [visible, setVisible] = useState(false);
-  const [lastMoveAt, setLastMoveAt] = useState<number>(0);
-
-  useEffect(() => {
-    if (!active) return;
-
-    let raf = 0;
-    const handleMove = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        setPos({ x, y });
-        setVisible(true);
-        setLastMoveAt(Date.now());
-      });
-    };
-
-    const handleLeave = () => setVisible(false);
-
-    window.addEventListener("mousemove", handleMove, { passive: true });
-    window.addEventListener("mouseleave", handleLeave);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mouseleave", handleLeave);
-    };
-  }, [active]);
-
-  if (!active || !brand?.logo) return null;
+function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; color?: string } | null }) {
+  if (!brand?.logo) return null;
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-30"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
       aria-hidden="true"
-      data-testid="overlay-brand-cursor-logo"
+      data-testid="bg-brand-logo"
     >
-      <motion.div
-        className="absolute"
+      <div className="absolute inset-0 bg-grid opacity-[0.18]" />
+      <div className="absolute inset-0 bg-noise opacity-[0.18]" />
+
+      <div className="absolute inset-0 grid place-items-center">
+        <img
+          src={brand.logo}
+          alt=""
+          className="w-[72vmin] max-w-[760px] object-contain opacity-[0.06]"
+          style={{ filter: "grayscale(1) contrast(1.05)" }}
+          data-testid="img-brand-logo-watermark"
+        />
+      </div>
+
+      <div
+        className="absolute inset-0"
         style={{
-          left: pos.x,
-          top: pos.y,
-          transform: "translate(-50%, -50%)",
+          background:
+            "radial-gradient(60% 60% at 50% 40%, rgba(10,17,34,0.06) 0%, rgba(10,17,34,0) 60%)",
         }}
-        animate={{
-          opacity: visible ? 1 : 0,
-          scale: visible ? 1 : 0.9,
-        }}
-        transition={{ duration: 0.12, ease: "easeOut" }}
-      >
-        <div
-          className="grid place-items-center rounded-full"
-          style={{
-            width: 120,
-            height: 120,
-            background:
-              "radial-gradient(circle, rgba(250,251,252,0.6) 0%, rgba(250,251,252,0.22) 45%, rgba(250,251,252,0) 72%)",
-          }}
-        >
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              border: "1px solid rgba(10,17,34,0.14)",
-              boxShadow:
-                "0 0 0 1px rgba(10,17,34,0.06) inset, 0 0 0 10px rgba(10,17,34,0.03)",
-            }}
-          />
-          <div
-            className="absolute inset-[-10px] rounded-full"
-            style={{ border: "1px solid rgba(10,17,34,0.06)" }}
-          />
-          <div
-            className="absolute inset-[-22px] rounded-full"
-            style={{ border: "1px solid rgba(10,17,34,0.04)" }}
-          />
-          <img
-            src={brand.logo}
-            alt=""
-            className="h-12 w-12 object-contain"
-            style={{
-              filter: "contrast(1.1) saturate(1.05)",
-              opacity: 0.9,
-            }}
-            data-testid="img-brand-cursor-logo"
-          />
-        </div>
-      </motion.div>
+      />
     </div>
   );
 }
@@ -128,11 +67,7 @@ export default function BrandPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <BrandCursorLogo brand={brand} active />
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-[0.2]" />
-        <div className="absolute inset-0 bg-noise opacity-[0.2]" />
-      </div>
+      <BrandBackgroundLogo brand={brand} />
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
