@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import useSound from "use-sound";
 import {
   ArrowRight,
   CheckCircle2,
@@ -12,9 +11,6 @@ import {
   Timer,
   Wrench,
   MessageCircle,
-  Volume2,
-  VolumeX,
-  Menu,
 } from "lucide-react";
 
 const BRANDS = [
@@ -144,8 +140,8 @@ const SERVICES = [
     icon: ShieldCheck,
   },
   {
-    title: "PLC Otomasyon",
-    desc: "Blok diyagramları, kontrol mantığı ve çevre birim optimizasyonu.",
+    title: "Hızlı Arıza Tespiti",
+    desc: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
     icon: Timer,
   },
 ];
@@ -326,122 +322,8 @@ function HeaderLogo() {
   );
 }
 
-function Header({ 
-  sections, 
-  active, 
-  isScrolled, 
-  isSoundEnabled, 
-  onToggleSound 
-}: { 
-  sections: { id: string, label: string }[], 
-  active: string, 
-  isScrolled: boolean,
-  isSoundEnabled: boolean,
-  onToggleSound: () => void
-}) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3", { volume: 0.1, soundEnabled: isSoundEnabled });
-  const [playTick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.05, soundEnabled: isSoundEnabled });
-
-  const handleNavClick = (id: string) => {
-    if (isSoundEnabled) playClick();
-    scrollToId(id);
-    setIsMobileMenuOpen(false);
-  };
-
-  const toggleMobileMenu = () => {
-    if (isSoundEnabled) playTick();
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  return (
-    <header
-      className={`fixed top-0 z-[80] w-full transition-all duration-300 ${
-        isScrolled ? "bg-background/80 py-2 shadow-sm backdrop-blur-md" : "bg-transparent py-4"
-      }`}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 md:px-6">
-        <HeaderLogo />
-
-        <div className="flex items-center gap-4">
-          <nav className="hidden items-center gap-1 md:flex">
-            {sections.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => handleNavClick(s.id)}
-                className={`px-4 py-2 text-sm font-medium transition-colors hover:text-primary ${
-                  active === s.id ? "text-primary" : "text-muted-foreground"
-                }`}
-                data-testid={`link-nav-${s.id}`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2 border-l pl-4">
-            <button
-              onClick={onToggleSound}
-              className="rounded-full p-2 hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
-              title={isSoundEnabled ? "Sesi Kapat" : "Sesi Aç"}
-            >
-              {isSoundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            </button>
-
-            <Button
-              size="icon"
-              variant="ghost"
-              className="md:hidden"
-              onClick={toggleMobileMenu}
-              data-testid="button-mobile-menu"
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute left-0 top-full w-full border-b bg-background p-4 md:hidden"
-          >
-            <nav className="flex flex-col gap-2">
-              {sections.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => handleNavClick(s.id)}
-                  className={`px-4 py-3 text-left text-lg font-medium ${
-                    active === s.id ? "text-primary" : "text-muted-foreground"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
-
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleSound = () => setIsSoundEnabled(!isSoundEnabled);
 
   const sections = useMemo(
     () => [
@@ -457,13 +339,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header 
-        sections={sections} 
-        active={active} 
-        isScrolled={isScrolled} 
-        isSoundEnabled={isSoundEnabled}
-        onToggleSound={toggleSound}
-      />
       <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
@@ -474,6 +349,55 @@ export default function HomePage() {
       >
         İletişime geçe atla
       </a>
+
+      {/* Arka plan InteractiveGradient içinde yönetiliyor */}
+      
+      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
+          <HeaderLogo />
+
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
+            {sections.slice(1).map((s) => {
+              const isActive = active === s.id;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => scrollToId(s.id)}
+                  className={
+                    "rounded-2xl px-3 py-2 text-sm transition " +
+                    (isActive
+                      ? "bg-card shadow-soft"
+                      : "text-muted-foreground hover:bg-card")
+                  }
+                  data-testid={`button-nav-${s.id}`}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <MagneticButton
+              variant="secondary"
+              className="hidden rounded-2xl md:inline-flex"
+              onClick={() => scrollToId("contact")}
+              data-testid="button-cta-quote"
+            >
+              Teklif iste
+            </MagneticButton>
+            <MagneticButton
+              className="rounded-2xl"
+              onClick={() => scrollToId("contact")}
+              data-testid="button-cta-contact"
+            >
+              İletişim
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </MagneticButton>
+          </div>
+        </div>
+      </header>
 
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
@@ -638,21 +562,14 @@ export default function HomePage() {
                     <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
                       Cihaz bilgisi ile hızlı fiyat/termin.
                     </p>
-                      <Button
-                        size="sm"
-                        className="rounded-xl"
-                        onClick={() => {
-                          if (isSoundEnabled) {
-                            const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
-                            audio.volume = 0.1;
-                            audio.play().catch(() => {});
-                          }
-                          scrollToId("contact");
-                        }}
-                        data-testid="button-hero-card-action"
-                      >
-                        Teklif al
-                      </Button>
+                    <Button
+                      size="sm"
+                      className="rounded-xl"
+                      onClick={() => scrollToId("contact")}
+                      data-testid="button-hero-card-action"
+                    >
+                      Teklif al
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -669,13 +586,13 @@ export default function HomePage() {
               <p className="text-sm text-muted-foreground" data-testid="text-services-eyebrow">
                 Neler yapıyoruz
               </p>
-                      <h2
-                        className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
-                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                        data-testid="text-services-title"
-                      >
-                        Hizmetler
-                      </h2>
+              <h2
+                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-services-title"
+              >
+                Hizmetler
+              </h2>
             </div>
             <Badge
               variant="secondary"
@@ -690,22 +607,23 @@ export default function HomePage() {
             {SERVICES.map((s) => (
               <Card
                 key={s.title}
-                className="group relative h-full overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
+                className="group rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
                 data-testid={`card-service-${s.title}`}
               >
-                <div className="relative z-10 flex items-start gap-3">
+                <div className="flex items-start gap-3">
                   <div
                     className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
                     data-testid={`icon-service-${s.title}`}
                   >
                     <s.icon
-                      className="h-5 w-5 text-[#0a1122]"
+                      className="h-5 w-5"
+                      style={{ color: "hsl(var(--primary))" }}
                       aria-hidden="true"
                     />
                   </div>
                   <div>
                     <p
-                      className="text-base font-semibold tracking-tight text-[#0a1122]"
+                      className="text-base font-semibold tracking-tight"
                       style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                       data-testid={`text-service-title-${s.title}`}
                     >
