@@ -238,10 +238,7 @@ export default function HomePage() {
             data-testid="button-logo-home"
           >
             <div className="h-10 w-10 flex items-center justify-center overflow-hidden rounded-xl border bg-card shadow-soft" aria-hidden="true">
-              {/* Buraya logonuzu <img src="/path-to-your-logo.png" /> şeklinde ekleyebilirsiniz */}
-              <div className="text-[10px] font-bold text-muted-foreground uppercase text-center p-1 leading-tight">
-                LOGO BURAYA
-              </div>
+              <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-cover p-1.5" />
             </div>
             <span className="leading-tight">
               <span
