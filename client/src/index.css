@@ -43,42 +43,42 @@
 }
 
 :root {
-  /* Minimalist White Theme - Apple Style */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 8%;
+  /* Classic Corporate Theme - Navy & Gold */
+  --background: 210 20% 98%;
+  --foreground: 220 40% 13%;
 
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 8%;
+  --card-foreground: 220 40% 13%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 8%;
+  --popover-foreground: 220 40% 13%;
 
-  --primary: 0 84% 50%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 220 60% 25%;
+  --primary-foreground: 45 90% 55%;
 
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 8%;
+  --secondary: 210 15% 95%;
+  --secondary-foreground: 220 40% 13%;
 
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
+  --muted: 210 15% 95%;
+  --muted-foreground: 220 15% 45%;
 
-  --accent: 0 84% 50%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 45 90% 48%;
+  --accent-foreground: 220 60% 15%;
 
-  --destructive: 0 84% 50%;
+  --destructive: 0 72% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 0 0% 90%;
-  --input: 0 0% 88%;
-  --ring: 0 84% 50%;
+  --border: 220 20% 88%;
+  --input: 220 15% 85%;
+  --ring: 220 60% 25%;
 
-  --font-sans: "SF Pro Display", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --radius: 12px;
+  --font-sans: "Playfair Display", "Georgia", "Times New Roman", serif;
+  --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --radius: 8px;
 
-  --grid-line: 0 0% 92%;
-  --shadow-soft: 0 0% 0%;
+  --grid-line: 220 20% 92%;
+  --shadow-soft: 220 40% 10%;
 }
 
 .dark {
@@ -295,25 +295,25 @@
   animation: slideLeft 1.5s linear infinite;
 }
 
-/* Minimalist glow effect for brand cards - Red accent */
+/* Classic Corporate glow effect - Navy & Gold */
 @keyframes voltageFlicker {
   0%, 100% {
     box-shadow: 
-      0 0 0 1px rgba(220, 38, 38, 0.3),
-      0 4px 12px rgba(220, 38, 38, 0.15);
+      0 0 0 1px rgba(30, 58, 95, 0.3),
+      0 4px 12px rgba(30, 58, 95, 0.15);
   }
   10%, 30%, 50%, 70%, 90% {
     box-shadow: 
-      0 0 0 1px rgba(220, 38, 38, 0.5),
-      0 0 10px rgba(220, 38, 38, 0.2),
-      0 4px 16px rgba(220, 38, 38, 0.25);
+      0 0 0 1px rgba(30, 58, 95, 0.5),
+      0 0 10px rgba(202, 160, 55, 0.2),
+      0 4px 16px rgba(30, 58, 95, 0.25);
   }
   15%, 35%, 55% {
     box-shadow: 
-      0 0 0 2px rgba(220, 38, 38, 0.7),
-      0 0 18px rgba(220, 38, 38, 0.35),
-      0 0 30px rgba(220, 38, 38, 0.2),
-      0 8px 24px rgba(220, 38, 38, 0.3);
+      0 0 0 2px rgba(30, 58, 95, 0.7),
+      0 0 18px rgba(202, 160, 55, 0.35),
+      0 0 30px rgba(202, 160, 55, 0.2),
+      0 8px 24px rgba(30, 58, 95, 0.3);
   }
 }
 
@@ -323,7 +323,7 @@
 
 .electric-glow:hover {
   animation: voltageFlicker 1.5s ease-in-out infinite;
-  border-color: rgba(220, 38, 38, 0.5);
+  border-color: rgba(202, 160, 55, 0.6);
 }
 
 /* Spotlight Grid Effect */
