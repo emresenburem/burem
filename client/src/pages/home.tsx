@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { useLocation } from "wouter";
 import {
   ArrowRight,
   CheckCircle2,
@@ -29,6 +30,7 @@ const BRANDS = [
 
 function BrandsPopup() {
   const [isOpen, setIsOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -62,7 +64,8 @@ function BrandsPopup() {
                 key={brand.name}
                 whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-default hover:shadow-xl hover:z-10"
+                onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
                 data-testid={`brand-item-${brand.name}`}
               >
                 <div className="h-8 w-full flex items-center justify-center">
