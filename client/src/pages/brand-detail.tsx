@@ -48,7 +48,7 @@ export default function BrandPage() {
       <BrandWatermark logo={brand?.logo} />
       <div className="relative z-10">
         <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
           <Button variant="ghost" className="rounded-xl" onClick={() => window.history.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Geri Dön
