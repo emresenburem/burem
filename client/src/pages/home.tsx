@@ -237,17 +237,38 @@ function LightningEffect() {
 
   return (
     <svg className="pointer-events-none fixed inset-0 z-[60] h-full w-full">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+          <feMerge>
+            <feMergeNode in="coloredBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
       <motion.line
         x1={bolt.x1}
         y1={bolt.y1}
         x2={bolt.x2}
         y2={bolt.y2}
-        stroke="#3b82f6"
+        stroke="#60a5fa"
+        strokeWidth="2.5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0.8, 1, 0] }}
+        transition={{ duration: 0.1 }}
+        style={{ filter: "url(#glow)" }}
+      />
+      {/* İkincil daha ince parlak hat */}
+      <motion.line
+        x1={bolt.x1}
+        y1={bolt.y1}
+        x2={bolt.x2}
+        y2={bolt.y2}
+        stroke="#ffffff"
         strokeWidth="1"
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0.5, 1, 0] }}
-        transition={{ duration: 0.15 }}
-        style={{ filter: "drop-shadow(0 0 4px #3b82f6)" }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ duration: 0.1 }}
       />
     </svg>
   );
