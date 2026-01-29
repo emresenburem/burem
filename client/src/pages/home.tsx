@@ -262,21 +262,24 @@ export default function HomePage() {
             </div>
             <span className="leading-tight">
               <motion.span
-                initial={{ x: 0, opacity: 1 }}
+                initial={{ opacity: 1 }}
                 animate={{
-                  x: [0, -2, 2, -2, 2, 0],
-                  opacity: [1, 0.5, 1, 0.3, 1, 1],
-                  filter: [
-                    "drop-shadow(0 0 0px rgba(59,130,246,0))",
-                    "drop-shadow(0 0 10px rgba(59,130,246,0.8))",
-                    "drop-shadow(0 0 0px rgba(59,130,246,0))"
+                  opacity: [1, 0, 1, 0, 1, 0.2, 1],
+                  color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
+                  textShadow: [
+                    "0 0 0px rgba(59,130,246,0)",
+                    "0 0 20px rgba(59,130,246,0.8)",
+                    "0 0 0px rgba(59,130,246,0)",
+                    "0 0 20px rgba(59,130,246,0.8)",
+                    "0 0 0px rgba(59,130,246,0)"
                   ]
                 }}
                 transition={{
-                  duration: 0.4,
-                  times: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                  duration: 0.8,
+                  times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 1],
                   repeat: 0,
-                  delay: 0.5
+                  delay: 0.5,
+                  ease: "linear"
                 }}
                 className="block font-semibold tracking-tight text-[#0a1122]"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
