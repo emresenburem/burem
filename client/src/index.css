@@ -266,3 +266,30 @@
   opacity: 1;
   animation: thunderBorder 1.2s linear infinite, lightningFlash 2s ease-in-out infinite;
 }
+
+/* Brand logo sliding animations */
+@keyframes slideRight {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+.animate-slide-right {
+  animation: slideRight 1.5s linear infinite;
+}
+
+.animate-slide-left {
+  animation: slideLeft 1.5s linear infinite;
+}

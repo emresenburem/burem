@@ -95,31 +95,27 @@ function BrandsPopup() {
                 style={{ backgroundColor: "#FFFFFF" }}
                 data-testid={`brand-item-${brand.name}`}
               >
-                {/* Multiple rows of sliding logos */}
-                <img 
-                  src={brand.logo} 
-                  alt=""
-                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-500 ease-out -left-full group-hover:left-full group-hover:opacity-20"
-                  style={{ top: '0%' }}
-                />
-                <img 
-                  src={brand.logo} 
-                  alt=""
-                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-600 ease-out left-full group-hover:-left-full group-hover:opacity-20"
-                  style={{ top: '25%', transitionDelay: '50ms' }}
-                />
-                <img 
-                  src={brand.logo} 
-                  alt=""
-                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-700 ease-out -left-full group-hover:left-full group-hover:opacity-20"
-                  style={{ top: '50%', transitionDelay: '100ms' }}
-                />
-                <img 
-                  src={brand.logo} 
-                  alt=""
-                  className="absolute h-1/4 w-full object-contain opacity-10 transition-all duration-800 ease-out left-full group-hover:-left-full group-hover:opacity-20"
-                  style={{ top: '75%', transitionDelay: '150ms' }}
-                />
+                {/* Multiple rows of sliding logos with continuous animation */}
+                <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <img 
+                    src={brand.logo} 
+                    alt=""
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
+                    style={{ top: '0%', animationDelay: '0ms' }}
+                  />
+                  <img 
+                    src={brand.logo} 
+                    alt=""
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-left"
+                    style={{ top: '33%', animationDelay: '200ms' }}
+                  />
+                  <img 
+                    src={brand.logo} 
+                    alt=""
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
+                    style={{ top: '66%', animationDelay: '400ms' }}
+                  />
+                </div>
                 <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
                   <img 
                     src={brand.logo} 
