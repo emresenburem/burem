@@ -335,7 +335,7 @@ function HeaderLogo() {
           ease: "easeInOut",
         }}
       >
-        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
+        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
       </motion.div>
     </button>
   );
