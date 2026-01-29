@@ -22,8 +22,8 @@ function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; 
         <img
           src={brand.logo}
           alt=""
-          className="w-[72vmin] max-w-[760px] object-contain opacity-[0.06]"
-          style={{ filter: "grayscale(1) contrast(1.05)" }}
+          className="w-[75vw] max-w-[900px] object-contain opacity-[0.12]"
+          style={{ filter: "grayscale(0.4) contrast(1.15)" }}
           data-testid="img-brand-logo-watermark"
         />
       </div>
