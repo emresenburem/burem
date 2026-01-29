@@ -211,18 +211,20 @@ function LightningEffect() {
     let frame = 0;
 
     const handleMouseMove = (e: MouseEvent) => {
-      frame++;
-      // Only trigger occasionally on movement to create "flicker" effect
-      if (frame % 20 === 0 && Math.random() > 0.7) {
-        const x1 = lastPos.x;
-        const y1 = lastPos.y;
-        const x2 = e.clientX;
-        const y2 = e.clientY;
+      const x1 = lastPos.x;
+      const y1 = lastPos.y;
+      const x2 = e.clientX;
+      const y2 = e.clientY;
 
+      // Calculate distance moved
+      const dist = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+      // Only show bolt if mouse actually moved
+      if (dist > 2) {
         setBolt({ x1, y1, x2, y2, opacity: 1 });
         
-        // Clear bolt quickly
-        setTimeout(() => setBolt(null), 50 + Math.random() * 100);
+        // Clear bolt very quickly to keep up with movement
+        setTimeout(() => setBolt(null), 30);
       }
       lastPos = { x: e.clientX, y: e.clientY };
     };
