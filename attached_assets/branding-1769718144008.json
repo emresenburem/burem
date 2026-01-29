@@ -1,0 +1,145 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "Arial",
+      "count": 63
+    },
+    {
+      "family": "Lato",
+      "count": 61
+    },
+    {
+      "family": "-apple-system",
+      "count": 61
+    },
+    {
+      "family": "BlinkMacSystemFont",
+      "count": 61
+    },
+    {
+      "family": "Segoe UI",
+      "count": 61
+    },
+    {
+      "family": "Roboto",
+      "count": 61
+    },
+    {
+      "family": "Helvetica Neue",
+      "count": 61
+    },
+    {
+      "family": "Noto Sans",
+      "count": 61
+    },
+    {
+      "family": "sans-serif",
+      "count": 61
+    },
+    {
+      "family": "Apple Color Emoji",
+      "count": 61
+    }
+  ],
+  "colors": {
+    "primary": "#364550",
+    "accent": "#1E0C20",
+    "background": "#FFFFFF",
+    "textPrimary": "#212529",
+    "link": "#1E0C20"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Lato",
+      "heading": "Lato"
+    },
+    "fontStacks": {
+      "body": [
+        "Lato",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "Noto Sans",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Noto Color Emoji"
+      ],
+      "heading": [
+        "Lato",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "Noto Sans",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Noto Color Emoji"
+      ],
+      "paragraph": [
+        "Lato",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "Segoe UI",
+        "Roboto",
+        "Helvetica Neue",
+        "Arial",
+        "Noto Sans",
+        "sans-serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol",
+        "Noto Color Emoji"
+      ]
+    },
+    "fontSizes": {
+      "h1": "16px",
+      "h2": "24px",
+      "body": "16px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "0px"
+  },
+  "components": {
+    "input": {
+      "background": "#EEEEEE",
+      "textColor": "#212121",
+      "borderColor": null,
+      "borderRadius": "24px",
+      "borderRadiusCorners": {
+        "topLeft": "24px",
+        "topRight": "24px",
+        "bottomRight": "24px",
+        "bottomLeft": "24px"
+      },
+      "shadow": "none"
+    }
+  },
+  "images": {
+    "logo": "https://www.logo.wine/logo.svg",
+    "favicon": "https://www.logo.wine/favicons/favicon-16x16.png",
+    "ogImage": null
+  },
+  "__framework_hints": [],
+  "__llm_logo_reasoning": {
+    "selectedIndex": 0,
+    "reasoning": "Strong indicators: header logo linking to homepage, header location, visible, top-left position, highest logo on page, alt matches logo/brand, src contains logo, class contains logo, reasonable size. Score: 130 (clear winner by 80 points)",
+    "confidence": 0.9
+  },
+  "confidence": {
+    "buttons": 0,
+    "colors": 0,
+    "overall": 0
+  }
+}
