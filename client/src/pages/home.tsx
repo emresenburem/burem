@@ -136,14 +136,15 @@ const SERVICES = [
     animation: (
       <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none">
         <svg className="h-full w-full text-blue-600 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* PCB Traces that draw on hover */}
           <motion.path
             d="M0 20 L30 20 L30 50 L60 50 L60 80 L100 80"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            initial={{ pathLength: 0 }}
-            whileHover={{ pathLength: 1 }}
+            variants={{
+              initial: { pathLength: 0 },
+              hover: { pathLength: 1 }
+            }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           />
           <motion.path
@@ -151,27 +152,33 @@ const SERVICES = [
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            initial={{ pathLength: 0 }}
-            whileHover={{ pathLength: 1 }}
+            variants={{
+              initial: { pathLength: 0 },
+              hover: { pathLength: 1 }
+            }}
             transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
           />
-          {/* Pads that appear at the end */}
           <motion.circle 
             cx="30" cy="20" r="2" fill="currentColor" 
-            initial={{ scale: 0 }}
-            whileHover={{ scale: 1 }}
+            variants={{
+              initial: { scale: 0 },
+              hover: { scale: 1 }
+            }}
             transition={{ delay: 1.2 }}
           />
           <motion.circle 
             cx="60" cy="50" r="2" fill="currentColor" 
-            initial={{ scale: 0 }}
-            whileHover={{ scale: 1 }}
+            variants={{
+              initial: { scale: 0 },
+              hover: { scale: 1 }
+            }}
             transition={{ delay: 1.4 }}
           />
-          {/* Main "Icon" glow at the end */}
           <motion.g
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileHover={{ opacity: 1, scale: 1 }}
+            variants={{
+              initial: { opacity: 0, scale: 0.5 },
+              hover: { opacity: 1, scale: 1 }
+            }}
             transition={{ delay: 1.6, type: "spring", stiffness: 200 }}
           >
             <circle cx="50" cy="50" r="8" fill="currentColor" className="opacity-20 blur-sm" />
@@ -684,40 +691,41 @@ export default function HomePage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {SERVICES.map((s) => (
-              <Card
-                key={s.title}
-                className="group relative overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
-                data-testid={`card-service-${s.title}`}
-              >
-                {s.animation}
-                <div className="relative z-10 flex items-start gap-3">
-                  <div
-                    className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
-                    data-testid={`icon-service-${s.title}`}
-                  >
-                    <s.icon
-                      className="h-5 w-5"
-                      style={{ color: "hsl(var(--primary))" }}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p
-                      className="text-base font-semibold tracking-tight"
-                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                      data-testid={`text-service-title-${s.title}`}
+              <motion.div key={s.title} initial="initial" whileHover="hover">
+                <Card
+                  className="group relative h-full overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
+                  data-testid={`card-service-${s.title}`}
+                >
+                  {s.animation}
+                  <div className="relative z-10 flex items-start gap-3">
+                    <div
+                      className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
+                      data-testid={`icon-service-${s.title}`}
                     >
-                      {s.title}
-                    </p>
-                    <p
-                      className="mt-1 text-sm text-muted-foreground"
-                      data-testid={`text-service-desc-${s.title}`}
-                    >
-                      {s.desc}
-                    </p>
+                      <s.icon
+                        className="h-5 w-5"
+                        style={{ color: "hsl(var(--primary))" }}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-base font-semibold tracking-tight"
+                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                        data-testid={`text-service-title-${s.title}`}
+                      >
+                        {s.title}
+                      </p>
+                      <p
+                        className="mt-1 text-sm text-muted-foreground"
+                        data-testid={`text-service-desc-${s.title}`}
+                      >
+                        {s.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </section>
