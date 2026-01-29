@@ -294,25 +294,25 @@
   animation: slideLeft 1.5s linear infinite;
 }
 
-/* Industrial voltage glow effect for brand cards */
+/* Industrial voltage glow effect for brand cards - Navy Blue */
 @keyframes voltageFlicker {
   0%, 100% {
     box-shadow: 
-      0 0 0 1px rgba(10, 17, 34, 0.3),
-      0 4px 12px rgba(10, 17, 34, 0.15);
+      0 0 0 1px rgba(0, 32, 96, 0.4),
+      0 4px 12px rgba(0, 32, 96, 0.2);
   }
   10%, 30%, 50%, 70%, 90% {
     box-shadow: 
-      0 0 0 1px rgba(10, 17, 34, 0.5),
-      0 0 8px rgba(10, 17, 34, 0.2),
-      0 4px 16px rgba(10, 17, 34, 0.25);
+      0 0 0 1px rgba(0, 32, 96, 0.6),
+      0 0 10px rgba(0, 32, 96, 0.3),
+      0 4px 16px rgba(0, 32, 96, 0.35);
   }
   15%, 35%, 55% {
     box-shadow: 
-      0 0 0 2px rgba(10, 17, 34, 0.7),
-      0 0 15px rgba(10, 17, 34, 0.3),
-      0 0 25px rgba(10, 17, 34, 0.15),
-      0 8px 24px rgba(10, 17, 34, 0.3);
+      0 0 0 2px rgba(0, 32, 96, 0.8),
+      0 0 18px rgba(0, 32, 96, 0.45),
+      0 0 30px rgba(0, 32, 96, 0.25),
+      0 8px 24px rgba(0, 32, 96, 0.4);
   }
 }
 
@@ -322,5 +322,5 @@
 
 .electric-glow:hover {
   animation: voltageFlicker 1.5s ease-in-out infinite;
-  border-color: rgba(10, 17, 34, 0.6);
+  border-color: rgba(0, 32, 96, 0.7);
 }
