@@ -95,18 +95,25 @@ function BrandsPopup() {
                 style={{ backgroundColor: "#FFFFFF" }}
                 data-testid={`brand-item-${brand.name}`}
               >
-                {/* Spiral logo animation */}
-                <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                {/* Multiple rows of sliding logos with continuous animation */}
+                <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <img 
                     src={brand.logo} 
                     alt=""
-                    className="absolute left-1/2 top-1/2 h-12 w-12 object-contain animate-spiral"
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
+                    style={{ top: '0%', animationDelay: '0ms' }}
                   />
                   <img 
                     src={brand.logo} 
                     alt=""
-                    className="absolute left-1/2 top-1/2 h-10 w-10 object-contain animate-spiral-reverse"
-                    style={{ animationDelay: '0.5s' }}
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-left"
+                    style={{ top: '33%', animationDelay: '200ms' }}
+                  />
+                  <img 
+                    src={brand.logo} 
+                    alt=""
+                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
+                    style={{ top: '66%', animationDelay: '400ms' }}
                   />
                 </div>
                 <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">

@@ -267,53 +267,29 @@
   animation: thunderBorder 1.2s linear infinite, lightningFlash 2s ease-in-out infinite;
 }
 
-/* Brand logo spiral animations */
-@keyframes spiralMove {
+/* Brand logo sliding animations */
+@keyframes slideRight {
   0% {
-    transform: translate(-50%, -50%) rotate(0deg) translateX(80px) rotate(0deg) scale(0.3);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.3;
-  }
-  50% {
-    transform: translate(-50%, -50%) rotate(180deg) translateX(40px) rotate(-180deg) scale(0.6);
-    opacity: 0.25;
-  }
-  80% {
-    opacity: 0.3;
+    left: -100%;
   }
   100% {
-    transform: translate(-50%, -50%) rotate(360deg) translateX(80px) rotate(-360deg) scale(0.3);
-    opacity: 0;
+    left: 100%;
   }
 }
 
-@keyframes spiralMoveReverse {
+@keyframes slideLeft {
   0% {
-    transform: translate(-50%, -50%) rotate(0deg) translateX(60px) rotate(0deg) scale(0.4);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.25;
-  }
-  50% {
-    transform: translate(-50%, -50%) rotate(-180deg) translateX(30px) rotate(180deg) scale(0.7);
-    opacity: 0.2;
-  }
-  80% {
-    opacity: 0.25;
+    left: 100%;
   }
   100% {
-    transform: translate(-50%, -50%) rotate(-360deg) translateX(60px) rotate(360deg) scale(0.4);
-    opacity: 0;
+    left: -100%;
   }
 }
 
-.animate-spiral {
-  animation: spiralMove 2s ease-in-out infinite;
+.animate-slide-right {
+  animation: slideRight 1.5s linear infinite;
 }
 
-.animate-spiral-reverse {
-  animation: spiralMoveReverse 2.5s ease-in-out infinite;
+.animate-slide-left {
+  animation: slideLeft 1.5s linear infinite;
 }
