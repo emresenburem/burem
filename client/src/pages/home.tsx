@@ -82,7 +82,10 @@ function BrandsPopup() {
             Tamir Ettiğimiz Markalar
           </h3>
           <div className="grid grid-cols-2 gap-3">
-            {BRANDS.map((brand) => (
+            {BRANDS.map((brand, index) => {
+              const row = Math.floor(index / 2);
+              const isEvenRow = row % 2 === 0;
+              return (
               <motion.div
                 key={brand.name}
                 whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
@@ -95,7 +98,11 @@ function BrandsPopup() {
                 <img 
                   src={brand.logo} 
                   alt=""
-                  className="absolute h-8 w-8 object-contain opacity-20 -left-10 top-1/2 -translate-y-1/2 transition-all duration-700 ease-out group-hover:left-[calc(100%+2rem)] group-hover:opacity-40"
+                  className={`absolute h-full w-full object-contain opacity-10 transition-all duration-700 ease-out group-hover:opacity-25 ${
+                    isEvenRow 
+                      ? "-left-full group-hover:left-full" 
+                      : "left-full group-hover:-left-full"
+                  }`}
                 />
                 <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
                   <img 
@@ -120,7 +127,8 @@ function BrandsPopup() {
                   </span>
                 </div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
           <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
             <p className="text-xs text-muted-foreground">
