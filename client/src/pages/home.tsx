@@ -67,7 +67,7 @@ function BrandsPopup() {
               >
                 <div className="h-8 w-full flex items-center justify-center">
                   <span 
-                    className="font-bold tracking-tighter text-[12px] italic" 
+                    className="font-bold tracking-tighter text-[16px] italic" 
                     style={{ 
                       color: brand.color,
                       fontFamily: "Space Grotesk, sans-serif",
@@ -78,7 +78,7 @@ function BrandsPopup() {
                   </span>
                 </div>
                 <span 
-                  className="text-[9px] font-bold text-foreground/60 uppercase tracking-[0.2em]"
+                  className="text-[11px] font-bold text-foreground/60 uppercase tracking-[0.2em] italic"
                   style={{ fontFamily: "Space Grotesk, sans-serif" }}
                 >
                   {brand.name}
