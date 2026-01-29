@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 function BrandCursorLogo({ brand, active = true }: { brand: { name: string; logo?: string; color?: string } | null; active?: boolean }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
+  const [lastMoveAt, setLastMoveAt] = useState<number>(0);
 
   useEffect(() => {
     if (!active) return;
@@ -21,6 +22,7 @@ function BrandCursorLogo({ brand, active = true }: { brand: { name: string; logo
       raf = requestAnimationFrame(() => {
         setPos({ x, y });
         setVisible(true);
+        setLastMoveAt(Date.now());
       });
     };
 
@@ -60,18 +62,35 @@ function BrandCursorLogo({ brand, active = true }: { brand: { name: string; logo
         <div
           className="grid place-items-center rounded-full"
           style={{
-            width: 180,
-            height: 180,
-            background: "radial-gradient(circle, rgba(250,251,252,0.82) 0%, rgba(250,251,252,0.32) 55%, rgba(250,251,252,0) 72%)",
+            width: 120,
+            height: 120,
+            background:
+              "radial-gradient(circle, rgba(250,251,252,0.6) 0%, rgba(250,251,252,0.22) 45%, rgba(250,251,252,0) 72%)",
           }}
         >
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              border: "1px solid rgba(10,17,34,0.14)",
+              boxShadow:
+                "0 0 0 1px rgba(10,17,34,0.06) inset, 0 0 0 10px rgba(10,17,34,0.03)",
+            }}
+          />
+          <div
+            className="absolute inset-[-10px] rounded-full"
+            style={{ border: "1px solid rgba(10,17,34,0.06)" }}
+          />
+          <div
+            className="absolute inset-[-22px] rounded-full"
+            style={{ border: "1px solid rgba(10,17,34,0.04)" }}
+          />
           <img
             src={brand.logo}
             alt=""
-            className="h-20 w-20 object-contain"
+            className="h-12 w-12 object-contain"
             style={{
               filter: "contrast(1.1) saturate(1.05)",
-              opacity: 0.95,
+              opacity: 0.9,
             }}
             data-testid="img-brand-cursor-logo"
           />
