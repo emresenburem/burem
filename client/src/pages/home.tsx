@@ -21,6 +21,7 @@ import {
   Binary,
   Telescope,
   Flame,
+  PenLine,
 } from "lucide-react";
 
 const BRANDS = [
@@ -725,7 +726,8 @@ export default function HomePage() {
                         </div>
                       ) : st.title === "Onarım + Parça İşçiligi" ? (
                         <div className="relative h-5 w-5 flex items-center justify-center">
-                          <Flame className="h-4 w-4 text-orange-500 animate-pulse" />
+                          <PenLine className="h-5 w-5 text-primary rotate-45" />
+                          <div className="absolute top-0 right-0 h-1.5 w-1.5 rounded-full bg-primary/20 animate-ping" />
                         </div>
                       ) : (
                         st.icon && <st.icon className="h-5 w-5" />
