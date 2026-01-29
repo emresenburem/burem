@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Volume2,
   VolumeX,
+  Menu,
 } from "lucide-react";
 
 const BRANDS = [
