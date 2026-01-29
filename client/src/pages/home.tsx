@@ -281,14 +281,14 @@ function HeaderLogo() {
           ease: "easeInOut",
         }}
       >
-        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
+        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
       </motion.div>
       <span className="leading-tight -ml-16">
         <motion.span
-          initial={{ opacity: 1, color: "#ffffff" }}
+          initial={{ opacity: 1, color: "#0a1122" }}
           animate={isFlickering ? {
             opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
-            color: ["#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff", "#3b82f6", "#ffffff"],
+            color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
             textShadow: [
               "0 0 0px rgba(59,130,246,0)",
               "0 0 30px rgba(59,130,246,1)",
@@ -298,14 +298,14 @@ function HeaderLogo() {
               "0 0 50px rgba(59,130,246,1)",
               "0 0 0px rgba(59,130,246,0)"
             ]
-          } : { opacity: 1, color: "#ffffff" }}
+          } : { opacity: 1, color: "#0a1122" }}
           transition={{
             duration: 2.5,
             times: [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.7, 1],
             repeat: 0,
             ease: "easeInOut"
           }}
-          className="block font-bold tracking-tight text-white text-xl md:text-2xl"
+          className="block font-bold tracking-tight text-[#0a1122] text-xl md:text-2xl"
           style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
           data-testid="text-brand-name"
         >
@@ -352,7 +352,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/75 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
           <HeaderLogo />
 
