@@ -87,12 +87,23 @@ function BrandsPopup() {
         data-testid="brands-tab-indicator"
       >
         <div className="flex items-center">
-          <div className="bg-gradient-to-r from-primary to-primary/80 text-white px-2 py-4 rounded-r-xl shadow-lg flex flex-col items-center gap-1 hover:px-3 transition-all">
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-[10px] font-medium tracking-tight [writing-mode:vertical-rl] rotate-180">
-              MARKALAR
-            </span>
-            <ChevronRight className="h-4 w-4" />
+          <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white px-1.5 py-3 rounded-r-xl shadow-lg flex flex-col items-center gap-2 hover:px-2.5 transition-all border-r border-y border-slate-700">
+            <ChevronRight className="h-3 w-3 text-primary" />
+            <div className="flex flex-col gap-1.5 py-1">
+              {BRANDS.slice(0, 6).map((brand) => (
+                <div key={brand.name} className="w-6 h-4 bg-white/90 rounded-sm p-0.5 flex items-center justify-center">
+                  <img 
+                    src={brand.logo} 
+                    alt={brand.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ))}
+              <div className="w-6 h-4 bg-white/20 rounded-sm flex items-center justify-center">
+                <span className="text-[8px] text-white/80">+{BRANDS.length - 6}</span>
+              </div>
+            </div>
+            <ChevronRight className="h-3 w-3 text-primary" />
           </div>
         </div>
       </motion.div>
