@@ -725,9 +725,7 @@ export default function HomePage() {
                         </div>
                       ) : st.title === "Onarım + Parça İşçiligi" ? (
                         <div className="relative h-5 w-5 flex items-center justify-center">
-                          <Flame className="h-4 w-4 relative z-10 text-orange-500 animate-pulse" />
-                          <div className="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-slate-400 shadow-[0_0_5px_rgba(148,163,184,0.8)]" />
-                          <div className="absolute bottom-2 left-1 h-1 w-1 rounded-full bg-slate-300" />
+                          <Flame className="h-4 w-4 text-orange-500 animate-pulse" />
                         </div>
                       ) : (
                         st.icon && <st.icon className="h-5 w-5" />
