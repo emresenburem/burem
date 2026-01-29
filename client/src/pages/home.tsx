@@ -726,12 +726,12 @@ export default function HomePage() {
                           <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
                         </div>
                       ) : st.title === "Onarım + Parça İşçiligi" ? (
-                        <div className="relative h-6 w-6 flex items-center justify-center">
+                        <div className="relative h-7 w-7 flex items-center justify-center">
                           <img 
                             src="/assets/soldering-iron.png" 
                             alt="Soldering Iron" 
-                            className="h-6 w-6 object-contain" 
-                            style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%)' }}
+                            className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
+                            style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
                           />
                         </div>
                       ) : st.title === "Test + Teslim" ? (
