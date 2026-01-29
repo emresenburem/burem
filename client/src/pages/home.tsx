@@ -134,15 +134,15 @@ const SERVICES = [
     desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti + onarım + test.",
     icon: Wrench,
     animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-20 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-150" viewBox="0 0 100 100">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <svg className="h-full w-full text-blue-600/10 scale-150" viewBox="0 0 100 100" preserveAspectRatio="none">
           <motion.path
             d="M10 50 Q 25 20, 40 50 T 70 50 T 100 50"
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
             animate={{ strokeDasharray: ["0, 100", "100, 0"] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
           <circle cx="10" cy="50" r="4" fill="currentColor" />
           <circle cx="40" cy="50" r="4" fill="currentColor" />
@@ -156,15 +156,15 @@ const SERVICES = [
     desc: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları.",
     icon: ShieldCheck,
     animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-20 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-150" viewBox="0 0 100 100">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <svg className="h-full w-full text-blue-600/10 scale-150" viewBox="0 0 100 100" preserveAspectRatio="none">
           <motion.path
             d="M0 50 L 20 50 L 25 20 L 35 80 L 40 50 L 60 50 L 65 10 L 75 90 L 80 50 L 100 50"
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
             animate={{ pathLength: [0, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           />
         </svg>
       </div>
@@ -175,11 +175,11 @@ const SERVICES = [
     desc: "Blok diyagramları, kontrol mantığı ve çevre birim optimizasyonu.",
     icon: Timer,
     animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-20 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-150" viewBox="0 0 100 100">
-          <motion.rect x="10" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity }} />
-          <motion.rect x="40" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.3 }} />
-          <motion.rect x="70" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: 0.6 }} />
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <svg className="h-full w-full text-blue-600/10 scale-150" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <motion.rect x="10" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.2, 0.8, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.rect x="40" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.2, 0.8, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.4, ease: "easeInOut" }} />
+          <motion.rect x="70" y="10" width="20" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="3" animate={{ opacity: [0.2, 0.8, 0.2] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.8, ease: "easeInOut" }} />
           <path d="M30 20 L 40 20 M 60 20 L 70 20" stroke="currentColor" strokeWidth="3" />
         </svg>
       </div>
