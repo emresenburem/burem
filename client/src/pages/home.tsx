@@ -303,7 +303,7 @@ function HeaderLogo() {
       data-testid="button-logo-home"
     >
       <motion.div 
-        className="h-32 w-48 flex items-center justify-center overflow-hidden" 
+        className="h-40 w-64 flex items-center justify-center overflow-hidden" 
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
@@ -359,7 +359,7 @@ export default function HomePage() {
       
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
-          <div className="-ml-8 -mt-8 mb-[-2rem]">
+          <div className="-ml-8 -mt-10 mb-[-2.5rem]">
             <HeaderLogo />
           </div>
 
