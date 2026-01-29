@@ -204,67 +204,19 @@ function scrollToId(id: string) {
 }
 
 function InteractiveGradient() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
-    <>
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-grid opacity-[0.15]" />
-        <div className="absolute inset-0 bg-noise opacity-[0.2]" />
-        
-        {/* Mouse follow glow */}
-        <motion.div
-          className="pointer-events-none fixed inset-0 z-0"
-          animate={{
-            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(59, 130, 246, 0.45), transparent 80%)`,
-          }}
-          transition={{ type: "tween", ease: "linear", duration: 0 }}
-        />
-      </div>
-    </>
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-grid opacity-[0.15]" />
+      <div className="absolute inset-0 bg-noise opacity-[0.2]" />
+    </div>
   );
 }
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { clientX, clientY, currentTarget } = e;
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    const distanceX = clientX - centerX;
-    const distanceY = clientY - centerY;
-    
-    // Magnetic pull strength
-    const strength = 0.35;
-    setPosition({ x: distanceX * strength, y: distanceY * strength });
-  };
-
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
   return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
-      className="inline-block"
-    >
-      <Button className={className} onClick={onClick} {...props}>
-        {children}
-      </Button>
-    </motion.div>
+    <Button className={className} onClick={onClick} {...props}>
+      {children}
+    </Button>
   );
 }
 
