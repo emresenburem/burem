@@ -86,11 +86,11 @@ function BrandsPopup() {
         onMouseEnter={() => setIsOpen(true)}
         data-testid="brands-tab-indicator"
       >
-        <div className="bg-white px-1.5 py-4 rounded-r-xl shadow-lg flex flex-col items-center justify-between h-full max-h-[90vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
-          <ChevronRight className="h-3 w-3 text-primary" />
-          <div className="flex flex-col gap-1.5 py-2 flex-1 justify-center">
+        <div className="bg-white px-1.5 py-2 rounded-r-xl shadow-lg flex flex-col items-center h-full max-h-[95vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
+          <ChevronRight className="h-3 w-3 text-primary mb-1" />
+          <div className="flex flex-col gap-0.5 flex-1 justify-between py-1">
             {BRANDS.map((brand) => (
-              <div key={brand.name} className="w-7 h-5 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden">
+              <div key={brand.name} className="w-8 h-6 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden flex-1">
                 <img 
                   src={brand.logo} 
                   alt={brand.name}
@@ -103,7 +103,7 @@ function BrandsPopup() {
               </div>
             ))}
           </div>
-          <ChevronRight className="h-3 w-3 text-primary" />
+          <ChevronRight className="h-3 w-3 text-primary mt-1" />
         </div>
       </motion.div>
 
