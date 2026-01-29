@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
+import useSound from "use-sound";
 import {
   ArrowRight,
   CheckCircle2,
@@ -11,6 +12,8 @@ import {
   Timer,
   Wrench,
   MessageCircle,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 const BRANDS = [
@@ -322,8 +325,122 @@ function HeaderLogo() {
   );
 }
 
+function Header({ 
+  sections, 
+  active, 
+  isScrolled, 
+  isSoundEnabled, 
+  onToggleSound 
+}: { 
+  sections: { id: string, label: string }[], 
+  active: string, 
+  isScrolled: boolean,
+  isSoundEnabled: boolean,
+  onToggleSound: () => void
+}) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3", { volume: 0.1, soundEnabled: isSoundEnabled });
+  const [playTick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.05, soundEnabled: isSoundEnabled });
+
+  const handleNavClick = (id: string) => {
+    if (isSoundEnabled) playClick();
+    scrollToId(id);
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    if (isSoundEnabled) playTick();
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  return (
+    <header
+      className={`fixed top-0 z-[80] w-full transition-all duration-300 ${
+        isScrolled ? "bg-background/80 py-2 shadow-sm backdrop-blur-md" : "bg-transparent py-4"
+      }`}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 md:px-6">
+        <HeaderLogo />
+
+        <div className="flex items-center gap-4">
+          <nav className="hidden items-center gap-1 md:flex">
+            {sections.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => handleNavClick(s.id)}
+                className={`px-4 py-2 text-sm font-medium transition-colors hover:text-primary ${
+                  active === s.id ? "text-primary" : "text-muted-foreground"
+                }`}
+                data-testid={`link-nav-${s.id}`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2 border-l pl-4">
+            <button
+              onClick={onToggleSound}
+              className="rounded-full p-2 hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
+              title={isSoundEnabled ? "Sesi Kapat" : "Sesi Aç"}
+            >
+              {isSoundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            </button>
+
+            <Button
+              size="icon"
+              variant="ghost"
+              className="md:hidden"
+              onClick={toggleMobileMenu}
+              data-testid="button-mobile-menu"
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute left-0 top-full w-full border-b bg-background p-4 md:hidden"
+          >
+            <nav className="flex flex-col gap-2">
+              {sections.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => handleNavClick(s.id)}
+                  className={`px-4 py-3 text-left text-lg font-medium ${
+                    active === s.id ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
+
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const toggleSound = () => setIsSoundEnabled(!isSoundEnabled);
 
   const sections = useMemo(
     () => [
@@ -339,6 +456,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Header 
+        sections={sections} 
+        active={active} 
+        isScrolled={isScrolled} 
+        isSoundEnabled={isSoundEnabled}
+        onToggleSound={toggleSound}
+      />
       <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
@@ -562,14 +686,21 @@ export default function HomePage() {
                     <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
                       Cihaz bilgisi ile hızlı fiyat/termin.
                     </p>
-                    <Button
-                      size="sm"
-                      className="rounded-xl"
-                      onClick={() => scrollToId("contact")}
-                      data-testid="button-hero-card-action"
-                    >
-                      Teklif al
-                    </Button>
+                      <Button
+                        size="sm"
+                        className="rounded-xl"
+                        onClick={() => {
+                          if (isSoundEnabled) {
+                            const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3");
+                            audio.volume = 0.1;
+                            audio.play().catch(() => {});
+                          }
+                          scrollToId("contact");
+                        }}
+                        data-testid="button-hero-card-action"
+                      >
+                        Teklif al
+                      </Button>
                   </div>
                 </div>
               </Card>
