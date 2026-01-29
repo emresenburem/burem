@@ -42,20 +42,20 @@ export default function BrandPage() {
   const brand = useMemo(() => {
     const normalized = brandName.trim().toLowerCase();
     const brands = [
-      { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
-      { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
-      { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
-      { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
-      { name: "Yaskawa", color: "#004098", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
-      { name: "Omron", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg" },
-      { name: "Lenze", color: "#0046AD", logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png" },
-      { name: "Mitsubishi", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
-      { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
-      { name: "Delta", color: "#003A8C", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png" },
-      { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
-      { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
-      { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
-      { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
+      { name: "Siemens", bgColor: "#008080", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
+      { name: "ABB", bgColor: "#FF0000", color: "#FFFFFF", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
+      { name: "Schneider", bgColor: "#3DCD58", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
+      { name: "Fanuc", bgColor: "#FFD700", color: "#CC0000", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
+      { name: "Yaskawa", bgColor: "#004098", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
+      { name: "Omron", bgColor: "#003DA5", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg" },
+      { name: "Lenze", bgColor: "#0046AD", color: "#FFFFFF", logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png" },
+      { name: "Mitsubishi", bgColor: "#FFFFFF", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
+      { name: "Danfoss", bgColor: "#E2000F", color: "#FFFFFF", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
+      { name: "Delta", bgColor: "#003A8C", color: "#FFFFFF", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png" },
+      { name: "Beckhoff", bgColor: "#000000", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
+      { name: "Allen Bradley", bgColor: "#000000", color: "#CC0000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
+      { name: "Fuji", bgColor: "#E60012", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
+      { name: "Rexroth", bgColor: "#003366", color: "#FFFFFF", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
     ];
 
     return brands.find((b) => b.name.toLowerCase() === normalized) ?? null;
