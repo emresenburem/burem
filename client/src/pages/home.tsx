@@ -234,21 +234,20 @@ export default function HomePage() {
           <button
             type="button"
             onClick={() => scrollToId("top")}
-            className="group flex items-center gap-2 rounded-2xl px-2 py-1 text-left"
+            className="group flex items-center gap-3 rounded-2xl px-2 py-1 text-left"
             data-testid="button-logo-home"
           >
-            <span
-              className="grid h-9 w-9 place-items-center rounded-2xl border bg-card shadow-soft"
-              aria-hidden="true"
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))",
-                }}
-              />
-            </span>
+            <div className="relative h-10 w-10 flex items-center justify-center" aria-hidden="true">
+              <div className="absolute inset-0 rounded-xl bg-primary/20 blur-sm group-hover:bg-primary/30 transition-colors" />
+              <div className="relative z-10 grid h-10 w-10 place-items-center rounded-xl border border-primary/50 bg-card shadow-soft overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-primary opacity-20 group-hover:opacity-40 transition-opacity" />
+                <div className="flex flex-col items-center gap-0.5">
+                  <div className="h-0.5 w-5 bg-primary rounded-full" />
+                  <div className="h-0.5 w-3 bg-accent rounded-full" />
+                  <div className="h-0.5 w-5 bg-primary rounded-full" />
+                </div>
+              </div>
+            </div>
             <span className="leading-tight">
               <span
                 className="block font-semibold tracking-tight"
