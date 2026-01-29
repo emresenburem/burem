@@ -291,7 +291,7 @@ function HeaderLogo() {
     const timer = setTimeout(() => {
       setIsFlickering(true);
       setTriggerCount(prev => prev + 1);
-      setTimeout(() => setIsFlickering(false), 2500);
+      setTimeout(() => setIsFlickering(false), 1200);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
@@ -300,7 +300,7 @@ function HeaderLogo() {
     if (!isFlickering) {
       setIsFlickering(true);
       setTriggerCount(prev => prev + 1);
-      setTimeout(() => setIsFlickering(false), 2500);
+      setTimeout(() => setIsFlickering(false), 1200);
     }
   };
 
@@ -319,18 +319,18 @@ function HeaderLogo() {
         animate={isFlickering ? {
           opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
           filter: [
-            "drop-shadow(0 0 0px rgba(59,130,246,0)) brightness(1)",
-            "drop-shadow(0 0 20px rgba(59,130,246,1)) brightness(2)",
-            "drop-shadow(0 0 0px rgba(59,130,246,0)) brightness(1)",
-            "drop-shadow(0 0 40px rgba(255,255,255,1)) brightness(3)",
-            "drop-shadow(0 0 0px rgba(59,130,246,0)) brightness(1)",
-            "drop-shadow(0 0 60px rgba(59,130,246,1)) brightness(2.5)",
-            "drop-shadow(0 0 0px rgba(59,130,246,0)) brightness(1)"
+            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
+            "drop-shadow(0 0 20px rgba(10,17,34,0.8)) brightness(2)",
+            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
+            "drop-shadow(0 0 40px rgba(10,17,34,1)) brightness(3)",
+            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
+            "drop-shadow(0 0 60px rgba(10,17,34,0.9)) brightness(2.5)",
+            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)"
           ]
-        } : { opacity: 1, filter: "drop-shadow(0 0 0px rgba(59,130,246,0)) brightness(1)" }}
+        } : { opacity: 1, filter: "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)" }}
         key={`logo-flicker-${triggerCount}`}
         transition={{
-          duration: 2.5,
+          duration: 1.2,
           times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
           ease: "easeInOut",
         }}
