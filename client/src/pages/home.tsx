@@ -708,10 +708,18 @@ export default function HomePage() {
                 >
                   <div className="flex items-start gap-4">
                     <div
-                      className="mt-0.5 rounded-2xl border bg-background p-2 text-primary"
+                      className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
                       data-testid={`icon-step-${st.title}`}
                     >
-                      {st.icon && <st.icon className="h-5 w-5" />}
+                      {st.title === "Arıza Tespiti" ? (
+                        <div className="relative h-5 w-5 flex items-center justify-center">
+                          <Zap className="h-4 w-4 animate-lightning relative z-10" />
+                          <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                          <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                        </div>
+                      ) : (
+                        st.icon && <st.icon className="h-5 w-5" />
+                      )}
                     </div>
                     <div>
                       <p
