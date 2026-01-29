@@ -1,6 +1,6 @@
 import { useRoute, useLocation } from "wouter";
-import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -56,32 +56,62 @@ export default function BrandPage() {
   const [, params] = useRoute("/brand/:name");
   const [, setLocation] = useLocation();
   const brandName = params?.name ? decodeURIComponent(params.name) : "";
+  const [direction, setDirection] = useState(0);
+  const prevBrandName = useRef(brandName);
 
-  const { brand, prevBrand, nextBrand } = useMemo(() => {
+  const { brand, prevBrand, nextBrand, currentIndex } = useMemo(() => {
     const normalized = brandName.trim().toLowerCase();
-    const currentIndex = BRANDS.findIndex((b) => b.name.toLowerCase() === normalized);
+    const idx = BRANDS.findIndex((b) => b.name.toLowerCase() === normalized);
     
-    if (currentIndex === -1) {
-      return { brand: null, prevBrand: null, nextBrand: null };
+    if (idx === -1) {
+      return { brand: null, prevBrand: null, nextBrand: null, currentIndex: -1 };
     }
     
-    const prevIndex = currentIndex === 0 ? BRANDS.length - 1 : currentIndex - 1;
-    const nextIndex = currentIndex === BRANDS.length - 1 ? 0 : currentIndex + 1;
+    const prevIndex = idx === 0 ? BRANDS.length - 1 : idx - 1;
+    const nextIndex = idx === BRANDS.length - 1 ? 0 : idx + 1;
     
     return {
-      brand: BRANDS[currentIndex],
+      brand: BRANDS[idx],
       prevBrand: BRANDS[prevIndex],
       nextBrand: BRANDS[nextIndex],
+      currentIndex: idx,
     };
   }, [brandName]);
 
+  useEffect(() => {
+    if (prevBrandName.current !== brandName) {
+      const prevNormalized = prevBrandName.current.trim().toLowerCase();
+      const prevIdx = BRANDS.findIndex((b) => b.name.toLowerCase() === prevNormalized);
+      if (prevIdx !== -1 && currentIndex !== -1) {
+        setDirection(currentIndex > prevIdx ? 1 : -1);
+      }
+      prevBrandName.current = brandName;
+    }
+  }, [brandName, currentIndex]);
+
+  const slideVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
+  };
+
+  const navigateTo = (name: string, dir: number) => {
+    setDirection(dir);
+    setLocation(`/brand/${encodeURIComponent(name)}`);
+  };
+
   return (
-    <motion.div 
-      className="relative min-h-screen text-foreground"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-    >
+    <AnimatePresence mode="wait" custom={direction}>
+      <motion.div 
+        key={brandName}
+        className="relative min-h-screen text-foreground"
+        custom={direction}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
       <BrandBackgroundLogo brand={brand} />
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
@@ -174,7 +204,7 @@ export default function BrandPage() {
           className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center gap-2 w-24 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
           whileHover={{ scale: 1.1, x: -5 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setLocation(`/brand/${encodeURIComponent(prevBrand.name)}`)}
+          onClick={() => navigateTo(prevBrand.name, -1)}
           data-testid="btn-prev-brand"
         >
           <ChevronLeft className="w-5 h-5 text-muted-foreground" />
@@ -191,7 +221,7 @@ export default function BrandPage() {
           className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center gap-2 w-24 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
           whileHover={{ scale: 1.1, x: 5 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setLocation(`/brand/${encodeURIComponent(nextBrand.name)}`)}
+          onClick={() => navigateTo(nextBrand.name, 1)}
           data-testid="btn-next-brand"
         >
           <img 
@@ -202,6 +232,7 @@ export default function BrandPage() {
           <ChevronRight className="w-5 h-5 text-muted-foreground" />
         </motion.button>
       )}
-    </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
