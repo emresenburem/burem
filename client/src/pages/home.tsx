@@ -34,7 +34,7 @@ const BRANDS = [
 function BrandsPopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setLocation] = useLocation();
-  const [playTick] = useSound("/sounds/tick.mp3", { volume: 0.15 });
+  const [playTick] = useSound("/sounds/tick.mp3", { volume: 0.15, preload: true });
   const lastOpenState = useRef(false);
 
   useEffect(() => {
@@ -224,7 +224,7 @@ function InteractiveGradient() {
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [playClick] = useSound("/sounds/click.mp3", { volume: 0.2 });
+  const [playClick] = useSound("/sounds/click.mp3", { volume: 0.2, preload: true });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY, currentTarget } = e;
