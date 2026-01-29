@@ -136,15 +136,13 @@ const SERVICES = [
     animation: (
       <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none">
         <svg className="h-full w-full text-blue-600 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* Main Traces */}
           <motion.path
             d="M0 20 L30 20 L30 50 L60 50 L60 80 L100 80"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            variants={{
-              initial: { pathLength: 0 },
-              hover: { pathLength: 1 }
-            }}
+            variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           />
           <motion.path
@@ -152,33 +150,43 @@ const SERVICES = [
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            variants={{
-              initial: { pathLength: 0 },
-              hover: { pathLength: 1 }
-            }}
+            variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }}
             transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
           />
+          
+          {/* THE PCB UNDERLINE EFFECT inside the card */}
+          <motion.path
+            d="M 25 70 L 35 70 L 40 65 L 50 75 L 55 70 L 85 70"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            variants={{ initial: { pathLength: 0, opacity: 0 }, hover: { pathLength: 1, opacity: 1 } }}
+            transition={{ duration: 1, ease: "easeInOut", delay: 0.8 }}
+          />
+          <motion.circle 
+            cx="25" cy="70" r="1.5" fill="currentColor"
+            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
+            transition={{ delay: 0.8 }}
+          />
+          <motion.circle 
+            cx="85" cy="70" r="1.5" fill="currentColor"
+            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
+            transition={{ delay: 1.8 }}
+          />
+
+          {/* Pads and Glow */}
           <motion.circle 
             cx="30" cy="20" r="2" fill="currentColor" 
-            variants={{
-              initial: { scale: 0 },
-              hover: { scale: 1 }
-            }}
+            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
             transition={{ delay: 1.2 }}
           />
           <motion.circle 
             cx="60" cy="50" r="2" fill="currentColor" 
-            variants={{
-              initial: { scale: 0 },
-              hover: { scale: 1 }
-            }}
+            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
             transition={{ delay: 1.4 }}
           />
           <motion.g
-            variants={{
-              initial: { opacity: 0, scale: 0.5 },
-              hover: { opacity: 1, scale: 1 }
-            }}
+            variants={{ initial: { opacity: 0, scale: 0.5 }, hover: { opacity: 1, scale: 1 } }}
             transition={{ delay: 1.6, type: "spring", stiffness: 200 }}
           >
             <circle cx="50" cy="50" r="8" fill="currentColor" className="opacity-20 blur-sm" />
