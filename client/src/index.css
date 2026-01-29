@@ -43,41 +43,42 @@
 }
 
 :root {
-  --background: 220 28% 97%;
-  --foreground: 222 47% 11%;
+  /* Minimalist White Theme - Apple Style */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 8%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 0 0% 8%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 0 0% 8%;
 
-  --primary: 206 84% 48%;
+  --primary: 0 84% 50%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 220 18% 94%;
-  --secondary-foreground: 222 47% 11%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 8%;
 
-  --muted: 220 18% 94%;
-  --muted-foreground: 220 10% 40%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
 
-  --accent: 188 86% 40%;
+  --accent: 0 84% 50%;
   --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 78% 52%;
+  --destructive: 0 84% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 220 14% 86%;
-  --input: 220 14% 82%;
-  --ring: 206 84% 48%;
+  --border: 0 0% 90%;
+  --input: 0 0% 88%;
+  --ring: 0 84% 50%;
 
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-sans: "SF Pro Display", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --radius: 16px;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --radius: 12px;
 
-  --grid-line: 222 32% 88%;
-  --shadow-soft: 220 40% 2%;
+  --grid-line: 0 0% 92%;
+  --shadow-soft: 0 0% 0%;
 }
 
 .dark {
@@ -294,25 +295,25 @@
   animation: slideLeft 1.5s linear infinite;
 }
 
-/* Industrial voltage glow effect for brand cards - Navy Blue */
+/* Minimalist glow effect for brand cards - Red accent */
 @keyframes voltageFlicker {
   0%, 100% {
     box-shadow: 
-      0 0 0 1px rgba(0, 32, 96, 0.4),
-      0 4px 12px rgba(0, 32, 96, 0.2);
+      0 0 0 1px rgba(220, 38, 38, 0.3),
+      0 4px 12px rgba(220, 38, 38, 0.15);
   }
   10%, 30%, 50%, 70%, 90% {
     box-shadow: 
-      0 0 0 1px rgba(0, 32, 96, 0.6),
-      0 0 10px rgba(0, 32, 96, 0.3),
-      0 4px 16px rgba(0, 32, 96, 0.35);
+      0 0 0 1px rgba(220, 38, 38, 0.5),
+      0 0 10px rgba(220, 38, 38, 0.2),
+      0 4px 16px rgba(220, 38, 38, 0.25);
   }
   15%, 35%, 55% {
     box-shadow: 
-      0 0 0 2px rgba(0, 32, 96, 0.8),
-      0 0 18px rgba(0, 32, 96, 0.45),
-      0 0 30px rgba(0, 32, 96, 0.25),
-      0 8px 24px rgba(0, 32, 96, 0.4);
+      0 0 0 2px rgba(220, 38, 38, 0.7),
+      0 0 18px rgba(220, 38, 38, 0.35),
+      0 0 30px rgba(220, 38, 38, 0.2),
+      0 8px 24px rgba(220, 38, 38, 0.3);
   }
 }
 
@@ -322,7 +323,7 @@
 
 .electric-glow:hover {
   animation: voltageFlicker 1.5s ease-in-out infinite;
-  border-color: rgba(0, 32, 96, 0.7);
+  border-color: rgba(220, 38, 38, 0.5);
 }
 
 /* Spotlight Grid Effect */
