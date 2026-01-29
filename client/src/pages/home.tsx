@@ -408,47 +408,45 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-3">
-          <div className="flex items-center gap-8">
-            <div className="-ml-4 -my-8">
-              <HeaderLogo />
-            </div>
-
-            <nav className="hidden items-center gap-1 lg:flex" aria-label="Ana menü">
-              {sections.slice(1).map((s) => {
-                const isActive = active === s.id;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => scrollToId(s.id)}
-                    className={
-                      "rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 " +
-                      (isActive
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50")
-                    }
-                    data-testid={`button-nav-${s.id}`}
-                  >
-                    {s.label}
-                  </button>
-                );
-              })}
-            </nav>
+      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
+          <div className="-ml-8 -mt-10 mb-[-2.5rem]">
+            <HeaderLogo />
           </div>
 
-          <div className="flex items-center gap-3">
+          <nav className="hidden items-center gap-1 md:flex -mt-2" aria-label="Ana menü">
+            {sections.slice(1).map((s) => {
+              const isActive = active === s.id;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => scrollToId(s.id)}
+                  className={
+                    "rounded-2xl px-3 py-2 text-sm transition " +
+                    (isActive
+                      ? "bg-card shadow-soft"
+                      : "text-muted-foreground hover:bg-card")
+                  }
+                  data-testid={`button-nav-${s.id}`}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
             <MagneticButton
-              variant="outline"
-              className="hidden rounded-lg border-primary/20 hover:border-primary/40 md:inline-flex"
+              variant="secondary"
+              className="hidden rounded-2xl md:inline-flex"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
             >
-              Teklif İste
+              Teklif iste
             </MagneticButton>
             <MagneticButton
-              className="rounded-lg bg-primary hover:bg-primary/90"
+              className="rounded-2xl"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
             >
@@ -460,8 +458,7 @@ export default function HomePage() {
       </header>
 
       <main id="top">
-        {/* Hero Section */}
-        <section className="mx-auto w-full max-w-6xl px-6 pb-16 pt-12 md:pb-24 md:pt-20">
+        <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
           <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
             <motion.div
               initial={preferReducedMotion ? false : { opacity: 0, y: 14 }}
