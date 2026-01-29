@@ -324,3 +324,20 @@
   animation: voltageFlicker 1.5s ease-in-out infinite;
   border-color: rgba(0, 32, 96, 0.7);
 }
+
+/* Spotlight Grid Effect */
+.spotlight-grid:has(.spotlight-item:hover) .spotlight-item:not(:hover) {
+  opacity: 0.4;
+  filter: blur(1px);
+  transform: scale(0.95);
+  transition: all 0.3s ease;
+}
+
+.spotlight-item {
+  transition: all 0.3s ease;
+}
+
+/* Radial gradient for spotlight */
+.bg-gradient-radial {
+  background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to));
+}
