@@ -65,12 +65,12 @@ function BrandsPopup() {
                 whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 12 }}
                 onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
+                className="flex flex-col items-center justify-center rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-8 w-full flex items-center justify-center">
+                <div className="h-10 w-full flex items-center justify-center">
                   <span 
-                    className="font-bold tracking-tighter text-[16px]" 
+                    className="font-bold tracking-tighter text-[18px]" 
                     style={{ 
                       color: brand.color,
                       fontFamily: "Space Grotesk, sans-serif",
@@ -80,12 +80,6 @@ function BrandsPopup() {
                     {brand.name}
                   </span>
                 </div>
-                <span 
-                  className="text-[11px] font-bold text-foreground/60 uppercase tracking-[0.2em]"
-                  style={{ fontFamily: "Space Grotesk, sans-serif" }}
-                >
-                  {brand.name}
-                </span>
               </motion.div>
             ))}
           </div>
@@ -272,7 +266,7 @@ export default function HomePage() {
             >
               <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
             </motion.div>
-            <span className="leading-tight -ml-8">
+            <span className="leading-tight -ml-28">
               <motion.span
                 initial={{ opacity: 1, color: "#0a1122" }}
                 animate={{
