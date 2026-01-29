@@ -33,7 +33,7 @@ export function HeaderLogo() {
       data-testid="button-logo-home"
     >
       <motion.div 
-        className="h-40 w-64 flex items-center justify-center overflow-hidden" 
+        className="h-40 w-64 flex items-center justify-center overflow-hidden ml-2" 
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
