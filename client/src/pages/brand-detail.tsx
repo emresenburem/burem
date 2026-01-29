@@ -166,23 +166,24 @@ export default function BrandPage() {
       {/* Navigation Buttons */}
       {prevBrand && (
         <motion.button
-          className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-20 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
+          className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center gap-2 w-24 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
           whileHover={{ scale: 1.1, x: -5 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setLocation(`/brand/${encodeURIComponent(prevBrand.name)}`)}
           data-testid="btn-prev-brand"
         >
+          <ChevronLeft className="w-5 h-5 text-muted-foreground" />
           <img 
             src={prevBrand.logo} 
             alt={prevBrand.name}
-            className="w-14 h-8 object-contain"
+            className="w-12 h-7 object-contain"
           />
         </motion.button>
       )}
 
       {nextBrand && (
         <motion.button
-          className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-20 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
+          className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center gap-2 w-24 h-12 rounded-xl bg-white/90 border shadow-lg backdrop-blur-sm cursor-pointer hover:bg-white transition-all"
           whileHover={{ scale: 1.1, x: 5 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setLocation(`/brand/${encodeURIComponent(nextBrand.name)}`)}
@@ -191,8 +192,9 @@ export default function BrandPage() {
           <img 
             src={nextBrand.logo} 
             alt={nextBrand.name}
-            className="w-14 h-8 object-contain"
+            className="w-12 h-7 object-contain"
           />
+          <ChevronRight className="w-5 h-5 text-muted-foreground" />
         </motion.button>
       )}
     </div>
