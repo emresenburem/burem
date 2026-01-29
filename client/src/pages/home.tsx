@@ -294,17 +294,17 @@ export default function HomePage() {
             </div>
             <span className="leading-tight">
               <span
-                className="block font-semibold tracking-tight"
+                className="block font-semibold tracking-tight text-[#0a1122]"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-brand-name"
               >
-                Inductra
+                Inductra Elektronik
               </span>
               <span
                 className="block text-xs text-muted-foreground"
                 data-testid="text-brand-tagline"
               >
-                Electronik · Sürücü Tamiri
+                Sürücü Tamir Merkezi
               </span>
             </span>
           </button>
