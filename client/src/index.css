@@ -43,41 +43,41 @@
 }
 
 :root {
-  --background: 224 71% 4%;
-  --foreground: 210 20% 98%;
+  --background: 220 28% 97%;
+  --foreground: 222 47% 11%;
 
-  --card: 224 64% 7%;
-  --card-foreground: 210 20% 98%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
 
-  --popover: 224 64% 7%;
-  --popover-foreground: 210 20% 98%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
 
-  --primary: 217 91% 60%;
-  --primary-foreground: 210 20% 98%;
+  --primary: 206 84% 48%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 224 64% 12%;
-  --secondary-foreground: 210 20% 98%;
+  --secondary: 220 18% 94%;
+  --secondary-foreground: 222 47% 11%;
 
-  --muted: 224 64% 12%;
-  --muted-foreground: 217 10% 70%;
+  --muted: 220 18% 94%;
+  --muted-foreground: 220 10% 40%;
 
-  --accent: 199 89% 48%;
-  --accent-foreground: 210 20% 98%;
+  --accent: 188 86% 40%;
+  --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 20% 98%;
+  --destructive: 0 78% 52%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 224 64% 15%;
-  --input: 224 64% 15%;
-  --ring: 217 91% 60%;
+  --border: 220 14% 86%;
+  --input: 220 14% 82%;
+  --ring: 206 84% 48%;
 
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --radius: 16px;
 
-  --grid-line: 217 91% 20%;
-  --shadow-soft: 224 71% 2%;
+  --grid-line: 222 32% 88%;
+  --shadow-soft: 220 40% 2%;
 }
 
 .dark {
