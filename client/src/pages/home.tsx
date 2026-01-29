@@ -15,6 +15,7 @@ import {
   ClipboardCheck,
   Search,
   TestTube2,
+  Zap,
 } from "lucide-react";
 
 const BRANDS = [
