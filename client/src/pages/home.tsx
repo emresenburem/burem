@@ -286,6 +286,16 @@ function HeaderLogo() {
   const [isFlickering, setIsFlickering] = useState(false);
   const [triggerCount, setTriggerCount] = useState(0);
 
+  useEffect(() => {
+    // Trigger lightning effect on initial mount
+    const timer = setTimeout(() => {
+      setIsFlickering(true);
+      setTriggerCount(prev => prev + 1);
+      setTimeout(() => setIsFlickering(false), 2500);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isFlickering) {
       setIsFlickering(true);
