@@ -9,32 +9,28 @@ import { BRANDS } from "./home";
 
 function BrandWatermark({ logo }: { logo?: string }) {
   const watermarks = useMemo(() => {
-    return Array.from({ length: 15 }).map((_, i) => ({
+    return Array.from({ length: 24 }).map((_, i) => ({
       id: i,
-      top: `${(i * 20) % 100}%`,
-      left: `${(i * 30) % 100}%`,
-      rotate: i * 45,
-      scale: 1,
-      opacity: 0.8,
+      top: `${Math.floor(i / 4) * 18}%`,
+      left: `${(i % 4) * 25}%`,
+      rotate: (i % 2 === 0 ? 15 : -15),
     }));
   }, []);
 
   if (!logo) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-50 overflow-hidden bg-white">
+    <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden opacity-[0.15]">
       {watermarks.map((w) => (
         <img
           key={w.id}
           src={logo}
           alt=""
-          className="absolute h-40 w-40 object-contain"
+          className="absolute h-40 w-40 object-contain grayscale brightness-0"
           style={{
             top: w.top,
             left: w.left,
-            transform: `rotate(${w.rotate}deg) scale(${w.scale})`,
-            opacity: w.opacity,
-            zIndex: -50
+            transform: `rotate(${w.rotate}deg)`,
           }}
         />
       ))}
@@ -48,14 +44,10 @@ export default function BrandPage() {
   const brand = BRANDS.find(b => b.name === brandName);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
       <BrandWatermark logo={brand?.logo} />
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-[0.2]" />
-        <div className="absolute inset-0 bg-noise opacity-[0.2]" />
-      </div>
-
-      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+      <div className="relative z-10">
+        <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
           <Button variant="ghost" className="rounded-xl" onClick={() => window.history.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
