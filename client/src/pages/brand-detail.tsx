@@ -11,30 +11,26 @@ function BrandBackgroundLogo({ brand }: { brand: { name: string; logo?: string; 
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden="true"
       data-testid="bg-brand-logo"
     >
-      <div className="absolute inset-0 bg-grid opacity-[0.18]" />
-      <div className="absolute inset-0 bg-noise opacity-[0.18]" />
+      <div className="absolute inset-0 bg-background" />
+      <div className="absolute inset-0 bg-grid opacity-[0.15]" />
+      <div className="absolute inset-0 bg-noise opacity-[0.15]" />
 
       <div className="absolute inset-0 grid place-items-center">
         <img
           src={brand.logo}
           alt=""
-          className="w-[75vw] max-w-[900px] object-contain opacity-[0.12]"
-          style={{ filter: "grayscale(0.4) contrast(1.15)" }}
+          className="w-[75vw] max-w-[900px] h-auto object-contain"
+          style={{ 
+            opacity: 0.15,
+            filter: "grayscale(0.3) contrast(1.2)" 
+          }}
           data-testid="img-brand-logo-watermark"
         />
       </div>
-
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(60% 60% at 50% 40%, rgba(10,17,34,0.06) 0%, rgba(10,17,34,0) 60%)",
-        }}
-      />
     </div>
   );
 }
@@ -66,7 +62,7 @@ export default function BrandPage() {
   }, [brandName]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen text-foreground">
       <BrandBackgroundLogo brand={brand} />
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
@@ -84,7 +80,7 @@ export default function BrandPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-12 md:px-6">
+      <main className="relative z-10 mx-auto max-w-4xl px-4 py-12 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
