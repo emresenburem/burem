@@ -266,7 +266,7 @@ export default function HomePage() {
             >
               <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain mix-blend-multiply" />
             </motion.div>
-            <span className="leading-tight -ml-24">
+            <span className="leading-tight -ml-16">
               <motion.span
                 initial={{ opacity: 1, color: "#0a1122" }}
                 animate={{
