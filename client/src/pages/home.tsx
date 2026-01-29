@@ -224,7 +224,6 @@ function InteractiveGradient() {
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [playClick] = useSound("/sounds/click.mp3", { volume: 0.2, preload: true, interrupt: true });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY, currentTarget } = e;
@@ -244,7 +243,7 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    playClick();
+    // Global click handler handles the sound now
     if (onClick) onClick(e);
   };
 
@@ -340,6 +339,11 @@ function HeaderLogo() {
 
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
+  const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
+
+  const handleGlobalClick = () => {
+    playClick();
+  };
 
   const sections = useMemo(
     () => [
@@ -354,7 +358,7 @@ export default function HomePage() {
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground" onClick={handleGlobalClick}>
       <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
