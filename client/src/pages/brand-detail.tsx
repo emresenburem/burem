@@ -1,8 +1,9 @@
 import { useRoute, useLocation } from "wouter";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Timer, Wrench, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeaderLogo } from "@/components/header-logo";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -115,12 +116,11 @@ export default function BrandPage() {
       <BrandBackgroundLogo brand={brand} />
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
-          <Button variant="ghost" className="rounded-xl" onClick={() => window.history.back()}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Geri Dön
-          </Button>
-          <div className="text-right">
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
+          <div className="-ml-8 -mt-10 mb-[-2.5rem]">
+            <HeaderLogo />
+          </div>
+          <div className="text-right -mt-2">
             <h1 className="text-lg font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
               {brandName} Servis Merkezi
             </h1>
