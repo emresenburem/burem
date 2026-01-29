@@ -730,6 +730,10 @@ export default function HomePage() {
                           <PenLine className="h-5 w-5 text-primary rotate-45" />
                           <div className="absolute top-0 right-0 h-1.5 w-1.5 rounded-full bg-primary/20 animate-ping" />
                         </div>
+                      ) : st.title === "Test + Teslim" ? (
+                        <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-green-600" data-testid={`icon-step-${st.title}`}>
+                          <PackageCheck className="h-5 w-5" />
+                        </div>
                       ) : (
                         st.icon && <st.icon className="h-5 w-5" />
                       )}
