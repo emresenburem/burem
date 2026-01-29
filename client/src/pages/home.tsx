@@ -718,39 +718,11 @@ export default function HomePage() {
                 Neler yapıyoruz
               </p>
                       <h2
-                        className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl relative group/title inline-block"
+                        className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
                         style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                         data-testid="text-services-title"
                       >
                         Hizmetler
-                        <div className="absolute -bottom-2 left-0 w-full h-1 pointer-events-none">
-                          <svg className="w-full h-4 text-blue-600 overflow-visible" viewBox="0 0 100 10" preserveAspectRatio="none">
-                            <motion.path
-                              d="M 0 5 L 10 5 L 15 0 L 25 10 L 30 5 L 100 5"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              initial={{ pathLength: 0, opacity: 0 }}
-                              whileInView={{ pathLength: 1, opacity: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 1.5, ease: "easeInOut" }}
-                            />
-                            <motion.circle 
-                              cx="0" cy="5" r="1.5" fill="currentColor"
-                              initial={{ scale: 0 }}
-                              whileInView={{ scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0 }}
-                            />
-                            <motion.circle 
-                              cx="100" cy="5" r="1.5" fill="currentColor"
-                              initial={{ scale: 0 }}
-                              whileInView={{ scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 1.5 }}
-                            />
-                          </svg>
-                        </div>
                       </h2>
             </div>
             <Badge
@@ -810,39 +782,11 @@ export default function HomePage() {
                 Nasıl çalışıyoruz
               </p>
               <h2
-                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl relative group/title inline-block"
+                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-process-title"
               >
                 Süreç
-                <div className="absolute -bottom-2 left-0 w-full h-1 pointer-events-none">
-                  <svg className="w-full h-4 text-blue-600 overflow-visible" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <motion.path
-                      d="M 0 5 L 10 5 L 15 0 L 25 10 L 30 5 L 100 5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      whileInView={{ pathLength: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.5, ease: "easeInOut" }}
-                    />
-                    <motion.circle 
-                      cx="0" cy="5" r="1.5" fill="currentColor"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0 }}
-                    />
-                    <motion.circle 
-                      cx="100" cy="5" r="1.5" fill="currentColor"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 1.5 }}
-                    />
-                  </svg>
-                </div>
               </h2>
               <p
                 className="mt-3 max-w-prose text-sm text-muted-foreground"
