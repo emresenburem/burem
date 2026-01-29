@@ -393,10 +393,12 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-        <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
-          <HeaderLogo />
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-1 md:px-6">
+          <div className="-ml-12 -mt-4 mb-[-1rem]">
+            <HeaderLogo />
+          </div>
 
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
+          <nav className="hidden items-center gap-1 md:flex -mt-6" aria-label="Ana menü">
             {sections.slice(1).map((s) => {
               const isActive = active === s.id;
               return (
