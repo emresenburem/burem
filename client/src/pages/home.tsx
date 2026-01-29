@@ -262,7 +262,7 @@ export default function HomePage() {
             </div>
             <span className="leading-tight">
               <motion.span
-                initial={{ opacity: 1 }}
+                initial={{ opacity: 1, color: "#0a1122" }}
                 animate={{
                   opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
                   color: ["#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122", "#3b82f6", "#0a1122"],
