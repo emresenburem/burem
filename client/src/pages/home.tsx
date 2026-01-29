@@ -91,11 +91,15 @@ function BrandsPopup() {
             <ChevronRight className="h-3 w-3 text-primary" />
             <div className="flex flex-col gap-1.5 py-1">
               {BRANDS.slice(0, 6).map((brand) => (
-                <div key={brand.name} className="w-6 h-4 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center">
+                <div key={brand.name} className="w-6 h-4 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden">
                   <img 
                     src={brand.logo} 
                     alt={brand.name}
-                    className="w-full h-full object-contain"
+                    className="object-contain"
+                    style={{ 
+                      width: brand.name === "ABB" ? "100%" : "170%",
+                      height: brand.name === "ABB" ? "100%" : "170%"
+                    }}
                   />
                 </div>
               ))}
