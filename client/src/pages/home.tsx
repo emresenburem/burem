@@ -19,6 +19,7 @@ import {
   Microscope,
   ClipboardList,
   Binary,
+  Telescope,
 } from "lucide-react";
 
 const BRANDS = [
@@ -174,7 +175,7 @@ const STEPS = [
     k: "Tespit",
     title: "Arıza Tespiti",
     desc: "Teknik ekip tarafından detaylı arıza analizi yapılır.",
-    icon: Binary,
+    icon: Microscope,
   },
   {
     k: "Onarım",
@@ -717,7 +718,7 @@ export default function HomePage() {
                     >
                       {st.title === "Arıza Tespiti" ? (
                         <div className="relative h-5 w-5 flex items-center justify-center">
-                          <Binary className="h-4 w-4 relative z-10" />
+                          <Microscope className="h-4 w-4 relative z-10" />
                           <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
                           <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
                         </div>
