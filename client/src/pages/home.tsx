@@ -134,29 +134,49 @@ const SERVICES = [
     desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti + onarım + test.",
     icon: Wrench,
     animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* PCB Traces */}
+      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none">
+        <svg className="h-full w-full text-blue-600 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* PCB Traces that draw on hover */}
           <motion.path
             d="M0 20 L30 20 L30 50 L60 50 L60 80 L100 80"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            animate={{ pathLength: [0, 1], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            initial={{ pathLength: 0 }}
+            whileHover={{ pathLength: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
           />
           <motion.path
             d="M0 80 L40 80 L40 40 L70 40 L70 10 L100 10"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            animate={{ pathLength: [0, 1], opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: 1.5 }}
+            initial={{ pathLength: 0 }}
+            whileHover={{ pathLength: 1 }}
+            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
           />
-          <circle cx="30" cy="20" r="2" fill="currentColor" />
-          <circle cx="60" cy="50" r="2" fill="currentColor" />
-          <circle cx="40" cy="80" r="2" fill="currentColor" />
-          <circle cx="70" cy="40" r="2" fill="currentColor" />
+          {/* Pads that appear at the end */}
+          <motion.circle 
+            cx="30" cy="20" r="2" fill="currentColor" 
+            initial={{ scale: 0 }}
+            whileHover={{ scale: 1 }}
+            transition={{ delay: 1.2 }}
+          />
+          <motion.circle 
+            cx="60" cy="50" r="2" fill="currentColor" 
+            initial={{ scale: 0 }}
+            whileHover={{ scale: 1 }}
+            transition={{ delay: 1.4 }}
+          />
+          {/* Main "Icon" glow at the end */}
+          <motion.g
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileHover={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.6, type: "spring", stiffness: 200 }}
+          >
+            <circle cx="50" cy="50" r="8" fill="currentColor" className="opacity-20 blur-sm" />
+            <path d="M46 50 L54 50 M50 46 L50 54" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          </motion.g>
         </svg>
       </div>
     )
