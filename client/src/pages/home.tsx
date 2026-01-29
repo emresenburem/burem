@@ -204,7 +204,51 @@ function scrollToId(id: string) {
 }
 
 function LightningEffect() {
-  return null;
+  const [bolt, setBolt] = useState<{ x1: number; y1: number; x2: number; y2: number; opacity: number } | null>(null);
+
+  useEffect(() => {
+    let lastPos = { x: 0, y: 0 };
+    let frame = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      frame++;
+      // Only trigger occasionally on movement to create "flicker" effect
+      if (frame % 20 === 0 && Math.random() > 0.7) {
+        const x1 = lastPos.x;
+        const y1 = lastPos.y;
+        const x2 = e.clientX;
+        const y2 = e.clientY;
+
+        setBolt({ x1, y1, x2, y2, opacity: 1 });
+        
+        // Clear bolt quickly
+        setTimeout(() => setBolt(null), 50 + Math.random() * 100);
+      }
+      lastPos = { x: e.clientX, y: e.clientY };
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  if (!bolt) return null;
+
+  return (
+    <svg className="pointer-events-none fixed inset-0 z-[60] h-full w-full">
+      <motion.line
+        x1={bolt.x1}
+        y1={bolt.y1}
+        x2={bolt.x2}
+        y2={bolt.y2}
+        stroke="#3b82f6"
+        strokeWidth="1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0.5, 1, 0] }}
+        transition={{ duration: 0.15 }}
+        style={{ filter: "drop-shadow(0 0 4px #3b82f6)" }}
+      />
+    </svg>
+  );
 }
 
 export default function HomePage() {
