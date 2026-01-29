@@ -1,0 +1,716 @@
+import { useEffect, useMemo, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Mail,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  Timer,
+  Wrench,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+
+const SERVICES = [
+  {
+    title: "Sürücü Tamiri",
+    desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti + onarım + test.",
+    icon: Wrench,
+  },
+  {
+    title: "Endüstriyel Elektronik",
+    desc: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Hızlı Arıza Tespiti",
+    desc: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+    icon: Timer,
+  },
+];
+
+const STEPS = [
+  {
+    k: "01",
+    title: "Ön İnceleme",
+    desc: "Arıza belirtisi, model bilgisi ve geçmiş işlemlerle hızlı başlangıç.",
+  },
+  {
+    k: "02",
+    title: "Onarım + Parça İşçiligi",
+    desc: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+  },
+  {
+    k: "03",
+    title: "Test + Teslim",
+    desc: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
+  },
+];
+
+function useScrollSpy(ids: string[]) {
+  const [active, setActive] = useState(ids[0] ?? "");
+
+  useEffect(() => {
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (els.length === 0) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort(
+            (a, b) =>
+              (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0),
+          )[0];
+        if (visible?.target?.id) setActive(visible.target.id);
+      },
+      {
+        rootMargin: "-30% 0px -60% 0px",
+        threshold: [0.08, 0.12, 0.2, 0.3],
+      },
+    );
+
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [ids]);
+
+  return active;
+}
+
+function scrollToId(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+export default function HomePage() {
+  const preferReducedMotion = useReducedMotion();
+
+  const sections = useMemo(
+    () => [
+      { id: "top", label: "Ana Sayfa" },
+      { id: "services", label: "Hizmetler" },
+      { id: "process", label: "Süreç" },
+      { id: "contact", label: "İletişim" },
+    ],
+    [],
+  );
+
+  const active = useScrollSpy(sections.map((s) => s.id));
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <a
+        href="#contact"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:shadow-soft"
+        data-testid="link-skip-contact"
+      >
+        İletişime geçe atla
+      </a>
+
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-[0.55]" />
+        <div className="absolute inset-0 bg-noise opacity-[0.55]" />
+        <div
+          className="absolute -left-28 top-[-120px] h-[520px] w-[520px] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(closest-side, hsl(var(--primary) / .24), transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute -right-28 top-[140px] h-[520px] w-[520px] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(closest-side, hsl(var(--accent) / .22), transparent 70%)",
+          }}
+        />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+          <button
+            type="button"
+            onClick={() => scrollToId("top")}
+            className="group flex items-center gap-2 rounded-2xl px-2 py-1 text-left"
+            data-testid="button-logo-home"
+          >
+            <span
+              className="grid h-9 w-9 place-items-center rounded-2xl border bg-card shadow-soft"
+              aria-hidden="true"
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))",
+                }}
+              />
+            </span>
+            <span className="leading-tight">
+              <span
+                className="block font-semibold tracking-tight"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-brand-name"
+              >
+                Inductra
+              </span>
+              <span
+                className="block text-xs text-muted-foreground"
+                data-testid="text-brand-tagline"
+              >
+                Electronik · Sürücü Tamiri
+              </span>
+            </span>
+          </button>
+
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Ana menü">
+            {sections.slice(1).map((s) => {
+              const isActive = active === s.id;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => scrollToId(s.id)}
+                  className={
+                    "rounded-2xl px-3 py-2 text-sm transition " +
+                    (isActive
+                      ? "bg-card shadow-soft"
+                      : "text-muted-foreground hover:bg-card")
+                  }
+                  data-testid={`button-nav-${s.id}`}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              className="hidden rounded-2xl md:inline-flex"
+              onClick={() => scrollToId("contact")}
+              data-testid="button-cta-quote"
+            >
+              Teklif iste
+            </Button>
+            <Button
+              className="rounded-2xl"
+              onClick={() => scrollToId("contact")}
+              data-testid="button-cta-contact"
+            >
+              İletişim
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main id="top">
+        <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
+          <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
+            <motion.div
+              initial={preferReducedMotion ? false : { opacity: 0, y: 14 }}
+              animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Badge
+                className="rounded-full border bg-card px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                data-testid="badge-hero"
+              >
+                Elektronik sürücü tamiri · Endüstriyel servis
+              </Badge>
+
+              <h1
+                className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-6xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-hero-title"
+              >
+                Sürücünüz arızalandıysa,
+                <span className="block text-muted-foreground">
+                  doğru teşhisle hızlıca ayağa kaldıralım.
+                </span>
+              </h1>
+
+              <p
+                className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
+                data-testid="text-hero-subtitle"
+              >
+                Inductra Electronik; inverter, servo sürücü ve endüstriyel elektronik
+                kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
+                şekilde yönetir.
+              </p>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button
+                  className="h-11 rounded-2xl"
+                  onClick={() => scrollToId("contact")}
+                  data-testid="button-hero-contact"
+                >
+                  Hemen iletişime geç
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  className="h-11 rounded-2xl"
+                  onClick={() => scrollToId("services")}
+                  data-testid="button-hero-services"
+                >
+                  Hizmetleri gör
+                </Button>
+              </div>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {["Hızlı dönüş", "Testli teslim", "Şeffaf rapor"].map((t) => (
+                  <div
+                    key={t}
+                    className="flex items-center gap-2 rounded-2xl border bg-card px-3 py-2 text-sm shadow-soft"
+                    data-testid={`pill-${t}`}
+                  >
+                    <CheckCircle2
+                      className="h-4 w-4"
+                      style={{ color: "hsl(var(--accent))" }}
+                      aria-hidden="true"
+                    />
+                    <span className="text-muted-foreground">{t}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
+              animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Card className="overflow-hidden rounded-3xl border bg-card shadow-elevated">
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p
+                        className="text-sm text-muted-foreground"
+                        data-testid="text-hero-card-eyebrow"
+                      >
+                        Servis özeti
+                      </p>
+                      <p
+                        className="mt-1 text-lg font-semibold tracking-tight"
+                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                        data-testid="text-hero-card-title"
+                      >
+                        Sürücü · Kart · Güç elektroniği
+                      </p>
+                    </div>
+                    <span
+                      className="rounded-full border bg-background px-2.5 py-1 text-xs text-muted-foreground"
+                      data-testid="badge-hero-card"
+                    >
+                      TR
+                    </span>
+                  </div>
+
+                  <div className="mt-5 space-y-3">
+                    <div
+                      className="rounded-2xl border bg-background px-4 py-3"
+                      data-testid="card-kpi-1"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Ortalama işlem</span>
+                        <span className="text-sm font-semibold">24–72 saat</span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        Parça durumuna göre değişir.
+                      </div>
+                    </div>
+
+                    <div
+                      className="rounded-2xl border bg-background px-4 py-3"
+                      data-testid="card-kpi-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Test</span>
+                        <span className="text-sm font-semibold">Yük altında</span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        Stabilite kontrolü yapılır.
+                      </div>
+                    </div>
+
+                    <div
+                      className="rounded-2xl border bg-background px-4 py-3"
+                      data-testid="card-kpi-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Raporlama</span>
+                        <span className="text-sm font-semibold">Şeffaf</span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        Yapılan işlemler net paylaşılır.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-3 gap-2">
+                    {["Inverter", "Servo", "SMPS"].map((k) => (
+                      <div
+                        key={k}
+                        className="rounded-2xl border bg-background px-3 py-2 text-center text-xs text-muted-foreground"
+                        data-testid={`chip-${k}`}
+                      >
+                        {k}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t bg-background p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
+                      Cihaz bilgisi ile hızlı fiyat/termin.
+                    </p>
+                    <Button
+                      size="sm"
+                      className="rounded-xl"
+                      onClick={() => scrollToId("contact")}
+                      data-testid="button-hero-card-action"
+                    >
+                      Teklif al
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          </div>
+        </section>
+
+        <section
+          id="services"
+          className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
+        >
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground" data-testid="text-services-eyebrow">
+                Neler yapıyoruz
+              </p>
+              <h2
+                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-services-title"
+              >
+                Hizmetler
+              </h2>
+            </div>
+            <Badge
+              variant="secondary"
+              className="rounded-full"
+              data-testid="badge-services"
+            >
+              Endüstriyel odak
+            </Badge>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {SERVICES.map((s) => (
+              <Card
+                key={s.title}
+                className="group rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
+                data-testid={`card-service-${s.title}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
+                    data-testid={`icon-service-${s.title}`}
+                  >
+                    <s.icon
+                      className="h-5 w-5"
+                      style={{ color: "hsl(var(--primary))" }}
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div>
+                    <p
+                      className="text-base font-semibold tracking-tight"
+                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                      data-testid={`text-service-title-${s.title}`}
+                    >
+                      {s.title}
+                    </p>
+                    <p
+                      className="mt-1 text-sm text-muted-foreground"
+                      data-testid={`text-service-desc-${s.title}`}
+                    >
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="process"
+          className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
+        >
+          <div className="grid gap-6 md:grid-cols-[1fr_1fr] md:items-start">
+            <div>
+              <p className="text-sm text-muted-foreground" data-testid="text-process-eyebrow">
+                Nasıl çalışıyoruz
+              </p>
+              <h2
+                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-process-title"
+              >
+                Süreç
+              </h2>
+              <p
+                className="mt-3 max-w-prose text-sm text-muted-foreground"
+                data-testid="text-process-subtitle"
+              >
+                Cihaz geldiğinde önce arızayı doğruluyor, ardından onarım ve yük altında
+                test ile güvenli teslim ediyoruz.
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              {STEPS.map((st) => (
+                <Card
+                  key={st.k}
+                  className="rounded-3xl border bg-card p-5 shadow-soft"
+                  data-testid={`card-step-${st.k}`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="mt-0.5 rounded-2xl border bg-background px-3 py-1 text-xs font-semibold"
+                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                      data-testid={`badge-step-${st.k}`}
+                    >
+                      {st.k}
+                    </div>
+                    <div>
+                      <p
+                        className="text-base font-semibold tracking-tight"
+                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                        data-testid={`text-step-title-${st.k}`}
+                      >
+                        {st.title}
+                      </p>
+                      <p
+                        className="mt-1 text-sm text-muted-foreground"
+                        data-testid={`text-step-desc-${st.k}`}
+                      >
+                        {st.desc}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="contact"
+          className="mx-auto w-full max-w-6xl px-4 pb-16 md:px-6"
+        >
+          <div className="grid gap-5 md:grid-cols-[1fr_1fr]">
+            <Card className="rounded-3xl border bg-card p-6 shadow-elevated">
+              <p className="text-sm text-muted-foreground" data-testid="text-contact-eyebrow">
+                İletişim
+              </p>
+              <h2
+                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-contact-title"
+              >
+                Teklif & arıza bildirimi
+              </h2>
+              <p
+                className="mt-3 text-sm text-muted-foreground"
+                data-testid="text-contact-subtitle"
+              >
+                Cihazın marka/modeli ve arıza belirtisini yazın; hızlıca dönüş yapalım.
+              </p>
+
+              <form
+                className="mt-5 space-y-3"
+                onSubmit={(e) => e.preventDefault()}
+                data-testid="form-contact"
+              >
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="sr-only" htmlFor="name">
+                      Ad Soyad
+                    </label>
+                    <Input
+                      id="name"
+                      placeholder="Ad Soyad"
+                      className="h-11 rounded-2xl"
+                      data-testid="input-name"
+                    />
+                  </div>
+                  <div>
+                    <label className="sr-only" htmlFor="phone">
+                      Telefon
+                    </label>
+                    <Input
+                      id="phone"
+                      placeholder="Telefon"
+                      className="h-11 rounded-2xl"
+                      data-testid="input-phone"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="sr-only" htmlFor="email">
+                    E-posta
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="E-posta"
+                    className="h-11 rounded-2xl"
+                    data-testid="input-email"
+                  />
+                </div>
+
+                <div>
+                  <label className="sr-only" htmlFor="message">
+                    Mesaj
+                  </label>
+                  <Textarea
+                    id="message"
+                    placeholder="Cihaz marka/model, arıza belirtisi, varsa hata kodu..."
+                    className="min-h-[120px] rounded-2xl"
+                    data-testid="input-message"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="h-11 w-full rounded-2xl"
+                  data-testid="button-submit"
+                >
+                  Gönder
+                </Button>
+
+                <p className="text-xs text-muted-foreground" data-testid="text-contact-note">
+                  Not: Bu prototipte form gönderimi demo amaçlıdır.
+                </p>
+              </form>
+            </Card>
+
+            <div className="grid gap-4">
+              <Card className="rounded-3xl border bg-card p-6 shadow-soft">
+                <p
+                  className="text-sm font-semibold tracking-tight"
+                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                  data-testid="text-contact-direct-title"
+                >
+                  Doğrudan iletişim
+                </p>
+
+                <div className="mt-4 space-y-3 text-sm">
+                  <div
+                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
+                    data-testid="row-contact-phone"
+                  >
+                    <Phone className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">Telefon</p>
+                      <p className="font-medium" data-testid="text-phone">
+                        +90 (5xx) xxx xx xx
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
+                    data-testid="row-contact-mail"
+                  >
+                    <Mail className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">E-posta</p>
+                      <p className="font-medium" data-testid="text-email">
+                        info@inductra.com
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
+                    data-testid="row-contact-location"
+                  >
+                    <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">Lokasyon</p>
+                      <p className="font-medium" data-testid="text-location">
+                        İstanbul / Türkiye
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-2xl border bg-background p-4">
+                  <p className="text-xs text-muted-foreground" data-testid="text-contact-hint">
+                    Cihaz üzerinde yazan etiket fotoğrafı ve hata kodu, teşhisi hızlandırır.
+                  </p>
+                </div>
+              </Card>
+
+              <Card className="rounded-3xl border bg-card p-6 shadow-soft">
+                <p
+                  className="text-sm font-semibold tracking-tight"
+                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                  data-testid="text-guarantee-title"
+                >
+                  Prensiplerimiz
+                </p>
+
+                <div className="mt-4 grid gap-3">
+                  {["Güvenilir parça & işçilik", "Net termin & maliyet", "Test ile teslim"].map(
+                    (t, idx) => (
+                      <div
+                        key={t}
+                        className="flex items-center gap-2 rounded-2xl border bg-background px-4 py-3 text-sm"
+                        data-testid={`row-principle-${idx}`}
+                      >
+                        <CheckCircle2
+                          className="h-4 w-4"
+                          style={{ color: "hsl(var(--primary))" }}
+                          aria-hidden="true"
+                        />
+                        <span className="text-muted-foreground">{t}</span>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t bg-background/70 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
+          <p data-testid="text-footer-left">
+            © {new Date().getFullYear()} Inductra Electronik
+          </p>
+          <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
