@@ -731,8 +731,8 @@ export default function HomePage() {
                           <div className="absolute top-0 right-0 h-1.5 w-1.5 rounded-full bg-primary/20 animate-ping" />
                         </div>
                       ) : st.title === "Test + Teslim" ? (
-                        <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-green-600" data-testid={`icon-step-${st.title}`}>
-                          <PackageCheck className="h-5 w-5" />
+                        <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                          <PackageCheck className="h-4 w-4 relative z-10" />
                         </div>
                       ) : (
                         st.icon && <st.icon className="h-5 w-5" />
