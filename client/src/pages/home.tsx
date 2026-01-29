@@ -14,20 +14,20 @@ import {
 } from "lucide-react";
 
 const BRANDS = [
-  { name: "Siemens", color: "#009999", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Siemens-logo.svg" },
-  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
-  { name: "Schneider", color: "#3dcd58", logo: "https://www.se.com/favicon.ico" },
-  { name: "Fanuc", color: "#FFD700", logo: "https://www.fanuc.com/favicon.ico" },
-  { name: "Yaskawa", color: "#004098", logo: "https://www.yaskawa-global.com/favicon.ico" },
-  { name: "Omron", color: "#005EB8", logo: "https://www.omron.com/favicon.ico" },
-  { name: "Lenze", color: "#0046AD", logo: "https://www.lenze.com/favicon.ico" },
-  { name: "Mitsubishi", color: "#E60012", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mitsubishi-logo.png" },
-  { name: "Danfoss", color: "#E2000F", logo: "https://www.danfoss.com/favicon.ico" },
-  { name: "Delta", color: "#003A8C", logo: "https://www.deltaww.com/favicon.ico" },
-  { name: "Beckhoff", color: "#E30613", logo: "https://www.beckhoff.com/favicon.ico" },
-  { name: "Allen Bradley", color: "#000000", logo: "https://www.rockwellautomation.com/favicon.ico" },
-  { name: "Fuji", color: "#E60012", logo: "https://www.fujielectric.com/favicon.ico" },
-  { name: "Eaton", color: "#005EB8", logo: "https://www.eaton.com/favicon.ico" }
+  { name: "Siemens", color: "#009999" },
+  { name: "ABB", color: "#FF0000" },
+  { name: "Schneider", color: "#3dcd58" },
+  { name: "Fanuc", color: "#FFD700" },
+  { name: "Yaskawa", color: "#004098" },
+  { name: "Omron", color: "#005EB8" },
+  { name: "Lenze", color: "#0046AD" },
+  { name: "Mitsubishi", color: "#E60012" },
+  { name: "Danfoss", color: "#E2000F" },
+  { name: "Delta", color: "#003A8C" },
+  { name: "Beckhoff", color: "#E30613" },
+  { name: "Allen Bradley", color: "#000000" },
+  { name: "Fuji", color: "#E60012" },
+  { name: "Eaton", color: "#005EB8" }
 ];
 
 function BrandsPopup() {
@@ -70,18 +70,9 @@ function BrandsPopup() {
                 className="flex flex-col items-center justify-center rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-12 w-full flex items-center justify-center p-1">
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="h-full w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                    }}
-                  />
+                <div className="h-10 w-full flex items-center justify-center">
                   <span 
-                    className="font-bold tracking-tighter text-[18px] hidden" 
+                    className="font-bold tracking-tighter text-[18px]" 
                     style={{ 
                       color: brand.color,
                       fontFamily: "Space Grotesk, sans-serif",
