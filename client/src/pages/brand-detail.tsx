@@ -1,9 +1,46 @@
 import { useRoute } from "wouter";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+function LightningEffect() {
+  const [trails, setTrails] = useState<{ id: number; x: number; y: number }[]>([]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const newTrail = { id: Date.now(), x: e.clientX, y: e.clientY };
+      setTrails((prev) => [...prev.slice(-15), newTrail]);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {trails.map((trail, i) => (
+        <motion.div
+          key={trail.id}
+          initial={{ opacity: 0.8, scale: 1 }}
+          animate={{ opacity: 0, scale: 0.5 }}
+          className="absolute"
+          style={{
+            left: trail.x - 10,
+            top: trail.y - 10,
+            width: "20px",
+            height: "20px",
+          }}
+        >
+          <svg viewBox="0 0 24 24" className="h-full w-full fill-primary drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 export default function BrandPage() {
   const [, params] = useRoute("/brand/:name");
@@ -11,6 +48,7 @@ export default function BrandPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <LightningEffect />
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-[0.2]" />
         <div className="absolute inset-0 bg-noise opacity-[0.2]" />
