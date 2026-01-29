@@ -88,7 +88,8 @@ function BrandsPopup() {
                 whileHover={{ scale: 1.15, y: -5, rotate: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 12 }}
                 onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                className="flex flex-col items-center justify-center rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
+                className="flex flex-col items-center justify-center rounded-xl border p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
+                style={{ backgroundColor: `${brand.color}15` }}
                 data-testid={`brand-item-${brand.name}`}
               >
                 <div className="h-12 w-full flex items-center justify-center p-1">
