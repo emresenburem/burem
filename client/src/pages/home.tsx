@@ -22,6 +22,7 @@ import {
   Telescope,
   Flame,
   PenLine,
+  PackageCheck,
 } from "lucide-react";
 
 const BRANDS = [
@@ -189,7 +190,7 @@ const STEPS = [
     k: "Test",
     title: "Test + Teslim",
     desc: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
-    icon: TestTube2,
+    icon: PackageCheck,
   },
 ];
 
