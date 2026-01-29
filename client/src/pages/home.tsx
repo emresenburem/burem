@@ -222,14 +222,15 @@ function InteractiveGradient() {
         
         {/* Mouse follow glow */}
         <motion.div
-          className="absolute h-[600px] w-[600px] rounded-full blur-[120px] opacity-40 pointer-events-none"
+          className="absolute h-[600px] w-[600px] rounded-full blur-[100px] opacity-70 pointer-events-none"
           animate={{
             x: mousePos.x - 300,
             y: mousePos.y - 300,
           }}
-          transition={{ type: "spring", damping: 30, stiffness: 80, mass: 0.5 }}
+          transition={{ type: "spring", damping: 35, stiffness: 100, mass: 0.2 }}
           style={{
-            background: "radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%)",
+            background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
+            zIndex: 0
           }}
         />
       </div>
