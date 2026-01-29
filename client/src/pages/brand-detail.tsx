@@ -1,54 +1,29 @@
 import { useRoute } from "wouter";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, ShieldCheck, Timer, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BRANDS } from "./home";
 
-function BrandWatermark({ logo }: { logo?: string }) {
-  const watermarks = useMemo(() => {
-    return Array.from({ length: 24 }).map((_, i) => ({
-      id: i,
-      top: `${Math.floor(i / 4) * 18}%`,
-      left: `${(i % 4) * 25}%`,
-      rotate: (i % 2 === 0 ? 15 : -15),
-    }));
-  }, []);
-
-  if (!logo) return null;
-
-  return (
-    <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden opacity-[0.15]">
-      {watermarks.map((w) => (
-        <img
-          key={w.id}
-          src={logo}
-          alt=""
-          className="absolute h-40 w-40 object-contain grayscale brightness-0"
-          style={{
-            top: w.top,
-            left: w.left,
-            transform: `rotate(${w.rotate}deg)`,
-          }}
-        />
-      ))}
-    </div>
-  );
+function LightningEffect() {
+  return null;
 }
 
 export default function BrandPage() {
   const [, params] = useRoute("/brand/:name");
   const brandName = params?.name ? decodeURIComponent(params.name) : "";
-  const brand = BRANDS.find(b => b.name === brandName);
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
-      <BrandWatermark logo={brand?.logo} />
-      <div className="relative z-10">
-        <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
+    <div className="min-h-screen bg-background text-foreground">
+      <LightningEffect />
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-[0.2]" />
+        <div className="absolute inset-0 bg-noise opacity-[0.2]" />
+      </div>
+
+      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
           <Button variant="ghost" className="rounded-xl" onClick={() => window.history.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Geri Dön
