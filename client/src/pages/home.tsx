@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
+import useSound from "use-sound";
 import {
   ArrowRight,
   CheckCircle2,
@@ -33,6 +34,15 @@ const BRANDS = [
 function BrandsPopup() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setLocation] = useLocation();
+  const [playTick] = useSound("/sounds/tick.mp3", { volume: 0.15 });
+  const lastOpenState = useRef(false);
+
+  useEffect(() => {
+    if (isOpen && !lastOpenState.current) {
+      playTick();
+    }
+    lastOpenState.current = isOpen;
+  }, [isOpen, playTick]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -214,6 +224,7 @@ function InteractiveGradient() {
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [playClick] = useSound("/sounds/click.mp3", { volume: 0.2 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY, currentTarget } = e;
@@ -232,6 +243,11 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
     setPosition({ x: 0, y: 0 });
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    playClick();
+    if (onClick) onClick(e);
+  };
+
   return (
     <motion.div
       onMouseMove={handleMouseMove}
@@ -240,7 +256,7 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
       transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
       className="inline-block"
     >
-      <Button className={className} onClick={onClick} {...props}>
+      <Button className={className} onClick={handleClick} {...props}>
         {children}
       </Button>
     </motion.div>
