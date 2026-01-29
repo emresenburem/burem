@@ -12,6 +12,9 @@ import {
   Timer,
   Wrench,
   MessageCircle,
+  ClipboardCheck,
+  Search,
+  TestTube2,
 } from "lucide-react";
 
 const BRANDS = [
@@ -158,19 +161,28 @@ const SERVICES = [
 
 const STEPS = [
   {
-    k: "01",
+    k: "İnceleme",
     title: "Ön İnceleme",
     desc: "Arıza belirtisi, model bilgisi ve geçmiş işlemlerle hızlı başlangıç.",
+    icon: ClipboardCheck,
   },
   {
-    k: "02",
+    k: "Tespit",
+    title: "Arıza Tespiti",
+    desc: "Teknik ekip tarafından detaylı arıza analizi yapılır.",
+    icon: Search,
+  },
+  {
+    k: "Onarım",
     title: "Onarım + Parça İşçiligi",
     desc: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+    icon: Wrench,
   },
   {
-    k: "03",
+    k: "Test",
     title: "Test + Teslim",
     desc: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
+    icon: TestTube2,
   },
 ];
 
@@ -690,29 +702,28 @@ export default function HomePage() {
             <div className="grid gap-3">
               {STEPS.map((st) => (
                 <Card
-                  key={st.k}
+                  key={st.title}
                   className="rounded-3xl border bg-card p-5 shadow-soft"
-                  data-testid={`card-step-${st.k}`}
+                  data-testid={`card-step-${st.title}`}
                 >
                   <div className="flex items-start gap-4">
                     <div
-                      className="mt-0.5 rounded-2xl border bg-background px-3 py-1 text-xs font-semibold"
-                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                      data-testid={`badge-step-${st.k}`}
+                      className="mt-0.5 rounded-2xl border bg-background p-2 text-primary"
+                      data-testid={`icon-step-${st.title}`}
                     >
-                      {st.k}
+                      {st.icon && <st.icon className="h-5 w-5" />}
                     </div>
                     <div>
                       <p
                         className="text-base font-semibold tracking-tight"
                         style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                        data-testid={`text-step-title-${st.k}`}
+                        data-testid={`text-step-title-${st.title}`}
                       >
                         {st.title}
                       </p>
                       <p
                         className="mt-1 text-sm text-muted-foreground"
-                        data-testid={`text-step-desc-${st.k}`}
+                        data-testid={`text-step-desc-${st.title}`}
                       >
                         {st.desc}
                       </p>
