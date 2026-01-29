@@ -319,13 +319,13 @@ function HeaderLogo() {
         animate={isFlickering ? {
           opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
           filter: [
-            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
-            "drop-shadow(0 0 20px rgba(10,17,34,0.8)) brightness(2)",
-            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
-            "drop-shadow(0 0 40px rgba(10,17,34,1)) brightness(3)",
-            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)",
-            "drop-shadow(0 0 60px rgba(10,17,34,0.9)) brightness(2.5)",
-            "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)"
+            "brightness(1)",
+            "brightness(2.5)",
+            "brightness(1)",
+            "brightness(4)",
+            "brightness(1)",
+            "brightness(3)",
+            "brightness(1)"
           ]
         } : { opacity: 1, filter: "drop-shadow(0 0 0px rgba(10,17,34,0)) brightness(1)" }}
         key={`logo-flicker-${triggerCount}`}
