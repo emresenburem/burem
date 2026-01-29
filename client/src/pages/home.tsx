@@ -14,20 +14,20 @@ import {
 } from "lucide-react";
 
 const BRANDS = [
-  { name: "Siemens", color: "#009999" },
-  { name: "ABB", color: "#FF0000" },
-  { name: "Schneider", color: "#3dcd58" },
-  { name: "Fanuc", color: "#FFD700" },
-  { name: "Yaskawa", color: "#004098" },
-  { name: "Omron", color: "#005EB8" },
-  { name: "Lenze", color: "#0046AD" },
-  { name: "Mitsubishi", color: "#E60012" },
-  { name: "Danfoss", color: "#E2000F" },
-  { name: "Delta", color: "#003A8C" },
-  { name: "Beckhoff", color: "#E30613" },
-  { name: "Allen Bradley", color: "#000000" },
-  { name: "Fuji", color: "#E60012" },
-  { name: "Eaton", color: "#005EB8" }
+  { name: "Siemens", color: "#009999", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Siemens-logo.svg" },
+  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
+  { name: "Schneider", color: "#3dcd58", logo: "https://upload.wikimedia.org/wikipedia/commons/9/95/Schneider_Electric_2007.svg" },
+  { name: "Fanuc", color: "#FFD700", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Fanuc_logo.svg" },
+  { name: "Yaskawa", color: "#004098", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Yaskawa_Electric_Corporation_logo.svg" },
+  { name: "Omron", color: "#005EB8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Omron_logo.svg" },
+  { name: "Lenze", color: "#0046AD", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Lenze_logo.svg" },
+  { name: "Mitsubishi", color: "#E60012", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mitsubishi-logo.png" },
+  { name: "Danfoss", color: "#E2000F", logo: "https://upload.wikimedia.org/wikipedia/commons/1/10/Danfoss-Logo.svg" },
+  { name: "Delta", color: "#003A8C", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Delta_Electronics_logo.svg" },
+  { name: "Beckhoff", color: "#E30613", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Beckhoff_Logo.svg" },
+  { name: "Allen Bradley", color: "#000000", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Rockwell_Automation_logo.svg" },
+  { name: "Fuji", color: "#E60012", logo: "https://upload.wikimedia.org/wikipedia/commons/d/de/Fuji_Electric_logo.svg" },
+  { name: "Eaton", color: "#005EB8", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Eaton_logo.svg" }
 ];
 
 function BrandsPopup() {
@@ -70,9 +70,18 @@ function BrandsPopup() {
                 className="flex flex-col items-center justify-center rounded-xl border bg-white p-3 text-center transition-colors hover:border-primary/50 group shadow-sm cursor-pointer hover:shadow-xl hover:z-10"
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-10 w-full flex items-center justify-center">
+                <div className="h-12 w-full flex items-center justify-center p-1">
+                  <img 
+                    src={brand.logo} 
+                    alt={brand.name} 
+                    className="h-full w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
                   <span 
-                    className="font-bold tracking-tighter text-[18px]" 
+                    className="font-bold tracking-tighter text-[18px] hidden" 
                     style={{ 
                       color: brand.color,
                       fontFamily: "Space Grotesk, sans-serif",
