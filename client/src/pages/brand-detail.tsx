@@ -9,37 +9,33 @@ import { BRANDS } from "./home";
 
 function BrandWatermark({ logo }: { logo?: string }) {
   const watermarks = useMemo(() => {
-    return Array.from({ length: 12 }).map((_, i) => ({
+    return Array.from({ length: 15 }).map((_, i) => ({
       id: i,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      rotate: Math.random() * 360,
-      scale: 1.2 + Math.random() * 0.5,
-      opacity: 0.4 + Math.random() * 0.2,
+      top: `${(i * 20) % 100}%`,
+      left: `${(i * 30) % 100}%`,
+      rotate: i * 45,
+      scale: 1,
+      opacity: 0.8,
     }));
   }, []);
 
   if (!logo) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 -z-50 overflow-hidden bg-white">
       {watermarks.map((w) => (
-        <motion.img
+        <img
           key={w.id}
           src={logo}
           alt=""
-          className="absolute h-32 w-32"
+          className="absolute h-40 w-40 object-contain"
           style={{
             top: w.top,
             left: w.left,
-            rotate: w.rotate,
-            scale: w.scale,
+            transform: `rotate(${w.rotate}deg) scale(${w.scale})`,
             opacity: w.opacity,
-            filter: "grayscale(0) brightness(1) contrast(1.1)",
+            zIndex: -50
           }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: w.opacity }}
-          transition={{ duration: 1 }}
         />
       ))}
     </div>
