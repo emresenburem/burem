@@ -87,11 +87,11 @@ function BrandsPopup() {
         data-testid="brands-tab-indicator"
       >
         <div className="flex items-center">
-          <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white px-1.5 py-3 rounded-r-xl shadow-lg flex flex-col items-center gap-2 hover:px-2.5 transition-all border-r border-y border-slate-700">
+          <div className="bg-white px-1.5 py-3 rounded-r-xl shadow-lg flex flex-col items-center gap-2 hover:px-2.5 transition-all border-r border-y border-gray-200">
             <ChevronRight className="h-3 w-3 text-primary" />
             <div className="flex flex-col gap-1.5 py-1">
               {BRANDS.slice(0, 6).map((brand) => (
-                <div key={brand.name} className="w-6 h-4 bg-white/90 rounded-sm p-0.5 flex items-center justify-center">
+                <div key={brand.name} className="w-6 h-4 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center">
                   <img 
                     src={brand.logo} 
                     alt={brand.name}
@@ -99,8 +99,8 @@ function BrandsPopup() {
                   />
                 </div>
               ))}
-              <div className="w-6 h-4 bg-white/20 rounded-sm flex items-center justify-center">
-                <span className="text-[8px] text-white/80">+{BRANDS.length - 6}</span>
+              <div className="w-6 h-4 bg-gray-100 rounded-sm flex items-center justify-center">
+                <span className="text-[8px] text-gray-500">+{BRANDS.length - 6}</span>
               </div>
             </div>
             <ChevronRight className="h-3 w-3 text-primary" />
