@@ -60,15 +60,15 @@ function BrandsPopup() {
             {BRANDS.map((brand) => (
               <div
                 key={brand.name}
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white/10 p-3 text-center transition hover:bg-white/20 hover:border-white/40 group"
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-3 text-center transition hover:border-primary/50 group shadow-sm"
                 data-testid={`brand-item-${brand.name}`}
               >
-                <div className="h-8 w-full flex items-center justify-center grayscale brightness-200 group-hover:grayscale-0 group-hover:brightness-100 transition-all">
-                  <span className="font-bold tracking-tighter text-[10px]" style={{ color: brand.color }}>
+                <div className="h-8 w-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span className="font-bold tracking-tighter text-[11px]" style={{ color: brand.color }}>
                     {brand.name}
                   </span>
                 </div>
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest">
+                <span className="text-[10px] font-bold text-foreground/80 uppercase tracking-widest">
                   {brand.name}
                 </span>
               </div>
