@@ -209,11 +209,11 @@
 }
 
 @keyframes thunderBorder {
-  0% { clip-path: polygon(0% 0%, 100% 0%, 100% 12%, 0% 12%); }
-  25% { clip-path: polygon(88% 0%, 100% 0%, 100% 100%, 88% 100%); }
-  50% { clip-path: polygon(0% 88%, 100% 88%, 100% 100%, 0% 100%); }
-  75% { clip-path: polygon(0% 0%, 12% 0%, 12% 100%, 0% 100%); }
-  100% { clip-path: polygon(0% 0%, 100% 0%, 100% 12%, 0% 12%); }
+  0% { clip-path: inset(0 0 88% 0); }
+  25% { clip-path: inset(0 0 0 88%); }
+  50% { clip-path: inset(88% 0 0 0); }
+  75% { clip-path: inset(0 88% 0 0); }
+  100% { clip-path: inset(0 0 88% 0); }
 }
 
 @keyframes lightningFlash {
@@ -221,14 +221,6 @@
   10%, 90% { opacity: 0.2; }
   11%, 13%, 15% { opacity: 1; filter: brightness(3) blur(0px); box-shadow: 0 0 40px #3b82f6; }
   12%, 14% { opacity: 0.4; }
-  45%, 47%, 49% { opacity: 1; filter: brightness(2.5) blur(0px); box-shadow: 0 0 30px #3b82f6; }
-  46%, 48% { opacity: 0.3; }
-}
-
-@keyframes branchLightning {
-  0%, 100% { opacity: 0; transform: scale(0.8); }
-  10%, 14%, 18% { opacity: 0.8; transform: scale(1) rotate(5deg); }
-  12%, 16% { opacity: 0; }
 }
 
 .thunder-border {
@@ -251,22 +243,24 @@
   transition: opacity 0.2s ease;
 }
 
+/* Çerçevenin dışını dolaşan şimşek hattı */
 .thunder-border::after {
   content: "";
   position: absolute;
-  inset: -20px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cpath d='M10 10 L40 50 L20 60 L60 90' stroke='%233b82f6' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-  background-size: 50% 50%;
+  inset: -10px;
+  border: 10px solid #3b82f6;
+  border-radius: calc(var(--radius) + 10px);
   pointer-events: none;
   opacity: 0;
   z-index: 51;
+  filter: drop-shadow(0 0 15px #3b82f6);
 }
 
 .thunder-border:hover::before {
   opacity: 1;
-  animation: thunderBorder 0.8s linear infinite, lightningFlash 1.5s ease-in-out infinite;
 }
 
 .thunder-border:hover::after {
-  animation: branchLightning 2s step-end infinite;
+  opacity: 1;
+  animation: thunderBorder 0.8s linear infinite, lightningFlash 1.5s ease-in-out infinite;
 }
