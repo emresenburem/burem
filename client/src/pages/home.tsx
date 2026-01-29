@@ -133,110 +133,16 @@ const SERVICES = [
     title: "Sürücü Tamiri",
     desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti + onarım + test.",
     icon: Wrench,
-    animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-110" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Main Traces */}
-          <motion.path
-            d="M0 20 L30 20 L30 50 L60 50 L60 80 L100 80"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-          />
-          <motion.path
-            d="M0 80 L40 80 L40 40 L70 40 L70 10 L100 10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            variants={{ initial: { pathLength: 0 }, hover: { pathLength: 1 } }}
-            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
-          />
-          
-          {/* THE PCB UNDERLINE EFFECT inside the card */}
-          <motion.path
-            d="M 25 70 L 35 70 L 40 65 L 50 75 L 55 70 L 85 70"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            variants={{ initial: { pathLength: 0, opacity: 0 }, hover: { pathLength: 1, opacity: 1 } }}
-            transition={{ duration: 1, ease: "easeInOut", delay: 0.8 }}
-          />
-          <motion.circle 
-            cx="25" cy="70" r="1.5" fill="currentColor"
-            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
-            transition={{ delay: 0.8 }}
-          />
-          <motion.circle 
-            cx="85" cy="70" r="1.5" fill="currentColor"
-            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
-            transition={{ delay: 1.8 }}
-          />
-
-          {/* Pads and Glow */}
-          <motion.circle 
-            cx="30" cy="20" r="2" fill="currentColor" 
-            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
-            transition={{ delay: 1.2 }}
-          />
-          <motion.circle 
-            cx="60" cy="50" r="2" fill="currentColor" 
-            variants={{ initial: { scale: 0 }, hover: { scale: 1 } }}
-            transition={{ delay: 1.4 }}
-          />
-          <motion.g
-            variants={{ initial: { opacity: 0, scale: 0.5 }, hover: { opacity: 1, scale: 1 } }}
-            transition={{ delay: 1.6, type: "spring", stiffness: 200 }}
-          >
-            <circle cx="50" cy="50" r="8" fill="currentColor" className="opacity-20 blur-sm" />
-            <path d="M46 50 L54 50 M50 46 L50 54" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          </motion.g>
-        </svg>
-      </div>
-    )
   },
   {
     title: "Endüstriyel Elektronik",
     desc: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları.",
     icon: ShieldCheck,
-    animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Oscilloscope Waveform */}
-          <motion.path
-            d="M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            animate={{ d: [
-              "M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50",
-              "M0 50 Q 10 90, 20 50 T 40 50 T 60 50 T 80 50 T 100 50",
-              "M0 50 Q 10 10, 20 50 T 40 50 T 60 50 T 80 50 T 100 50"
-            ]}}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
-        </svg>
-      </div>
-    )
   },
   {
     title: "PLC Otomasyon",
     desc: "Blok diyagramları, kontrol mantığı ve çevre birim optimizasyonu.",
     icon: Timer,
-    animation: (
-      <div className="absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none">
-        <svg className="h-full w-full text-blue-600 scale-125" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Animated PLC Logic Blocks */}
-          <motion.rect x="10" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity }} />
-          <motion.rect x="42" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity, delay: 0.3 }} />
-          <motion.rect x="75" y="30" width="15" height="15" rx="1" fill="none" stroke="currentColor" strokeWidth="2" animate={{ fill: ["transparent", "rgba(37, 99, 235, 0.2)", "transparent"] }} transition={{ duration: 1, repeat: Infinity, delay: 0.6 }} />
-          <motion.path d="M25 37 L42 37" stroke="currentColor" strokeWidth="2" animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.15 }} />
-          <motion.path d="M57 37 L75 37" stroke="currentColor" strokeWidth="2" animate={{ opacity: [0.2, 1, 0.2] }} transition={{ duration: 1, repeat: Infinity, delay: 0.45 }} />
-        </svg>
-      </div>
-    )
   },
 ];
 
@@ -727,41 +633,38 @@ export default function HomePage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {SERVICES.map((s) => (
-              <motion.div key={s.title} initial="initial" whileHover="hover">
-                <Card
-                  className="group relative h-full overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
-                  data-testid={`card-service-${s.title}`}
-                >
-                  {s.animation}
-                  <div className="relative z-10 flex items-start gap-3">
-                    <div
-                      className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
-                      data-testid={`icon-service-${s.title}`}
-                    >
-                      <s.icon
-                        className="h-5 w-5"
-                        style={{ color: "hsl(var(--primary))" }}
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div>
-                      <p
-                        className="text-base font-semibold tracking-tight"
-                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                        data-testid={`text-service-title-${s.title}`}
-                      >
-                        {s.title}
-                      </p>
-                      <p
-                        className="mt-1 text-sm text-muted-foreground"
-                        data-testid={`text-service-desc-${s.title}`}
-                      >
-                        {s.desc}
-                      </p>
-                    </div>
+              <Card
+                key={s.title}
+                className="group relative h-full overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
+                data-testid={`card-service-${s.title}`}
+              >
+                <div className="relative z-10 flex items-start gap-3">
+                  <div
+                    className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
+                    data-testid={`icon-service-${s.title}`}
+                  >
+                    <s.icon
+                      className="h-5 w-5 text-[#0a1122]"
+                      aria-hidden="true"
+                    />
                   </div>
-                </Card>
-              </motion.div>
+                  <div>
+                    <p
+                      className="text-base font-semibold tracking-tight text-[#0a1122]"
+                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                      data-testid={`text-service-title-${s.title}`}
+                    >
+                      {s.title}
+                    </p>
+                    <p
+                      className="mt-1 text-sm text-muted-foreground"
+                      data-testid={`text-service-desc-${s.title}`}
+                    >
+                      {s.desc}
+                    </p>
+                  </div>
+                </div>
+              </Card>
             ))}
           </div>
         </section>
