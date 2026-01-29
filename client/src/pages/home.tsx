@@ -394,7 +394,13 @@ export default function HomePage() {
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <div className="min-h-screen bg-background text-foreground" onClick={handleGlobalClick}>
+    <motion.div 
+      className="min-h-screen bg-background text-foreground" 
+      onClick={handleGlobalClick}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+    >
       <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
@@ -973,6 +979,6 @@ export default function HomePage() {
           <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
         </div>
       </footer>
-    </div>
+    </motion.div>
   );
 }

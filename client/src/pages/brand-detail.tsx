@@ -76,7 +76,12 @@ export default function BrandPage() {
   }, [brandName]);
 
   return (
-    <div className="relative min-h-screen text-foreground">
+    <motion.div 
+      className="relative min-h-screen text-foreground"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
       <BrandBackgroundLogo brand={brand} />
 
       <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
@@ -197,6 +202,6 @@ export default function BrandPage() {
           <ChevronRight className="w-5 h-5 text-muted-foreground" />
         </motion.button>
       )}
-    </div>
+    </motion.div>
   );
 }
