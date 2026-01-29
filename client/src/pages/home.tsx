@@ -26,20 +26,20 @@ import {
 } from "lucide-react";
 
 const BRANDS = [
-  { name: "Siemens", color: "#009999", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Siemens-logo.svg" },
-  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
-  { name: "Schneider", color: "#3dcd58", logo: "https://upload.wikimedia.org/wikipedia/commons/9/95/Schneider_Electric_2007.svg" },
-  { name: "Fanuc", color: "#FFD700", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Fanuc_logo.svg" },
-  { name: "Yaskawa", color: "#004098", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Yaskawa_Electric_Corporation_logo.svg" },
-  { name: "Omron", color: "#005EB8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Omron_logo.svg" },
-  { name: "Lenze", color: "#0046AD", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Lenze_logo.svg" },
-  { name: "Mitsubishi", color: "#E60012", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mitsubishi-logo.png" },
-  { name: "Danfoss", color: "#E2000F", logo: "https://upload.wikimedia.org/wikipedia/commons/1/10/Danfoss-Logo.svg" },
-  { name: "Delta", color: "#003A8C", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Delta_Electronics_logo.svg" },
-  { name: "Beckhoff", color: "#E30613", logo: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Beckhoff_Logo.svg" },
-  { name: "Allen Bradley", color: "#000000", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Rockwell_Automation_logo.svg" },
-  { name: "Fuji", color: "#E60012", logo: "https://upload.wikimedia.org/wikipedia/commons/d/de/Fuji_Electric_logo.svg" },
-  { name: "Eaton", color: "#005EB8", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Eaton_logo.svg" }
+  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
+  { name: "ABB", color: "#FF0000", logo: "https://www.logo.wine/a/logo/ABB_(company)/ABB_(company)-Logo.wine.svg" },
+  { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
+  { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
+  { name: "Yaskawa", color: "#004098", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
+  { name: "Omron", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg" },
+  { name: "Lenze", color: "#0046AD", logo: "https://cdn.worldvectorlogo.com/logos/lenze.svg" },
+  { name: "Mitsubishi", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
+  { name: "Danfoss", color: "#E2000F", logo: "https://www.logo.wine/a/logo/Danfoss/Danfoss-Logo.wine.svg" },
+  { name: "Delta", color: "#003A8C", logo: "https://www.logo.wine/a/logo/Delta_Electronics/Delta_Electronics-Logo.wine.svg" },
+  { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
+  { name: "Allen Bradley", color: "#000000", logo: "https://www.logo.wine/a/logo/Rockwell_Automation/Rockwell_Automation-Logo.wine.svg" },
+  { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
+  { name: "Eaton", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Eaton_Corporation/Eaton_Corporation-Logo.wine.svg" }
 ];
 
 function BrandsPopup() {
