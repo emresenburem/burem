@@ -341,3 +341,32 @@
 .bg-gradient-radial {
   background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to));
 }
+
+/* Professional section dividers */
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
+}
+
+/* Professional card styling */
+.pro-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.5);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.pro-card:hover {
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: 0 10px 40px -10px hsl(var(--primary) / 0.1);
+}
