@@ -727,7 +727,12 @@ export default function HomePage() {
                         </div>
                       ) : st.title === "Onarım + Parça İşçiligi" ? (
                         <div className="relative h-5 w-5 flex items-center justify-center">
-                          <PenLine className="h-5 w-5 text-primary rotate-45" />
+                          <img 
+                            src="/assets/soldering-iron.png" 
+                            alt="Soldering Iron" 
+                            className="h-5 w-5 object-contain brightness-0 invert" 
+                            style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%)' }}
+                          />
                           <div className="absolute top-0 right-0 h-1.5 w-1.5 rounded-full bg-primary/20 animate-ping" />
                         </div>
                       ) : st.title === "Test + Teslim" ? (
