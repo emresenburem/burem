@@ -888,7 +888,7 @@ export default function HomePage() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { name: "Martur Fompak", logo: "https://www.marturfompak.com/uploads/logo/logo-67b869fce30ee.png" },
+                    { name: "ermetal", logo: "https://seekvectorlogo.net/wp-content/uploads/2020/01/ermetal-vector-logo.png" },
                     { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg" },
                     { name: "Bosch", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/2560px-Bosch-logo.svg.png" },
                     { name: "Tofaş", logo: "https://images.seeklogo.com/logo-png/42/1/tofas-logo-png_seeklogo-426899.png" },
