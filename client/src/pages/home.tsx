@@ -33,7 +33,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const BRANDS = [
-  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
+  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg"  },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.45 },
   { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
   { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
@@ -188,7 +188,7 @@ function BrandsPopup() {
           </div>
           <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
             <p className="text-xs text-muted-foreground">
-              Ve daha fazlası... Listenizde olmayan markalar için bize danışın.
+              Ve daha fazlası... Listemizde olmayan markalar için bize danışın.
             </p>
           </div>
         </motion.div>
@@ -569,9 +569,10 @@ export default function HomePage() {
                 data-testid="text-hero-title"
               >
                 Sürücünüz arızalandıysa,
-                <span className="block text-muted-foreground">
+                <span className="block text-foreground">
                   doğru teşhisle hızlıca ayağa kaldıralım.
                 </span>
+
               </h1>
 
               <p
@@ -816,59 +817,102 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid gap-3">
-              {STEPS.map((st) => (
-                <Card
-                  key={st.title}
-                  className="rounded-3xl border bg-card p-5 shadow-soft"
-                  data-testid={`card-step-${st.title}`}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Sol: Süreç Adımları */}
+              <div className="grid gap-3">
+                {STEPS.map((st) => (
+                  <Card
+                    key={st.title}
+                    className="rounded-3xl border bg-card p-5 shadow-soft"
+                    data-testid={`card-step-${st.title}`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div
+                        className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
+                        data-testid={`icon-step-${st.title}`}
+                      >
+                        {st.title === "Arıza Tespiti" ? (
+                          <div className="relative h-5 w-5 flex items-center justify-center">
+                            <Microscope className="h-4 w-4 relative z-10" />
+                            <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                            <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                          </div>
+                        ) : st.title === "Onarım + Parça İşçiligi" ? (
+                          <div className="relative h-7 w-7 flex items-center justify-center">
+                            <img 
+                              src="/assets/soldering-iron.png" 
+                              alt="Soldering Iron" 
+                              className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
+                              style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
+                            />
+                          </div>
+                        ) : st.title === "Test + Teslim" ? (
+                          <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                            <PackageCheck className="h-4 w-4 relative z-10" />
+                          </div>
+                        ) : (
+                          st.icon && <st.icon className="h-5 w-5" />
+                        )}
+                      </div>
+                      <div>
+                        <p
+                          className="text-base font-semibold tracking-tight"
+                          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                          data-testid={`text-step-title-${st.title}`}
+                        >
+                          {st.title}
+                        </p>
+                        <p
+                          className="mt-1 text-sm text-muted-foreground"
+                          data-testid={`text-step-desc-${st.title}`}
+                        >
+                          {st.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Sağ: Çalıştığımız Firmalar */}
+              <Card className="rounded-3xl border bg-card p-6 shadow-soft h-fit" data-testid="card-partners">
+                <p className="text-sm text-muted-foreground mb-2" data-testid="text-partners-eyebrow">
+                  Referanslarımız
+                </p>
+                <h3
+                  className="text-xl font-semibold tracking-tight mb-6"
+                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                  data-testid="text-partners-title"
                 >
-                  <div className="flex items-start gap-4">
+                  Çalıştığımız Firmalar
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { name: "Martur Fompak", logo: "https://www.marturfompak.com/assets/images/logo.svg" },
+                    { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Valeo_Logo.svg/2560px-Valeo_Logo.svg.png" },
+                    { name: "Bosch", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/2560px-Bosch-logo.svg.png" },
+                    { name: "Tofaş", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/TOFA%C5%9E_logo_%282019-%29.svg/2560px-TOFA%C5%9E_logo_%282019-%29.svg.png" },
+                    { name: "Sarar", logo: "https://www.sarar.com/static/images/logo.svg" },
+                  ].map((company) => (
                     <div
-                      className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
-                      data-testid={`icon-step-${st.title}`}
+                      key={company.name}
+                      className="bg-white rounded-xl p-4 flex items-center justify-center h-16 border shadow-sm"
+                      data-testid={`partner-${company.name.toLowerCase().replace(' ', '-')}`}
                     >
-                      {st.title === "Arıza Tespiti" ? (
-                        <div className="relative h-5 w-5 flex items-center justify-center">
-                          <Microscope className="h-4 w-4 relative z-10" />
-                          <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
-                          <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
-                        </div>
-                      ) : st.title === "Onarım + Parça İşçiligi" ? (
-                        <div className="relative h-7 w-7 flex items-center justify-center">
-                          <img 
-                            src="/assets/soldering-iron.png" 
-                            alt="Soldering Iron" 
-                            className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
-                            style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
-                          />
-                        </div>
-                      ) : st.title === "Test + Teslim" ? (
-                        <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
-                          <PackageCheck className="h-4 w-4 relative z-10" />
-                        </div>
-                      ) : (
-                        st.icon && <st.icon className="h-5 w-5" />
-                      )}
+                      <img
+                        src={company.logo}
+                        alt={company.name}
+                        className="max-h-10 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement!.innerHTML = `<span class="text-sm font-semibold text-gray-700">${company.name}</span>`;
+                        }}
+                      />
                     </div>
-                    <div>
-                      <p
-                        className="text-base font-semibold tracking-tight"
-                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                        data-testid={`text-step-title-${st.title}`}
-                      >
-                        {st.title}
-                      </p>
-                      <p
-                        className="mt-1 text-sm text-muted-foreground"
-                        data-testid={`text-step-desc-${st.title}`}
-                      >
-                        {st.desc}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+                  ))}
+                </div>
+              </Card>
             </div>
           </div>
         </section>
