@@ -896,13 +896,13 @@ export default function HomePage() {
                   ].map((company) => (
                     <div
                       key={company.name}
-                      className="bg-white rounded-xl p-4 flex items-center justify-center h-16 border shadow-sm"
+                      className="bg-white rounded-xl p-4 flex items-center justify-center h-20 border shadow-sm"
                       data-testid={`partner-${company.name.toLowerCase().replace(' ', '-')}`}
                     >
                       <img
                         src={company.logo}
                         alt={company.name}
-                        className="max-h-10 max-w-full object-contain"
+                        className="max-h-14 max-w-full object-contain"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
