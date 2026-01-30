@@ -888,11 +888,11 @@ export default function HomePage() {
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { name: "Martur Fompak", logo: "https://www.marturfompak.com/assets/images/logo.svg" },
-                    { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Valeo_Logo.svg/2560px-Valeo_Logo.svg.png" },
+                    { name: "Martur Fompak", logo: "https://lms.marturfompak.com/pluginfile.php/1/core_admin/logo/0x200/1658134626/MFI%20Logo.png" },
+                    { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg" },
                     { name: "Bosch", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/2560px-Bosch-logo.svg.png" },
-                    { name: "Tofaş", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/TOFA%C5%9E_logo_%282019-%29.svg/2560px-TOFA%C5%9E_logo_%282019-%29.svg.png" },
-                    { name: "Sarar", logo: "https://www.sarar.com/static/images/logo.svg" },
+                    { name: "Tofaş", logo: "https://images.seeklogo.com/logo-png/42/1/tofas-logo-png_seeklogo-426899.png" },
+                    { name: "Sarar", logo: "https://images.seeklogo.com/logo-png/30/1/sarar-logo-png_seeklogo-309235.png" },
                   ].map((company) => (
                     <div
                       key={company.name}
