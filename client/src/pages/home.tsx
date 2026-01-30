@@ -906,7 +906,12 @@ export default function HomePage() {
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
-                          target.parentElement!.innerHTML = `<span class="text-sm font-semibold text-gray-700">${company.name}</span>`;
+                          if (target.parentElement) {
+                            const span = document.createElement('span');
+                            span.className = 'text-sm font-semibold text-gray-700';
+                            span.textContent = company.name;
+                            target.parentElement.appendChild(span);
+                          }
                         }}
                       />
                     </div>
