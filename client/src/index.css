@@ -342,72 +342,63 @@
   background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to));
 }
 
-/* Process step border animation */
-@keyframes borderTrace {
+/* Process step spinning border animation */
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spinBorder {
   0% {
-    clip-path: inset(0 100% 100% 0);
-  }
-  25% {
-    clip-path: inset(0 0 100% 0);
-  }
-  50% {
-    clip-path: inset(0 0 0 0);
-  }
-  75% {
-    clip-path: inset(0 0 0 0);
+    --border-angle: 0deg;
   }
   100% {
-    clip-path: inset(0 0 0 0);
+    --border-angle: 360deg;
   }
 }
 
-@keyframes borderGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
-  }
-  50% {
-    box-shadow: 0 0 20px 4px rgba(34, 197, 94, 0.5);
-  }
-}
-
-.step-card-animate {
+.step-card-border {
   position: relative;
-  overflow: hidden;
+  background: hsl(var(--card));
+  border-radius: 24px;
 }
 
-.step-card-animate::before {
+.step-card-border::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 27px;
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0deg,
+    transparent 60deg,
+    #22c55e 90deg,
+    #4ade80 120deg,
+    #22c55e 150deg,
+    transparent 180deg,
+    transparent 360deg
+  );
+  opacity: 0;
+  z-index: -1;
+  animation: spinBorder 1.5s linear infinite;
+  transition: opacity 0.3s ease;
+}
+
+.step-card-border::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 24px;
-  padding: 3px;
-  background: linear-gradient(90deg, #22c55e, #22c55e);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  animation: stepBorderAppear 0.8s ease forwards, stepBorderGlow 0.8s ease forwards;
+  background: hsl(var(--card));
+  z-index: -1;
 }
 
-@keyframes stepBorderAppear {
-  0% {
-    opacity: 0;
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  100% {
-    opacity: 1;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+.step-card-border.active::before {
+  opacity: 1;
 }
 
-@keyframes stepBorderGlow {
-  0%, 30% {
-    box-shadow: none;
-  }
-  50% {
-    box-shadow: 0 0 30px 8px rgba(34, 197, 94, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 15px 3px rgba(34, 197, 94, 0.2);
-  }
+/* Glow effect for active card */
+.step-card-border.active {
+  box-shadow: 0 0 25px 5px rgba(34, 197, 94, 0.15);
 }

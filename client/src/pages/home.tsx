@@ -264,6 +264,125 @@ const STEPS = [
   },
 ];
 
+function ProcessStepsGrid() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const totalSteps = STEPS.length;
+  const cycleDuration = 2500;
+  const animationDuration = 2000;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % totalSteps);
+    }, cycleDuration);
+    return () => clearInterval(interval);
+  }, [totalSteps]);
+
+  return (
+    <div className="grid grid-cols-2 gap-3 relative">
+      {/* Connection lines SVG */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#22c55e" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#4ade80" stopOpacity="1" />
+            <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      {STEPS.map((st, index) => {
+        const isActive = activeIndex === index;
+        const wasActive = activeIndex === (index === 0 ? totalSteps - 1 : index - 1);
+        
+        return (
+          <div
+            key={st.title}
+            className="relative"
+          >
+            <Card
+              className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${isActive ? 'active' : ''}`}
+              data-testid={`card-step-${st.title}`}
+            >
+              <div className="flex items-start gap-4 relative z-10">
+                <div
+                  className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
+                  data-testid={`icon-step-${st.title}`}
+                >
+                  {st.title === "Arıza Tespiti" ? (
+                    <div className="relative h-5 w-5 flex items-center justify-center">
+                      <Microscope className="h-4 w-4 relative z-10" />
+                      <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                      <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                    </div>
+                  ) : st.title === "Onarım + Parça İşçiligi" ? (
+                    <div className="relative h-7 w-7 flex items-center justify-center">
+                      <img 
+                        src="/assets/soldering-iron.png" 
+                        alt="Soldering Iron" 
+                        className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
+                        style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
+                      />
+                    </div>
+                  ) : st.title === "Test + Teslim" ? (
+                    <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                      <PackageCheck className="h-4 w-4 relative z-10" />
+                    </div>
+                  ) : (
+                    st.icon && <st.icon className="h-5 w-5" />
+                  )}
+                </div>
+                <div>
+                  <p
+                    className="text-base font-semibold tracking-tight"
+                    style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                    data-testid={`text-step-title-${st.title}`}
+                  >
+                    {st.title}
+                  </p>
+                  <p
+                    className="mt-1 text-sm text-muted-foreground"
+                    data-testid={`text-step-desc-${st.title}`}
+                  >
+                    {st.desc}
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            {/* Traveling energy particle */}
+            {isActive && (
+              <motion.div
+                className="absolute w-3 h-3 rounded-full bg-green-500 z-20"
+                style={{ 
+                  boxShadow: '0 0 15px 5px rgba(34, 197, 94, 0.6)',
+                  filter: 'blur(1px)'
+                }}
+                initial={{ 
+                  top: '50%',
+                  left: index === 0 ? '-20px' : index === 1 ? '0%' : index === 2 ? '50%' : '100%',
+                  opacity: 0,
+                  scale: 0.5
+                }}
+                animate={{
+                  top: ['50%', '0%', '0%', '50%', '100%', '100%', '50%'],
+                  left: ['0%', '0%', '50%', '100%', '100%', '50%', '0%'],
+                  opacity: [0, 1, 1, 1, 1, 1, 0],
+                  scale: [0.5, 1, 1, 1, 1, 1, 0.5]
+                }}
+                transition={{
+                  duration: animationDuration / 1000,
+                  ease: "linear",
+                  times: [0, 0.16, 0.33, 0.5, 0.66, 0.83, 1]
+                }}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function useScrollSpy(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
 
@@ -818,87 +937,7 @@ export default function HomePage() {
               </p>
 
               {/* Süreç Adımları - 2x2 Grid */}
-              <div className="grid grid-cols-2 gap-3">
-                {STEPS.map((st, index) => (
-                  <motion.div
-                    key={st.title}
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 1 }}
-                  >
-                  <Card
-                    className="rounded-3xl border bg-card p-5 shadow-soft relative overflow-hidden"
-                    data-testid={`card-step-${st.title}`}
-                  >
-                    <motion.div
-                      className="absolute inset-0 rounded-3xl pointer-events-none z-10"
-                      initial={{ 
-                        boxShadow: "inset 0 0 0 0px #22c55e",
-                        opacity: 0
-                      }}
-                      animate={{ 
-                        boxShadow: [
-                          "inset 0 0 0 0px #22c55e",
-                          "inset 0 0 0 3px #22c55e",
-                          "inset 0 0 0 3px #22c55e",
-                          "inset 0 0 0 0px #22c55e"
-                        ],
-                        opacity: [0, 1, 1, 0]
-                      }}
-                      transition={{ 
-                        delay: index * 2.5,
-                        duration: 2,
-                        times: [0, 0.15, 0.85, 1],
-                        ease: "easeInOut"
-                      }}
-                    />
-                    <div className="flex items-start gap-4">
-                      <div
-                        className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
-                        data-testid={`icon-step-${st.title}`}
-                      >
-                        {st.title === "Arıza Tespiti" ? (
-                          <div className="relative h-5 w-5 flex items-center justify-center">
-                            <Microscope className="h-4 w-4 relative z-10" />
-                            <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
-                            <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
-                          </div>
-                        ) : st.title === "Onarım + Parça İşçiligi" ? (
-                          <div className="relative h-7 w-7 flex items-center justify-center">
-                            <img 
-                              src="/assets/soldering-iron.png" 
-                              alt="Soldering Iron" 
-                              className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
-                              style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
-                            />
-                          </div>
-                        ) : st.title === "Test + Teslim" ? (
-                          <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
-                            <PackageCheck className="h-4 w-4 relative z-10" />
-                          </div>
-                        ) : (
-                          st.icon && <st.icon className="h-5 w-5" />
-                        )}
-                      </div>
-                      <div>
-                        <p
-                          className="text-base font-semibold tracking-tight"
-                          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                          data-testid={`text-step-title-${st.title}`}
-                        >
-                          {st.title}
-                        </p>
-                        <p
-                          className="mt-1 text-sm text-muted-foreground"
-                          data-testid={`text-step-desc-${st.title}`}
-                        >
-                          {st.desc}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                  </motion.div>
-                ))}
-              </div>
+              <ProcessStepsGrid />
             </div>
 
               {/* Sağ: Çalıştığımız Firmalar */}
