@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
 import {
+  
   ArrowRight,
   CheckCircle2,
   Mail,
@@ -264,127 +265,157 @@ const STEPS = [
   },
 ];
 
-function ProcessStepsGrid() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const totalSteps = STEPS.length;
-  const cycleDuration = 2500;
-  const animationDuration = 2000;
+      function ProcessStepsGrid() {
+        const [activeIndex, setActiveIndex] = useState(0);
+        const totalSteps = STEPS.length;
+        const cycleDuration = 2500;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % totalSteps);
-    }, cycleDuration);
-    return () => clearInterval(interval);
-  }, [totalSteps]);
+        // ✅ Kart referansları ve sarmaşık koordinatları
+        const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+        const [vine, setVine] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
 
-  return (
-    <div className="grid grid-cols-2 gap-3 relative">
-      {/* Connection lines SVG */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#22c55e" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#4ade80" stopOpacity="1" />
-            <stop offset="100%" stopColor="#22c55e" stopOpacity="0.8" />
-          </linearGradient>
-        </defs>
-      </svg>
-      
-      {STEPS.map((st, index) => {
-        const isActive = activeIndex === index;
-        const wasActive = activeIndex === (index === 0 ? totalSteps - 1 : index - 1);
-        
+        const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
+          cardRefs.current[i] = el;
+        };
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setActiveIndex((prev) => (prev + 1) % totalSteps);
+          }, cycleDuration);
+          return () => clearInterval(interval);
+        }, [totalSteps]);
+
+        // ✅ Aktif karttan sonraki karta sarmaşık koordinatı hesapla
+        useEffect(() => {
+          const from = cardRefs.current[activeIndex];
+          const to = cardRefs.current[(activeIndex + 1) % totalSteps];
+          if (!from || !to) return;
+
+          const a = from.getBoundingClientRect();
+          const b = to.getBoundingClientRect();
+
+          const x1 = a.left + a.width / 2;
+          const y1 = a.top + a.height / 2;
+          const x2 = b.left + b.width / 2;
+          const y2 = b.top + b.height / 2;
+
+          setVine({ x1, y1, x2, y2 });
+        }, [activeIndex, totalSteps]);
+
         return (
-          <div
-            key={st.title}
-            className="relative"
-          >
-            <Card
-              className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${isActive ? 'active' : ''}`}
-              data-testid={`card-step-${st.title}`}
-            >
-              <div className="flex items-start gap-4 relative z-10">
-                <div
-                  className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
-                  data-testid={`icon-step-${st.title}`}
-                >
-                  {st.title === "Arıza Tespiti" ? (
-                    <div className="relative h-5 w-5 flex items-center justify-center">
-                      <Microscope className="h-4 w-4 relative z-10" />
-                      <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
-                      <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
-                    </div>
-                  ) : st.title === "Onarım + Parça İşçiligi" ? (
-                    <div className="relative h-7 w-7 flex items-center justify-center">
-                      <img 
-                        src="/assets/soldering-iron.png" 
-                        alt="Soldering Iron" 
-                        className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]" 
-                        style={{ filter: 'invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)' }}
-                      />
-                    </div>
-                  ) : st.title === "Test + Teslim" ? (
-                    <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
-                      <PackageCheck className="h-4 w-4 relative z-10" />
-                    </div>
-                  ) : (
-                    st.icon && <st.icon className="h-5 w-5" />
-                  )}
-                </div>
-                <div>
-                  <p
-                    className="text-base font-semibold tracking-tight"
-                    style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                    data-testid={`text-step-title-${st.title}`}
+          <div className="grid grid-cols-2 gap-3 relative">
+            {/* ✅ Sarmaşık “atlama” animasyonu */}
+            <AnimatePresence>
+              {vine && (
+                <VineJump
+                  key={`vine-${activeIndex}`}
+                  x1={vine.x1}
+                  y1={vine.y1}
+                  x2={vine.x2}
+                  y2={vine.y2}
+                />
+              )}
+            </AnimatePresence>
+
+            {STEPS.map((st, index) => {
+              const isActive = activeIndex === index;
+
+              return (
+                // ✅ ref'i wrapper div'e veriyoruz (Card forwardRef olmasa bile çalışır)
+                <div key={st.title} ref={setCardRef(index)} className="relative">
+                  <Card
+                    className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${
+                      isActive ? "active" : ""
+                    }`}
+                    data-testid={`card-step-${st.title}`}
                   >
-                    {st.title}
-                  </p>
-                  <p
-                    className="mt-1 text-sm text-muted-foreground"
-                    data-testid={`text-step-desc-${st.title}`}
-                  >
-                    {st.desc}
-                  </p>
+                    <div className="flex items-start gap-4 relative z-10">
+                      <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden">
+                        {st.title === "Arıza Tespiti" ? (
+                          <div className="relative h-5 w-5 flex items-center justify-center">
+                            <Microscope className="h-4 w-4 relative z-10" />
+                            <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                            <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                          </div>
+                        ) : st.title === "Onarım + Parça İşçiligi" ? (
+                          <div className="relative h-7 w-7 flex items-center justify-center">
+                            <img
+                              src="/assets/soldering-iron.png"
+                              alt="Soldering Iron"
+                              className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]"
+                              style={{
+                                filter:
+                                  "invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)",
+                              }}
+                            />
+                          </div>
+                        ) : st.title === "Test + Teslim" ? (
+                          <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                            <PackageCheck className="h-4 w-4 relative z-10" />
+                          </div>
+                        ) : (
+                          st.icon && <st.icon className="h-5 w-5" />
+                        )}
+                      </div>
+
+                      <div>
+                        <p className="text-base font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+                          {st.title}
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">{st.desc}</p>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
-              </div>
-            </Card>
+              );
+            })}
           </div>
         );
-      })}
-      
-      {/* Connection beam between cards */}
-      <AnimatePresence>
-        {activeIndex < totalSteps - 1 && (
-          <motion.div
-            key={`beam-${activeIndex}`}
-            className="absolute pointer-events-none z-30"
-            style={{
-              top: activeIndex < 2 ? '50%' : 'calc(50% + 6px)',
-              left: activeIndex % 2 === 0 ? 'calc(50% - 6px)' : '25%',
-              width: activeIndex % 2 === 0 ? '12px' : '50%',
-              height: activeIndex % 2 === 0 ? '12px' : '4px',
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div
-              className="h-full rounded-full"
-              style={{
-                background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.8), rgba(74, 222, 128, 1), rgba(34, 197, 94, 0.8))',
-                boxShadow: '0 0 20px 4px rgba(34, 197, 94, 0.5)',
-              }}
-              initial={{ scaleX: 0, originX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      }
+function VineJump({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lift = 55;
+
+  const c1x = x1 + dx * 0.25;
+  const c1y = y1 + dy * 0.05 - lift;
+  const c2x = x1 + dx * 0.75;
+  const c2y = y1 + dy * 0.95 - lift;
+
+  const d = `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+
+  return (
+    <svg className="fixed inset-0 pointer-events-none z-40">
+      {/* Glow */}
+      <motion.path
+        d={d}
+        fill="none"
+        stroke="rgba(74,222,128,0.22)"
+        strokeWidth="12"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      />
+
+      {/* Main vine */}
+      <motion.path
+        d={d}
+        fill="none"
+        stroke="rgba(34,197,94,0.60)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      />
+    </svg>
   );
 }
+
+
 
 function useScrollSpy(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
