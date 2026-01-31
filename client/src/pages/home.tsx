@@ -265,153 +265,73 @@ const STEPS = [
   },
 ];
 
-      function ProcessStepsGrid() {
-        const [activeIndex, setActiveIndex] = useState(0);
-        const totalSteps = STEPS.length;
-        const cycleDuration = 2500;
 
-        // ✅ Kart referansları ve sarmaşık koordinatları
-        const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-        const [vine, setVine] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
+function ProcessStepsGrid() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const totalSteps = STEPS.length;
+  const cycleDuration = 2500;
 
-        const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
-          cardRefs.current[i] = el;
-        };
-
-        useEffect(() => {
-          const interval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % totalSteps);
-          }, cycleDuration);
-          return () => clearInterval(interval);
-        }, [totalSteps]);
-
-        // ✅ Aktif karttan sonraki karta sarmaşık koordinatı hesapla
-        useEffect(() => {
-          const from = cardRefs.current[activeIndex];
-          const to = cardRefs.current[(activeIndex + 1) % totalSteps];
-          if (!from || !to) return;
-
-          const a = from.getBoundingClientRect();
-          const b = to.getBoundingClientRect();
-
-          const x1 = a.left + a.width / 2;
-          const y1 = a.top + a.height / 2;
-          const x2 = b.left + b.width / 2;
-          const y2 = b.top + b.height / 2;
-
-          setVine({ x1, y1, x2, y2 });
-        }, [activeIndex, totalSteps]);
-
-        return (
-          <div className="grid grid-cols-2 gap-3 relative">
-            {/* ✅ Sarmaşık “atlama” animasyonu */}
-            <AnimatePresence>
-              {vine && (
-                <VineJump
-                  key={`vine-${activeIndex}`}
-                  x1={vine.x1}
-                  y1={vine.y1}
-                  x2={vine.x2}
-                  y2={vine.y2}
-                />
-              )}
-            </AnimatePresence>
-
-            {STEPS.map((st, index) => {
-              const isActive = activeIndex === index;
-
-              return (
-                // ✅ ref'i wrapper div'e veriyoruz (Card forwardRef olmasa bile çalışır)
-                <div key={st.title} ref={setCardRef(index)} className="relative">
-                  <Card
-                    className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${
-                      isActive ? "active" : ""
-                    }`}
-                    data-testid={`card-step-${st.title}`}
-                  >
-                    <div className="flex items-start gap-4 relative z-10">
-                      <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden">
-                        {st.title === "Arıza Tespiti" ? (
-                          <div className="relative h-5 w-5 flex items-center justify-center">
-                            <Microscope className="h-4 w-4 relative z-10" />
-                            <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
-                            <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
-                          </div>
-                        ) : st.title === "Onarım + Parça İşçiligi" ? (
-                          <div className="relative h-7 w-7 flex items-center justify-center">
-                            <img
-                              src="/assets/soldering-iron.png"
-                              alt="Soldering Iron"
-                              className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]"
-                              style={{
-                                filter:
-                                  "invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)",
-                              }}
-                            />
-                          </div>
-                        ) : st.title === "Test + Teslim" ? (
-                          <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
-                            <PackageCheck className="h-4 w-4 relative z-10" />
-                          </div>
-                        ) : (
-                          st.icon && <st.icon className="h-5 w-5" />
-                        )}
-                      </div>
-
-                      <div>
-                        <p className="text-base font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
-                          {st.title}
-                        </p>
-                        <p className="mt-1 text-sm text-muted-foreground">{st.desc}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              );
-            })}
-          </div>
-        );
-      }
-function VineJump({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const lift = 55;
-
-  const c1x = x1 + dx * 0.25;
-  const c1y = y1 + dy * 0.05 - lift;
-  const c2x = x1 + dx * 0.75;
-  const c2y = y1 + dy * 0.95 - lift;
-
-  const d = `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % totalSteps);
+    }, cycleDuration);
+    return () => clearInterval(interval);
+  }, [totalSteps]);
 
   return (
-    <svg className="fixed inset-0 pointer-events-none z-40">
-      {/* Glow */}
-      <motion.path
-        d={d}
-        fill="none"
-        stroke="rgba(74,222,128,0.22)"
-        strokeWidth="12"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      />
+    <div className="grid grid-cols-2 gap-3 relative">
+      {STEPS.map((st, index) => {
+        const isActive = activeIndex === index;
 
-      {/* Main vine */}
-      <motion.path
-        d={d}
-        fill="none"
-        stroke="rgba(34,197,94,0.60)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      />
-    </svg>
+        return (
+          <div key={st.title} className="relative">
+            <Card
+              className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${
+                isActive ? "active" : ""
+              }`}
+              data-testid={`card-step-${st.title}`}
+            >
+              <div className="flex items-start gap-4 relative z-10">
+                <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden">
+                  {st.title === "Arıza Tespiti" ? (
+                    <div className="relative h-7 w-7 flex items-center justify-center">
+                      <Microscope className="h-4 w-4 relative z-10" />
+                      <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                      <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                    </div>
+                  ) : st.title === "Onarım + Parça İşçiligi" ? (
+                    <div className="relative h-7 w-7 flex items-center justify-center">
+                      <img
+                        src="/assets/soldering-iron.png"
+                        alt="Soldering Iron"
+                        className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]"
+                        style={{
+                          filter:
+                            "invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)",
+                        }}
+                      />
+                    </div>
+                  ) : st.title === "Test + Teslim" ? (
+                    <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                      <PackageCheck className="h-4 w-4 relative z-10" />
+                    </div>
+                  ) : (
+                    st.icon && <st.icon className="h-5 w-5" />
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-base font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+                    {st.title}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{st.desc}</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
