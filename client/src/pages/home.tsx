@@ -822,19 +822,15 @@ export default function HomePage() {
                 {STEPS.map((st, index) => (
                   <motion.div
                     key={st.title}
-                    initial={{ opacity: 0 }}
+                    initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.8, duration: 0.3 }}
                   >
                   <Card
-                    className="rounded-3xl border bg-card p-5 shadow-soft step-card-animate relative overflow-hidden"
-                    style={{ 
-                      animationDelay: `${index * 0.8}s`,
-                    }}
+                    className="rounded-3xl border bg-card p-5 shadow-soft relative overflow-hidden"
                     data-testid={`card-step-${st.title}`}
                   >
                     <motion.div
-                      className="absolute inset-0 rounded-3xl pointer-events-none"
+                      className="absolute inset-0 rounded-3xl pointer-events-none z-10"
                       initial={{ 
                         boxShadow: "inset 0 0 0 0px #22c55e",
                         opacity: 0
@@ -849,9 +845,10 @@ export default function HomePage() {
                         opacity: [0, 1, 1, 0]
                       }}
                       transition={{ 
-                        delay: index * 0.8 + 0.3,
-                        duration: 1.2,
-                        times: [0, 0.2, 0.8, 1]
+                        delay: index * 2.5,
+                        duration: 2,
+                        times: [0, 0.15, 0.85, 1],
+                        ease: "easeInOut"
                       }}
                     />
                     <div className="flex items-start gap-4">
