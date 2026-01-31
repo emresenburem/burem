@@ -348,37 +348,40 @@ function ProcessStepsGrid() {
                 </div>
               </div>
             </Card>
-            
-            {/* Traveling energy particle */}
-            {isActive && (
-              <motion.div
-                className="absolute w-3 h-3 rounded-full bg-green-500 z-20"
-                style={{ 
-                  boxShadow: '0 0 15px 5px rgba(34, 197, 94, 0.6)',
-                  filter: 'blur(1px)'
-                }}
-                initial={{ 
-                  top: '50%',
-                  left: index === 0 ? '-20px' : index === 1 ? '0%' : index === 2 ? '50%' : '100%',
-                  opacity: 0,
-                  scale: 0.5
-                }}
-                animate={{
-                  top: ['50%', '0%', '0%', '50%', '100%', '100%', '50%'],
-                  left: ['0%', '0%', '50%', '100%', '100%', '50%', '0%'],
-                  opacity: [0, 1, 1, 1, 1, 1, 0],
-                  scale: [0.5, 1, 1, 1, 1, 1, 0.5]
-                }}
-                transition={{
-                  duration: animationDuration / 1000,
-                  ease: "linear",
-                  times: [0, 0.16, 0.33, 0.5, 0.66, 0.83, 1]
-                }}
-              />
-            )}
           </div>
         );
       })}
+      
+      {/* Connection beam between cards */}
+      <AnimatePresence>
+        {activeIndex < totalSteps - 1 && (
+          <motion.div
+            key={`beam-${activeIndex}`}
+            className="absolute pointer-events-none z-30"
+            style={{
+              top: activeIndex < 2 ? '50%' : 'calc(50% + 6px)',
+              left: activeIndex % 2 === 0 ? 'calc(50% - 6px)' : '25%',
+              width: activeIndex % 2 === 0 ? '12px' : '50%',
+              height: activeIndex % 2 === 0 ? '12px' : '4px',
+            }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              className="h-full rounded-full"
+              style={{
+                background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.8), rgba(74, 222, 128, 1), rgba(34, 197, 94, 0.8))',
+                boxShadow: '0 0 20px 4px rgba(34, 197, 94, 0.5)',
+              }}
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
