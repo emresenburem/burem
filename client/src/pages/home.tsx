@@ -78,7 +78,7 @@ function BrandsPopup() {
     <>
       {/* Side Tab Indicator */}
       <motion.div
-        className="fixed left-0 top-0 h-screen z-[99] cursor-pointer flex items-center"
+        className="fixed left-0 top-14 h-screen z-[99] cursor-pointer flex items-center"
         initial={{ x: 0 }}
         animate={{ x: isOpen ? -100 : 0 }}
         transition={{ type: "spring", damping: 20, stiffness: 200 }}
@@ -86,9 +86,9 @@ function BrandsPopup() {
         onMouseEnter={() => setIsOpen(true)}
         data-testid="brands-tab-indicator"
       >
-        <div className="bg-white px-1.5 py-2 rounded-r-xl shadow-lg flex flex-col items-center h-full max-h-[95vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
+        <div className="bg-white px-0.5 py-1 rounded-r-xl shadow-lg flex flex-col items-center h-[99vh] max-h-[90vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
           <ChevronRight className="h-3 w-3 text-primary mb-1" />
-          <div className="flex flex-col gap-0.5 flex-1 justify-between py-1">
+          <div className="flex flex-col gap-2 py-1 overflow-hidden">
             {BRANDS.map((brand) => (
               <div key={brand.name} className="w-8 h-6 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden flex-1">
                 <img 
@@ -480,7 +480,7 @@ export default function HomePage() {
 
   return (
     <motion.div 
-      className="min-h-screen bg-background text-foreground" 
+      className="min-h-screen bg-purple-900/10 text-gray-900" 
       onClick={handleGlobalClick}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -499,7 +499,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-background/75 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b bg-purple-900/2 shadow-elevated backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-8 -mt-10 mb-[-2.5rem]">
             <HeaderLogo />
@@ -557,7 +557,7 @@ export default function HomePage() {
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <Badge
-                className="rounded-full border bg-card px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                className="rounded-full border bg-purple-900/10 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
                 data-testid="badge-hero"
               >
                 Elektronik sürücü tamiri · Endüstriyel servis
@@ -608,7 +608,7 @@ export default function HomePage() {
                 {["Hızlı dönüş", "Testli teslim", "Şeffaf rapor"].map((t) => (
                   <div
                     key={t}
-                    className="flex items-center gap-2 rounded-2xl border bg-card px-3 py-2 text-sm shadow-soft"
+                    className="flex items-center gap-2 rounded-2xl border bg-purple-100 px-3 py-2 text-sm shadow-soft"
                     data-testid={`pill-${t}`}
                   >
                     <CheckCircle2
@@ -627,7 +627,7 @@ export default function HomePage() {
               animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Card className="overflow-hidden rounded-3xl border bg-card shadow-elevated">
+              <Card className="overflow-hidden rounded-3xl border bg-purple-900/10 shadow-elevated">
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -638,7 +638,7 @@ export default function HomePage() {
                         Servis özeti
                       </p>
                       <p
-                        className="mt-1 text-lg font-semibold tracking-tight"
+                        className="bg-purple-700/2 mt-1 text-lg font-semibold tracking-tight"
                         style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                         data-testid="text-hero-card-title"
                       >
@@ -646,7 +646,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <span
-                      className="rounded-full border bg-background px-2.5 py-1 text-xs text-muted-foreground"
+                      className="rounded-full border bg-red-900/10 px-2.5 py-1 text-xs text-muted-foreground"
                       data-testid="badge-hero-card"
                     >
                       TR
@@ -655,7 +655,7 @@ export default function HomePage() {
 
                   <div className="mt-5 space-y-3">
                     <div
-                      className="rounded-2xl border bg-background px-4 py-3"
+                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
                       data-testid="card-kpi-1"
                     >
                       <div className="flex items-center justify-between">
@@ -668,7 +668,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-background px-4 py-3"
+                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
                       data-testid="card-kpi-2"
                     >
                       <div className="flex items-center justify-between">
@@ -681,7 +681,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-background px-4 py-3"
+                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
                       data-testid="card-kpi-3"
                     >
                       <div className="flex items-center justify-between">
@@ -698,7 +698,7 @@ export default function HomePage() {
                     {["Inverter", "Servo", "SMPS"].map((k) => (
                       <div
                         key={k}
-                        className="rounded-2xl border bg-background px-3 py-2 text-center text-xs text-muted-foreground"
+                        className="rounded-2xl border bg-purple-900/10 px-3 py-2 text-center text-xs text-muted-foreground"
                         data-testid={`chip-${k}`}
                       >
                         {k}
@@ -707,7 +707,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="border-t bg-background p-4">
+                <div className="border-t bg-purple-900/0 p-4 shadow-elevated">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
                       Cihaz bilgisi ile hızlı fiyat/termin.
@@ -796,7 +796,8 @@ export default function HomePage() {
           id="process"
           className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
         >
-          <div className="grid gap-6 md:grid-cols-[1fr_1fr] md:items-start">
+          <div className="grid gap-6 md:grid-cols-2 md:items-start">
+            {/* Sol: Süreç Başlık + Adımlar */}
             <div>
               <p className="text-sm text-muted-foreground" data-testid="text-process-eyebrow">
                 Nasıl çalışıyoruz
@@ -809,17 +810,15 @@ export default function HomePage() {
                 Süreç
               </h2>
               <p
-                className="mt-3 max-w-prose text-sm text-muted-foreground"
+                className="mt-3 max-w-prose text-sm text-muted-foreground mb-6"
                 data-testid="text-process-subtitle"
               >
                 Cihaz geldiğinde önce arızayı doğruluyor, ardından onarım ve yük altında
                 test ile güvenli teslim ediyoruz.
               </p>
-            </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* Sol: Süreç Adımları */}
-              <div className="grid gap-3">
+              {/* Süreç Adımları - 2x2 Grid */}
+              <div className="grid grid-cols-2 gap-3">
                 {STEPS.map((st) => (
                   <Card
                     key={st.title}
@@ -873,6 +872,7 @@ export default function HomePage() {
                   </Card>
                 ))}
               </div>
+            </div>
 
               {/* Sağ: Çalıştığımız Firmalar */}
               <Card className="rounded-3xl border bg-card p-6 shadow-soft h-fit" data-testid="card-partners">
@@ -918,7 +918,6 @@ export default function HomePage() {
                   ))}
                 </div>
               </Card>
-            </div>
           </div>
         </section>
 
