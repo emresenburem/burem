@@ -819,12 +819,41 @@ export default function HomePage() {
 
               {/* Süreç Adımları - 2x2 Grid */}
               <div className="grid grid-cols-2 gap-3">
-                {STEPS.map((st) => (
-                  <Card
+                {STEPS.map((st, index) => (
+                  <motion.div
                     key={st.title}
-                    className="rounded-3xl border bg-card p-5 shadow-soft"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.8, duration: 0.3 }}
+                  >
+                  <Card
+                    className="rounded-3xl border bg-card p-5 shadow-soft step-card-animate relative overflow-hidden"
+                    style={{ 
+                      animationDelay: `${index * 0.8}s`,
+                    }}
                     data-testid={`card-step-${st.title}`}
                   >
+                    <motion.div
+                      className="absolute inset-0 rounded-3xl pointer-events-none"
+                      initial={{ 
+                        boxShadow: "inset 0 0 0 0px #22c55e",
+                        opacity: 0
+                      }}
+                      animate={{ 
+                        boxShadow: [
+                          "inset 0 0 0 0px #22c55e",
+                          "inset 0 0 0 3px #22c55e",
+                          "inset 0 0 0 3px #22c55e",
+                          "inset 0 0 0 0px #22c55e"
+                        ],
+                        opacity: [0, 1, 1, 0]
+                      }}
+                      transition={{ 
+                        delay: index * 0.8 + 0.3,
+                        duration: 1.2,
+                        times: [0, 0.2, 0.8, 1]
+                      }}
+                    />
                     <div className="flex items-start gap-4">
                       <div
                         className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden"
@@ -870,6 +899,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </Card>
+                  </motion.div>
                 ))}
               </div>
             </div>
