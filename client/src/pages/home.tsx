@@ -893,18 +893,18 @@ export default function HomePage() {
             </div>
 
               {/* Sağ: Çalıştığımız Firmalar */}
-              <Card className="rounded-3xl border bg-card p-6 shadow-soft h-fit" data-testid="card-partners">
-                <p className="text-sm text-muted-foreground mb-2" data-testid="text-partners-eyebrow">
+              <Card className="rounded-2xl border bg-card p-4 shadow-soft h-fit" data-testid="card-partners">
+                <p className="text-xs text-muted-foreground mb-1" data-testid="text-partners-eyebrow">
                   Referanslarımız
                 </p>
                 <h3
-                  className="text-xl font-semibold tracking-tight mb-6"
+                  className="text-base font-semibold tracking-tight mb-3"
                   style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                   data-testid="text-partners-title"
                 >
                   Çalıştığımız Firmalar
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                   {[
                     { name: "ermetal", logo: "https://seekvectorlogo.net/wp-content/uploads/2020/01/ermetal-vector-logo.png" },
                     { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg" },
@@ -914,13 +914,13 @@ export default function HomePage() {
                   ].map((company) => (
                     <div
                       key={company.name}
-                      className="bg-white rounded-xl p-4 flex items-center justify-center h-20 border shadow-sm"
+                      className="bg-white rounded-lg p-2 flex items-center justify-center h-12 border shadow-sm"
                       data-testid={`partner-${company.name.toLowerCase().replace(' ', '-')}`}
                     >
                       <img
                         src={company.logo}
                         alt={company.name}
-                        className="max-h-14 max-w-full object-contain"
+                        className="max-h-8 max-w-full object-contain"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
