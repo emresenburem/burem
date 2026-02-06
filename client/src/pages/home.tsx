@@ -652,7 +652,7 @@ export default function HomePage() {
                 className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
                 data-testid="text-hero-subtitle"
               >
-                Inductra Electronik; inverter, servo sürücü ve endüstriyel elektronik
+                Inductra Elektronik; inverter, servo sürücü ve endüstriyel elektronik
                 kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
                 şekilde yönetir.
               </p>
@@ -1129,7 +1129,7 @@ export default function HomePage() {
       <footer className="border-t bg-background/70 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
           <p data-testid="text-footer-left">
-            © {new Date().getFullYear()} Inductra Electronik
+            © {new Date().getFullYear()} Inductra Elektronik
           </p>
           <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
         </div>
