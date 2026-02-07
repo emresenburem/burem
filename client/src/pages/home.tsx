@@ -48,6 +48,10 @@ const BRANDS = [
   { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
   { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png", scale: 1.5 },
   { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
+  { name: "HAAS", color: "#E60012", logo: "https://images.seeklogo.com/logo-png/32/1/haas-logo-png_seeklogo-321914.png" },
+  { name: "Heidenhain", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Heidenhain_2022_logo.svg" }
+  { name: "SEW", color: , logo: "https://images.seeklogo.com/logo-png/23/1/sew-eurodrive-logo-png_seeklogo-236154.png" }
+  { name: "MAZAK", color: "#E60012", logo: "https://images.seeklogo.com/logo-png/32/1/mazak-logo-png_seeklogo-321946.png" },
   { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
   { name: "Panasonic", color: "#003366", logo: "https://w7.pngwing.com/pngs/432/765/png-transparent-logo-panasonic-phone-panasonic-service-center-panasonic-india-pvt-ltd-others-blue-text-innovation.png" }
 ];
@@ -281,20 +285,24 @@ function ProcessStepsGrid() {
   }, [totalSteps]);
 
   return (
-    <div className="grid grid-cols-2 gap-3 relative">
+    <div className="grid grid-cols-2 gap-3 relative auto-rows-fr">
       {STEPS.map((st, index) => {
         const isActive = activeIndex === index;
 
         return (
           <div key={st.title} className="relative">
             <Card
-              className={`step-card-border rounded-3xl border bg-card p-5 shadow-soft relative overflow-visible transition-all duration-300 ${
+              className={`step-card-border rounded-3xl border bg-card p-5 h-full shadow-soft relative overflow-visible transition-all duration-300 ${
                 isActive ? "active" : ""
               }`}
               data-testid={`card-step-${st.title}`}
             >
               <div className="flex items-start gap-4 relative z-10">
-                <div className="relative mt-0.5 rounded-2xl border bg-background p-2 text-primary overflow-hidden">
+                    <div
+                      className={`relative mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center rounded-2xl border bg-background text-primary overflow-hidden
+                      ${isActive ? "icon-pulse" : ""}`}
+                    >
+
                   {st.title === "Arıza Tespiti" ? (
                     <div className="relative h-7 w-7 flex items-center justify-center">
                       <Microscope className="h-4 w-4 relative z-10" />

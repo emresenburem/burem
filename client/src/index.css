@@ -373,16 +373,16 @@
     from var(--border-angle),
     transparent 0deg,
     transparent 60deg,
-    #22c55e 90deg,
-    #4ade80 120deg,
-    #22c55e 150deg,
+    #0284c7  90deg,
+    #38bdf8  120deg,
+    #0284c7  150deg,
     transparent 180deg,
     transparent 360deg
   );
   opacity: 0;
   z-index: -1;
   animation: spinBorder 1.5s linear infinite;
-  transition: opacity 0.3s ease;
+  transition: opacity 3s ease;
 }
 
 .step-card-border::after {
@@ -400,5 +400,67 @@
 
 /* Glow effect for active card */
 .step-card-border.active {
-  box-shadow: 0 0 25px 5px rgba(34, 197, 94, 0.15);
+  box-shadow: 0 0 25px 5px rgba(2, 132, 1, 0.15);
+}
+/* =========================================================
+   ACTIVE STEP ICON – SOFT MICRO PULSE
+   ========================================================= */
+
+/* Kart wrapper (zaten varsa sorun değil) */
+.step-card-border {
+  position: relative;
+}
+
+/* Aktif kart ikonu */
+.icon-pulse {
+  animation: micro-pulse 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  box-shadow:
+    0 0 10px rgba(14, 165, 233, 0.32),
+    0 0 22px rgba(14, 165, 233, 0.18);
+  will-change: transform, opacity;
+}
+
+/* Yumuşak pulse animasyonu */
+@keyframes micro-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+  40% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Soft halo ring (çok ince, sert değil) */
+.icon-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  filter: blur(0.6px);
+  animation: halo-ring 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* Halo nefes efekti */
+@keyframes halo-ring {
+  0%, 100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Erişilebilirlik – motion kapalıysa animasyon yok */
+@media (prefers-reduced-motion: reduce) {
+  .icon-pulse,
+  .icon-pulse::after {
+    animation: none;
+  }
 }
