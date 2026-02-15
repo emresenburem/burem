@@ -33,7 +33,7 @@ export function HeaderLogo() {
       data-testid="button-logo-home"
     >
       <motion.div 
-        className="h-40 w-64 flex items-center justify-center overflow-hidden ml-2 mt-4" 
+        className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4" 
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
@@ -55,7 +55,7 @@ export function HeaderLogo() {
           ease: "easeInOut",
         }}
       >
-        <img src="/logo.png" alt="Inductra Logo" className="h-full w-full object-contain" />
+        <img src="/logo.png" alt="Burem Elektronik Logo" className="h-full w-full object-contain mix-blend-multiply" style={{ backgroundColor: 'transparent' }} />
       </motion.div>
     </button>
   );
