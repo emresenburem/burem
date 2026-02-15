@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
 import { useQuery } from "@tanstack/react-query";
@@ -69,15 +69,29 @@ function BrandsPopup() {
   }, [isOpen, playTick]);
 
   useEffect(() => {
+    let raf = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (e.clientX < 50) {
-        setIsOpen(true);
-      } else if (e.clientX > 320) {
-        setIsOpen(false);
-      }
+      cancelAnimationFrame(raf);
+
+      raf = requestAnimationFrame(() => {
+        const shouldOpen = e.clientX < 50;
+        const shouldClose = e.clientX > 320;
+
+        setIsOpen((prev) => {
+          if (shouldOpen && !prev) return true;
+          if (shouldClose && prev) return false;
+          return prev;
+        });
+      });
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   return (
@@ -120,7 +134,7 @@ function BrandsPopup() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
-            className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl"
+            className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto"
             data-testid="popup-brands"
           >
           <h3 className="mb-6 font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
@@ -272,74 +286,72 @@ const STEPS = [
 
 
 function ProcessStepsGrid() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const totalSteps = STEPS.length;
-  const cycleDuration = 2500;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % totalSteps);
-    }, cycleDuration);
-    return () => clearInterval(interval);
-  }, [totalSteps]);
-
   return (
-    <div className="grid grid-cols-2 gap-3 relative auto-rows-fr">
-      {STEPS.map((st, index) => {
-        const isActive = activeIndex === index;
-
-        return (
-          <div key={st.title} className="relative">
-            <Card
-              className={`step-card-border rounded-3xl border bg-card p-5 h-full shadow-soft relative overflow-visible transition-all duration-300 ${
-                isActive ? "active" : ""
-              }`}
-              data-testid={`card-step-${st.title}`}
-            >
-              <div className="flex items-start gap-4 relative z-10">
-                    <div
-                      className={`relative mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center rounded-2xl border bg-background text-primary overflow-hidden
-                      ${isActive ? "icon-pulse" : ""}`}
-                    >
-
-                  {st.title === "Arıza Tespiti" ? (
-                    <div className="relative h-7 w-7 flex items-center justify-center">
-                      <Microscope className="h-4 w-4 relative z-10" />
-                      <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
-                      <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
-                    </div>
-                  ) : st.title === "Onarım + Parça İşçiligi" ? (
-                    <div className="relative h-7 w-7 flex items-center justify-center">
-                      <img
-                        src="/assets/soldering-iron.png"
-                        alt="Soldering Iron"
-                        className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]"
-                        style={{
-                          filter:
-                            "invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)",
-                        }}
-                      />
-                    </div>
-                  ) : st.title === "Test + Teslim" ? (
-                    <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
-                      <PackageCheck className="h-4 w-4 relative z-10" />
-                    </div>
-                  ) : (
-                    st.icon && <st.icon className="h-5 w-5" />
-                  )}
-                </div>
-
-                <div>
-                  <p className="text-base font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
-                    {st.title}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">{st.desc}</p>
-                </div>
+    <div className="grid grid-cols-2 gap-8 relative auto-rows-fr">
+      {STEPS.map((st, index) => (
+            <motion.div
+              key={st.title}
+              className="relative"
+              initial={{ opacity: 0, y: 48, scale: 0.92 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: false, amount: 0.6 }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+                delay: index * 0.10,
+              }}
+              style={{ willChange: "transform, opacity" }}
+            
+          
+        >
+          <Card
+            className="step-card-border rounded-3xl border bg-card p-5 h-full shadow-soft relative overflow-visible transition-all duration-300"
+            data-testid={`card-step-${st.title}`}
+          >
+            <div className="flex items-start gap-4 relative z-10">
+              <div
+                className="relative mt-0.5 h-10 w-10 shrink-0 flex items-center justify-center rounded-2xl border bg-background text-primary overflow-hidden"
+              >
+                {st.title === "Arıza Tespiti" ? (
+                  <div className="relative h-7 w-7 flex items-center justify-center">
+                    <Microscope className="h-4 w-4 relative z-10" />
+                    <div className="absolute inset-[-4px] border border-primary/30 rounded-full animate-scan" />
+                    <div className="absolute inset-[-8px] border border-primary/10 rounded-full animate-scan [animation-delay:0.5s]" />
+                  </div>
+                ) : st.title === "Onarım + Parça İşçiligi" ? (
+                  <div className="relative h-7 w-7 flex items-center justify-center">
+                    <img
+                      src="/assets/soldering-iron.png"
+                      alt="Soldering Iron"
+                      className="h-7 w-7 object-contain drop-shadow-[0_0_8px_rgba(10,17,34,0.3)]"
+                      style={{
+                        filter:
+                          "invert(16%) sepia(89%) saturate(4854%) hue-rotate(224deg) brightness(96%) contrast(101%) contrast(1.2) brightness(1.1)",
+                      }}
+                    />
+                  </div>
+                ) : st.title === "Test + Teslim" ? (
+                  <div className="relative h-5 w-5 flex items-center justify-center text-green-600">
+                    <PackageCheck className="h-4 w-4 relative z-10" />
+                  </div>
+                ) : (
+                  st.icon && <st.icon className="h-5 w-5" />
+                )}
               </div>
-            </Card>
-          </div>
-        );
-      })}
+
+              <div>
+                <p
+                  className="text-base font-semibold tracking-tight"
+                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                >
+                  {st.title}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">{st.desc}</p>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      ))}
     </div>
   );
 }
@@ -874,9 +886,9 @@ export default function HomePage() {
 
         <section
           id="process"
-          className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
+          className="mx-auto w-full max-w-4xl px-4 pb-14 md:px-6 md:pb-20"
         >
-          <div className="grid gap-6 md:grid-cols-2 md:items-start">
+          <div className="grid gap-20">
             {/* Sol: Süreç Başlık + Adımlar */}
             <div>
               <p className="text-sm text-muted-foreground" data-testid="text-process-eyebrow">
@@ -901,8 +913,8 @@ export default function HomePage() {
               <ProcessStepsGrid />
             </div>
 
-              {/* Sağ: Çalıştığımız Firmalar */}
-              <Card className="rounded-2xl border bg-card p-4 shadow-soft h-fit" data-testid="card-partners">
+              {/* Sağ: Çalıştığımız Firmalar false */}
+              <Card className="hidden rounded-2xl border bg-card p-4 shadow-soft h-fit" data-testid="card-partners">
                 <p className="text-xs text-muted-foreground mb-1" data-testid="text-partners-eyebrow">
                   Referanslarımız
                 </p>
