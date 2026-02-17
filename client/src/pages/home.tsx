@@ -34,8 +34,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const BRANDS = [
-  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
-  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg"  },
+  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2 },
+  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.45 },
   { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
   { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
@@ -573,7 +573,7 @@ export default function HomePage() {
 
   return (
     <motion.div 
-      className="min-h-screen bg-purple-900/10 text-gray-900" 
+      className="min-h-screen bg-blue-900/10 text-gray-900" 
       onClick={handleGlobalClick}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -592,7 +592,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-purple-900/2 shadow-elevated backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b bg-blue-900/2 shadow-elevated backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-8 -mt-10 mb-[-2.5rem]">
             <HeaderLogo />
@@ -650,7 +650,7 @@ export default function HomePage() {
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <Badge
-                className="rounded-full border bg-purple-900/10 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                className="rounded-full border bg-blue-900/10 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
                 data-testid="badge-hero"
               >
                 Elektronik sürücü tamiri · Endüstriyel servis
@@ -701,7 +701,7 @@ export default function HomePage() {
                 {["Hızlı dönüş", "Testli teslim", "Şeffaf rapor"].map((t) => (
                   <div
                     key={t}
-                    className="flex items-center gap-2 rounded-2xl border bg-purple-100 px-3 py-2 text-sm shadow-soft"
+                    className="flex items-center gap-2 rounded-2xl border bg-blue-100 px-3 py-2 text-sm shadow-soft"
                     data-testid={`pill-${t}`}
                   >
                     <CheckCircle2
@@ -720,7 +720,7 @@ export default function HomePage() {
               animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Card className="overflow-hidden rounded-3xl border bg-purple-900/10 shadow-elevated">
+              <Card className="overflow-hidden rounded-3xl border bg-blue-900/10 shadow-elevated">
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -731,7 +731,7 @@ export default function HomePage() {
                         Servis özeti
                       </p>
                       <p
-                        className="bg-purple-700/2 mt-1 text-lg font-semibold tracking-tight"
+                        className="bg-blue-700/2 mt-1 text-lg font-semibold tracking-tight"
                         style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                         data-testid="text-hero-card-title"
                       >
@@ -748,7 +748,7 @@ export default function HomePage() {
 
                   <div className="mt-5 space-y-3">
                     <div
-                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
                       data-testid="card-kpi-1"
                     >
                       <div className="flex items-center justify-between">
@@ -761,7 +761,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
                       data-testid="card-kpi-2"
                     >
                       <div className="flex items-center justify-between">
@@ -774,7 +774,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-purple-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
                       data-testid="card-kpi-3"
                     >
                       <div className="flex items-center justify-between">
@@ -791,7 +791,7 @@ export default function HomePage() {
                     {["Inverter", "Servo", "SMPS"].map((k) => (
                       <div
                         key={k}
-                        className="rounded-2xl border bg-purple-900/10 px-3 py-2 text-center text-xs text-muted-foreground"
+                        className="rounded-2xl border bg-blue-900/10 px-3 py-2 text-center text-xs text-muted-foreground"
                         data-testid={`chip-${k}`}
                       >
                         {k}
@@ -800,7 +800,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="border-t bg-purple-900/0 p-4 shadow-elevated">
+                <div className="border-t bg-blue-900/0 p-4 shadow-elevated">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
                       Cihaz bilgisi ile hızlı fiyat/termin.
