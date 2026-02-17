@@ -131,21 +131,6 @@
     text-wrap: balance;
   }
 
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, hsl(var(--grid-line) / 0.45) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--grid-line) / 0.45) 1px, transparent 1px);
-    background-size: 56px 56px;
-    background-position: center;
-  }
-
-  .bg-noise {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-    background-size: 220px 220px;
-    background-repeat: repeat;
-    mix-blend-mode: overlay;
-  }
-
   .shadow-soft {
     box-shadow:
       0 1px 0 0 hsl(var(--shadow-soft) / 0.04),
@@ -268,31 +253,6 @@
 }
 
 /* Brand logo sliding animations */
-@keyframes slideRight {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
-
-@keyframes slideLeft {
-  0% {
-    left: 100%;
-  }
-  100% {
-    left: -100%;
-  }
-}
-
-.animate-slide-right {
-  animation: slideRight 1.5s linear infinite;
-}
-
-.animate-slide-left {
-  animation: slideLeft 1.5s linear infinite;
-}
 
 /* Industrial voltage glow effect for brand cards - Navy Blue */
 @keyframes voltageFlicker {

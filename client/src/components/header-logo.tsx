@@ -48,14 +48,19 @@ export function HeaderLogo() {
             "contrast(1) brightness(1)"
           ]
         } : { opacity: 1, filter: "contrast(1) brightness(1)" }}
-        key={`logo-flicker-${triggerCount}`}
         transition={{
           duration: 1.2,
           times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
           ease: "easeInOut",
         }}
       >
-        <img src="/logo.png" alt="Burem Elektronik Logo" className="h-full w-full object-contain mix-blend-multiply" style={{ backgroundColor: 'transparent' }} />
+        <img
+          src="/public/logo.png"
+          alt="Burem Elektronik Logo"
+          className={"h-80 w-80 object-contain " + (isFlickering ? "" : "mix-blend-multiply")}
+          decoding="async"
+          draggable={false}
+        />
       </motion.div>
     </button>
   );
