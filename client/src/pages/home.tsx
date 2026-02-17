@@ -672,7 +672,7 @@ export default function HomePage() {
                 className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
                 data-testid="text-hero-subtitle"
               >
-                Inductra Elektronik; inverter, servo sürücü ve endüstriyel elektronik
+                Burem Elektronik; inverter, servo sürücü ve endüstriyel elektronik
                 kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
                 şekilde yönetir.
               </p>
@@ -739,7 +739,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <span
-                      className="rounded-full border bg-red-900/10 px-2.5 py-1 text-xs text-muted-foreground"
+                      className="rounded-full border bg-blue-900/10 px-2.5 py-1 text-xs text-muted-foreground"
                       data-testid="badge-hero-card"
                     >
                       TR
@@ -1087,7 +1087,7 @@ export default function HomePage() {
                     <div>
                       <p className="text-xs text-muted-foreground">E-posta</p>
                       <p className="font-medium" data-testid="text-email">
-                        info@inductra.com
+                        info@buremelektronik.com
                       </p>
                     </div>
                   </div>
@@ -1149,7 +1149,7 @@ export default function HomePage() {
       <footer className="border-t bg-background/70 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
           <p data-testid="text-footer-left">
-            © {new Date().getFullYear()} Inductra Elektronik
+            © {new Date().getFullYear()} Burem Elektronik
           </p>
           <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
         </div>
