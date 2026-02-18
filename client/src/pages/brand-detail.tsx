@@ -209,7 +209,7 @@ export default function BrandPage() {
             <h1 className="text-lg font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
               {brandName} Servis Merkezi
             </h1>
-            <p className="text-xs text-muted-foreground">Inductra Elektronik Güvencesiyle</p>
+            <p className="text-xs text-muted-foreground">Burem Elektronik Güvencesiyle</p>
           </div>
         </div>
       </header>
