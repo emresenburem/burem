@@ -48,7 +48,7 @@ export async function registerRoutes(
         from,
         to,
         subject: subject ? `Teklif: ${subject}` : "Web Sitesi Teklif Formu",
-        reply_to: email,
+        replyTo: email,
         text:
           `Yeni teklif/iletişim formu:\n\n` +
           `İsim: ${name}\n` +
@@ -58,6 +58,12 @@ export async function registerRoutes(
           `Mesaj:\n${message}\n`,
       });
 
+      if (error) {
+        console.error("Resend API error:", JSON.stringify(error));
+        return res.status(500).json({ error: error.message || "Mail gönderilemedi" });
+      }
+
+      console.log("Email sent successfully:", JSON.stringify(data));
       return res.json({ ok: true });
     } catch (err) {
       console.error("contact mail error:", err);
