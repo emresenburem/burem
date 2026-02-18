@@ -48,7 +48,7 @@ export async function registerRoutes(
         from,
         to,
         subject: subject ? `Teklif: ${subject}` : "Web Sitesi Teklif Formu",
-        reply_to: email,
+        replyTo: email,
         text:
           `Yeni teklif/iletişim formu:\n\n` +
           `İsim: ${name}\n` +

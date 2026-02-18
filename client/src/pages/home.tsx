@@ -240,6 +240,103 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+function ContactForm() {
+  const [formState, setFormState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = formRef.current;
+    if (!form) return;
+
+    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value?.trim();
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value?.trim();
+    const phone = (form.elements.namedItem("phone") as HTMLInputElement)?.value?.trim();
+    const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim();
+
+    if (!name || !email || !message) {
+      setFormState("error");
+      setErrorMsg("Lütfen ad, e-posta ve mesaj alanlarını doldurun.");
+      return;
+    }
+
+    setFormState("sending");
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, message }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Mesaj gönderilemedi");
+      }
+
+      setFormState("sent");
+      form.reset();
+    } catch (err: any) {
+      setFormState("error");
+      setErrorMsg(err.message || "Bir hata oluştu");
+    }
+  };
+
+  if (formState === "sent") {
+    return (
+      <div className="mt-5 flex flex-col items-center gap-3 py-8 text-center" data-testid="contact-success">
+        <CheckCircle2 className="h-12 w-12 text-green-500" />
+        <p className="text-lg font-semibold">Mesajınız gönderildi!</p>
+        <p className="text-sm text-muted-foreground">En kısa sürede size dönüş yapacağız.</p>
+        <Button
+          variant="outline"
+          className="mt-2 rounded-2xl"
+          onClick={() => setFormState("idle")}
+          data-testid="button-new-message"
+        >
+          Yeni Mesaj
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      ref={formRef}
+      className="mt-5 space-y-3"
+      onSubmit={handleSubmit}
+      data-testid="form-contact"
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className="sr-only" htmlFor="name">Ad Soyad</label>
+          <Input id="name" placeholder="Ad Soyad" className="h-11 rounded-2xl" data-testid="input-name" required />
+        </div>
+        <div>
+          <label className="sr-only" htmlFor="phone">Telefon</label>
+          <Input id="phone" placeholder="Telefon" className="h-11 rounded-2xl" data-testid="input-phone" />
+        </div>
+      </div>
+      <div>
+        <label className="sr-only" htmlFor="email">E-posta</label>
+        <Input id="email" type="email" placeholder="E-posta" className="h-11 rounded-2xl" data-testid="input-email" required />
+      </div>
+      <div>
+        <label className="sr-only" htmlFor="message">Mesaj</label>
+        <Textarea id="message" placeholder="Cihaz marka/model, arıza belirtisi, varsa hata kodu..." className="min-h-[120px] rounded-2xl" data-testid="input-message" required />
+      </div>
+      <Button type="submit" className="h-11 w-full rounded-2xl" disabled={formState === "sending"} data-testid="button-submit">
+        {formState === "sending" ? "Gönderiliyor..." : "Gönder"}
+      </Button>
+      {formState === "error" && errorMsg && (
+        <p className="text-sm text-red-500" data-testid="text-contact-error">{errorMsg}</p>
+      )}
+    </form>
+  );
+}
+
 const SERVICES = [
   {
     title: "Sürücü Tamiri",
@@ -986,73 +1083,7 @@ export default function HomePage() {
                 Cihazın marka/modeli ve arıza belirtisini yazın; hızlıca dönüş yapalım.
               </p>
 
-              <form
-                className="mt-5 space-y-3"
-                onSubmit={(e) => e.preventDefault()}
-                data-testid="form-contact"
-              >
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className="sr-only" htmlFor="name">
-                      Ad Soyad
-                    </label>
-                    <Input
-                      id="name"
-                      placeholder="Ad Soyad"
-                      className="h-11 rounded-2xl"
-                      data-testid="input-name"
-                    />
-                  </div>
-                  <div>
-                    <label className="sr-only" htmlFor="phone">
-                      Telefon
-                    </label>
-                    <Input
-                      id="phone"
-                      placeholder="Telefon"
-                      className="h-11 rounded-2xl"
-                      data-testid="input-phone"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="sr-only" htmlFor="email">
-                    E-posta
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="E-posta"
-                    className="h-11 rounded-2xl"
-                    data-testid="input-email"
-                  />
-                </div>
-
-                <div>
-                  <label className="sr-only" htmlFor="message">
-                    Mesaj
-                  </label>
-                  <Textarea
-                    id="message"
-                    placeholder="Cihaz marka/model, arıza belirtisi, varsa hata kodu..."
-                    className="min-h-[120px] rounded-2xl"
-                    data-testid="input-message"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="h-11 w-full rounded-2xl"
-                  data-testid="button-submit"
-                >
-                  Gönder
-                </Button>
-
-                <p className="text-xs text-muted-foreground" data-testid="text-contact-note">
-                  Not: Bu prototipte form gönderimi demo amaçlıdır.
-                </p>
-              </form>
+              <ContactForm />
             </Card>
 
             <div className="grid gap-4">
