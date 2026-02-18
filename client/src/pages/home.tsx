@@ -222,7 +222,7 @@ function BrandsPopup() {
 function WhatsAppButton() {
   return (
     <motion.a
-      href="https://wa.me/905000000000"
+      href="https://wa.me/905322664764"
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
@@ -1074,7 +1074,7 @@ export default function HomePage() {
                     <div>
                       <p className="text-xs text-muted-foreground">Telefon</p>
                       <p className="font-medium" data-testid="text-phone">
-                        +90 (5xx) xxx xx xx
+                        +90 (532) 266 47 64
                       </p>
                     </div>
                   </div>
@@ -1100,7 +1100,7 @@ export default function HomePage() {
                     <div>
                       <p className="text-xs text-muted-foreground">Lokasyon</p>
                       <p className="font-medium" data-testid="text-location">
-                        İstanbul / Türkiye
+                        Bursa / Türkiye
                       </p>
                     </div>
                   </div>
