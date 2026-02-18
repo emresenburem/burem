@@ -4,7 +4,10 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 
 const app = express();
+app.use(express.json());
+
 const httpServer = createServer(app);
+
 
 declare module "http" {
   interface IncomingMessage {

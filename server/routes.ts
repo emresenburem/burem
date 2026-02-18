@@ -1,7 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { Resend } from "resend";
 import { storage } from "./storage";
 import { insertProductSchema } from "@shared/schema";
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function registerRoutes(
   httpServer: Server,
@@ -26,14 +29,42 @@ export async function registerRoutes(
     res.json(product);
   });
 
-  app.post("/api/products", async (req, res) => {
-    const parsed = insertProductSchema.safeParse(req.body);
-    if (!parsed.success) {
-      return res.status(400).json({ error: parsed.error.errors });
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { name, email, phone, subject, message } = req.body ?? {};
+
+      if (!name || !email || !message) {
+        return res.status(400).json({ error: "name, email, message zorunlu" });
+      }
+
+      if (!resend) {
+        return res.status(503).json({ error: "E-posta servisi yapılandırılmamış" });
+      }
+
+      const to = process.env.CONTACT_TO_EMAIL || "info@buremelektronik.com";
+      const from = process.env.CONTACT_FROM_EMAIL || "onboarding@resend.dev";
+
+      await resend.emails.send({
+        from,
+        to,
+        subject: subject ? `Teklif: ${subject}` : "Web Sitesi Teklif Formu",
+        reply_to: email,
+        text:
+          `Yeni teklif/iletişim formu:\n\n` +
+          `İsim: ${name}\n` +
+          `E-posta: ${email}\n` +
+          `Telefon: ${phone || "-"}\n` +
+          `Konu: ${subject || "-"}\n\n` +
+          `Mesaj:\n${message}\n`,
+      });
+
+      return res.json({ ok: true });
+    } catch (err) {
+      console.error("contact mail error:", err);
+      return res.status(500).json({ error: "Mail gönderilemedi" });
     }
-    const product = await storage.createProduct(parsed.data);
-    res.status(201).json(product);
   });
+
 
   app.put("/api/products/:id", async (req, res) => {
     const parsed = insertProductSchema.partial().safeParse(req.body);
