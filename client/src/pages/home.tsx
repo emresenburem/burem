@@ -99,7 +99,7 @@ function BrandsPopup() {
     <>
       {/* Side Tab Indicator */}
       <motion.div
-        className="fixed left-0 top-14 h-screen z-[99] cursor-pointer flex items-center"
+        className="fixed left-0 top-28 h-screen z-[99] cursor-pointer flex items-center"
         initial={{ x: 0 }}
         animate={{ x: isOpen ? -100 : 0 }}
         transition={{ type: "spring", damping: 20, stiffness: 200 }}
@@ -691,7 +691,7 @@ export default function HomePage() {
       
       <header className="sticky top-0 z-40 border-b bg-blue-900/2 shadow-elevated backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
-          <div className="-ml-8 -mt-10 mb-[-2.5rem]">
+          <div className="-ml-25 -mt-12 mb-[-2.5rem]">
             <HeaderLogo />
           </div>
 
