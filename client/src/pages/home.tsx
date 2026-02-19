@@ -54,6 +54,7 @@ const BRANDS = [
   { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
   { name: "Panasonic", color: "#003366", logo: "https://w7.pngwing.com/pngs/432/765/png-transparent-logo-panasonic-phone-panasonic-service-center-panasonic-india-pvt-ltd-others-blue-text-innovation.png" },
   { name: "B&R", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/B%26R_Logo_Tagline_below_RGB_HD.jpg" }
+  
 ];
 
 function BrandsPopup() {
@@ -112,15 +113,15 @@ function BrandsPopup() {
           <div className="flex flex-col gap-2 py-1 overflow-hidden">
             {BRANDS.map((brand) => (
               <div key={brand.name} className="w-8 h-6 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden flex-1">
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name}
-                  className="object-contain"
-                  style={{ 
-                    width: brand.name === "ABB" ? "100%" : "250%",
-                    height: brand.name === "ABB" ? "100%" : "250%"
-                  }}
-                />
+                <div className="h-16 flex items-center justify-center">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="max-h-14 w-auto object-contain transition-transform duration-200"
+                    style={{ transform: `scale(${brand.scale ?? 1.25})` }}
+                    draggable={false}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -187,7 +188,7 @@ function BrandsPopup() {
                     src={brand.logo} 
                     alt={brand.name} 
                     className="h-full w-full object-contain transition-all duration-300"
-                    style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
+                    style={brand.scale ? { transform: `scale(${brand.scale })` } : undefined}
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                       (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
@@ -222,7 +223,7 @@ function BrandsPopup() {
 function WhatsAppButton() {
   return (
     <motion.a
-      href="https://wa.me/905322"
+      href="https://wa.me/905322664764"
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
@@ -795,7 +796,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {["Hızlı dönüş", "Testli teslim", "Şeffaf rapor"].map((t) => (
+                {["Hızlı dönüş", "Testli teslim", "Kontrollü onarım"].map((t) => (
                   <div
                     key={t}
                     className="flex items-center gap-2 rounded-2xl border bg-blue-100 px-3 py-2 text-sm shadow-soft"
@@ -1074,7 +1075,7 @@ export default function HomePage() {
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-contact-title"
               >
-                Teklif & arıza bildirimi
+                Arıza bildirimi
               </h2>
               <p
                 className="mt-3 text-sm text-muted-foreground"
