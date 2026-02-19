@@ -113,15 +113,15 @@ function BrandsPopup() {
           <div className="flex flex-col gap-2 py-1 overflow-hidden">
             {BRANDS.map((brand) => (
               <div key={brand.name} className="w-8 h-6 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden flex-1">
-                <div className="h-16 flex items-center justify-center">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="max-h-14 w-auto object-contain transition-transform duration-200"
-                    style={{ transform: `scale(${brand.scale ?? 1.25})` }}
-                    draggable={false}
-                  />
-                </div>
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name}
+                  className="object-contain"
+                  style={{ 
+                    width: brand.name === "ABB" ? "100%" : "250%",
+                    height: brand.name === "ABB" ? "100%" : "250%"
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -233,7 +233,7 @@ function WhatsAppButton() {
       className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/20 transition-transform"
       data-testid="button-whatsapp"
     >
-      <MessageCircle className="h-7 w-7 fill-white" />
+      <img src="/whatsapp-icon.png" alt="WhatsApp" className="h-8 w-8 object-contain" />
     </motion.a>
   );
 }
