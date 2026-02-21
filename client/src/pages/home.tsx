@@ -1155,7 +1155,7 @@ export default function HomePage() {
                 </p>
 
                 <div className="mt-4 grid gap-3">
-                  {["Güvenilir parça & işçilik", "Net termin & maliyet", "Test ile teslim"].map(
+                  {["Güvenilir parça & işçilik", "Detaylı arıza analizi", "Test ile teslim"].map(
                     (t, idx) => (
                       <div
                         key={t}
