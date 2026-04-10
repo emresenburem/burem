@@ -249,7 +249,7 @@ function ScrollVideo() {
         <video
           ref={videoRef}
           src="/hero-video.mp4"
-          className="w-full h-full object-cover opacity-25"
+          className="w-full h-full object-cover opacity-60"
           muted
           playsInline
           preload="auto"
