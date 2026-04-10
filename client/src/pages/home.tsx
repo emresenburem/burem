@@ -244,17 +244,20 @@ function ScrollVideo() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[300vh]" data-testid="section-scroll-video">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-        <video
-          ref={videoRef}
-          src="/hero-video.mp4"
-          className="w-full h-full object-cover opacity-60"
-          muted
-          playsInline
-          preload="auto"
-          data-testid="video-scroll"
-        />
+    <div ref={containerRef} className="relative h-[250vh]" data-testid="section-scroll-video">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+        <div className="w-full max-w-3xl mx-auto px-6">
+          <video
+            ref={videoRef}
+            src="/hero-video.mp4"
+            className="w-full rounded-2xl shadow-2xl opacity-90"
+            style={{ maxHeight: "60vh", objectFit: "cover" }}
+            muted
+            playsInline
+            preload="auto"
+            data-testid="video-scroll"
+          />
+        </div>
       </div>
     </div>
   );
