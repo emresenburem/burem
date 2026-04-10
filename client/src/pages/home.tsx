@@ -245,24 +245,16 @@ function ScrollVideo() {
 
   return (
     <div ref={containerRef} className="relative h-[300vh]" data-testid="section-scroll-video">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
         <video
           ref={videoRef}
           src="/hero-video.mp4"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-25"
           muted
           playsInline
           preload="auto"
           data-testid="video-scroll"
         />
-        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-end pb-16 pointer-events-none">
-          <p
-            className="text-white/70 text-sm tracking-widest uppercase animate-bounce"
-            data-testid="text-scroll-hint"
-          >
-            Aşağı kaydır
-          </p>
-        </div>
       </div>
     </div>
   );
