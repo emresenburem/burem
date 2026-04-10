@@ -220,6 +220,43 @@ function BrandsPopup() {
   );
 }
 
+function IntroScreen({ onDone }: { onDone: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.play().catch(() => {});
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[200] bg-black flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.8, ease: "easeInOut" }}
+      data-testid="intro-screen"
+    >
+      <video
+        ref={videoRef}
+        src="/intro-video.mp4"
+        className="w-full h-full object-cover"
+        muted
+        playsInline
+        onEnded={onDone}
+        data-testid="video-intro"
+      />
+      <button
+        onClick={onDone}
+        className="absolute bottom-8 right-8 text-white/70 hover:text-white text-sm border border-white/30 hover:border-white/70 px-4 py-2 rounded-full transition-all"
+        data-testid="button-intro-skip"
+      >
+        Geç →
+      </button>
+    </motion.div>
+  );
+}
+
 function ScrollVideo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -694,6 +731,7 @@ function ProductsShowcase() {
 
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
+  const [showIntro, setShowIntro] = useState(true);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
   const handleGlobalClick = () => {
@@ -713,13 +751,17 @@ export default function HomePage() {
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <motion.div 
-      className="min-h-screen bg-white text-gray-900" 
-      onClick={handleGlobalClick}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-    >
+    <>
+      <AnimatePresence>
+        {showIntro && <IntroScreen onDone={() => setShowIntro(false)} />}
+      </AnimatePresence>
+      <motion.div 
+        className="min-h-screen bg-white text-gray-900" 
+        onClick={handleGlobalClick}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+      >
       <InteractiveGradient />
       <WhatsAppButton />
       <BrandsPopup />
@@ -1231,6 +1273,7 @@ export default function HomePage() {
           <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
         </div>
       </footer>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }
