@@ -220,6 +220,54 @@ function BrandsPopup() {
   );
 }
 
+function ScrollVideo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const video = videoRef.current;
+    if (!container || !video) return;
+
+    const handleScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const containerHeight = container.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = Math.min(Math.max(scrolled / containerHeight, 0), 1);
+      if (video.duration && isFinite(video.duration)) {
+        video.currentTime = progress * video.duration;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative h-[300vh]" data-testid="section-scroll-video">
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+        <video
+          ref={videoRef}
+          src="/hero-video.mp4"
+          className="w-full h-full object-cover"
+          muted
+          playsInline
+          preload="auto"
+          data-testid="video-scroll"
+        />
+        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-end pb-16 pointer-events-none">
+          <p
+            className="text-white/70 text-sm tracking-widest uppercase animate-bounce"
+            data-testid="text-scroll-hint"
+          >
+            Aşağı kaydır
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function WhatsAppButton() {
   return (
     <motion.a
@@ -917,6 +965,8 @@ export default function HomePage() {
             </motion.div>
           </div>
         </section>
+
+        <ScrollVideo />
 
         <section
           id="services"
