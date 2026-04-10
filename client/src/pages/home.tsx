@@ -159,7 +159,7 @@ function BrandsPopup() {
                 data-testid={`brand-item-${brand.name}`}
               >
                 {/* Spotlight glow effect */}
-                <div className="absolute inset-0 bg-gradient-radial from-blue-100/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-radial from-gray-100/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
                 {/* Sliding logos animation */}
                 <div className="hidden absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -711,7 +711,7 @@ export default function HomePage() {
 
   return (
     <motion.div 
-      className="min-h-screen bg-blue-900/10 text-gray-900" 
+      className="min-h-screen bg-white text-gray-900" 
       onClick={handleGlobalClick}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -730,7 +730,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-blue-900/2 shadow-elevated backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b bg-white/80 shadow-elevated backdrop-blur-xl">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-25 -mt-12 mb-[-2.5rem]">
             <HeaderLogo />
@@ -788,7 +788,7 @@ export default function HomePage() {
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
               <Badge
-                className="rounded-full border bg-blue-900/10 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                className="rounded-full border bg-white/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
                 data-testid="badge-hero"
               >
                 Elektronik sürücü tamiri · Endüstriyel servis
@@ -839,7 +839,7 @@ export default function HomePage() {
                 {["Hızlı dönüş", "Testli teslim", "Kontrollü onarım"].map((t) => (
                   <div
                     key={t}
-                    className="flex items-center gap-2 rounded-2xl border bg-blue-100 px-3 py-2 text-sm shadow-soft"
+                    className="flex items-center gap-2 rounded-2xl border bg-gray-100 px-3 py-2 text-sm shadow-soft"
                     data-testid={`pill-${t}`}
                   >
                     <CheckCircle2
@@ -858,7 +858,7 @@ export default function HomePage() {
               animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Card className="overflow-hidden rounded-3xl border bg-blue-900/10 shadow-elevated">
+              <Card className="overflow-hidden rounded-3xl border bg-white/70 shadow-elevated">
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -877,7 +877,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <span
-                      className="rounded-full border bg-blue-900/10 px-2.5 py-1 text-xs text-muted-foreground"
+                      className="rounded-full border bg-white/70 px-2.5 py-1 text-xs text-muted-foreground"
                       data-testid="badge-hero-card"
                     >
                       TR
@@ -886,7 +886,7 @@ export default function HomePage() {
 
                   <div className="mt-5 space-y-3">
                     <div
-                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-white/70 px-4 py-3"
                       data-testid="card-kpi-1"
                     >
                       <div className="flex items-center justify-between">
@@ -899,7 +899,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-white/70 px-4 py-3"
                       data-testid="card-kpi-2"
                     >
                       <div className="flex items-center justify-between">
@@ -912,7 +912,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-blue-900/10 px-4 py-3"
+                      className="rounded-2xl border bg-white/70 px-4 py-3"
                       data-testid="card-kpi-3"
                     >
                       <div className="flex items-center justify-between">
@@ -929,7 +929,7 @@ export default function HomePage() {
                     {["Inverter", "Servo", "SMPS"].map((k) => (
                       <div
                         key={k}
-                        className="rounded-2xl border bg-blue-900/10 px-3 py-2 text-center text-xs text-muted-foreground"
+                        className="rounded-2xl border bg-white/70 px-3 py-2 text-center text-xs text-muted-foreground"
                         data-testid={`chip-${k}`}
                       >
                         {k}
@@ -938,7 +938,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="border-t bg-blue-900/0 p-4 shadow-elevated">
+                <div className="border-t bg-transparent p-4 shadow-elevated">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
                       Cihaz bilgisi ile hızlı fiyat/termin.
