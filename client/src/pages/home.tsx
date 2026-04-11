@@ -42,6 +42,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/interactive-empty-state";
+import { ShowcaseList } from "@/components/ui/project-showcase";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
@@ -482,43 +483,29 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
-      <div className="mt-2 grid gap-5 md:grid-cols-3">
-        {[
-          {
-            title: "Sürücü Tamiri",
-            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
-            icons: [<Wrench key="w" className="h-5 w-5" />, <Zap key="z" className="h-5 w-5" />, <ShieldCheck key="s" className="h-5 w-5" />],
-          },
-          {
-            title: "Endüstriyel Elektronik",
-            description: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları onarımı.",
-            icons: [<Cpu key="c" className="h-5 w-5" />, <Settings key="st" className="h-5 w-5" />, <Binary key="b" className="h-5 w-5" />],
-          },
-          {
-            title: "Hızlı Arıza Tespiti",
-            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
-            icons: [<Timer key="t" className="h-5 w-5" />, <Search key="s2" className="h-5 w-5" />, <ClipboardList key="cl" className="h-5 w-5" />],
-          },
-        ].map((item, i) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
-          >
-            <EmptyState
-              title={item.title}
-              description={item.description}
-              icons={item.icons}
-              theme="light"
-              variant="default"
-              size="default"
-              className="h-full"
-              data-testid={`card-service-${item.title}`}
-            />
-          </motion.div>
-        ))}
+      <div className="mx-auto max-w-2xl">
+        <ShowcaseList
+          items={[
+            {
+              title: "Sürücü Tamiri",
+              description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
+              tag: "AC · DC · Servo",
+              image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=560&auto=format&fit=crop",
+            },
+            {
+              title: "Endüstriyel Elektronik",
+              description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları.",
+              tag: "PCB · SMPS · CNC",
+              image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=560&auto=format&fit=crop",
+            },
+            {
+              title: "Hızlı Arıza Tespiti",
+              description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+              tag: "Ön Analiz",
+              image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=560&auto=format&fit=crop",
+            },
+          ]}
+        />
       </div>
     </section>
   );
@@ -604,48 +591,35 @@ function AnimatedProcessSection() {
         </div>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {[
-          {
-            title: "Ön İnceleme",
-            description: "Arıza belirtisi, model bilgisi ve geçmiş işlemlerle hızlı başlangıç.",
-            icons: [<ClipboardList key="cl" className="h-5 w-5" />, <Eye key="e" className="h-5 w-5" />, <FileSearch key="fs" className="h-5 w-5" />],
-          },
-          {
-            title: "Arıza Tespiti",
-            description: "Teknik ekip tarafından detaylı komponent düzeyinde arıza analizi.",
-            icons: [<Microscope key="m" className="h-5 w-5" />, <ScanLine key="sl" className="h-5 w-5" />, <Search key="s" className="h-5 w-5" />],
-          },
-          {
-            title: "Onarım + Parça",
-            description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
-            icons: [<Wrench key="w" className="h-5 w-5" />, <Settings key="st" className="h-5 w-5" />, <Flame key="f" className="h-5 w-5" />],
-          },
-          {
-            title: "Test + Teslim",
-            description: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
-            icons: [<PackageCheck key="pc" className="h-5 w-5" />, <Zap key="z" className="h-5 w-5" />, <Truck key="tr" className="h-5 w-5" />],
-          },
-        ].map((item, i) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
-          >
-            <EmptyState
-              title={item.title}
-              description={item.description}
-              icons={item.icons}
-              theme="light"
-              variant="default"
-              size="default"
-              className="h-full"
-              data-testid={`card-step-${item.title}`}
-            />
-          </motion.div>
-        ))}
+      <div className="mx-auto max-w-2xl">
+        <ShowcaseList
+          items={[
+            {
+              title: "Ön İnceleme",
+              description: "Arıza belirtisi, model bilgisi ve geçmiş işlemlerle hızlı değerlendirme başlatılır.",
+              tag: "01",
+              image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=560&auto=format&fit=crop",
+            },
+            {
+              title: "Arıza Tespiti",
+              description: "Teknik ekip tarafından komponent düzeyinde detaylı arıza analizi yapılır.",
+              tag: "02",
+              image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=560&auto=format&fit=crop",
+            },
+            {
+              title: "Onarım + Parça",
+              description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+              tag: "03",
+              image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=560&auto=format&fit=crop",
+            },
+            {
+              title: "Test + Teslim",
+              description: "Yük altında test, stabilite kontrolü ve teslim öncesi detaylı rapor.",
+              tag: "04",
+              image: "https://images.unsplash.com/photo-1565126998043-23c1ad5f8bf7?w=560&auto=format&fit=crop",
+            },
+          ]}
+        />
       </div>
     </section>
   );
@@ -870,9 +844,9 @@ export default function HomePage() {
     <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        initial={{ opacity: 0, filter: "blur(18px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
       >
       <InteractiveGradient />
       {/* Sparkle arka plan — tüm sayfanın arkasında sabit */}
