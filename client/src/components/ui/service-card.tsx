@@ -24,9 +24,7 @@ export function ServiceCard({
     <motion.div
       className="relative rounded-3xl overflow-hidden cursor-default select-none border border-gray-200/80"
       style={{
-        background: "rgba(255,255,255,0.55)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        background: "rgba(248,249,252,0.9)",
         minHeight: 220,
       }}
       onHoverStart={() => setHovered(true)}

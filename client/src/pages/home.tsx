@@ -882,10 +882,10 @@ export default function HomePage() {
         <SparklesCore
           background="transparent"
           particleColor="#1e293b"
-          particleDensity={160}
-          minSize={0.6}
-          maxSize={2.2}
-          speed={1.2}
+          particleDensity={28}
+          minSize={0.5}
+          maxSize={1.4}
+          speed={0.6}
           className="h-full w-full"
         />
       </div>
