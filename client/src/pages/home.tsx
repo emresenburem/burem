@@ -1118,7 +1118,11 @@ export default function HomePage() {
 
         {/* Marka logoları sonsuz slider */}
         <div className="relative w-full py-12 overflow-hidden">
-          <p className="text-center text-sm text-muted-foreground mb-6 tracking-widest uppercase">
+          <p
+            className="text-center text-2xl font-bold text-gray-800 mb-8 tracking-tight"
+            style={{ fontFamily: "Nunito, var(--font-sans)" }}
+            data-testid="text-brands-title"
+          >
             Tamir ettiğimiz markalar
           </p>
           <div className="relative h-20 w-full">
