@@ -425,6 +425,190 @@ function ProcessStepsGrid() {
   );
 }
 
+function AnimatedServicesSection() {
+  const serviceWords = ["AC/DC Sürücüler", "İnverterler", "Servo Sürücüler", "Güç Kartları"];
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setCurrent((p) => (p + 1) % serviceWords.length), 2200);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section
+      id="services"
+      className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20"
+      data-testid="section-services"
+    >
+      <div className="flex flex-col items-center text-center gap-4 mb-14">
+        <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-services-eyebrow">
+          Neler yapıyoruz
+        </p>
+        <h2
+          className="text-4xl md:text-6xl font-bold tracking-tight leading-tight"
+          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+          data-testid="text-services-title"
+        >
+          Tamir ediyoruz
+          <span
+            className="relative block overflow-hidden"
+            style={{ height: "1.25em" }}
+          >
+            {serviceWords.map((word, i) => (
+              <motion.span
+                key={i}
+                className="absolute inset-x-0 text-primary font-bold"
+                initial={{ opacity: 0, y: 80 }}
+                animate={
+                  current === i
+                    ? { y: 0, opacity: 1 }
+                    : { y: current > i ? -80 : 80, opacity: 0 }
+                }
+                transition={{ type: "spring", stiffness: 55, damping: 14 }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </span>
+        </h2>
+        <p className="text-base text-muted-foreground max-w-md" data-testid="text-services-subtitle">
+          Endüstriyel sürücü ve elektronik kartlarını fabrikadan çıkmış gibi teslim ediyoruz.
+        </p>
+      </div>
+
+      <div className="mt-2 grid gap-4 md:grid-cols-3">
+        {SERVICES.map((s, i) => (
+          <motion.div
+            key={s.title}
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
+          >
+            <Card
+              className="group relative overflow-hidden rounded-3xl border bg-card p-6 shadow-soft transition-all duration-300 hover:shadow-elevated hover:border-primary/50 charge-up impulse-shock energy-sweep thunder-border h-full"
+              data-testid={`card-service-${s.title}`}
+            >
+              <div className="flex flex-col gap-4">
+                <div
+                  className="grid h-12 w-12 place-items-center rounded-2xl border bg-background"
+                  data-testid={`icon-service-${s.title}`}
+                >
+                  <s.icon
+                    className="h-5 w-5"
+                    style={{ color: "hsl(var(--primary))" }}
+                    aria-hidden="true"
+                  />
+                </div>
+                <div>
+                  <p
+                    className="text-base font-semibold tracking-tight"
+                    style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                    data-testid={`text-service-title-${s.title}`}
+                  >
+                    {s.title}
+                  </p>
+                  <p
+                    className="mt-2 text-sm text-muted-foreground leading-relaxed"
+                    data-testid={`text-service-desc-${s.title}`}
+                  >
+                    {s.desc}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AnimatedProcessSection() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setCurrent((p) => (p + 1) % STEPS.length), 2600);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section
+      id="process"
+      className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24"
+      data-testid="section-process"
+    >
+      <div className="flex flex-col items-center text-center gap-4 mb-14">
+        <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-process-eyebrow">
+          Nasıl çalışıyoruz
+        </p>
+        <h2
+          className="text-4xl md:text-6xl font-bold tracking-tight leading-tight"
+          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+          data-testid="text-process-title"
+        >
+          Adım adım
+          <span
+            className="relative block overflow-hidden"
+            style={{ height: "1.25em" }}
+          >
+            {STEPS.map((step, i) => (
+              <motion.span
+                key={i}
+                className="absolute inset-x-0 text-primary font-bold"
+                initial={{ opacity: 0, y: 80 }}
+                animate={
+                  current === i
+                    ? { y: 0, opacity: 1 }
+                    : { y: current > i ? -80 : 80, opacity: 0 }
+                }
+                transition={{ type: "spring", stiffness: 55, damping: 14 }}
+              >
+                {step.title}
+              </motion.span>
+            ))}
+          </span>
+        </h2>
+
+        <div className="relative h-10 overflow-hidden w-full max-w-lg">
+          {STEPS.map((step, i) => (
+            <motion.p
+              key={i}
+              className="absolute inset-x-0 text-sm text-muted-foreground"
+              initial={{ opacity: 0, y: 24 }}
+              animate={
+                current === i
+                  ? { y: 0, opacity: 1 }
+                  : { y: current > i ? -24 : 24, opacity: 0 }
+              }
+              transition={{ type: "spring", stiffness: 60, damping: 15, delay: 0.05 }}
+              data-testid={`text-process-step-desc-${i}`}
+            >
+              {step.desc}
+            </motion.p>
+          ))}
+        </div>
+
+        <div className="flex gap-2 mt-2">
+          {STEPS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                current === i ? "w-8 bg-primary" : "w-2 bg-muted-foreground/30"
+              }`}
+              data-testid={`dot-process-${i}`}
+              aria-label={`Adım ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <ProcessStepsGrid />
+    </section>
+  );
+}
+
 function useScrollSpy(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
 
@@ -919,146 +1103,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        <section
-          id="services"
-          className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
-        >
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground" data-testid="text-services-eyebrow">
-                Neler yapıyoruz
-              </p>
-              <h2
-                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                data-testid="text-services-title"
-              >
-                Hizmetler
-              </h2>
-            </div>
-            <Badge
-              variant="secondary"
-              className="rounded-full"
-              data-testid="badge-services"
-            >
-              Endüstriyel odak
-            </Badge>
-          </div>
+        <AnimatedServicesSection />
 
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {SERVICES.map((s) => (
-              <Card
-                key={s.title}
-                className="group relative overflow-hidden rounded-3xl border bg-card p-5 shadow-soft transition-all duration-300 hover:shadow-elevated hover:border-primary/50 charge-up impulse-shock energy-sweep thunder-border"
-                data-testid={`card-service-${s.title}`}
-              >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="grid h-11 w-11 place-items-center rounded-2xl border bg-background"
-                    data-testid={`icon-service-${s.title}`}
-                  >
-                    <s.icon
-                      className="h-5 w-5"
-                      style={{ color: "hsl(var(--primary))" }}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div>
-                    <p
-                      className="text-base font-semibold tracking-tight"
-                      style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                      data-testid={`text-service-title-${s.title}`}
-                    >
-                      {s.title}
-                    </p>
-                    <p
-                      className="mt-1 text-sm text-muted-foreground"
-                      data-testid={`text-service-desc-${s.title}`}
-                    >
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section
-          id="process"
-          className="mx-auto w-full max-w-4xl px-4 pb-14 md:px-6 md:pb-20"
-        >
-          <div className="grid gap-20">
-            {/* Sol: Süreç Başlık + Adımlar */}
-            <div>
-              <p className="text-sm text-muted-foreground" data-testid="text-process-eyebrow">
-                Nasıl çalışıyoruz
-              </p>
-              <h2
-                className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                data-testid="text-process-title"
-              >
-                Süreç
-              </h2>
-              <p
-                className="mt-3 max-w-prose text-sm text-muted-foreground mb-6"
-                data-testid="text-process-subtitle"
-              >
-                Cihaz geldiğinde önce arızayı doğruluyor, ardından onarım ve yük altında
-                test ile güvenli teslim ediyoruz.
-              </p>
-
-              {/* Süreç Adımları - 2x2 Grid */}
-              <ProcessStepsGrid />
-            </div>
-
-              {/* Sağ: Çalıştığımız Firmalar false */}
-              <Card className="hidden rounded-2xl border bg-card p-4 shadow-soft h-fit" data-testid="card-partners">
-                <p className="text-xs text-muted-foreground mb-1" data-testid="text-partners-eyebrow">
-                  Referanslarımız
-                </p>
-                <h3
-                  className="text-base font-semibold tracking-tight mb-3"
-                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                  data-testid="text-partners-title"
-                >
-                  Çalıştığımız Firmalar
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { name: "ermetal", logo: "https://seekvectorlogo.net/wp-content/uploads/2020/01/ermetal-vector-logo.png" },
-                    { name: "Valeo", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg" },
-                    { name: "Bosch", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/2560px-Bosch-logo.svg.png" },
-                    { name: "Tofaş", logo: "https://images.seeklogo.com/logo-png/42/1/tofas-logo-png_seeklogo-426899.png" },
-                    { name: "Sarar", logo: "https://images.seeklogo.com/logo-png/30/1/sarar-logo-png_seeklogo-309235.png" },
-                  ].map((company) => (
-                    <div
-                      key={company.name}
-                      className="bg-white rounded-lg p-2 flex items-center justify-center h-12 border shadow-sm"
-                      data-testid={`partner-${company.name.toLowerCase().replace(' ', '-')}`}
-                    >
-                      <img
-                        src={company.logo}
-                        alt={company.name}
-                        className="max-h-8 max-w-full object-contain"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          if (target.parentElement) {
-                            const span = document.createElement('span');
-                            span.className = 'text-sm font-semibold text-gray-700';
-                            span.textContent = company.name;
-                            target.parentElement.appendChild(span);
-                          }
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Card>
-          </div>
-        </section>
+        <AnimatedProcessSection />
 
         <ProductsShowcase />
 
