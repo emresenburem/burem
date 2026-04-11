@@ -494,8 +494,7 @@ function AnimatedServicesSection() {
             <Zap key="z" className="h-5 w-5" />,
             <ShieldCheck key="s" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)"
-          accentColor="rgba(99,102,241,0.4)"
+          accentColor="rgba(99,102,241,0.14)"
         />
         <ServiceCard
           title="Endüstriyel Elektronik"
@@ -506,8 +505,7 @@ function AnimatedServicesSection() {
             <Settings key="st" className="h-5 w-5" />,
             <Binary key="b" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #0c1a12 0%, #14261d 60%, #0c1a12 100%)"
-          accentColor="rgba(34,197,94,0.35)"
+          accentColor="rgba(34,197,94,0.12)"
         />
         <ServiceCard
           title="Hızlı Arıza Tespiti"
@@ -518,8 +516,7 @@ function AnimatedServicesSection() {
             <Search key="s2" className="h-5 w-5" />,
             <ClipboardList key="cl" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #1a0f0a 0%, #2d1810 60%, #1a0f0a 100%)"
-          accentColor="rgba(249,115,22,0.4)"
+          accentColor="rgba(249,115,22,0.14)"
         />
       </div>
     </section>
@@ -616,8 +613,7 @@ function AnimatedProcessSection() {
             <Eye key="e" className="h-5 w-5" />,
             <FileSearch key="fs" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #0f172a 0%, #1e2d40 60%, #0f172a 100%)"
-          accentColor="rgba(56,189,248,0.35)"
+          accentColor="rgba(56,189,248,0.14)"
         />
         <ServiceCard
           title="Arıza Tespiti"
@@ -628,8 +624,7 @@ function AnimatedProcessSection() {
             <ScanLine key="sl" className="h-5 w-5" />,
             <Search key="sr" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #14100a 0%, #2a1f10 60%, #14100a 100%)"
-          accentColor="rgba(251,191,36,0.35)"
+          accentColor="rgba(251,191,36,0.14)"
         />
         <ServiceCard
           title="Onarım + Parça"
@@ -640,8 +635,7 @@ function AnimatedProcessSection() {
             <Settings key="st" className="h-5 w-5" />,
             <Flame key="f" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #1a0f0f 0%, #2d1414 60%, #1a0f0f 100%)"
-          accentColor="rgba(239,68,68,0.35)"
+          accentColor="rgba(239,68,68,0.13)"
         />
         <ServiceCard
           title="Test + Teslim"
@@ -652,8 +646,7 @@ function AnimatedProcessSection() {
             <Zap key="z" className="h-5 w-5" />,
             <Truck key="tr" className="h-5 w-5" />,
           ]}
-          gradient="linear-gradient(135deg, #0a120f 0%, #111f18 60%, #0a120f 100%)"
-          accentColor="rgba(34,197,94,0.35)"
+          accentColor="rgba(34,197,94,0.12)"
         />
       </div>
     </section>
@@ -888,11 +881,11 @@ export default function HomePage() {
       <div className="fixed inset-0 z-[-1] pointer-events-none">
         <SparklesCore
           background="transparent"
-          particleColor="#555555"
-          particleDensity={60}
-          minSize={0.4}
-          maxSize={1.5}
-          speed={0.8}
+          particleColor="#1e293b"
+          particleDensity={160}
+          minSize={0.6}
+          maxSize={2.2}
+          speed={1.2}
           className="h-full w-full"
         />
       </div>

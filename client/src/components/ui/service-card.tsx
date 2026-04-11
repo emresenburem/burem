@@ -6,8 +6,8 @@ interface ServiceCardProps {
   description: string;
   tag?: string;
   icons: React.ReactNode[];
-  gradient?: string;
   accentColor?: string;
+  iconColor?: string;
 }
 
 export function ServiceCard({
@@ -15,70 +15,74 @@ export function ServiceCard({
   description,
   tag,
   icons,
-  gradient = "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
-  accentColor = "rgba(99,102,241,0.35)",
+  accentColor = "rgba(99,102,241,0.12)",
+  iconColor = "hsl(var(--primary))",
 }: ServiceCardProps) {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
-      className="relative rounded-3xl overflow-hidden cursor-default select-none"
-      style={{ background: gradient, minHeight: 220 }}
+      className="relative rounded-3xl overflow-hidden cursor-default select-none border border-gray-200/80"
+      style={{
+        background: "rgba(255,255,255,0.55)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        minHeight: 220,
+      }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      whileHover={{ scale: 1.015 }}
+      whileHover={{ scale: 1.015, borderColor: "rgba(0,0,0,0.15)" }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
-      {/* Animated glow blob on hover */}
+      {/* Glow blob on hover */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.35 }}
         style={{
-          background: `radial-gradient(ellipse at 30% 50%, ${accentColor} 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse at 25% 40%, ${accentColor} 0%, transparent 65%)`,
         }}
       />
 
-      {/* Noise texture overlay */}
+      {/* Subtle grid dot texture */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
         style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          backgroundSize: "150px",
+          backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10 p-6 flex flex-col h-full" style={{ minHeight: 220 }}>
+      <div className="relative z-10 p-6 flex flex-col" style={{ minHeight: 220 }}>
         {/* Tag */}
         {tag && (
-          <span className="text-[10px] font-mono tracking-widest uppercase text-white/35 mb-3">
+          <span className="text-[10px] font-mono tracking-widest uppercase text-gray-400 mb-3">
             {tag}
           </span>
         )}
 
         {/* Title */}
         <h3
-          className="text-white font-bold text-xl leading-tight mb-2"
+          className="text-gray-900 font-bold text-xl leading-tight mb-2"
           style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
         >
           {title}
         </h3>
 
         {/* Description */}
-        <p className="text-white/55 text-sm leading-relaxed flex-1">{description}</p>
+        <p className="text-gray-500 text-sm leading-relaxed flex-1">{description}</p>
 
-        {/* Icon boxes — stagger animate on hover */}
+        {/* Icon boxes — stagger on hover */}
         <div className="flex gap-3 mt-6">
           {icons.map((icon, i) => (
             <motion.div
               key={i}
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-white/80"
+              className="w-11 h-11 rounded-xl flex items-center justify-center"
               style={{
-                background: "rgba(255,255,255,0.07)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                backdropFilter: "blur(4px)",
+                background: "rgba(0,0,0,0.04)",
+                border: "1px solid rgba(0,0,0,0.08)",
+                color: iconColor,
               }}
               initial={false}
               animate={
@@ -97,12 +101,12 @@ export function ServiceCard({
             </motion.div>
           ))}
 
-          {/* Decorative empty 4th box (like box4 in social card) */}
+          {/* Decorative empty box */}
           <motion.div
             className="w-11 h-11 rounded-xl"
             style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
+              background: "rgba(0,0,0,0.02)",
+              border: "1px solid rgba(0,0,0,0.04)",
             }}
             initial={false}
             animate={
