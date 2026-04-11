@@ -6,6 +6,7 @@ import { SparklesCore } from "@/components/ui/sparkles-core";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
+import { IntroScreen } from "@/components/intro-screen";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
@@ -849,6 +850,7 @@ function ProductsShowcase() {
 
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
+  const [showIntro, setShowIntro] = useState(true);
   const [brandsOpen, setBrandsOpen] = useState(false);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
@@ -870,13 +872,20 @@ export default function HomePage() {
 
   return (
     <>
-    {/* Açılış beyaz flaş */}
-    <motion.div
-      className="fixed inset-0 z-[999] bg-white pointer-events-none"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 0 }}
-      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
-    />
+    {/* Giriş ekranı */}
+    {showIntro && (
+      <IntroScreen onDone={() => setShowIntro(false)} />
+    )}
+
+    {/* Açılış beyaz flaş — intro bittikten sonra */}
+    {!showIntro && (
+      <motion.div
+        className="fixed inset-0 z-[999] bg-white pointer-events-none"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+      />
+    )}
     <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
