@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
 import {
-  
   ArrowRight,
   CheckCircle2,
   Mail,
@@ -33,9 +32,16 @@ import {
   PackageCheck,
   Package,
   ChevronRight,
+  Cpu,
+  Settings,
+  Eye,
+  FileSearch,
+  Truck,
+  ScanLine,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/interactive-empty-state";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
@@ -476,47 +482,41 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
-      <div className="mt-2 grid gap-4 md:grid-cols-3">
-        {SERVICES.map((s, i) => (
+      <div className="mt-2 grid gap-5 md:grid-cols-3">
+        {[
+          {
+            title: "Sürücü Tamiri",
+            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
+            icons: [<Wrench key="w" className="h-5 w-5" />, <Zap key="z" className="h-5 w-5" />, <ShieldCheck key="s" className="h-5 w-5" />],
+          },
+          {
+            title: "Endüstriyel Elektronik",
+            description: "Güç kartları, kontrol kartları, SMPS, CNC/PLC çevre ekipmanları onarımı.",
+            icons: [<Cpu key="c" className="h-5 w-5" />, <Settings key="st" className="h-5 w-5" />, <Binary key="b" className="h-5 w-5" />],
+          },
+          {
+            title: "Hızlı Arıza Tespiti",
+            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+            icons: [<Timer key="t" className="h-5 w-5" />, <Search key="s2" className="h-5 w-5" />, <ClipboardList key="cl" className="h-5 w-5" />],
+          },
+        ].map((item, i) => (
           <motion.div
-            key={s.title}
+            key={item.title}
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
           >
-            <Card
-              className="group relative overflow-hidden rounded-3xl border bg-card p-6 shadow-soft transition-all duration-300 hover:shadow-elevated hover:border-primary/50 charge-up impulse-shock energy-sweep thunder-border h-full"
-              data-testid={`card-service-${s.title}`}
-            >
-              <div className="flex flex-col gap-4">
-                <div
-                  className="grid h-12 w-12 place-items-center rounded-2xl border bg-background"
-                  data-testid={`icon-service-${s.title}`}
-                >
-                  <s.icon
-                    className="h-5 w-5"
-                    style={{ color: "hsl(var(--primary))" }}
-                    aria-hidden="true"
-                  />
-                </div>
-                <div>
-                  <p
-                    className="text-base font-semibold tracking-tight"
-                    style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                    data-testid={`text-service-title-${s.title}`}
-                  >
-                    {s.title}
-                  </p>
-                  <p
-                    className="mt-2 text-sm text-muted-foreground leading-relaxed"
-                    data-testid={`text-service-desc-${s.title}`}
-                  >
-                    {s.desc}
-                  </p>
-                </div>
-              </div>
-            </Card>
+            <EmptyState
+              title={item.title}
+              description={item.description}
+              icons={item.icons}
+              theme="light"
+              variant="default"
+              size="default"
+              className="h-full"
+              data-testid={`card-service-${item.title}`}
+            />
           </motion.div>
         ))}
       </div>
@@ -604,7 +604,49 @@ function AnimatedProcessSection() {
         </div>
       </div>
 
-      <ProcessStepsGrid />
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {[
+          {
+            title: "Ön İnceleme",
+            description: "Arıza belirtisi, model bilgisi ve geçmiş işlemlerle hızlı başlangıç.",
+            icons: [<ClipboardList key="cl" className="h-5 w-5" />, <Eye key="e" className="h-5 w-5" />, <FileSearch key="fs" className="h-5 w-5" />],
+          },
+          {
+            title: "Arıza Tespiti",
+            description: "Teknik ekip tarafından detaylı komponent düzeyinde arıza analizi.",
+            icons: [<Microscope key="m" className="h-5 w-5" />, <ScanLine key="sl" className="h-5 w-5" />, <Search key="s" className="h-5 w-5" />],
+          },
+          {
+            title: "Onarım + Parça",
+            description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+            icons: [<Wrench key="w" className="h-5 w-5" />, <Settings key="st" className="h-5 w-5" />, <Flame key="f" className="h-5 w-5" />],
+          },
+          {
+            title: "Test + Teslim",
+            description: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
+            icons: [<PackageCheck key="pc" className="h-5 w-5" />, <Zap key="z" className="h-5 w-5" />, <Truck key="tr" className="h-5 w-5" />],
+          },
+        ].map((item, i) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
+          >
+            <EmptyState
+              title={item.title}
+              description={item.description}
+              icons={item.icons}
+              theme="light"
+              variant="default"
+              size="default"
+              className="h-full"
+              data-testid={`card-step-${item.title}`}
+            />
+          </motion.div>
+        ))}
+      </div>
     </section>
   );
 }
