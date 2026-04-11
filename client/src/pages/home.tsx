@@ -60,166 +60,84 @@ const BRANDS = [
   
 ];
 
-function BrandsPopup() {
-  const [isOpen, setIsOpen] = useState(false);
+function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [, setLocation] = useLocation();
   const [playTick] = useSound("/sounds/tick.mp3", { volume: 0.15, preload: true, interrupt: true });
   const lastOpenState = useRef(false);
 
   useEffect(() => {
-    if (isOpen && !lastOpenState.current) {
-      playTick();
-    }
+    if (isOpen && !lastOpenState.current) playTick();
     lastOpenState.current = isOpen;
   }, [isOpen, playTick]);
 
   useEffect(() => {
-    let raf = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      cancelAnimationFrame(raf);
-
-      raf = requestAnimationFrame(() => {
-        const shouldOpen = e.clientX < 50;
-        const shouldClose = e.clientX > 320;
-
-        setIsOpen((prev) => {
-          if (shouldOpen && !prev) return true;
-          if (shouldClose && prev) return false;
-          return prev;
-        });
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+    if (!isOpen) return;
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
 
   return (
-    <>
-      {/* Side Tab Indicator */}
-      <motion.div
-        className="fixed left-0 top-28 h-screen z-[99] cursor-pointer flex items-center"
-        initial={{ x: 0 }}
-        animate={{ x: isOpen ? -100 : 0 }}
-        transition={{ type: "spring", damping: 20, stiffness: 200 }}
-        onClick={() => setIsOpen(true)}
-        onMouseEnter={() => setIsOpen(true)}
-        data-testid="brands-tab-indicator"
-      >
-        <div className="bg-white px-0.5 py-1 rounded-r-xl shadow-lg flex flex-col items-center h-[99vh] max-h-[90vh] my-auto hover:px-2.5 transition-all border-r border-y border-gray-200">
-          <ChevronRight className="h-3 w-3 text-primary mb-1" />
-          <div className="flex flex-col gap-2 py-1 overflow-hidden">
-            {BRANDS.map((brand) => (
-              <div key={brand.name} className="w-8 h-6 bg-gray-50 rounded-sm p-0.5 flex items-center justify-center overflow-hidden flex-1">
-                <img 
-                  src={brand.logo} 
-                  alt={brand.name}
-                  className="object-contain"
-                  style={{ 
-                    width: brand.name === "ABB" ? "100%" : "250%",
-                    height: brand.name === "ABB" ? "100%" : "250%"
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-          <ChevronRight className="h-3 w-3 text-primary mt-1" />
-        </div>
-      </motion.div>
-
-      <AnimatePresence>
-        {isOpen && (
+    <AnimatePresence>
+      {isOpen && (
+        <>
           <motion.div
-            initial={{ x: -300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            transition={{ type: "spring", damping: 20, stiffness: 100 }}
-            className="fixed left-0 top-0 z-[100] h-screen w-[300px] border-r bg-card/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto"
+            className="fixed inset-0 z-[98] bg-black/20 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed left-1/2 top-20 z-[99] w-[90vw] max-w-3xl -translate-x-1/2 rounded-2xl border bg-white/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto max-h-[75vh]"
             data-testid="popup-brands"
           >
-          <h3 className="mb-6 font-semibold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
-            Tamir Ettiğimiz Markalar
-          </h3>
-          
-          {/* Spotlight Grid */}
-          <div className="grid grid-cols-2 gap-3 spotlight-grid">
-            {BRANDS.map((brand) => (
-              <motion.div
-                key={brand.name}
-                className="spotlight-item relative flex flex-col items-center justify-center rounded-xl border p-3 text-center bg-white shadow-sm cursor-pointer overflow-hidden electric-glow group"
-                whileHover={{ 
-                  scale: 1.25, 
-                  zIndex: 50,
-                  boxShadow: "0 20px 40px rgba(0,32,96,0.3)"
-                }}
-                transition={{ type: "spring", stiffness: 600, damping: 15 }}
-                onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                data-testid={`brand-item-${brand.name}`}
-              >
-                {/* Spotlight glow effect */}
-                <div className="absolute inset-0 bg-gradient-radial from-gray-100/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                {/* Sliding logos animation */}
-                <div className="hidden absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
-                    style={{ top: '0%', animationDelay: '0ms' }}
-                  />
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-left"
-                    style={{ top: '33%', animationDelay: '200ms' }}
-                  />
-                  <img 
-                    src={brand.logo} 
-                    alt=""
-                    className="absolute h-1/3 w-3/4 object-contain opacity-20 animate-slide-right"
-                    style={{ top: '66%', animationDelay: '400ms' }}
-                  />
-                </div>
-                
-                <div className="h-12 w-full flex items-center justify-center p-1 relative z-10">
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="h-full w-full object-contain transition-all duration-300"
-                    style={brand.scale ? { transform: `scale(${brand.scale })` } : undefined}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                    }}
-                  />
-                  <span 
-                    className="font-bold tracking-tighter text-[18px] hidden" 
-                    style={{ 
-                      color: brand.color,
-                      fontFamily: "Space Grotesk, sans-serif",
-                      letterSpacing: "-0.05em"
-                    }}
-                  >
-                    {brand.name}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          <div className="mt-10 rounded-2xl border border-dashed p-4 text-center">
-            <p className="text-xs text-muted-foreground">
-              Ve daha fazlası... Listemizde olmayan markalar için bize danışın.
-            </p>
-          </div>
-        </motion.div>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-bold text-lg tracking-tight">
+                Tamir Ettiğimiz Markalar
+              </h3>
+              <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xl leading-none" data-testid="button-brands-close">✕</button>
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {BRANDS.map((brand) => (
+                <motion.div
+                  key={brand.name}
+                  className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center bg-white shadow-sm cursor-pointer overflow-hidden group hover:border-primary/40 hover:shadow-md transition-all"
+                  whileHover={{ scale: 1.08, zIndex: 50 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                  onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); onClose(); }}
+                  data-testid={`brand-item-${brand.name}`}
+                >
+                  <div className="h-10 w-full flex items-center justify-center p-1">
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="h-full w-full object-contain"
+                      style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <span className="font-bold text-xs hidden" style={{ color: brand.color }}>{brand.name}</span>
+                  </div>
+                  <span className="mt-1 text-[10px] text-muted-foreground truncate w-full text-center">{brand.name}</span>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-5 rounded-xl border border-dashed p-3 text-center">
+              <p className="text-xs text-muted-foreground">
+                Ve daha fazlası… Listemizde olmayan markalar için bize danışın.
+              </p>
+            </div>
+          </motion.div>
+        </>
       )}
-      </AnimatePresence>
-    </>
+    </AnimatePresence>
   );
 }
 
@@ -300,6 +218,53 @@ function ScrollVideo() {
         </div>
       </div>
     </div>
+  );
+}
+
+function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }) {
+  const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
+
+  return (
+    <ul
+      className="relative flex w-fit rounded-full border-2 border-gray-900 bg-white p-1"
+      onMouseLeave={() => setPosition((p) => ({ ...p, opacity: 0 }))}
+    >
+      {items.map((item) => (
+        <SlideNavTab key={item.label} setPosition={setPosition} onClick={item.onClick}>
+          {item.label}
+        </SlideNavTab>
+      ))}
+      <motion.li
+        animate={position}
+        className="absolute z-0 h-7 rounded-full bg-gray-900 md:h-9"
+      />
+    </ul>
+  );
+}
+
+function SlideNavTab({
+  children,
+  setPosition,
+  onClick,
+}: {
+  children: React.ReactNode;
+  setPosition: React.Dispatch<React.SetStateAction<{ left: number; width: number; opacity: number }>>;
+  onClick: () => void;
+}) {
+  const ref = useRef<HTMLLIElement>(null);
+  return (
+    <li
+      ref={ref}
+      onClick={onClick}
+      onMouseEnter={() => {
+        if (!ref.current) return;
+        const { width } = ref.current.getBoundingClientRect();
+        setPosition({ width, opacity: 1, left: ref.current.offsetLeft });
+      }}
+      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-white mix-blend-difference md:px-4 md:py-2 md:text-sm font-semibold"
+    >
+      {children}
+    </li>
   );
 }
 
@@ -735,6 +700,7 @@ function ProductsShowcase() {
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
   const [showIntro, setShowIntro] = useState(true);
+  const [brandsOpen, setBrandsOpen] = useState(false);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
   const handleGlobalClick = () => {
@@ -767,7 +733,7 @@ export default function HomePage() {
       >
       <InteractiveGradient />
       <WhatsAppButton />
-      <BrandsPopup />
+      <BrandsPopup isOpen={brandsOpen} onClose={() => setBrandsOpen(false)} />
       <a
         href="#contact"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:shadow-soft"
@@ -784,26 +750,13 @@ export default function HomePage() {
             <HeaderLogo />
           </div>
 
-          <nav className="hidden items-center gap-1 md:flex -mt-2" aria-label="Ana menü">
-            {sections.slice(1).map((s) => {
-              const isActive = active === s.id;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => scrollToId(s.id)}
-                  className={
-                    "rounded-2xl px-3 py-2 text-sm transition " +
-                    (isActive
-                      ? "bg-card shadow-soft"
-                      : "text-muted-foreground hover:bg-card")
-                  }
-                  data-testid={`button-nav-${s.id}`}
-                >
-                  {s.label}
-                </button>
-              );
-            })}
+          <nav aria-label="Ana menü" className="hidden md:flex">
+            <SlideNav
+              items={[
+                ...sections.slice(1).map((s) => ({ label: s.label, onClick: () => scrollToId(s.id) })),
+                { label: "Markalar", onClick: () => setBrandsOpen((v) => !v) },
+              ]}
+            />
           </nav>
 
           <div className="flex items-center gap-2">
