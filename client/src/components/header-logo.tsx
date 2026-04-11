@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
+import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 
 export function HeaderLogo() {
   const [, setLocation] = useLocation();
   const [isFlickering, setIsFlickering] = useState(false);
-  const [triggerCount, setTriggerCount] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsFlickering(true);
-      setTriggerCount(prev => prev + 1);
       setTimeout(() => setIsFlickering(false), 1200);
     }, 500);
     return () => clearTimeout(timer);
@@ -19,7 +18,6 @@ export function HeaderLogo() {
   const handleMouseMove = () => {
     if (!isFlickering) {
       setIsFlickering(true);
-      setTriggerCount(prev => prev + 1);
       setTimeout(() => setIsFlickering(false), 1200);
     }
   };
@@ -32,8 +30,8 @@ export function HeaderLogo() {
       className="group flex items-center gap-0 rounded-2xl py-1 text-left"
       data-testid="button-logo-home"
     >
-      <motion.div 
-        className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4" 
+      <motion.div
+        className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4"
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
@@ -62,6 +60,22 @@ export function HeaderLogo() {
           draggable={false}
         />
       </motion.div>
+
+      {/* CPU Architecture dekoratif SVG */}
+      <div
+        className="hidden md:block w-48 h-24 opacity-60 group-hover:opacity-90 transition-opacity duration-500 mt-4 ml-[-8px]"
+        aria-hidden="true"
+      >
+        <CpuArchitecture
+          text="BUREM"
+          width="100%"
+          height="100%"
+          animateText={true}
+          animateLines={true}
+          animateMarkers={true}
+          showCpuConnections={true}
+        />
+      </div>
     </button>
   );
 }
