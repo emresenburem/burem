@@ -142,85 +142,6 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
   );
 }
 
-function IntroScreen({ onDone }: { onDone: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.play().catch(() => {});
-  }, []);
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[200] bg-black flex items-center justify-center"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-      data-testid="intro-screen"
-    >
-      <video
-        ref={videoRef}
-        src="/intro-video.mp4"
-        className="w-full h-full object-cover"
-        muted
-        playsInline
-        onEnded={onDone}
-        data-testid="video-intro"
-      />
-      <button
-        onClick={onDone}
-        className="absolute bottom-8 right-8 text-white/70 hover:text-white text-sm border border-white/30 hover:border-white/70 px-4 py-2 rounded-full transition-all"
-        data-testid="button-intro-skip"
-      >
-        Geç →
-      </button>
-    </motion.div>
-  );
-}
-
-function ScrollVideo() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const video = videoRef.current;
-    if (!container || !video) return;
-
-    const handleScroll = () => {
-      const rect = container.getBoundingClientRect();
-      const containerHeight = container.offsetHeight - window.innerHeight;
-      const scrolled = -rect.top;
-      const progress = Math.min(Math.max(scrolled / containerHeight, 0), 1);
-      if (video.duration && isFinite(video.duration)) {
-        video.currentTime = progress * video.duration;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <div ref={containerRef} className="relative h-[250vh]" data-testid="section-scroll-video">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center">
-        <div className="w-full max-w-3xl mx-auto px-6">
-          <video
-            ref={videoRef}
-            src="/hero-video.mp4"
-            className="w-full rounded-2xl shadow-2xl opacity-90"
-            style={{ maxHeight: "60vh", objectFit: "cover" }}
-            muted
-            playsInline
-            preload="auto"
-            data-testid="video-scroll"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }) {
   const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
@@ -700,7 +621,6 @@ function ProductsShowcase() {
 
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
-  const [showIntro, setShowIntro] = useState(true);
   const [brandsOpen, setBrandsOpen] = useState(false);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
@@ -721,11 +641,7 @@ export default function HomePage() {
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <>
-      <AnimatePresence>
-        {showIntro && <IntroScreen onDone={() => setShowIntro(false)} />}
-      </AnimatePresence>
-      <motion.div 
+    <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
         initial={{ opacity: 0 }}
@@ -1003,8 +919,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        <ScrollVideo />
-
         <section
           id="services"
           className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16"
@@ -1274,6 +1188,5 @@ export default function HomePage() {
         </div>
       </footer>
       </motion.div>
-    </>
   );
 }
