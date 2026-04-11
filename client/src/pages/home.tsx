@@ -1124,7 +1124,7 @@ export default function HomePage() {
           <div className="relative h-20 w-full">
             <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
               {BRANDS.map((brand) => (
-                <div key={brand.name} className="flex items-center justify-center h-14 w-32 flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100">
+                <div key={brand.name} className="flex items-center justify-center h-14 w-32 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
                   <img
                     src={brand.logo}
                     alt={brand.name}
