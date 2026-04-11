@@ -869,12 +869,20 @@ export default function HomePage() {
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
+    <>
+    {/* Açılış beyaz flaş */}
+    <motion.div
+      className="fixed inset-0 z-[999] bg-white pointer-events-none"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 0 }}
+      transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+    />
     <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
-        initial={{ opacity: 0, filter: "blur(18px)" }}
-        animate={{ opacity: 1, filter: "blur(0px)" }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, filter: "blur(22px)", scale: 1.03 }}
+        animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
       >
       <InteractiveGradient />
       {/* Sparkle arka plan — tüm sayfanın arkasında sabit */}
@@ -940,40 +948,52 @@ export default function HomePage() {
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
           <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
-            <motion.div
-              initial={preferReducedMotion ? false : { opacity: 0, y: 14 }}
-              animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Badge
-                className="rounded-full border bg-white/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
-                data-testid="badge-hero"
+            <div>
+              <motion.div
+                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                Elektronik sürücü tamiri · Endüstriyel servis
-              </Badge>
+                <Badge
+                  className="rounded-full border bg-white/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                  data-testid="badge-hero"
+                >
+                  Elektronik sürücü tamiri · Endüstriyel servis
+                </Badge>
+              </motion.div>
 
-              <h1
+              <motion.h1
                 className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-6xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-hero-title"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 Sürücünüz arızalandıysa,
                 <span className="block text-foreground">
                   doğru teşhisle hızlıca ayağa kaldıralım.
                 </span>
+              </motion.h1>
 
-              </h1>
-
-              <p
+              <motion.p
                 className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
                 data-testid="text-hero-subtitle"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.56, ease: [0.22, 1, 0.36, 1] }}
               >
                 Burem Elektronik; inverter, servo sürücü ve endüstriyel elektronik
                 kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
                 şekilde yönetir.
-              </p>
+              </motion.p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <motion.div
+                className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <MagneticButton
                   className="h-11 rounded-2xl"
                   onClick={() => scrollToId("contact")}
@@ -991,9 +1011,14 @@ export default function HomePage() {
                 >
                   Hizmetleri gör
                 </MagneticButton>
-              </div>
+              </motion.div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              <motion.div
+                className="mt-8 grid gap-3 sm:grid-cols-3"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.80, ease: [0.22, 1, 0.36, 1] }}
+              >
                 {["Hızlı dönüş", "Testli teslim", "Kontrollü onarım"].map((t) => (
                   <div
                     key={t}
@@ -1008,8 +1033,8 @@ export default function HomePage() {
                     <span className="text-muted-foreground">{t}</span>
                   </div>
                 ))}
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
             <motion.div
               initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
@@ -1283,5 +1308,6 @@ export default function HomePage() {
         </div>
       </footer>
       </motion.div>
+    </>
   );
 }
