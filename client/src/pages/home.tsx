@@ -6,6 +6,7 @@ import { SparklesCore } from "@/components/ui/sparkles-core";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
+import { LampContainer } from "@/components/ui/lamp";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
@@ -1181,6 +1182,57 @@ export default function HomePage() {
         <AnimatedProcessSection />
 
         <ProductsShowcase />
+
+        {/* Lamp CTA bölümü */}
+        <div className="w-full">
+          <LampContainer>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6, ease: "easeInOut" }}
+              className="text-cyan-400 text-sm font-semibold tracking-widest uppercase mb-4 text-center"
+            >
+              Endüstriyel elektronik onarım
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0.5, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+              className="text-4xl md:text-6xl font-bold text-center tracking-tight"
+              style={{
+                fontFamily: "Space Grotesk, var(--font-sans)",
+                background: "linear-gradient(to bottom, #f1f5f9, #94a3b8)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Sürücünüz arızalandı mı?
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6, ease: "easeInOut" }}
+              className="mt-4 text-slate-400 text-base md:text-lg text-center max-w-md"
+            >
+              Hızlı arıza tespiti, testli onarım ve güvenilir teslim için hemen iletişime geçin.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, duration: 0.6, ease: "easeInOut" }}
+              className="mt-8"
+            >
+              <button
+                onClick={() => scrollToId("contact")}
+                className="px-8 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-sm transition-all duration-200 hover:scale-105 shadow-lg shadow-cyan-500/30"
+                data-testid="button-lamp-cta"
+              >
+                Teklif iste →
+              </button>
+            </motion.div>
+          </LampContainer>
+        </div>
 
         <section
           id="contact"
