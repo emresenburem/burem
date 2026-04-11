@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { Sparkles } from "@/components/ui/sparkles";
+import { SparklesCore } from "@/components/ui/sparkles-core";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
@@ -732,6 +733,18 @@ export default function HomePage() {
         transition={{ duration: 0.35, ease: "easeOut" }}
       >
       <InteractiveGradient />
+      {/* Sparkle arka plan — tüm sayfanın arkasında sabit */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <SparklesCore
+          background="transparent"
+          particleColor="#555555"
+          particleDensity={60}
+          minSize={0.4}
+          maxSize={1.5}
+          speed={0.8}
+          className="h-full w-full"
+        />
+      </div>
       <WhatsAppButton />
       <BrandsPopup isOpen={brandsOpen} onClose={() => setBrandsOpen(false)} />
       <a
