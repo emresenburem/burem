@@ -85,6 +85,10 @@
 
   --grid-line: 222 32% 88%;
   --shadow-soft: 220 40% 2%;
+
+  /* Neobrutalist button */
+  --neo-shadow: 4px 4px 0px 0px #000;
+  --neo-border: #000;
 }
 
 .dark {

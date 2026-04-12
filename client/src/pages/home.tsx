@@ -271,7 +271,7 @@ function ContactForm() {
         <p className="text-sm text-muted-foreground">En kısa sürede size dönüş yapacağız.</p>
         <Button
           variant="outline"
-          className="mt-2 rounded-2xl"
+          className="mt-2"
           onClick={() => setFormState("idle")}
           data-testid="button-new-message"
         >
@@ -306,7 +306,7 @@ function ContactForm() {
         <label className="sr-only" htmlFor="message">Mesaj</label>
         <Textarea id="message" placeholder="Cihaz marka/model, arıza belirtisi, varsa hata kodu..." className="min-h-[120px] rounded-2xl" data-testid="input-message" required />
       </div>
-      <Button type="submit" className="h-11 w-full rounded-2xl" disabled={formState === "sending"} data-testid="button-submit">
+      <Button type="submit" className="h-11 w-full" disabled={formState === "sending"} data-testid="button-submit">
         {formState === "sending" ? "Gönderiliyor..." : "Gönder"}
       </Button>
       {formState === "error" && errorMsg && (
@@ -927,14 +927,13 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <MagneticButton
               variant="secondary"
-              className="hidden rounded-2xl md:inline-flex"
+              className="hidden md:inline-flex"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
             >
               Teklif iste
             </MagneticButton>
             <MagneticButton
-              className="rounded-2xl"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
             >
@@ -995,7 +994,7 @@ export default function HomePage() {
                 transition={{ duration: 0.55, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
               >
                 <MagneticButton
-                  className="h-11 rounded-2xl"
+                  className="h-11"
                   onClick={() => scrollToId("contact")}
                   data-testid="button-hero-contact"
                 >
@@ -1005,7 +1004,7 @@ export default function HomePage() {
 
                 <MagneticButton
                   variant="secondary"
-                  className="h-11 rounded-2xl"
+                  className="h-11"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
@@ -1128,7 +1127,6 @@ export default function HomePage() {
                     </p>
                     <Button
                       size="sm"
-                      className="rounded-xl"
                       onClick={() => scrollToId("contact")}
                       data-testid="button-hero-card-action"
                     >
