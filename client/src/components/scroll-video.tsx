@@ -56,10 +56,10 @@ export function ScrollVideo() {
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ height: "300vh" }} className="relative w-full">
+    <div ref={sectionRef} style={{ height: "200vh" }} className="relative w-full">
       <div
         className="sticky top-0 w-full overflow-hidden"
-        style={{ height: "100svh", background: "#111" }}
+        style={{ height: "65svh", background: "#111" }}
       >
         <video
           ref={videoRef}
