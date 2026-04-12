@@ -10,17 +10,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
+          "bg-[#FDFBF7] text-gray-900 border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
         secondary:
-          "bg-white text-black border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
+          "bg-[#F0EDE8] text-gray-900 border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
         destructive:
-          "bg-destructive text-destructive-foreground border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
+          "bg-[#FFF1F1] text-red-700 border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
         outline:
-          "bg-white text-black border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
+          "bg-[#FDFBF7] text-gray-900 border-2 border-black [box-shadow:4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px] hover:[box-shadow:none]",
         ghost:
-          "border border-transparent hover:bg-accent/10 hover:text-accent-foreground",
+          "border border-transparent text-gray-700 hover:bg-[#F0EDE8] hover:text-gray-900",
         link:
-          "text-primary underline-offset-4 hover:underline",
+          "text-gray-900 underline-offset-4 hover:underline",
       },
       size: {
         default: "min-h-9 px-4 py-2",
