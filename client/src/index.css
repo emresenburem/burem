@@ -447,9 +447,9 @@
 .cpu-architecture {
   offset-anchor: 10px 0px;
   animation: animation-path;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
   animation-timing-function: cubic-bezier(0.75, -0.01, 0, 0.99);
+  will-change: offset-distance;
 }
 .cpu-line-1 {
   offset-path: path("M 10 20 h 79.5 q 5 0 5 5 v 30");
