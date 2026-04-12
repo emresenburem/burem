@@ -882,8 +882,8 @@ export default function HomePage() {
     <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
-        initial={{ opacity: 0, filter: "blur(22px)", scale: 1.03 }}
-        animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+        initial={{ opacity: 0, filter: "blur(18px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
       >
       <InteractiveGradient />
