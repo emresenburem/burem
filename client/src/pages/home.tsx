@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
@@ -449,19 +449,20 @@ function AnimatedServicesSection() {
       className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20"
       data-testid="section-services"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      {/* Sol hizalı başlık — DESIGN_VARIANCE=8 anti-center kuralı */}
+      <div className="flex flex-col gap-3 mb-12">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-services-eyebrow">
           Neler yapıyoruz
         </p>
         <h2
-          className="text-4xl md:text-6xl font-bold tracking-tight leading-tight"
+          className="text-4xl md:text-6xl font-bold tracking-tighter leading-none"
           style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
           data-testid="text-services-title"
         >
           Tamir ediyoruz
           <span
-            className="relative block overflow-hidden"
-            style={{ height: "1.25em" }}
+            className="relative ml-3 inline-block overflow-hidden align-bottom"
+            style={{ height: "1.15em", minWidth: "8rem" }}
           >
             {serviceWords.map((word, i) => (
               <motion.span
@@ -480,45 +481,51 @@ function AnimatedServicesSection() {
             ))}
           </span>
         </h2>
-        <p className="text-base text-muted-foreground max-w-md" data-testid="text-services-subtitle">
+        <p className="text-base text-muted-foreground max-w-lg" data-testid="text-services-subtitle">
           Endüstriyel sürücü ve elektronik kartlarını fabrikadan çıkmış gibi teslim ediyoruz.
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
+      {/* Asimetrik Bento Grid — 3 eşit kolon yasak (taste-skill kuralı) */}
+      <div className="grid gap-4 md:grid-cols-[3fr_2fr]">
+        {/* Sol: büyük öne çıkan kart */}
         <ServiceCard
           title="Sürücü Tamiri"
-          description="AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test."
+          description="AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test. Fabrikasyon değil, gerçek teşhis."
           tag="AC · DC · Servo"
+          featured
           icons={[
             <Wrench key="w" className="h-5 w-5" />,
             <Zap key="z" className="h-5 w-5" />,
             <ShieldCheck key="s" className="h-5 w-5" />,
           ]}
-          accentColor="rgba(99,102,241,0.14)"
+          accentColor="rgba(37,99,235,0.1)"
         />
-        <ServiceCard
-          title="Endüstriyel Elektronik"
-          description="Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı."
-          tag="PCB · SMPS · CNC"
-          icons={[
-            <Cpu key="c" className="h-5 w-5" />,
-            <Settings key="st" className="h-5 w-5" />,
-            <Binary key="b" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(34,197,94,0.12)"
-        />
-        <ServiceCard
-          title="Hızlı Arıza Tespiti"
-          description="Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok."
-          tag="Ön Analiz"
-          icons={[
-            <Timer key="t" className="h-5 w-5" />,
-            <Search key="s2" className="h-5 w-5" />,
-            <ClipboardList key="cl" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(249,115,22,0.14)"
-        />
+        {/* Sağ: iki küçük kart dikey */}
+        <div className="flex flex-col gap-4">
+          <ServiceCard
+            title="Endüstriyel Elektronik"
+            description="Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı."
+            tag="PCB · SMPS · CNC"
+            icons={[
+              <Cpu key="c" className="h-4 w-4" />,
+              <Settings key="st" className="h-4 w-4" />,
+              <Binary key="b" className="h-4 w-4" />,
+            ]}
+            accentColor="rgba(34,197,94,0.11)"
+          />
+          <ServiceCard
+            title="Hızlı Arıza Tespiti"
+            description="Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok."
+            tag="Ön Analiz"
+            icons={[
+              <Timer key="t" className="h-4 w-4" />,
+              <Search key="s2" className="h-4 w-4" />,
+              <ClipboardList key="cl" className="h-4 w-4" />,
+            ]}
+            accentColor="rgba(249,115,22,0.11)"
+          />
+        </div>
       </div>
     </section>
   );
@@ -538,19 +545,19 @@ function AnimatedProcessSection() {
       className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24"
       data-testid="section-process"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      <div className="flex flex-col gap-3 mb-12">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-process-eyebrow">
           Nasıl çalışıyoruz
         </p>
         <h2
-          className="text-4xl md:text-6xl font-bold tracking-tight leading-tight"
+          className="text-4xl md:text-6xl font-bold tracking-tighter leading-none"
           style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
           data-testid="text-process-title"
         >
           Adım adım
           <span
-            className="relative block overflow-hidden"
-            style={{ height: "1.25em" }}
+            className="relative ml-3 inline-block overflow-hidden align-bottom"
+            style={{ height: "1.15em", minWidth: "9rem" }}
           >
             {STEPS.map((step, i) => (
               <motion.span
@@ -703,39 +710,36 @@ function InteractiveGradient() {
 }
 
 function MagneticButton({ children, className, onClick, ...props }: any) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+
+  // useMotionValue yerine useState — React render döngüsü dışında
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const x = useSpring(rawX, { stiffness: 180, damping: 16, mass: 0.08 });
+  const y = useSpring(rawY, { stiffness: 180, damping: 16, mass: 0.08 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { clientX, clientY, currentTarget } = e;
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    const distanceX = clientX - centerX;
-    const distanceY = clientY - centerY;
-    
-    // Magnetic pull strength
-    const strength = 0.35;
-    setPosition({ x: distanceX * strength, y: distanceY * strength });
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    rawX.set((e.clientX - cx) * 0.38);
+    rawY.set((e.clientY - cy) * 0.38);
   };
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const handleClick = (e: React.MouseEvent) => {
-    // Global click handler handles the sound now
-    if (onClick) onClick(e);
+    rawX.set(0);
+    rawY.set(0);
   };
 
   return (
     <motion.div
+      ref={ref}
+      style={{ x, y, display: "inline-block" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
-      className="inline-block"
     >
-      <SparkleButton className={className} onClick={handleClick} {...props}>
+      <SparkleButton className={className} onClick={onClick} {...props}>
         {children}
       </SparkleButton>
     </motion.div>
@@ -911,7 +915,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-white/80 shadow-elevated backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-white/80 shadow-elevated backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-25 -mt-12 mb-[-2.5rem]">
             <HeaderLogo />
@@ -966,7 +970,7 @@ export default function HomePage() {
               </motion.div>
 
               <motion.h1
-                className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-6xl"
+                className="mt-4 text-balance text-4xl font-bold tracking-tighter leading-none md:text-6xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-hero-title"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
