@@ -7,6 +7,7 @@ import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEve
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
 import { SparkleButton } from "@/components/ui/sparkle-button";
+import { ScrollVideo } from "@/components/scroll-video";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
@@ -944,6 +945,8 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      <ScrollVideo />
 
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
