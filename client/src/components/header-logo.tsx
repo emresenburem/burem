@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { CpuArchitecture } from "@/components/ui/cpu-architecture";
@@ -7,13 +7,7 @@ export function HeaderLogo() {
   const [, setLocation] = useLocation();
   const [isFlickering, setIsFlickering] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsFlickering(true);
-      setTimeout(() => setIsFlickering(false), 1200);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+  // Yalnızca masaüstü hover'da tetiklenir — mobilde çalışmaz
 
   const handleMouseMove = () => {
     if (!isFlickering) {
@@ -70,7 +64,7 @@ export function HeaderLogo() {
           text="BUREM"
           width="100%"
           height="100%"
-          animateText={true}
+          animateText={false}
           animateLines={true}
           animateMarkers={true}
           showCpuConnections={true}

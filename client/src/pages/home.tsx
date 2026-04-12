@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { Sparkles } from "@/components/ui/sparkles";
-import { SparklesCore } from "@/components/ui/sparkles-core";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
@@ -882,23 +880,11 @@ export default function HomePage() {
     <motion.div 
         className="min-h-screen bg-white text-gray-900" 
         onClick={handleGlobalClick}
-        initial={{ opacity: 0, filter: "blur(18px)" }}
-        animate={{ opacity: 1, filter: "blur(0px)" }}
-        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
       <InteractiveGradient />
-      {/* Sparkle arka plan — tüm sayfanın arkasında sabit */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none">
-        <SparklesCore
-          background="transparent"
-          particleColor="#1e293b"
-          particleDensity={28}
-          minSize={0.5}
-          maxSize={1.4}
-          speed={0.6}
-          className="h-full w-full"
-        />
-      </div>
       <WhatsAppButton />
       <BrandsPopup isOpen={brandsOpen} onClose={() => setBrandsOpen(false)} />
       <a
@@ -911,7 +897,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-white/80 shadow-elevated backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b bg-white/95 shadow-elevated">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-25 -mt-12 mb-[-2.5rem]">
             <HeaderLogo />
