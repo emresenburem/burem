@@ -6,6 +6,7 @@ import { SparklesCore } from "@/components/ui/sparkles-core";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useLocation } from "wouter";
 import { HeaderLogo } from "@/components/header-logo";
+import { SparkleButton } from "@/components/ui/sparkle-button";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
@@ -306,9 +307,9 @@ function ContactForm() {
         <label className="sr-only" htmlFor="message">Mesaj</label>
         <Textarea id="message" placeholder="Cihaz marka/model, arıza belirtisi, varsa hata kodu..." className="min-h-[120px] rounded-2xl" data-testid="input-message" required />
       </div>
-      <Button type="submit" className="h-11 w-full" disabled={formState === "sending"} data-testid="button-submit">
+      <SparkleButton type="submit" className="h-11 w-full" disabled={formState === "sending"} data-testid="button-submit">
         {formState === "sending" ? "Gönderiliyor..." : "Gönder"}
-      </Button>
+      </SparkleButton>
       {formState === "error" && errorMsg && (
         <p className="text-sm text-red-500" data-testid="text-contact-error">{errorMsg}</p>
       )}
@@ -734,9 +735,9 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
       transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.1 }}
       className="inline-block"
     >
-      <Button className={className} onClick={handleClick} {...props}>
+      <SparkleButton className={className} onClick={handleClick} {...props}>
         {children}
-      </Button>
+      </SparkleButton>
     </motion.div>
   );
 }
