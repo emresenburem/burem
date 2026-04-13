@@ -5,7 +5,6 @@ import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEve
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
-import { SplineScene } from "@/components/ui/spline-scene";
 import { SparkleButton } from "@/components/ui/sparkle-button";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
@@ -1211,11 +1210,14 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Sağ — 3D sahne */}
-              <div className="flex-1 relative" data-testid="container-spline">
-                <SplineScene
-                  scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                  className="w-full h-full"
+              {/* Sağ — endüstriyel robot görseli */}
+              <div className="flex-1 relative flex items-center justify-center p-6" data-testid="container-robot-img">
+                <img
+                  src="https://motioncontrolsrobotics.com/wp-content/uploads/2015/10/r-1000.png"
+                  alt="Endüstriyel robot kolu"
+                  className="h-full max-h-[380px] w-auto object-contain drop-shadow-2xl select-none"
+                  draggable={false}
+                  data-testid="img-robot"
                 />
               </div>
             </div>
