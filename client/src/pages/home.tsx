@@ -43,7 +43,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/interactive-empty-state";
 import { ShowcaseList } from "@/components/ui/project-showcase";
-import { ServiceCard } from "@/components/ui/service-card";
+import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
@@ -538,41 +538,29 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
-        <ServiceCard
-          title="Sürücü Tamiri"
-          description="AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test."
-          tag="AC · DC · Servo"
-          icons={[
-            <Wrench key="w" className="h-5 w-5" />,
-            <Zap key="z" className="h-5 w-5" />,
-            <ShieldCheck key="s" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(99,102,241,0.14)"
-        />
-        <ServiceCard
-          title="Endüstriyel Elektronik"
-          description="Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı."
-          tag="PCB · SMPS · CNC"
-          icons={[
-            <Cpu key="c" className="h-5 w-5" />,
-            <Settings key="st" className="h-5 w-5" />,
-            <Binary key="b" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(34,197,94,0.12)"
-        />
-        <ServiceCard
-          title="Hızlı Arıza Tespiti"
-          description="Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok."
-          tag="Ön Analiz"
-          icons={[
-            <Timer key="t" className="h-5 w-5" />,
-            <Search key="s2" className="h-5 w-5" />,
-            <ClipboardList key="cl" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(249,115,22,0.14)"
-        />
-      </div>
+      <ImageAccordion
+        defaultActive={0}
+        items={[
+          {
+            id: 1,
+            title: "Sürücü Tamiri",
+            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
+            imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop",
+          },
+          {
+            id: 2,
+            title: "Endüstriyel Elektronik",
+            description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
+            imageUrl: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop",
+          },
+          {
+            id: 3,
+            title: "Hızlı Arıza Tespiti",
+            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+            imageUrl: "https://images.unsplash.com/photo-1576836165612-8bc9b9b1d9d7?w=800&auto=format&fit=crop",
+          },
+        ]}
+      />
     </section>
   );
 }
@@ -657,52 +645,35 @@ function AnimatedProcessSection() {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <ServiceCard
-          title="Ön İnceleme"
-          description="Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır."
-          tag="01"
-          icons={[
-            <ClipboardList key="cl" className="h-5 w-5" />,
-            <Eye key="e" className="h-5 w-5" />,
-            <FileSearch key="fs" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(56,189,248,0.14)"
-        />
-        <ServiceCard
-          title="Arıza Tespiti"
-          description="Komponent düzeyinde detaylı teknik arıza analizi yapılır."
-          tag="02"
-          icons={[
-            <Microscope key="m" className="h-5 w-5" />,
-            <ScanLine key="sl" className="h-5 w-5" />,
-            <Search key="sr" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(251,191,36,0.14)"
-        />
-        <ServiceCard
-          title="Onarım + Parça"
-          description="Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik."
-          tag="03"
-          icons={[
-            <Wrench key="w" className="h-5 w-5" />,
-            <Settings key="st" className="h-5 w-5" />,
-            <Flame key="f" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(239,68,68,0.13)"
-        />
-        <ServiceCard
-          title="Test + Teslim"
-          description="Yük altında test, stabilite kontrolü ve teslim öncesi rapor."
-          tag="04"
-          icons={[
-            <PackageCheck key="pc" className="h-5 w-5" />,
-            <Zap key="z" className="h-5 w-5" />,
-            <Truck key="tr" className="h-5 w-5" />,
-          ]}
-          accentColor="rgba(34,197,94,0.12)"
-        />
-      </div>
+      <ImageAccordion
+        defaultActive={0}
+        items={[
+          {
+            id: 1,
+            title: "Ön İnceleme",
+            description: "Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır.",
+            imageUrl: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=800&auto=format&fit=crop",
+          },
+          {
+            id: 2,
+            title: "Arıza Tespiti",
+            description: "Komponent düzeyinde detaylı teknik arıza analizi yapılır.",
+            imageUrl: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&auto=format&fit=crop",
+          },
+          {
+            id: 3,
+            title: "Onarım + Parça",
+            description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+            imageUrl: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&auto=format&fit=crop",
+          },
+          {
+            id: 4,
+            title: "Test + Teslim",
+            description: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
+            imageUrl: "https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=800&auto=format&fit=crop",
+          },
+        ]}
+      />
     </section>
   );
 }
