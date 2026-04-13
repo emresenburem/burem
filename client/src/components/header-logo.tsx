@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
+import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 
 export function HeaderLogo() {
   const [, setLocation] = useLocation();
@@ -26,13 +27,12 @@ export function HeaderLogo() {
       type="button"
       onClick={() => setLocation("/")}
       onMouseMove={handleMouseMove}
-      className="flex items-center gap-2.5 rounded-xl py-2 text-left"
+      className="group flex items-center gap-0 rounded-2xl py-1 text-left"
       data-testid="button-logo-home"
     >
-      <motion.img
-        src="/logo.png"
-        alt="Burem Elektronik Logo"
-        className="h-10 w-10 object-contain mix-blend-multiply"
+      <motion.div
+        className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4"
+        aria-hidden="true"
         style={{ willChange: "opacity" }}
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
@@ -43,15 +43,31 @@ export function HeaderLogo() {
           times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
           ease: "easeInOut",
         }}
-        decoding="async"
-        draggable={false}
-      />
-      <span
-        className="hidden sm:block text-sm font-semibold tracking-tight text-foreground"
-        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
       >
-        Burem Elektronik
-      </span>
+        <img
+          src="/logo.png"
+          alt="Burem Elektronik Logo"
+          className="h-80 w-80 object-contain mix-blend-multiply"
+          decoding="async"
+          draggable={false}
+        />
+      </motion.div>
+
+      {/* CPU Architecture dekoratif SVG — yalnızca masaüstünde */}
+      <div
+        className="hidden md:block w-48 h-24 opacity-60 group-hover:opacity-90 transition-opacity duration-500 mt-4 ml-[-8px]"
+        aria-hidden="true"
+      >
+        <CpuArchitecture
+          text="BUREM"
+          width="100%"
+          height="100%"
+          animateText={true}
+          animateLines={true}
+          animateMarkers={true}
+          showCpuConnections={true}
+        />
+      </div>
     </button>
   );
 }
