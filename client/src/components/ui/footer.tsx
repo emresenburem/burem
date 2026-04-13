@@ -39,17 +39,19 @@ const BuremFooter: React.FC = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
+        {/* Logo — sol üst köşe */}
+        <div className="mb-10 flex items-start">
+          <img
+            src="/logo.png"
+            alt="Burem Elektronik Logo"
+            className="h-24 w-auto object-contain mix-blend-multiply transition-transform duration-300 hover:scale-105"
+            draggable={false}
+          />
+        </div>
+
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Marka */}
-          <div className="group">
-            <div className="mb-6 flex items-center gap-2">
-              <img
-                src="/logo.png"
-                alt="Burem Elektronik Logo"
-                className="h-24 w-auto object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
-                draggable={false}
-              />
-            </div>
+          <div>
             <p className="mb-6 text-sm leading-relaxed text-gray-500">
               Endüstriyel elektronik cihazlarınızı orijinal kalitesiyle geri
               kazandırıyoruz. Servo sürücüden PLC'ye, tüm sürücü tamirlerinde
