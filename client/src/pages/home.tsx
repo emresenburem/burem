@@ -444,6 +444,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
     offset: ["start end", "end start"],
   });
 
+  // Scroll değiştikçe video zamanını güncelle
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     const video = videoRef.current;
     if (!video || !readyRef.current) return;
@@ -455,20 +456,28 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
     const markReady = () => {
       if (readyRef.current) return;
       readyRef.current = true;
       video.pause();
-      video.currentTime = 0;
+      // Mevcut scroll pozisyonuna göre başlangıç karesi
+      const p = scrollYProgress.get();
+      const dur = video.duration;
+      if (isFinite(dur) && dur > 0) {
+        video.currentTime = Math.min(p * dur, dur);
+      }
     };
-    video.addEventListener("play", markReady, { once: true });
+
     video.addEventListener("canplay", markReady, { once: true });
+    video.addEventListener("canplaythrough", markReady, { once: true });
     video.load();
+
     return () => {
-      video.removeEventListener("play", markReady);
       video.removeEventListener("canplay", markReady);
+      video.removeEventListener("canplaythrough", markReady);
     };
-  }, []);
+  }, [scrollYProgress]);
 
   return (
     <div className="absolute inset-0" data-testid="container-inverter-video">
@@ -477,7 +486,6 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
         src="/inverter-video.mp4"
         className="h-full w-full object-cover"
         style={{ mixBlendMode: "screen" }}
-        autoPlay
         muted
         playsInline
         preload="auto"
