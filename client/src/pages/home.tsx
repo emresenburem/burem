@@ -5,7 +5,6 @@ import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEve
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
-import { AnimatedThemeToggleButton } from "@/components/ui/animated-theme-toggle-button";
 import { SparkleButton } from "@/components/ui/sparkle-button";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
@@ -997,7 +996,6 @@ export default function HomePage() {
               İletişim
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </MagneticButton>
-            <AnimatedThemeToggleButton type="vertical" />
           </div>
         </div>
       </header>
