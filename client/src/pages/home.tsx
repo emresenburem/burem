@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
+import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -1307,14 +1308,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="border-t bg-background/70 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
-          <p data-testid="text-footer-left">
-            © {new Date().getFullYear()} Burem Elektronik
-          </p>
-          <p data-testid="text-footer-right">Elektronik sürücü tamiri · Endüstriyel servis</p>
-        </div>
-      </footer>
+      <BuremFooter />
       </motion.div>
     </>
   );
