@@ -64,11 +64,13 @@ export function SparkleButton({ children, className, variant, size, ...props }: 
   }, []);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       className="relative inline-block"
       onMouseEnter={startParticles}
       onMouseLeave={stopParticles}
+      whileTap={{ scale: 0.93 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20, mass: 0.6 }}
     >
       {/* Partikül katmanı — overflow:hidden sayesinde buton dışına taşmaz */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[6px]" aria-hidden="true">
@@ -103,6 +105,6 @@ export function SparkleButton({ children, className, variant, size, ...props }: 
       >
         {children}
       </Button>
-    </div>
+    </motion.div>
   );
 }
