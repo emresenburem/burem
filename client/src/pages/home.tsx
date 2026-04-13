@@ -469,11 +469,12 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
   }, []);
 
   return (
-    <div className="flex-1 relative overflow-hidden rounded-r-3xl" data-testid="container-inverter-video">
+    <div className="flex-1 relative flex items-center justify-center overflow-hidden" data-testid="container-inverter-video">
       <video
         ref={videoRef}
-        src="/intro-video.mp4"
-        className="h-full w-full object-cover"
+        src="/inverter-video.mp4"
+        className="h-full w-full object-contain"
+        style={{ mixBlendMode: "screen" }}
         autoPlay
         muted
         playsInline
