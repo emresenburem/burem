@@ -871,6 +871,9 @@ export default function HomePage() {
 
   return (
     <>
+    {/* Sayfanın tamamında scroll ile oynayan fixed arka plan video */}
+    <ScrollVideo />
+
     {/* Açılış beyaz flaş */}
     <motion.div
       className="fixed inset-0 z-[999] bg-white pointer-events-none"
@@ -946,7 +949,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      <ScrollVideo />
+      {/* Video spacer — fixed video'nun kapladığı alan kadar yer açar */}
+      <div style={{ height: "38svh" }} aria-hidden="true" />
 
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
