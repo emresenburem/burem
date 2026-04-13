@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
@@ -429,6 +429,58 @@ function ProcessStepsGrid() {
           </Card>
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+function RobotTiltImage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [14, -14]), { stiffness: 260, damping: 28 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-14, 14]), { stiffness: 260, damping: 28 });
+  const shadowX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-20, 20]), { stiffness: 260, damping: 28 });
+  const shadowY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-20, 20]), { stiffness: 260, damping: 28 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex-1 relative flex items-center justify-center p-6 cursor-none"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ perspective: "900px" }}
+      data-testid="container-robot-img"
+    >
+      <motion.img
+        src="https://motioncontrolsrobotics.com/wp-content/uploads/2015/10/r-1000.png"
+        alt="Endüstriyel robot kolu"
+        className="h-full max-h-[380px] w-auto object-contain select-none"
+        draggable={false}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+          filter: useTransform(
+            [shadowX, shadowY],
+            ([sx, sy]: number[]) =>
+              `drop-shadow(${sx}px ${sy}px 32px rgba(255,255,255,0.18)) drop-shadow(0 8px 40px rgba(0,0,0,0.7))`
+          ),
+        }}
+        data-testid="img-robot"
+      />
     </div>
   );
 }
@@ -1210,16 +1262,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Sağ — endüstriyel robot görseli */}
-              <div className="flex-1 relative flex items-center justify-center p-6" data-testid="container-robot-img">
-                <img
-                  src="https://motioncontrolsrobotics.com/wp-content/uploads/2015/10/r-1000.png"
-                  alt="Endüstriyel robot kolu"
-                  className="h-full max-h-[380px] w-auto object-contain drop-shadow-2xl select-none"
-                  draggable={false}
-                  data-testid="img-robot"
-                />
-              </div>
+              {/* Sağ — mouse takip eden 3D tilt robot görseli */}
+              <RobotTiltImage />
             </div>
           </div>
         </section>
