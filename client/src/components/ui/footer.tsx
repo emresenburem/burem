@@ -46,7 +46,7 @@ const BuremFooter: React.FC = () => {
               <img
                 src="/logo.png"
                 alt="Burem Elektronik Logo"
-                className="h-14 w-auto object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
+                className="h-24 w-auto object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
             </div>

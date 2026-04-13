@@ -13,16 +13,18 @@ export function HeaderLogo() {
 
     controls.set({
       opacity: 0,
-      filter: "blur(18px) drop-shadow(0 0 24px rgba(255,255,255,0.9)) brightness(2)",
+      scale: 0.55,
+      filter: "blur(24px) drop-shadow(0 0 60px rgba(180,210,255,1)) drop-shadow(0 0 120px rgba(255,255,255,0.95)) brightness(3)",
     });
 
     controls.start({
       opacity: 1,
-      filter: "blur(0px) drop-shadow(0 0 0px rgba(255,255,255,0)) brightness(1)",
+      scale: 1,
+      filter: "blur(0px) drop-shadow(0 0 0px rgba(180,210,255,0)) brightness(1)",
       transition: {
-        duration: 1.1,
-        ease: [0.22, 1, 0.36, 1],
-        delay: 0.15,
+        duration: 1.35,
+        ease: [0.16, 1, 0.3, 1],
+        delay: 0.1,
       },
     });
   }, [controls]);
@@ -54,7 +56,7 @@ export function HeaderLogo() {
         className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4"
         aria-hidden="true"
         animate={controls}
-        style={{ willChange: "filter, opacity" }}
+        style={{ willChange: "filter, opacity, transform" }}
       >
         <img
           src="/logo.png"
