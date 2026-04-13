@@ -1,62 +1,47 @@
-import { useEffect, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 
 export function HeaderLogo() {
   const [, setLocation] = useLocation();
-  const controls = useAnimation();
-  const hasAnimated = useRef(false);
+  const [isFlickering, setIsFlickering] = useState(false);
 
   useEffect(() => {
-    if (hasAnimated.current) return;
-    hasAnimated.current = true;
+    const timer = setTimeout(() => {
+      setIsFlickering(true);
+      setTimeout(() => setIsFlickering(false), 1200);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
-    controls.set({
-      opacity: 0,
-      scale: 0.55,
-      filter: "blur(24px) drop-shadow(0 0 60px rgba(180,210,255,1)) drop-shadow(0 0 120px rgba(255,255,255,0.95)) brightness(3)",
-    });
-
-    controls.start({
-      opacity: 1,
-      scale: 1,
-      filter: "blur(0px) drop-shadow(0 0 0px rgba(180,210,255,0)) brightness(1)",
-      transition: {
-        duration: 1.35,
-        ease: [0.16, 1, 0.3, 1],
-        delay: 0.1,
-      },
-    });
-  }, [controls]);
-
-  const handleMouseEnter = () => {
-    controls.start({
-      filter: "blur(0px) drop-shadow(0 0 10px rgba(100,140,255,0.35)) brightness(1.08)",
-      transition: { duration: 0.35, ease: "easeOut" },
-    });
-  };
-
-  const handleMouseLeave = () => {
-    controls.start({
-      filter: "blur(0px) drop-shadow(0 0 0px rgba(100,140,255,0)) brightness(1)",
-      transition: { duration: 0.45, ease: "easeOut" },
-    });
+  const handleMouseMove = () => {
+    if (!isFlickering) {
+      setIsFlickering(true);
+      setTimeout(() => setIsFlickering(false), 1200);
+    }
   };
 
   return (
     <button
       type="button"
       onClick={() => setLocation("/")}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
       className="group flex items-center gap-0 rounded-2xl py-1 text-left"
       data-testid="button-logo-home"
     >
       <motion.div
         className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4"
         aria-hidden="true"
-        animate={controls}
-        style={{ willChange: "filter, opacity, transform" }}
+        style={{ willChange: "opacity" }}
+        initial={{ opacity: 1 }}
+        animate={isFlickering ? {
+          opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
+        } : { opacity: 1 }}
+        transition={{
+          duration: 1.2,
+          times: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+          ease: "easeInOut",
+        }}
       >
         <img
           src="/logo.png"

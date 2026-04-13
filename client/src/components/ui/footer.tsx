@@ -1,6 +1,5 @@
 import React from "react";
-import { Phone, Mail, MapPin, MessageCircle, Linkedin, Instagram } from "lucide-react";
-import { DottedSurface } from "@/components/ui/dotted-surface";
+import { Cpu, Phone, Mail, MapPin, MessageCircle, Linkedin, Instagram } from "lucide-react";
 
 const BuremFooter: React.FC = () => {
   const year = new Date().getFullYear();
@@ -24,27 +23,36 @@ const BuremFooter: React.FC = () => {
   const socials = [
     { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
     { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-    { icon: MessageCircle, href: "https://wa.me/905322664764", label: "WhatsApp" },
+    {
+      icon: MessageCircle,
+      href: "https://wa.me/905322664764",
+      label: "WhatsApp",
+    },
   ];
 
   return (
-    <footer className="relative bg-white pt-20 pb-10 overflow-hidden">
-      {/* Three.js dalgalı nokta arka planı */}
-      <DottedSurface dotColor="#94a3b8" />
-
-      {/* Hafif üst sis — içeriği netleştirir */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/60 via-white/30 to-white/10" />
+    <footer className="relative bg-gradient-to-br from-white via-gray-50 to-gray-100 pt-20 pb-10 overflow-hidden">
+      {/* Grid pattern */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_60%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-500/5 via-blue-500/5 to-indigo-500/5" />
+      </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Marka */}
-          <div>
-            <h3
-              className="mb-4 text-base font-bold tracking-tight text-gray-900"
-              style={{ fontFamily: "var(--font-sans)" }}
-            >
-              Burem Elektronik
-            </h3>
+          <div className="group">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
+                <Cpu className="h-5 w-5" />
+              </div>
+              <span
+                className="text-lg font-bold tracking-tight text-gray-900"
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                Burem Elektronik
+              </span>
+            </div>
             <p className="mb-6 text-sm leading-relaxed text-gray-500">
               Endüstriyel elektronik cihazlarınızı orijinal kalitesiyle geri
               kazandırıyoruz. Servo sürücüden PLC'ye, tüm sürücü tamirlerinde
@@ -114,7 +122,7 @@ const BuremFooter: React.FC = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-2 text-sm text-gray-500">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                <span>Bursa, Türkiye</span>
+                <span>İstanbul, Türkiye</span>
               </li>
               <li>
                 <a
