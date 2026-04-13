@@ -836,6 +836,16 @@ function ProductsShowcase() {
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
   const [brandsOpen, setBrandsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const h = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
   const inverterSectionRef = useRef<HTMLElement>(null);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
@@ -867,24 +877,26 @@ export default function HomePage() {
     <motion.div 
         className="min-h-screen bg-background text-foreground" 
         onClick={handleGlobalClick}
-        initial={{ opacity: 0, filter: "blur(12px)" }}
-        animate={{ opacity: 1, filter: "blur(0px)" }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        style={{ willChange: "opacity, filter" }}
+        initial={isMobile ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)" }}
+        animate={isMobile ? { opacity: 1 } : { opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
+        style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
-      <InteractiveGradient />
-      {/* Arka plan partikülleri — düşük yoğunluk, GPU'da çalışır */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none">
-        <SparklesCore
-          background="transparent"
-          particleColor="#1e293b"
-          particleDensity={10}
-          minSize={0.4}
-          maxSize={1.0}
-          speed={0.4}
-          className="h-full w-full"
-        />
-      </div>
+      {!isMobile && <InteractiveGradient />}
+      {/* Arka plan partikülleri — mobilde atlanır */}
+      {!isMobile && (
+        <div className="fixed inset-0 z-[-1] pointer-events-none">
+          <SparklesCore
+            background="transparent"
+            particleColor="#1e293b"
+            particleDensity={10}
+            minSize={0.4}
+            maxSize={1.0}
+            speed={0.4}
+            className="h-full w-full"
+          />
+        </div>
+      )}
       <WhatsAppButton />
       <BrandsPopup isOpen={brandsOpen} onClose={() => setBrandsOpen(false)} />
       <a

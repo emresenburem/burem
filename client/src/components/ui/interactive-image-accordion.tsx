@@ -1,5 +1,19 @@
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 import { SparklesCore } from "@/components/ui/sparkles-core";
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isMobile;
+}
 
 export interface AccordionItem {
   id: number;
@@ -21,6 +35,7 @@ function HorizontalPanel({
   onMouseEnter: () => void;
 }) {
   const uid = useId();
+  const isMobile = useIsMobile();
   return (
     <div
       className={`
@@ -32,19 +47,21 @@ function HorizontalPanel({
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
     >
-      {/* Sparkles */}
-      <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-30"}`}>
-        <SparklesCore
-          id={uid}
-          background="transparent"
-          minSize={0.5}
-          maxSize={isActive ? 1.6 : 0.8}
-          particleDensity={isActive ? 90 : 30}
-          particleColor={item.particleColor}
-          speed={isActive ? 1.2 : 0.4}
-          className="w-full h-full"
-        />
-      </div>
+      {/* Sparkles — mobilde atlanır */}
+      {!isMobile && (
+        <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-30"}`}>
+          <SparklesCore
+            id={uid}
+            background="transparent"
+            minSize={0.5}
+            maxSize={isActive ? 1.6 : 0.8}
+            particleDensity={isActive ? 90 : 30}
+            particleColor={item.particleColor}
+            speed={isActive ? 1.2 : 0.4}
+            className="w-full h-full"
+          />
+        </div>
+      )}
 
       {/* İkon (arka planda büyür) */}
       <div
@@ -94,6 +111,7 @@ function VerticalPanel({
   onMouseEnter: () => void;
 }) {
   const uid = useId();
+  const isMobile = useIsMobile();
   return (
     <div
       className={`
@@ -105,19 +123,21 @@ function VerticalPanel({
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
     >
-      {/* Sparkles */}
-      <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-20"}`}>
-        <SparklesCore
-          id={uid}
-          background="transparent"
-          minSize={0.4}
-          maxSize={isActive ? 1.2 : 0.6}
-          particleDensity={isActive ? 70 : 20}
-          particleColor={item.particleColor}
-          speed={isActive ? 1.0 : 0.3}
-          className="w-full h-full"
-        />
-      </div>
+      {/* Sparkles — mobilde atlanır */}
+      {!isMobile && (
+        <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-20"}`}>
+          <SparklesCore
+            id={uid}
+            background="transparent"
+            minSize={0.4}
+            maxSize={isActive ? 1.2 : 0.6}
+            particleDensity={isActive ? 70 : 20}
+            particleColor={item.particleColor}
+            speed={isActive ? 1.0 : 0.3}
+            className="w-full h-full"
+          />
+        </div>
+      )}
 
       {/* İkon arka planda */}
       <div
