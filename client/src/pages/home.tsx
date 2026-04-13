@@ -450,7 +450,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
     if (!video || !readyRef.current) return;
     const dur = video.duration;
     if (!isFinite(dur) || dur === 0) return;
-    video.currentTime = Math.min(p * dur, dur);
+    video.currentTime = Math.min(p * 2 * dur, dur);
   });
 
   useEffect(() => {
@@ -465,7 +465,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
       const p = scrollYProgress.get();
       const dur = video.duration;
       if (isFinite(dur) && dur > 0) {
-        video.currentTime = Math.min(p * dur, dur);
+        video.currentTime = Math.min(p * 2 * dur, dur);
       }
     };
 
