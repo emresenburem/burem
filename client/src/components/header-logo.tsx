@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { CpuArchitecture } from "@/components/ui/cpu-architecture";
 
 export function HeaderLogo() {
   const [, setLocation] = useLocation();
@@ -52,22 +51,6 @@ export function HeaderLogo() {
           draggable={false}
         />
       </motion.div>
-
-      {/* CPU Architecture dekoratif SVG — yalnızca masaüstünde */}
-      <div
-        className="hidden md:block w-48 h-24 opacity-60 group-hover:opacity-90 transition-opacity duration-500 mt-4 ml-[-8px]"
-        aria-hidden="true"
-      >
-        <CpuArchitecture
-          text="BUREM"
-          width="100%"
-          height="100%"
-          animateText={true}
-          animateLines={true}
-          animateMarkers={true}
-          showCpuConnections={true}
-        />
-      </div>
     </button>
   );
 }
