@@ -5,6 +5,7 @@ import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEve
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
+import { AnimatedThemeToggleButton } from "@/components/ui/animated-theme-toggle-button";
 import { SparkleButton } from "@/components/ui/sparkle-button";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
@@ -933,7 +934,7 @@ export default function HomePage() {
       transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
     />
     <motion.div 
-        className="min-h-screen bg-white text-gray-900" 
+        className="min-h-screen bg-background text-foreground" 
         onClick={handleGlobalClick}
         initial={{ opacity: 0, filter: "blur(12px)" }}
         animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -965,7 +966,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-white/80 shadow-elevated backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b bg-background/80 shadow-elevated backdrop-blur-md">
         <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
           <div className="-ml-25 -mt-12 mb-[-2.5rem]">
             <HeaderLogo />
@@ -996,6 +997,7 @@ export default function HomePage() {
               İletişim
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </MagneticButton>
+            <AnimatedThemeToggleButton type="vertical" />
           </div>
         </div>
       </header>
