@@ -557,7 +557,7 @@ function AnimatedServicesSection() {
             description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
             icon: <Zap strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
           {
             id: 2,
@@ -565,7 +565,7 @@ function AnimatedServicesSection() {
             description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
             icon: <Cpu strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
           {
             id: 3,
@@ -573,7 +573,7 @@ function AnimatedServicesSection() {
             description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
             icon: <Search strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
         ]}
       />
@@ -670,7 +670,7 @@ function AnimatedProcessSection() {
             description: "Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır.",
             icon: <ClipboardList strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
           {
             id: 2,
@@ -678,7 +678,7 @@ function AnimatedProcessSection() {
             description: "Komponent düzeyinde detaylı teknik arıza analizi yapılır.",
             icon: <ScanLine strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
           {
             id: 3,
@@ -686,7 +686,7 @@ function AnimatedProcessSection() {
             description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
             icon: <Wrench strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
           {
             id: 4,
@@ -694,7 +694,7 @@ function AnimatedProcessSection() {
             description: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
             icon: <PackageCheck strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
         ]}
       />
@@ -1092,7 +1092,7 @@ export default function HomePage() {
                           description: "Ortalama işlem süresi. Parça durumuna göre değişir.",
                           icon: <Timer strokeWidth={1.3} />,
                           particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
                         },
                         {
                           id: 2,
@@ -1100,7 +1100,7 @@ export default function HomePage() {
                           description: "Stabilite ve ısı kontrolü teslimden önce yapılır.",
                           icon: <Zap strokeWidth={1.3} />,
                           particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
                         },
                         {
                           id: 3,
@@ -1108,7 +1108,7 @@ export default function HomePage() {
                           description: "Yapılan tüm işlemler müşteriye net biçimde aktarılır.",
                           icon: <ClipboardList strokeWidth={1.3} />,
                           particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
                         },
                       ]}
                     />

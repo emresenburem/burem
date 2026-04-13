@@ -26,7 +26,8 @@ function HorizontalPanel({
       className={`
         relative rounded-2xl overflow-hidden cursor-pointer flex-shrink-0
         transition-all duration-700 ease-in-out h-[420px]
-        ${isActive ? "flex-[4]" : "flex-[0.55]"}
+        border border-slate-200
+        ${isActive ? "flex-[4] shadow-md" : "flex-[0.55]"}
       `}
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
@@ -61,8 +62,8 @@ function HorizontalPanel({
           isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6 pointer-events-none"
         }`}
       >
-        <p className="text-white text-2xl font-bold leading-tight tracking-tight">{item.title}</p>
-        <p className="text-white/65 text-sm mt-3 leading-relaxed">{item.description}</p>
+        <p className="text-slate-800 text-2xl font-bold leading-tight tracking-tight">{item.title}</p>
+        <p className="text-slate-500 text-sm mt-3 leading-relaxed">{item.description}</p>
       </div>
 
       {/* Pasif: dikey başlık */}
@@ -72,7 +73,7 @@ function HorizontalPanel({
         }`}
       >
         <span
-          className="text-white/80 text-[13px] font-semibold whitespace-nowrap tracking-wide"
+          className="text-slate-400 text-[13px] font-semibold whitespace-nowrap tracking-wide"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
           {item.title}
@@ -98,7 +99,8 @@ function VerticalPanel({
       className={`
         relative w-full rounded-2xl overflow-hidden cursor-pointer flex-shrink-0
         transition-all duration-600 ease-in-out
-        ${isActive ? "flex-[3]" : "flex-[0.7]"}
+        border border-slate-200
+        ${isActive ? "flex-[3] shadow-sm" : "flex-[0.7]"}
       `}
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
@@ -133,10 +135,10 @@ function VerticalPanel({
           isActive ? "opacity-0" : "opacity-100"
         }`}
       >
-        <div className="w-5 h-5 shrink-0 [&>svg]:w-full [&>svg]:h-full" style={{ color: item.particleColor }}>
+        <div className="w-5 h-5 shrink-0 [&>svg]:w-full [&>svg]:h-full text-slate-400">
           {item.icon}
         </div>
-        <span className="text-white/90 text-sm font-semibold truncate">{item.title}</span>
+        <span className="text-slate-500 text-sm font-semibold truncate">{item.title}</span>
       </div>
 
       {/* Aktif: başlık + açıklama */}
@@ -145,8 +147,8 @@ function VerticalPanel({
           isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <p className="text-white text-base font-bold leading-snug">{item.title}</p>
-        <p className="text-white/65 text-xs mt-1.5 leading-relaxed">{item.description}</p>
+        <p className="text-slate-800 text-base font-bold leading-snug">{item.title}</p>
+        <p className="text-slate-500 text-xs mt-1.5 leading-relaxed">{item.description}</p>
       </div>
     </div>
   );
