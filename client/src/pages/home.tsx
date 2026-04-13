@@ -1107,57 +1107,37 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <div className="mt-5 space-y-3">
-                    <div
-                      className="rounded-2xl border bg-background/60 px-4 py-3"
-                      data-testid="card-kpi-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Ortalama işlem</span>
-                        <span className="text-sm font-semibold">24–72 saat</span>
-                      </div>
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        Parça durumuna göre değişir.
-                      </div>
-                    </div>
-
-                    <div
-                      className="rounded-2xl border bg-background/60 px-4 py-3"
-                      data-testid="card-kpi-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Test</span>
-                        <span className="text-sm font-semibold">Yük altında</span>
-                      </div>
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        Stabilite kontrolü yapılır.
-                      </div>
-                    </div>
-
-                    <div
-                      className="rounded-2xl border bg-background/60 px-4 py-3"
-                      data-testid="card-kpi-3"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Raporlama</span>
-                        <span className="text-sm font-semibold">Şeffaf</span>
-                      </div>
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        Yapılan işlemler net paylaşılır.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 grid grid-cols-3 gap-2">
-                    {["Inverter", "Servo", "SMPS"].map((k) => (
-                      <div
-                        key={k}
-                        className="rounded-2xl border bg-background/60 px-3 py-2 text-center text-xs text-muted-foreground"
-                        data-testid={`chip-${k}`}
-                      >
-                        {k}
-                      </div>
-                    ))}
+                  <div className="mt-5 h-[220px]" data-testid="card-kpi-accordion">
+                    <ImageAccordion
+                      direction="vertical"
+                      defaultActive={0}
+                      items={[
+                        {
+                          id: 1,
+                          title: "24–72 saat",
+                          description: "Ortalama işlem süresi. Parça durumuna göre değişir.",
+                          icon: <Timer strokeWidth={1.3} />,
+                          particleColor: "#38bdf8",
+                          gradient: "linear-gradient(135deg, #0c1a2e 0%, #0c4a6e 100%)",
+                        },
+                        {
+                          id: 2,
+                          title: "Yük altında test",
+                          description: "Stabilite ve ısı kontrolü teslimden önce yapılır.",
+                          icon: <Zap strokeWidth={1.3} />,
+                          particleColor: "#fbbf24",
+                          gradient: "linear-gradient(135deg, #1c1400 0%, #451a03 100%)",
+                        },
+                        {
+                          id: 3,
+                          title: "Şeffaf raporlama",
+                          description: "Yapılan tüm işlemler müşteriye net biçimde aktarılır.",
+                          icon: <ClipboardList strokeWidth={1.3} />,
+                          particleColor: "#4ade80",
+                          gradient: "linear-gradient(135deg, #001a0a 0%, #052e16 100%)",
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
 
