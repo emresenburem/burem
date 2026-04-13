@@ -433,53 +433,54 @@ function ProcessStepsGrid() {
   );
 }
 
-function RobotTiltImage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLElement> }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const readyRef = useRef(false);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [14, -14]), { stiffness: 260, damping: 28 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-14, 14]), { stiffness: 260, damping: 28 });
-  const shadowX = useSpring(useTransform(mouseX, [-0.5, 0.5], [-20, 20]), { stiffness: 260, damping: 28 });
-  const shadowY = useSpring(useTransform(mouseY, [-0.5, 0.5], [-20, 20]), { stiffness: 260, damping: 28 });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    const video = videoRef.current;
+    if (!video || !readyRef.current) return;
+    const dur = video.duration;
+    if (!isFinite(dur) || dur === 0) return;
+    video.currentTime = Math.min(p * dur, dur);
+  });
 
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const markReady = () => {
+      if (readyRef.current) return;
+      readyRef.current = true;
+      video.pause();
+      video.currentTime = 0;
+    };
+    video.addEventListener("play", markReady, { once: true });
+    video.addEventListener("canplay", markReady, { once: true });
+    video.load();
+    return () => {
+      video.removeEventListener("play", markReady);
+      video.removeEventListener("canplay", markReady);
+    };
+  }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="flex-1 relative flex items-center justify-center p-6 cursor-none"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ perspective: "900px" }}
-      data-testid="container-robot-img"
-    >
-      <motion.img
-        src="https://motioncontrolsrobotics.com/wp-content/uploads/2015/10/r-1000.png"
-        alt="Endüstriyel robot kolu"
-        className="h-full max-h-[380px] w-auto object-contain select-none"
-        draggable={false}
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-          filter: useTransform(
-            [shadowX, shadowY],
-            ([sx, sy]: number[]) =>
-              `drop-shadow(${sx}px ${sy}px 32px rgba(255,255,255,0.18)) drop-shadow(0 8px 40px rgba(0,0,0,0.7))`
-          ),
-        }}
-        data-testid="img-robot"
+    <div className="flex-1 relative overflow-hidden rounded-r-3xl" data-testid="container-inverter-video">
+      <video
+        ref={videoRef}
+        src="/intro-video.mp4"
+        className="h-full w-full object-cover"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        loop={false}
+        disablePictureInPicture
+        data-testid="video-inverter"
       />
     </div>
   );
@@ -902,6 +903,7 @@ function ProductsShowcase() {
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
   const [brandsOpen, setBrandsOpen] = useState(false);
+  const inverterSectionRef = useRef<HTMLElement>(null);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
   const handleGlobalClick = () => {
@@ -1227,8 +1229,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* İnverter 3D Tanıtım Bölümü */}
-        <section className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
+        {/* İnverter Video Bölümü */}
+        <section ref={inverterSectionRef} className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
           <div className="relative w-full h-[420px] md:h-[500px] rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-elevated">
             {/* Spotlight efekti */}
             <div className="pointer-events-none absolute -top-32 left-1/3 w-[500px] h-[300px] rounded-full bg-white/5 blur-3xl" />
@@ -1262,8 +1264,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Sağ — mouse takip eden 3D tilt robot görseli */}
-              <RobotTiltImage />
+              {/* Sağ — scroll ile oynayan inverter videosu */}
+              <InverterScrollVideo sectionRef={inverterSectionRef} />
             </div>
           </div>
         </section>
