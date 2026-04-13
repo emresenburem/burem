@@ -1,5 +1,5 @@
 import React from "react";
-import { Cpu, Phone, Mail, MapPin, MessageCircle, Linkedin, Instagram } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle, Linkedin, Instagram } from "lucide-react";
 
 const BuremFooter: React.FC = () => {
   const year = new Date().getFullYear();
@@ -42,16 +42,13 @@ const BuremFooter: React.FC = () => {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Marka */}
           <div className="group">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
-                <Cpu className="h-5 w-5" />
-              </div>
-              <span
-                className="text-lg font-bold tracking-tight text-gray-900"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                Burem Elektronik
-              </span>
+            <div className="mb-6 flex items-center gap-2">
+              <img
+                src="/logo.png"
+                alt="Burem Elektronik Logo"
+                className="h-14 w-auto object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
+                draggable={false}
+              />
             </div>
             <p className="mb-6 text-sm leading-relaxed text-gray-500">
               Endüstriyel elektronik cihazlarınızı orijinal kalitesiyle geri
@@ -122,7 +119,7 @@ const BuremFooter: React.FC = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-2 text-sm text-gray-500">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                <span>İstanbul, Türkiye</span>
+                <span>Bursa, Türkiye</span>
               </li>
               <li>
                 <a
