@@ -44,6 +44,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/interactive-empty-state";
 import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
+import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
@@ -957,10 +958,12 @@ export default function HomePage() {
           </div>
 
           <nav aria-label="Ana menü" className="hidden md:flex">
-            <SlideNav
+            <InteractiveMenu
               items={[
-                ...sections.slice(1).map((s) => ({ label: s.label, onClick: () => scrollToId(s.id) })),
-                { label: "Markalar", onClick: () => setBrandsOpen((v) => !v) },
+                { label: "Hizmetler", icon: Wrench,  onClick: () => scrollToId("services") },
+                { label: "Süreç",     icon: Settings, onClick: () => scrollToId("process")  },
+                { label: "İletişim",  icon: Phone,    onClick: () => scrollToId("contact")  },
+                { label: "Markalar",  icon: Package,  onClick: () => setBrandsOpen((v) => !v) },
               ]}
             />
           </nav>
