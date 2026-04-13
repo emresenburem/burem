@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
-import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -957,16 +956,6 @@ export default function HomePage() {
                 </div>
               ))}
             </InfiniteSlider>
-            <ProgressiveBlur
-              className="pointer-events-none absolute top-0 left-0 h-full w-[150px]"
-              direction="left"
-              blurIntensity={0.5}
-            />
-            <ProgressiveBlur
-              className="pointer-events-none absolute top-0 right-0 h-full w-[150px]"
-              direction="right"
-              blurIntensity={0.5}
-            />
           </div>
         </div>
 
