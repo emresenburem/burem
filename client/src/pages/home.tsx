@@ -988,6 +988,41 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Marka logoları sonsuz slider */}
+        <div className="relative w-full py-8 overflow-hidden border-b">
+          <p
+            className="text-center text-xl font-bold text-foreground mb-6 tracking-tight"
+            style={{ fontFamily: "Nunito, var(--font-sans)" }}
+            data-testid="text-brands-title"
+          >
+            Tamir ettiğimiz markalar
+          </p>
+          <div className="relative h-16 w-full">
+            <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
+              {BRANDS.map((brand) => (
+                <div key={brand.name} className="flex items-center justify-center h-12 w-32 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="max-h-9 w-auto object-contain"
+                    style={{ transform: `scale(${brand.scale ?? 1})` }}
+                  />
+                </div>
+              ))}
+            </InfiniteSlider>
+            <ProgressiveBlur
+              className="pointer-events-none absolute top-0 left-0 h-full w-[150px]"
+              direction="left"
+              blurIntensity={0.5}
+            />
+            <ProgressiveBlur
+              className="pointer-events-none absolute top-0 right-0 h-full w-[150px]"
+              direction="right"
+              blurIntensity={0.5}
+            />
+          </div>
+        </div>
+
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
           <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
@@ -1162,41 +1197,6 @@ export default function HomePage() {
             </motion.div>
           </div>
         </section>
-
-        {/* Marka logoları sonsuz slider */}
-        <div className="relative w-full py-12 overflow-hidden">
-          <p
-            className="text-center text-2xl font-bold text-foreground mb-8 tracking-tight"
-            style={{ fontFamily: "Nunito, var(--font-sans)" }}
-            data-testid="text-brands-title"
-          >
-            Tamir ettiğimiz markalar
-          </p>
-          <div className="relative h-20 w-full">
-            <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
-              {BRANDS.map((brand) => (
-                <div key={brand.name} className="flex items-center justify-center h-14 w-32 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="max-h-10 w-auto object-contain"
-                    style={{ transform: `scale(${brand.scale ?? 1})` }}
-                  />
-                </div>
-              ))}
-            </InfiniteSlider>
-            <ProgressiveBlur
-              className="pointer-events-none absolute top-0 left-0 h-full w-[150px]"
-              direction="left"
-              blurIntensity={0.5}
-            />
-            <ProgressiveBlur
-              className="pointer-events-none absolute top-0 right-0 h-full w-[150px]"
-              direction="right"
-              blurIntensity={0.5}
-            />
-          </div>
-        </div>
 
         {/* İnverter Video Bölümü */}
         <section ref={inverterSectionRef} className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
