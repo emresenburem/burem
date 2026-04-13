@@ -1206,92 +1206,62 @@ export default function HomePage() {
               <ContactForm />
             </Card>
 
-            <div className="grid gap-4">
-              <Card className="rounded-3xl border bg-card p-6 shadow-soft">
-                <p
-                  className="text-sm font-semibold tracking-tight"
-                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                  data-testid="text-contact-direct-title"
-                >
-                  Doğrudan iletişim
-                </p>
-
-                <div className="mt-4 space-y-3 text-sm">
-                  <div
-                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
-                    data-testid="row-contact-phone"
-                  >
-                    <Phone className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Telefon</p>
-                      <p className="font-medium" data-testid="text-phone">
-                        +90 (532) 266 47 64
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
-                    data-testid="row-contact-mail"
-                  >
-                    <Mail className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">E-posta</p>
-                      <p className="font-medium" data-testid="text-email">
-                        info@buremelektronik.com
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    className="flex items-start gap-3 rounded-2xl border bg-background px-4 py-3"
-                    data-testid="row-contact-location"
-                  >
-                    <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Lokasyon</p>
-                      <p className="font-medium" data-testid="text-location">
-                        Bursa / Türkiye
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 rounded-2xl border bg-background p-4">
-                  <p className="text-xs text-muted-foreground" data-testid="text-contact-hint">
-                    Cihaz üzerinde yazan etiket fotoğrafı ve hata kodu, teşhisi hızlandırır.
-                  </p>
-                </div>
-              </Card>
-
-              <Card className="rounded-3xl border bg-card p-6 shadow-soft">
-                <p
-                  className="text-sm font-semibold tracking-tight"
-                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                  data-testid="text-guarantee-title"
-                >
-                  Prensiplerimiz
-                </p>
-
-                <div className="mt-4 grid gap-3">
-                  {["Güvenilir parça & işçilik", "Detaylı arıza analizi", "Test ile teslim"].map(
-                    (t, idx) => (
-                      <div
-                        key={t}
-                        className="flex items-center gap-2 rounded-2xl border bg-background px-4 py-3 text-sm"
-                        data-testid={`row-principle-${idx}`}
-                      >
-                        <CheckCircle2
-                          className="h-4 w-4"
-                          style={{ color: "hsl(var(--primary))" }}
-                          aria-hidden="true"
-                        />
-                        <span className="text-muted-foreground">{t}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </Card>
+            <div className="h-full min-h-[520px]">
+              <ImageAccordion
+                direction="vertical"
+                defaultActive={0}
+                className="h-full"
+                items={[
+                  {
+                    id: 1,
+                    title: "Telefon",
+                    description: "+90 (532) 266 47 64 — Hızlı yanıt için arayabilirsiniz.",
+                    icon: <Phone strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                  {
+                    id: 2,
+                    title: "E-posta",
+                    description: "info@buremelektronik.com — Teknik bilgi ve fiyat talebi için.",
+                    icon: <Mail strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                  {
+                    id: 3,
+                    title: "Lokasyon",
+                    description: "Bursa / Türkiye — Cihazınızı kargo veya elden teslim edebilirsiniz.",
+                    icon: <MapPin strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                  {
+                    id: 4,
+                    title: "Güvenilir parça & işçilik",
+                    description: "Yalnızca kaliteli parça kullanılır, işçilik titizlikle uygulanır.",
+                    icon: <ShieldCheck strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                  {
+                    id: 5,
+                    title: "Detaylı arıza analizi",
+                    description: "Komponent düzeyinde inceleme; gereksiz parça değişimi yapılmaz.",
+                    icon: <ScanLine strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                  {
+                    id: 6,
+                    title: "Test ile teslim",
+                    description: "Her cihaz yük altında test edilip, stabilite kontrolünden geçirilerek teslim edilir.",
+                    icon: <PackageCheck strokeWidth={1.3} />,
+                    particleColor: "#94a3b8",
+                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+                  },
+                ]}
+              />
             </div>
           </div>
         </section>
