@@ -5,6 +5,7 @@ import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEve
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
+import { SplineScene } from "@/components/ui/spline-scene";
 import { SparkleButton } from "@/components/ui/sparkle-button";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
@@ -1174,6 +1175,52 @@ export default function HomePage() {
             />
           </div>
         </div>
+
+        {/* İnverter 3D Tanıtım Bölümü */}
+        <section className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
+          <div className="relative w-full h-[420px] md:h-[500px] rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-elevated">
+            {/* Spotlight efekti */}
+            <div className="pointer-events-none absolute -top-32 left-1/3 w-[500px] h-[300px] rounded-full bg-white/5 blur-3xl" />
+
+            <div className="flex h-full flex-col md:flex-row">
+              {/* Sol — metin */}
+              <div className="relative z-10 flex flex-col justify-center px-8 py-10 md:w-[42%]">
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3" data-testid="text-inverter-eyebrow">
+                  Uzmanlık Alanımız
+                </p>
+                <h2
+                  className="text-3xl md:text-4xl font-bold leading-tight text-white"
+                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                  data-testid="text-inverter-title"
+                >
+                  Frekans İnverteri&nbsp;&amp; Sürücü Tamiri
+                </h2>
+                <p className="mt-4 text-sm text-zinc-400 max-w-xs leading-relaxed" data-testid="text-inverter-desc">
+                  ABB, Siemens, Danfoss, Schneider ve daha fazlasının frekans inverterleri — kart seviyesinde onarım, test ve devreye alma.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {["AC Sürücü", "DC Sürücü", "Servo", "Güç Kartı"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-zinc-700 bg-zinc-800/60 px-3 py-1 text-xs text-zinc-300"
+                      data-testid={`tag-inverter-${tag}`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sağ — 3D sahne */}
+              <div className="flex-1 relative" data-testid="container-spline">
+                <SplineScene
+                  scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
         <AnimatedServicesSection />
 
