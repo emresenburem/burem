@@ -471,11 +471,11 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
   }, []);
 
   return (
-    <div className="flex-1 relative flex items-center justify-center overflow-hidden" data-testid="container-inverter-video">
+    <div className="absolute inset-0" data-testid="container-inverter-video">
       <video
         ref={videoRef}
         src="/inverter-video.mp4"
-        className="h-full w-full object-contain"
+        className="h-full w-full object-cover"
         style={{ mixBlendMode: "screen" }}
         autoPlay
         muted
@@ -1138,41 +1138,40 @@ export default function HomePage() {
 
         {/* İnverter Video Bölümü */}
         <section ref={inverterSectionRef} className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
-          <div className="relative w-full h-[420px] md:h-[500px] rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-elevated">
-            {/* Spotlight efekti */}
-            <div className="pointer-events-none absolute -top-32 left-1/3 w-[500px] h-[300px] rounded-full bg-white/5 blur-3xl" />
+          <div className="relative w-full h-[480px] md:h-[560px] rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-elevated">
+            {/* Video — tam karta dolu */}
+            <InverterScrollVideo sectionRef={inverterSectionRef} />
 
-            <div className="flex h-full flex-col md:flex-row">
-              {/* Sol — metin */}
-              <div className="relative z-10 flex flex-col justify-center px-8 py-10 md:w-[42%]">
-                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3" data-testid="text-inverter-eyebrow">
-                  Uzmanlık Alanımız
-                </p>
-                <h2
-                  className="text-3xl md:text-4xl font-bold leading-tight text-white"
-                  style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                  data-testid="text-inverter-title"
-                >
-                  Frekans İnverteri&nbsp;&amp; Sürücü Tamiri
-                </h2>
-                <p className="mt-4 text-sm text-zinc-400 max-w-xs leading-relaxed" data-testid="text-inverter-desc">
-                  ABB, Siemens, Danfoss, Schneider ve daha fazlasının frekans inverterleri — kart seviyesinde onarım, test ve devreye alma.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {["AC Sürücü", "DC Sürücü", "Servo", "Güç Kartı"].map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-zinc-700 bg-zinc-800/60 px-3 py-1 text-xs text-zinc-300"
-                      data-testid={`tag-inverter-${tag}`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+            {/* Gradient overlay — soldan metin okunabilirliği için */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/60 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent" />
+
+            {/* Metin — sol altta */}
+            <div className="absolute inset-0 z-10 flex flex-col justify-end px-8 py-10 md:max-w-[52%]">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3" data-testid="text-inverter-eyebrow">
+                Uzmanlık Alanımız
+              </p>
+              <h2
+                className="text-3xl md:text-5xl font-bold leading-tight text-white"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-inverter-title"
+              >
+                Frekans İnverteri&nbsp;&amp; Sürücü Tamiri
+              </h2>
+              <p className="mt-4 text-sm text-zinc-400 max-w-sm leading-relaxed" data-testid="text-inverter-desc">
+                ABB, Siemens, Danfoss, Schneider ve daha fazlasının frekans inverterleri — kart seviyesinde onarım, test ve devreye alma.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {["AC Sürücü", "DC Sürücü", "Servo", "Güç Kartı"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-zinc-700 bg-zinc-800/60 px-3 py-1 text-xs text-zinc-300"
+                    data-testid={`tag-inverter-${tag}`}
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-
-              {/* Sağ — scroll ile oynayan inverter videosu */}
-              <InverterScrollVideo sectionRef={inverterSectionRef} />
             </div>
           </div>
         </section>
