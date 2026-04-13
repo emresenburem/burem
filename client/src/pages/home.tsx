@@ -912,10 +912,8 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       <header className="sticky top-0 z-40 border-b bg-white/80 shadow-elevated backdrop-blur-md">
-        <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
-          <div className="-ml-25 -mt-12 mb-[-2.5rem]">
-            <HeaderLogo />
-          </div>
+        <div className="flex w-full items-center justify-between gap-3 px-4 py-3 md:px-6">
+          <HeaderLogo />
 
           <nav aria-label="Ana menü" className="hidden md:flex">
             <SlideNav
