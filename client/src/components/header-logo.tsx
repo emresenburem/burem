@@ -46,7 +46,7 @@ export function HeaderLogo() {
         <img
           src="/logo.png"
           alt="Burem Elektronik Logo"
-          className="h-80 w-80 object-contain mix-blend-multiply"
+          className="h-80 w-80 object-contain mix-blend-multiply dark:mix-blend-normal dark:invert"
           decoding="async"
           draggable={false}
         />

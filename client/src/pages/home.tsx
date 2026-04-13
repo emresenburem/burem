@@ -103,7 +103,7 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed left-1/2 top-20 z-[99] w-[90vw] max-w-3xl -translate-x-1/2 rounded-2xl border bg-white/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto max-h-[75vh]"
+            className="fixed left-1/2 top-20 z-[99] w-[90vw] max-w-3xl -translate-x-1/2 rounded-2xl border bg-card/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto max-h-[75vh]"
             data-testid="popup-brands"
           >
             <div className="flex items-center justify-between mb-5">
@@ -116,7 +116,7 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               {BRANDS.map((brand) => (
                 <motion.div
                   key={brand.name}
-                  className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center bg-white shadow-sm cursor-pointer overflow-hidden group hover:border-primary/40 hover:shadow-md transition-all"
+                  className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center bg-card shadow-sm cursor-pointer overflow-hidden group hover:border-primary/40 hover:shadow-md transition-all"
                   whileHover={{ scale: 1.08, zIndex: 50 }}
                   transition={{ type: "spring", stiffness: 500, damping: 20 }}
                   onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); onClose(); }}
@@ -157,7 +157,7 @@ function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }
 
   return (
     <ul
-      className="relative flex w-fit rounded-full border-2 border-gray-900 bg-white p-1"
+      className="relative flex w-fit rounded-full border-2 border-foreground/30 bg-background p-1"
       onMouseLeave={() => setPosition((p) => ({ ...p, opacity: 0 }))}
     >
       {items.map((item) => (
@@ -167,7 +167,7 @@ function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }
       ))}
       <motion.li
         animate={position}
-        className="absolute z-0 h-7 rounded-full bg-gray-900 md:h-9"
+        className="absolute z-0 h-7 rounded-full bg-foreground md:h-9"
       />
     </ul>
   );
@@ -1012,7 +1012,7 @@ export default function HomePage() {
                 transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
                 <Badge
-                  className="rounded-full border bg-white/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                  className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
                   data-testid="badge-hero"
                 >
                   Elektronik sürücü tamiri · Endüstriyel servis
@@ -1079,7 +1079,7 @@ export default function HomePage() {
                 {["Hızlı dönüş", "Testli teslim", "Kontrollü onarım"].map((t) => (
                   <div
                     key={t}
-                    className="flex items-center gap-2 rounded-2xl border bg-gray-100 px-3 py-2 text-sm shadow-soft"
+                    className="flex items-center gap-2 rounded-2xl border bg-muted px-3 py-2 text-sm shadow-soft"
                     data-testid={`pill-${t}`}
                   >
                     <CheckCircle2
@@ -1098,7 +1098,7 @@ export default function HomePage() {
               animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Card className="overflow-hidden rounded-3xl border bg-white/70 shadow-elevated">
+              <Card className="overflow-hidden rounded-3xl border bg-card/70 shadow-elevated">
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -1117,7 +1117,7 @@ export default function HomePage() {
                       </p>
                     </div>
                     <span
-                      className="rounded-full border bg-white/70 px-2.5 py-1 text-xs text-muted-foreground"
+                      className="rounded-full border bg-background/70 px-2.5 py-1 text-xs text-muted-foreground"
                       data-testid="badge-hero-card"
                     >
                       TR
@@ -1126,7 +1126,7 @@ export default function HomePage() {
 
                   <div className="mt-5 space-y-3">
                     <div
-                      className="rounded-2xl border bg-white/70 px-4 py-3"
+                      className="rounded-2xl border bg-background/60 px-4 py-3"
                       data-testid="card-kpi-1"
                     >
                       <div className="flex items-center justify-between">
@@ -1139,7 +1139,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-white/70 px-4 py-3"
+                      className="rounded-2xl border bg-background/60 px-4 py-3"
                       data-testid="card-kpi-2"
                     >
                       <div className="flex items-center justify-between">
@@ -1152,7 +1152,7 @@ export default function HomePage() {
                     </div>
 
                     <div
-                      className="rounded-2xl border bg-white/70 px-4 py-3"
+                      className="rounded-2xl border bg-background/60 px-4 py-3"
                       data-testid="card-kpi-3"
                     >
                       <div className="flex items-center justify-between">
@@ -1169,7 +1169,7 @@ export default function HomePage() {
                     {["Inverter", "Servo", "SMPS"].map((k) => (
                       <div
                         key={k}
-                        className="rounded-2xl border bg-white/70 px-3 py-2 text-center text-xs text-muted-foreground"
+                        className="rounded-2xl border bg-background/60 px-3 py-2 text-center text-xs text-muted-foreground"
                         data-testid={`chip-${k}`}
                       >
                         {k}
@@ -1200,7 +1200,7 @@ export default function HomePage() {
         {/* Marka logoları sonsuz slider */}
         <div className="relative w-full py-12 overflow-hidden">
           <p
-            className="text-center text-2xl font-bold text-gray-800 mb-8 tracking-tight"
+            className="text-center text-2xl font-bold text-foreground mb-8 tracking-tight"
             style={{ fontFamily: "Nunito, var(--font-sans)" }}
             data-testid="text-brands-title"
           >
