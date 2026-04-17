@@ -806,13 +806,13 @@ function BrandsDropdown() {
               <div className="w-3 h-3 rotate-45 border-l border-t border-border bg-card" />
             </div>
 
-            <div className="w-[700px] rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden">
+            <div className="w-[860px] rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden">
               {/* Üst renkli şerit */}
               <div className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
 
-              <div className="p-5">
+              <div className="p-6">
                 {/* Başlık */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-5">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
                     Tamir ettiğimiz markalar
                   </p>
@@ -820,24 +820,24 @@ function BrandsDropdown() {
                 </div>
 
                 {/* Logo grid — 5 kolon, büyük kartlar */}
-                <div className="grid grid-cols-5 gap-2.5">
+                <div className="grid grid-cols-5 gap-3">
                   {BRANDS.map((brand, i) => (
                     <motion.button
                       key={brand.name}
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.022, type: "spring", stiffness: 400, damping: 28 }}
                       onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); setOpen(false); }}
                       title={brand.name}
                       data-testid={`brand-dropdown-${brand.name}`}
-                      className="group/logo flex flex-col items-center justify-center gap-1.5 rounded-xl border border-transparent bg-muted/30 p-3 h-[70px] hover:border-primary/30 hover:bg-background hover:shadow-md transition-all duration-200"
-                      whileHover={{ scale: 1.06, y: -2 }}
+                      className="flex items-center justify-center rounded-xl border border-transparent bg-muted/30 p-4 h-[90px] hover:border-primary/30 hover:bg-background hover:shadow-md transition-all duration-200"
+                      whileHover={{ scale: 1.07, y: -3 }}
                       whileTap={{ scale: 0.97 }}
                     >
                       <img
                         src={brand.logo}
                         alt={brand.name}
-                        className="h-8 w-full object-contain"
+                        className="h-12 w-full object-contain"
                         style={brand.scale ? { transform: `scale(${brand.scale * 0.7})` } : undefined}
                         onError={(e) => {
                           const img = e.target as HTMLImageElement;
@@ -846,10 +846,7 @@ function BrandsDropdown() {
                           if (fb) fb.style.display = "flex";
                         }}
                       />
-                      <span className="hidden items-center justify-center text-[8px] font-bold" style={{ color: brand.color }}>
-                        {brand.name}
-                      </span>
-                      <span className="text-[8px] text-muted-foreground/0 group-hover/logo:text-muted-foreground transition-colors truncate w-full text-center leading-none">
+                      <span className="hidden items-center justify-center text-[9px] font-bold" style={{ color: brand.color }}>
                         {brand.name}
                       </span>
                     </motion.button>
