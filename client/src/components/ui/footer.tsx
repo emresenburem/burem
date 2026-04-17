@@ -122,7 +122,7 @@ const BuremFooter: React.FC = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-2 text-sm text-gray-500">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                <span>İstanbul, Türkiye</span>
+                <span>Bursa, Türkiye</span>
               </li>
               <li>
                 <a
