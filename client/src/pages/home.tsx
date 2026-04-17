@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import BuremFooter from "@/components/ui/footer";
+import { CinematicFooter } from "@/components/ui/cinematic-footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
@@ -928,7 +928,7 @@ export default function HomePage() {
                 key={item.label}
                 onClick={item.onClick}
                 data-testid={`nav-item-${item.id}`}
-                className="group flex items-center gap-1.5 px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px"
+                className="group flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px"
               >
                 <item.icon className="h-3.5 w-3.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
                 {item.label}
@@ -1283,7 +1283,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <BuremFooter />
+      <CinematicFooter />
       </motion.div>
     </>
   );
