@@ -1,0 +1,74 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "O8Kb5rE-p38IDFOIz2z9Q"
+uri = "file://public/products/siemens-g120.png"
+type = "image"
+title = "Siemens G120 drive"
+
+[[generated]]
+id = "fkz45i2Aal_D1XDjXCT7_"
+uri = "file://public/products/abb-acs580.png"
+type = "image"
+title = "ABB ACS580 drive"
+
+[[generated]]
+id = "oUwVRUfp8a6HEcymFZceu"
+uri = "file://public/products/danfoss-fc302.png"
+type = "image"
+title = "Danfoss FC302 drive"
+
+[[generated]]
+id = "mu-nsCgExh8EtRwk24OXK"
+uri = "file://public/products/yaskawa-a1000.png"
+type = "image"
+title = "Yaskawa A1000 drive"
+
+[[generated]]
+id = "59ks5KD-unXSMVFec0Odh"
+uri = "file://public/products/mitsubishi-fre800.png"
+type = "image"
+title = "Mitsubishi FR-E800 drive"
+
+[[generated]]
+id = "CPlFh1srdeyhCB7bg_I8W"
+uri = "file://public/products/schneider-atv320.png"
+type = "image"
+title = "Schneider ATV320 drive"
+
+[[generated]]
+id = "V5EhBi8AdeZ99PTlc1NkL"
+uri = "file://public/products/lenze-i550.png"
+type = "image"
+title = "Lenze i550 inverter"
+
+[[generated]]
+id = "16uesGF7NLYMQVDyjRHZt"
+uri = "file://public/products/sew-movitrac.png"
+type = "image"
+title = "SEW MOVITRAC B drive"
+
+[[generated]]
+id = "Z_4KMSXj3M5U3RXNawzFm"
+uri = "file://public/products/omron-mx2.png"
+type = "image"
+title = "Omron MX2 inverter"
+
+[[generated]]
+id = "jjuI_ptYm47YLaNnPdVQh"
+uri = "file://public/products/delta-ms300.png"
+type = "image"
+title = "Delta VFD MS300 drive"
+
+[[generated]]
+id = "sxkIJzp3ZJQ9k-hfaVQ1m"
+uri = "file://public/products/rexroth-efc5610.png"
+type = "image"
+title = "Bosch Rexroth EFC5610 drive"
+
+[[generated]]
+id = "A4dGLjqgaZ71fYUg-5jfO"
+uri = "file://public/products/siemens-g120x.png"
+type = "image"
+title = "Siemens G120X drive"
