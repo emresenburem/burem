@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
-import { CinematicFooter } from "@/components/ui/cinematic-footer";
+import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
@@ -1283,7 +1283,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <CinematicFooter />
+      <BuremFooter />
       </motion.div>
     </>
   );
