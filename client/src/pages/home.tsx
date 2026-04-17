@@ -909,23 +909,34 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="sticky top-0 z-40 border-b bg-background/80 shadow-elevated backdrop-blur-md">
-        <div className="flex w-full items-center justify-between gap-3 px-4 py-0 md:px-6">
-          <div className="-ml-25 -mt-12 mb-[-2.5rem]">
+      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
+        <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
+          {/* Logo */}
+          <div className="-ml-25 -mt-12 mb-[-2.5rem] flex-shrink-0">
             <HeaderLogo />
           </div>
 
-          <nav aria-label="Ana menü" className="hidden md:flex">
-            <InteractiveMenu
-              items={[
-                { label: "Hizmetler", icon: Wrench,  onClick: () => scrollToId("services") },
-                { label: "Süreç",     icon: Settings, onClick: () => scrollToId("process")  },
-                { label: "İletişim",  icon: Phone,    onClick: () => scrollToId("contact")  },
-                { label: "Markalar",  icon: Package,  onClick: () => setBrandsOpen((v) => !v) },
-              ]}
-            />
+          {/* Nav — alt border'a yapışık */}
+          <nav aria-label="Ana menü" className="hidden md:flex self-end gap-0">
+            {[
+              { label: "Hizmetler", icon: Wrench,   id: "services", onClick: () => scrollToId("services") },
+              { label: "Süreç",     icon: Settings, id: "process",  onClick: () => scrollToId("process")  },
+              { label: "İletişim",  icon: Phone,    id: "contact",  onClick: () => scrollToId("contact")  },
+              { label: "Markalar",  icon: Package,  id: "brands",   onClick: () => setBrandsOpen((v) => !v) },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={item.onClick}
+                data-testid={`nav-item-${item.id}`}
+                className="group flex items-center gap-1.5 px-4 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px"
+              >
+                <item.icon className="h-3.5 w-3.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+                {item.label}
+              </button>
+            ))}
           </nav>
 
+          {/* CTA butonları */}
           <div className="flex items-center gap-2">
             <MagneticButton
               variant="secondary"
