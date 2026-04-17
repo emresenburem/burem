@@ -45,6 +45,7 @@ import { EmptyState } from "@/components/ui/interactive-empty-state";
 import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
+import { BrandsMorph } from "@/components/ui/brands-morph";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 
 const BRANDS = [
@@ -100,50 +101,31 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
             onClick={onClose}
           />
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed left-1/2 top-20 z-[99] w-[90vw] max-w-3xl -translate-x-1/2 rounded-2xl border bg-card/95 p-6 shadow-2xl backdrop-blur-xl overflow-y-auto max-h-[75vh]"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ type: "spring", damping: 28, stiffness: 200 }}
+            className="fixed inset-4 md:inset-8 z-[99] rounded-2xl border bg-card/95 shadow-2xl backdrop-blur-xl overflow-hidden"
             data-testid="popup-brands"
           >
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="font-bold text-lg tracking-tight">
-                Tamir Ettiğimiz Markalar
-              </h3>
-              <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xl leading-none" data-testid="button-brands-close">✕</button>
-            </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-              {BRANDS.map((brand) => (
-                <motion.div
-                  key={brand.name}
-                  className="relative flex flex-col items-center justify-center rounded-xl border p-3 text-center bg-card shadow-sm cursor-pointer overflow-hidden group hover:border-primary/40 hover:shadow-md transition-all"
-                  whileHover={{ scale: 1.08, zIndex: 50 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                  onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); onClose(); }}
-                  data-testid={`brand-item-${brand.name}`}
-                >
-                  <div className="h-12 w-full flex items-center justify-center p-1">
-                    <img
-                      src={brand.logo}
-                      alt={brand.name}
-                      className="h-full w-full object-contain"
-                      style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                        (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <span className="font-bold text-xs hidden" style={{ color: brand.color }}>{brand.name}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            <div className="mt-5 rounded-xl border border-dashed p-3 text-center">
-              <p className="text-xs text-muted-foreground">
-                Ve daha fazlası… Listemizde olmayan markalar için bize danışın.
-              </p>
-            </div>
+            {/* Kapat butonu */}
+            <button
+              onClick={onClose}
+              className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full border bg-background/80 text-muted-foreground hover:text-foreground transition-colors text-sm"
+              data-testid="button-brands-close"
+            >
+              ✕
+            </button>
+
+            {/* Animasyonlu marka bileşeni */}
+            <BrandsMorph
+              brands={BRANDS}
+              onBrandClick={(brand) => {
+                setLocation(`/brand/${encodeURIComponent(brand.name)}`);
+                onClose();
+              }}
+              onClose={onClose}
+            />
           </motion.div>
         </>
       )}
