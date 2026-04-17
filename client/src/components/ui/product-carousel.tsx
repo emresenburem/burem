@@ -1,7 +1,8 @@
 import * as React from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export interface CarouselProduct {
   id: string | number;
@@ -21,22 +22,19 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   return (
-    <motion.div
-      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-      className="group relative w-48 flex-shrink-0"
+    <div
+      className="group w-48 flex-shrink-0 cursor-pointer"
+      onClick={() => onClick?.(product)}
       data-testid={`carousel-card-${product.id}`}
     >
-      <div
-        className="flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground transition-all duration-300 hover:shadow-md cursor-pointer"
-        onClick={() => onClick?.(product)}
-      >
+      <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
         {/* Görsel */}
         <div className="relative h-40 overflow-hidden bg-muted flex items-center justify-center">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain p-3 transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex flex-col items-center gap-2 text-muted-foreground/40">
@@ -66,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           </motion.button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -81,45 +79,6 @@ interface ProductCarouselProps {
 
 export const ProductCarousel = React.forwardRef<HTMLDivElement, ProductCarouselProps>(
   ({ title, products, viewAllHref = "#", onProductClick, className, emptyMessage }, ref) => {
-    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-    const [isScrollable, setIsScrollable] = React.useState(false);
-    const [isAtStart, setIsAtStart] = React.useState(true);
-    const [isAtEnd, setIsAtEnd] = React.useState(false);
-
-    const handleScroll = (direction: "left" | "right") => {
-      if (scrollContainerRef.current) {
-        const scrollAmount = scrollContainerRef.current.clientWidth * 0.8;
-        scrollContainerRef.current.scrollBy({
-          left: direction === "left" ? -scrollAmount : scrollAmount,
-          behavior: "smooth",
-        });
-      }
-    };
-
-    const checkScrollState = React.useCallback(() => {
-      const el = scrollContainerRef.current;
-      if (!el) return;
-      setIsScrollable(el.scrollWidth > el.clientWidth);
-      setIsAtStart(el.scrollLeft === 0);
-      setIsAtEnd(Math.abs(el.scrollWidth - el.scrollLeft - el.clientWidth) < 1);
-    }, []);
-
-    React.useEffect(() => {
-      checkScrollState();
-      const el = scrollContainerRef.current;
-      el?.addEventListener("scroll", checkScrollState);
-      window.addEventListener("resize", checkScrollState);
-      return () => {
-        el?.removeEventListener("scroll", checkScrollState);
-        window.removeEventListener("resize", checkScrollState);
-      };
-    }, [checkScrollState, products]);
-
-    const containerVariants = {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-    };
-
     return (
       <section className={cn("relative w-full space-y-4 py-8", className)} ref={ref}>
         <div className="flex items-center justify-between px-4 sm:px-6">
@@ -144,47 +103,22 @@ export const ProductCarousel = React.forwardRef<HTMLDivElement, ProductCarouselP
             {emptyMessage ?? "Henüz ürün eklenmemiş."}
           </div>
         ) : (
-          <div className="relative">
-            <motion.div
-              ref={scrollContainerRef}
-              className="scrollbar-hide flex space-x-4 overflow-x-auto px-4 sm:px-6 pb-2"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
+          <div className="relative h-[290px]">
+            <InfiniteSlider
+              gap={16}
+              duration={45}
+              durationOnHover={120}
+              className="h-full px-4 sm:px-6"
             >
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} onClick={onProductClick} />
               ))}
-            </motion.div>
+            </InfiniteSlider>
 
-            {isScrollable && (
-              <>
-                <button
-                  onClick={() => handleScroll("left")}
-                  disabled={isAtStart}
-                  aria-label="Sola kaydır"
-                  className={cn(
-                    "absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border bg-background p-2 shadow-md transition-opacity duration-300 disabled:opacity-0",
-                    "hover:bg-accent focus:outline-none"
-                  )}
-                  data-testid="button-carousel-left"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleScroll("right")}
-                  disabled={isAtEnd}
-                  aria-label="Sağa kaydır"
-                  className={cn(
-                    "absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border bg-background p-2 shadow-md transition-opacity duration-300 disabled:opacity-0",
-                    "hover:bg-accent focus:outline-none"
-                  )}
-                  data-testid="button-carousel-right"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </>
-            )}
+            {/* Sol kenar silikleştirme */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-background to-transparent" />
+            {/* Sağ kenar silikleştirme */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-background to-transparent" />
           </div>
         )}
       </section>
