@@ -23,7 +23,6 @@ export const products = pgTable("products", {
   brand: text("brand").notNull(),
   category: text("category").notNull(),
   description: text("description"),
-  price: integer("price"),
   imageUrl: text("image_url"),
   inStock: boolean("in_stock").default(true),
 });

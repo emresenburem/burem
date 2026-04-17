@@ -9,7 +9,6 @@ export interface CarouselProduct {
   name: string;
   brand: string;
   category: string;
-  price?: number | null;
   imageUrl?: string | null;
   inStock: boolean;
   description?: string | null;

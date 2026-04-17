@@ -95,11 +95,6 @@ function ProductsSection({ brandName }: { brandName: string }) {
                 {product.description && (
                   <p className="text-xs text-muted-foreground line-clamp-2">{product.description}</p>
                 )}
-                {product.price && (
-                  <p className="font-bold text-primary">
-                    {new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(product.price / 100)}
-                  </p>
-                )}
               </div>
             </Card>
           ))}
