@@ -20,12 +20,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
-  const formattedPrice = product.price
-    ? new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" }).format(
-        product.price / 100
-      )
-    : null;
-
   return (
     <motion.div
       variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
@@ -75,22 +69,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
             {product.brand} · {product.category}
           </p>
 
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-col">
-              {formattedPrice ? (
-                <span className="text-base font-semibold text-foreground">{formattedPrice}</span>
-              ) : (
-                <span className="text-sm text-muted-foreground italic">Fiyat sor</span>
-              )}
-            </div>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="rounded-lg border border-primary bg-background px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-              data-testid={`button-add-${product.id}`}
-            >
-              Teklif al
-            </motion.button>
-          </div>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="w-full rounded-lg border border-primary bg-background py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            data-testid={`button-add-${product.id}`}
+          >
+            Teklif al
+          </motion.button>
         </div>
       </div>
     </motion.div>
