@@ -32,6 +32,7 @@ import {
   PackageCheck,
   Package,
   ChevronRight,
+  ChevronDown,
   Cpu,
   Settings,
   Eye,
@@ -45,7 +46,6 @@ import { EmptyState } from "@/components/ui/interactive-empty-state";
 import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
-import { BrandsMorph } from "@/components/ui/brands-morph";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 
 const BRANDS = [
@@ -72,66 +72,6 @@ const BRANDS = [
   
 ];
 
-function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [, setLocation] = useLocation();
-  const [playTick] = useSound("/sounds/tick.mp3", { volume: 0.15, preload: true, interrupt: true });
-  const lastOpenState = useRef(false);
-
-  useEffect(() => {
-    if (isOpen && !lastOpenState.current) playTick();
-    lastOpenState.current = isOpen;
-  }, [isOpen, playTick]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isOpen, onClose]);
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            className="fixed inset-0 z-[98] bg-black/20 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ type: "spring", damping: 28, stiffness: 200 }}
-            className="fixed inset-4 md:inset-8 z-[99] rounded-2xl border bg-card/95 shadow-2xl backdrop-blur-xl overflow-hidden"
-            data-testid="popup-brands"
-          >
-            {/* Kapat butonu */}
-            <button
-              onClick={onClose}
-              className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full border bg-background/80 text-muted-foreground hover:text-foreground transition-colors text-sm"
-              data-testid="button-brands-close"
-            >
-              ✕
-            </button>
-
-            {/* Animasyonlu marka bileşeni */}
-            <BrandsMorph
-              brands={BRANDS}
-              onBrandClick={(brand) => {
-                setLocation(`/brand/${encodeURIComponent(brand.name)}`);
-                onClose();
-              }}
-              onClose={onClose}
-            />
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
-}
 
 
 function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }) {
@@ -814,9 +754,68 @@ function ProductsShowcase() {
   );
 }
 
+function BrandsDropdown() {
+  const [, setLocation] = useLocation();
+
+  return (
+    <div className="group/brands relative self-end -mb-px" data-testid="nav-item-brands">
+      {/* Tetikleyici buton */}
+      <button className="flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent group-hover/brands:border-primary group-hover/brands:text-foreground transition-colors">
+        <Package className="h-3.5 w-3.5 shrink-0 opacity-60 group-hover/brands:opacity-100 transition-opacity" />
+        Markalar
+        <ChevronDown className="h-3 w-3 opacity-50 transition-transform duration-200 group-hover/brands:rotate-180 group-hover/brands:opacity-100" />
+      </button>
+
+      {/* Dropdown paneli */}
+      <div className="invisible group-hover/brands:visible opacity-0 group-hover/brands:opacity-100 transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 pt-1 z-50">
+        <motion.div
+          initial={false}
+          className="w-[520px] rounded-xl border bg-card/95 backdrop-blur-xl shadow-2xl p-4"
+        >
+          {/* Başlık */}
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
+            Tamir ettiğimiz markalar
+          </p>
+
+          {/* Logo grid */}
+          <div className="grid grid-cols-5 gap-2">
+            {BRANDS.map((brand) => (
+              <button
+                key={brand.name}
+                onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
+                title={brand.name}
+                data-testid={`brand-dropdown-${brand.name}`}
+                className="group/logo flex items-center justify-center rounded-lg border border-transparent bg-muted/40 p-2 h-12 hover:border-primary/30 hover:bg-background hover:shadow-sm transition-all"
+              >
+                <img
+                  src={brand.logo}
+                  alt={brand.name}
+                  className="h-full w-full object-contain"
+                  style={brand.scale ? { transform: `scale(${brand.scale * 0.75})` } : undefined}
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                    const fb = img.nextElementSibling as HTMLElement | null;
+                    if (fb) fb.style.display = "block";
+                  }}
+                />
+                <span className="hidden text-[9px] font-bold" style={{ color: brand.color }}>{brand.name}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Alt not */}
+          <p className="mt-3 text-center text-[10px] text-muted-foreground border-t pt-2">
+            Ve daha fazlası — listemizde olmayan markalar için bizi arayın.
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
-  const [brandsOpen, setBrandsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
@@ -879,7 +878,6 @@ export default function HomePage() {
         </div>
       )}
       <WhatsAppButton />
-      <BrandsPopup isOpen={brandsOpen} onClose={() => setBrandsOpen(false)} />
       <a
         href="#contact"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:shadow-soft"
@@ -903,7 +901,6 @@ export default function HomePage() {
               { label: "Hizmetler", icon: Wrench,   id: "services", onClick: () => scrollToId("services") },
               { label: "Süreç",     icon: Settings, id: "process",  onClick: () => scrollToId("process")  },
               { label: "İletişim",  icon: Phone,    id: "contact",  onClick: () => scrollToId("contact")  },
-              { label: "Markalar",  icon: Package,  id: "brands",   onClick: () => setBrandsOpen((v) => !v) },
             ].map((item) => (
               <button
                 key={item.label}
@@ -915,6 +912,9 @@ export default function HomePage() {
                 {item.label}
               </button>
             ))}
+
+            {/* Markalar — hover dropdown */}
+            <BrandsDropdown />
           </nav>
 
           {/* CTA butonları */}
