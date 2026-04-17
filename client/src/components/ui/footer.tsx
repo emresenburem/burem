@@ -22,7 +22,7 @@ const BuremFooter: React.FC = () => {
 
   const socials = [
     { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: Instagram, href: "https://www.instagram.com/buremelektronik?igsh=amg1aHh6bTV5N2g3&utm_source=qr", label: "Instagram" },
     {
       icon: MessageCircle,
       href: "https://wa.me/905322664764",
