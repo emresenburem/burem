@@ -948,13 +948,6 @@ export default function HomePage() {
 
       {/* Marka logoları sonsuz slider */}
         <div className="relative w-full pt-8 pb-3 overflow-hidden border-b">
-          <p
-            className="text-center text-xl font-bold text-foreground mb-6 tracking-tight"
-            style={{ fontFamily: "Nunito, var(--font-sans)" }}
-            data-testid="text-brands-title"
-          >
-            Tamir ettiğimiz markalar
-          </p>
           <div className="relative h-16 w-full">
             <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
               {BRANDS.map((brand) => (
