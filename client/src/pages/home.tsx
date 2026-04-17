@@ -123,7 +123,7 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); onClose(); }}
                   data-testid={`brand-item-${brand.name}`}
                 >
-                  <div className="h-10 w-full flex items-center justify-center p-1">
+                  <div className="h-12 w-full flex items-center justify-center p-1">
                     <img
                       src={brand.logo}
                       alt={brand.name}
@@ -136,7 +136,6 @@ function BrandsPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                     />
                     <span className="font-bold text-xs hidden" style={{ color: brand.color }}>{brand.name}</span>
                   </div>
-                  <span className="mt-1 text-[10px] text-muted-foreground truncate w-full text-center">{brand.name}</span>
                 </motion.div>
               ))}
             </div>
