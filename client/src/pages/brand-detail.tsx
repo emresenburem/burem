@@ -85,11 +85,7 @@ function ProductsSection({ brandName }: { brandName: string }) {
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <h4 className="font-semibold text-sm">{product.name}</h4>
-                  {product.inStock ? (
-                    <Badge variant="secondary" className="text-xs shrink-0">Stokta</Badge>
-                  ) : (
-                    <Badge variant="outline" className="text-xs shrink-0">Sipariş</Badge>
-                  )}
+                  <Badge variant="outline" className="text-xs shrink-0 bg-slate-100 text-slate-600 border-slate-200">Stok bilgisi sorunuz</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">{product.category}</p>
                 {product.description && (
