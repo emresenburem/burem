@@ -947,7 +947,7 @@ export default function HomePage() {
       </header>
 
       {/* Marka logoları sonsuz slider */}
-        <div className="relative w-full py-8 overflow-hidden border-b">
+        <div className="relative w-full pt-8 pb-3 overflow-hidden border-b">
           <p
             className="text-center text-xl font-bold text-foreground mb-6 tracking-tight"
             style={{ fontFamily: "Nunito, var(--font-sans)" }}
