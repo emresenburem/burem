@@ -1,6 +1,6 @@
 import * as React from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Clock, ShoppingCart } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface CarouselProduct {
@@ -43,25 +43,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
               <ShoppingCart className="h-10 w-10" />
             </div>
           )}
-          <div
-            className={cn(
-              "absolute left-2 top-2 rounded-md px-2 py-0.5 text-xs font-semibold",
-              product.inStock
-                ? "bg-green-100 text-green-800"
-                : "bg-orange-100 text-orange-800"
-            )}
-          >
-            {product.inStock ? "Stokta" : "Sipariş"}
+          <div className="absolute left-2 top-2 rounded-md px-2 py-0.5 text-xs font-semibold bg-slate-100 text-slate-600">
+            Stok bilgisi sorunuz
           </div>
         </div>
 
         {/* Detaylar */}
         <div className="flex flex-col space-y-3 p-4">
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5 shrink-0" />
-            <span>{product.inStock ? "Hızlı kargo" : "3–7 iş günü"}</span>
-          </div>
-
           <h3 className="line-clamp-2 text-sm font-medium text-foreground leading-snug h-10">
             {product.name}
           </h3>
