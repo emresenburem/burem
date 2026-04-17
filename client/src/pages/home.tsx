@@ -756,60 +756,123 @@ function ProductsShowcase() {
 
 function BrandsDropdown() {
   const [, setLocation] = useLocation();
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleEnter = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const handleLeave = () => {
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
 
   return (
-    <div className="group/brands relative self-end -mb-px" data-testid="nav-item-brands">
+    <div
+      className="relative self-end -mb-px"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      data-testid="nav-item-brands"
+    >
       {/* Tetikleyici buton */}
-      <button className="flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent group-hover/brands:border-primary group-hover/brands:text-foreground transition-colors">
-        <Package className="h-3.5 w-3.5 shrink-0 opacity-60 group-hover/brands:opacity-100 transition-opacity" />
+      <button
+        className={`flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium border-b-2 transition-colors ${
+          open
+            ? "border-primary text-foreground"
+            : "border-transparent text-muted-foreground hover:border-primary hover:text-foreground"
+        }`}
+      >
+        <Package className="h-3.5 w-3.5 shrink-0" />
         Markalar
-        <ChevronDown className="h-3 w-3 opacity-50 transition-transform duration-200 group-hover/brands:rotate-180 group-hover/brands:opacity-100" />
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
+          <ChevronDown className="h-3 w-3" />
+        </motion.span>
       </button>
 
       {/* Dropdown paneli */}
-      <div className="invisible group-hover/brands:visible opacity-0 group-hover/brands:opacity-100 transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 pt-1 z-50">
-        <motion.div
-          initial={false}
-          className="w-[520px] rounded-xl border bg-card/95 backdrop-blur-xl shadow-2xl p-4"
-        >
-          {/* Başlık */}
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 px-1">
-            Tamir ettiğimiz markalar
-          </p>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="brands-dropdown"
+            initial={{ opacity: 0, y: -10, scale: 0.97, filter: "blur(4px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
+            transition={{ type: "spring", stiffness: 320, damping: 28, mass: 0.8 }}
+            className="absolute top-[calc(100%+4px)] left-1/2 -translate-x-1/2 z-50"
+            style={{ transformOrigin: "top center" }}
+          >
+            {/* Ok işareti */}
+            <div className="flex justify-center mb-[-1px]">
+              <div className="w-3 h-3 rotate-45 border-l border-t border-border bg-card" />
+            </div>
 
-          {/* Logo grid */}
-          <div className="grid grid-cols-5 gap-2">
-            {BRANDS.map((brand) => (
-              <button
-                key={brand.name}
-                onClick={() => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
-                title={brand.name}
-                data-testid={`brand-dropdown-${brand.name}`}
-                className="group/logo flex items-center justify-center rounded-lg border border-transparent bg-muted/40 p-2 h-12 hover:border-primary/30 hover:bg-background hover:shadow-sm transition-all"
-              >
-                <img
-                  src={brand.logo}
-                  alt={brand.name}
-                  className="h-full w-full object-contain"
-                  style={brand.scale ? { transform: `scale(${brand.scale * 0.75})` } : undefined}
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.display = "none";
-                    const fb = img.nextElementSibling as HTMLElement | null;
-                    if (fb) fb.style.display = "block";
-                  }}
-                />
-                <span className="hidden text-[9px] font-bold" style={{ color: brand.color }}>{brand.name}</span>
-              </button>
-            ))}
-          </div>
+            <div className="w-[700px] rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden">
+              {/* Üst renkli şerit */}
+              <div className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
 
-          {/* Alt not */}
-          <p className="mt-3 text-center text-[10px] text-muted-foreground border-t pt-2">
-            Ve daha fazlası — listemizde olmayan markalar için bizi arayın.
-          </p>
-        </motion.div>
-      </div>
+              <div className="p-5">
+                {/* Başlık */}
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Tamir ettiğimiz markalar
+                  </p>
+                  <span className="text-[10px] text-muted-foreground/60">{BRANDS.length} marka</span>
+                </div>
+
+                {/* Logo grid — 5 kolon, büyük kartlar */}
+                <div className="grid grid-cols-5 gap-2.5">
+                  {BRANDS.map((brand, i) => (
+                    <motion.button
+                      key={brand.name}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.022, type: "spring", stiffness: 400, damping: 28 }}
+                      onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); setOpen(false); }}
+                      title={brand.name}
+                      data-testid={`brand-dropdown-${brand.name}`}
+                      className="group/logo flex flex-col items-center justify-center gap-1.5 rounded-xl border border-transparent bg-muted/30 p-3 h-[70px] hover:border-primary/30 hover:bg-background hover:shadow-md transition-all duration-200"
+                      whileHover={{ scale: 1.06, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <img
+                        src={brand.logo}
+                        alt={brand.name}
+                        className="h-8 w-full object-contain"
+                        style={brand.scale ? { transform: `scale(${brand.scale * 0.7})` } : undefined}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.display = "none";
+                          const fb = img.nextElementSibling as HTMLElement | null;
+                          if (fb) fb.style.display = "flex";
+                        }}
+                      />
+                      <span className="hidden items-center justify-center text-[8px] font-bold" style={{ color: brand.color }}>
+                        {brand.name}
+                      </span>
+                      <span className="text-[8px] text-muted-foreground/0 group-hover/logo:text-muted-foreground transition-colors truncate w-full text-center leading-none">
+                        {brand.name}
+                      </span>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Alt not */}
+                <div className="mt-4 flex items-center justify-center gap-2 border-t pt-3">
+                  <span className="text-[10px] text-muted-foreground">
+                    Listemizde olmayan markalar için —
+                  </span>
+                  <button
+                    onClick={() => { document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); setOpen(false); }}
+                    className="text-[10px] font-semibold text-primary hover:underline"
+                  >
+                    bize danışın →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
