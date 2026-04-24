@@ -730,6 +730,9 @@ const REFERENCES = [
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
   { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png", darkBg: true },
+  { name: "Beztaş",        logo: "https://www.beztas.com/images/logo.png" },
+  { name: "Sarı Ankolaj",  logo: "http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png" },
+  { name: "Ermetal",       logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", darkBg: true },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
