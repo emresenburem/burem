@@ -711,6 +711,102 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
   );
 }
 
+const REFERENCES = [
+  { name: "Arçelik", sector: "Beyaz Eşya" },
+  { name: "Bosch Türkiye", sector: "Endüstriyel" },
+  { name: "Vestel", sector: "Elektronik" },
+  { name: "Ford Otomotiv", sector: "Otomotiv" },
+  { name: "Tofaş", sector: "Otomotiv" },
+  { name: "Oyak-Renault", sector: "Otomotiv" },
+  { name: "Kardemir", sector: "Çelik" },
+  { name: "Erdemir", sector: "Çelik" },
+  { name: "Şişecam", sector: "Cam" },
+  { name: "Bursa Çelik", sector: "Metal" },
+  { name: "Alarko", sector: "Enerji" },
+  { name: "Enerjisa", sector: "Elektrik" },
+  { name: "Türk Traktör", sector: "Tarım Mak." },
+  { name: "Aselsan", sector: "Savunma" },
+  { name: "Beksa", sector: "Çelik Tel" },
+  { name: "Nuh Çimento", sector: "Çimento" },
+  { name: "Limak", sector: "İnşaat" },
+  { name: "Cengiz Holding", sector: "Enerji" },
+  { name: "Doğuş Otomotiv", sector: "Otomotiv" },
+  { name: "Çimsa", sector: "Çimento" },
+];
+
+function ReferencesSlider() {
+  const mid = Math.ceil(REFERENCES.length / 2);
+  const row1 = REFERENCES.slice(0, mid);
+  const row2 = REFERENCES.slice(mid);
+
+  return (
+    <section className="w-full py-16 overflow-hidden">
+      <div className="mx-auto max-w-6xl px-4 md:px-6 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+              Referanslarımız
+            </p>
+            <h2
+              className="text-2xl md:text-3xl font-semibold tracking-tight"
+              style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+            >
+              Güvendikleri için teşekkür ederiz.
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground max-w-xs text-right hidden sm:block">
+            Türkiye'nin önde gelen sanayi kuruluşlarına servis veriyoruz.
+          </p>
+        </div>
+      </div>
+
+      {/* Satır 1 — soldan sağa */}
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <InfiniteSlider gap={12} duration={40} durationOnHover={100} className="py-1.5">
+          {row1.map((ref) => (
+            <div
+              key={ref.name}
+              className="flex-shrink-0 flex items-center gap-3 rounded-2xl border bg-card px-5 py-3.5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-default"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-xs font-bold text-muted-foreground">
+                {ref.name.charAt(0)}
+              </div>
+              <div>
+                <p className="text-sm font-semibold leading-tight">{ref.name}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight">{ref.sector}</p>
+              </div>
+            </div>
+          ))}
+        </InfiniteSlider>
+      </div>
+
+      {/* Satır 2 — sağdan sola */}
+      <div className="relative mt-3">
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <InfiniteSlider gap={12} duration={38} durationOnHover={100} reverse className="py-1.5">
+          {row2.map((ref) => (
+            <div
+              key={ref.name}
+              className="flex-shrink-0 flex items-center gap-3 rounded-2xl border bg-card px-5 py-3.5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-default"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-xs font-bold text-muted-foreground">
+                {ref.name.charAt(0)}
+              </div>
+              <div>
+                <p className="text-sm font-semibold leading-tight">{ref.name}</p>
+                <p className="text-[10px] text-muted-foreground leading-tight">{ref.sector}</p>
+              </div>
+            </div>
+          ))}
+        </InfiniteSlider>
+      </div>
+    </section>
+  );
+}
+
 function ProductsShowcase() {
   const [, setLocation] = useLocation();
   const { data: products = [], isLoading } = useQuery<Product[]>({
@@ -1236,6 +1332,8 @@ export default function HomePage() {
         <AnimatedProcessSection />
 
         <ProductsShowcase />
+
+        <ReferencesSlider />
 
         <section
           id="contact"
