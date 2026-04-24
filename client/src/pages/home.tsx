@@ -727,6 +727,9 @@ const REFERENCES = [
   { name: "Brisa",          logo: "https://www.brisa.com.tr/assets/images/brisa-logo.svg" },
   { name: "İpeks",          logo: "https://ipeks.com/wp-content/uploads/2020/02/ipeks-logo.png" },
   { name: "Yataş",          logo: "https://www.yatas.com.tr/Content/Images/logo.png" },
+  { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
+  { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
+  { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
