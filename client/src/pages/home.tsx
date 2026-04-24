@@ -729,10 +729,10 @@ const REFERENCES = [
   { name: "Continental", logo: WC + "3/3f/Continental_logo.svg" },
   { name: "ZF",          logo: WC + "9/94/ZF_logo_STD_Blue_3CC.svg" },
   { name: "Hella",       logo: WC + "3/38/Hella-logo.svg" },
-  { name: "Magna",       logo: WC + "6/63/Magna_logo.svg" },
-  { name: "Emerson",     logo: WC + "5/50/Logo_Emerson.svg" },
-  { name: "Aselsan",     logo: WC + "c/c4/ASELSAN_logo.svg" },
-  { name: "Delphi",      logo: WC + "5/55/Delphi_Logo_12.svg" },
+  { name: "Magna",         logo: WC + "6/63/Magna_logo.svg" },
+  { name: "Emerson",       logo: WC + "5/50/Logo_Emerson.svg" },
+  { name: "Bursa CNC",     logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
+  { name: "Delphi",        logo: WC + "5/55/Delphi_Logo_12.svg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
