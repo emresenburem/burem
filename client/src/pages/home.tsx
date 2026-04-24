@@ -712,52 +712,47 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
 }
 
 const REFERENCES = [
-  { name: "Bosch", sector: "Endüstriyel", logo: "https://www.logo.wine/a/logo/Robert_Bosch_GmbH/Robert_Bosch_GmbH-Logo.wine.svg" },
-  { name: "Tofaş", sector: "Otomotiv", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Tofas_logo.svg/320px-Tofas_logo.svg.png" },
-  { name: "Valeo", sector: "Otomotiv", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Valeo_Logo.svg/320px-Valeo_Logo.svg.png" },
-  { name: "Ford", sector: "Otomotiv", logo: "https://www.logo.wine/a/logo/Ford_Motor_Company/Ford_Motor_Company-Logo.wine.svg" },
-  { name: "Arçelik", sector: "Beyaz Eşya", logo: "https://upload.wikimedia.org/wikipedia/commons/6/60/Arcelik-logo.svg" },
-  { name: "Beko", sector: "Beyaz Eşya", logo: "https://www.logo.wine/a/logo/Beko/Beko-Logo.wine.svg" },
-  { name: "Vestel", sector: "Elektronik", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Vestel_logo.svg" },
-  { name: "Renault", sector: "Otomotiv", logo: "https://www.logo.wine/a/logo/Renault/Renault-Logo.wine.svg" },
-  { name: "Toyota", sector: "Otomotiv", logo: "https://www.logo.wine/a/logo/Toyota/Toyota-Logo.wine.svg" },
-  { name: "Fiat", sector: "Otomotiv", logo: "https://www.logo.wine/a/logo/Fiat/Fiat-Logo.wine.svg" },
-  { name: "Honeywell", sector: "Otomasyon", logo: "https://www.logo.wine/a/logo/Honeywell/Honeywell-Logo.wine.svg" },
-  { name: "Parker", sector: "Hidrolik", logo: "https://www.logo.wine/a/logo/Parker_Hannifin/Parker_Hannifin-Logo.wine.svg" },
-  { name: "Eaton", sector: "Güç Yönetimi", logo: "https://www.logo.wine/a/logo/Eaton_Corporation/Eaton_Corporation-Logo.wine.svg" },
-  { name: "Continental", sector: "Otomotiv", logo: "https://www.logo.wine/a/logo/Continental_AG/Continental_AG-Logo.wine.svg" },
-  { name: "ZF", sector: "Otomotiv", logo: "https://upload.wikimedia.org/wikipedia/commons/4/49/ZF_logo.svg" },
-  { name: "Hella", sector: "Otomotiv", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Hella_logo.svg/320px-Hella_logo.svg.png" },
-  { name: "Aselsan", sector: "Savunma", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Aselsan_logo.svg/320px-Aselsan_logo.svg.png" },
-  { name: "Emerson", sector: "Otomasyon", logo: "https://www.logo.wine/a/logo/Emerson_Electric/Emerson_Electric-Logo.wine.svg" },
-  { name: "Türk Traktör", sector: "Tarım Mak.", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/T%C3%BCrk_Trak%C3%B6r_logo.svg/320px-T%C3%BCrk_Trak%C3%B6r_logo.svg.png" },
-  { name: "Koç Holding", sector: "Holding", logo: "https://www.logo.wine/a/logo/Ko%C3%A7_Holding/Ko%C3%A7_Holding-Logo.wine.svg" },
+  { name: "Bosch",       logo: "https://cdn.worldvectorlogo.com/logos/bosch-2.svg" },
+  { name: "Tofaş",      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Tofas_logo.svg/320px-Tofas_logo.svg.png" },
+  { name: "Valeo",       logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Valeo_Logo.svg/320px-Valeo_Logo.svg.png" },
+  { name: "Ford",        logo: "https://cdn.worldvectorlogo.com/logos/ford-motor.svg" },
+  { name: "Arçelik",    logo: "https://upload.wikimedia.org/wikipedia/commons/6/60/Arcelik-logo.svg" },
+  { name: "Beko",        logo: "https://cdn.worldvectorlogo.com/logos/beko-2.svg" },
+  { name: "Vestel",      logo: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Vestel_logo.svg" },
+  { name: "Renault",     logo: "https://cdn.worldvectorlogo.com/logos/renault-9.svg" },
+  { name: "Toyota",      logo: "https://cdn.worldvectorlogo.com/logos/toyota-6.svg" },
+  { name: "Fiat",        logo: "https://cdn.worldvectorlogo.com/logos/fiat-6.svg" },
+  { name: "Honeywell",   logo: "https://cdn.worldvectorlogo.com/logos/honeywell-1.svg" },
+  { name: "Parker",      logo: "https://cdn.worldvectorlogo.com/logos/parker-hannifin.svg" },
+  { name: "Eaton",       logo: "https://cdn.worldvectorlogo.com/logos/eaton-1.svg" },
+  { name: "Continental", logo: "https://cdn.worldvectorlogo.com/logos/continental-2.svg" },
+  { name: "ZF",          logo: "https://upload.wikimedia.org/wikipedia/commons/4/49/ZF_logo.svg" },
+  { name: "Hella",       logo: "https://cdn.worldvectorlogo.com/logos/hella-1.svg" },
+  { name: "Magna",       logo: "https://cdn.worldvectorlogo.com/logos/magna-international.svg" },
+  { name: "Emerson",     logo: "https://cdn.worldvectorlogo.com/logos/emerson-2.svg" },
+  { name: "Aselsan",     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Aselsan_logo.svg/320px-Aselsan_logo.svg.png" },
+  { name: "Delphi",      logo: "https://cdn.worldvectorlogo.com/logos/delphi-1.svg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <div className="flex-shrink-0 flex flex-col items-center justify-center gap-2 rounded-2xl border bg-card px-6 py-4 w-[160px] h-[100px] shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-default group">
+    <div className="flex-shrink-0 flex items-center justify-center rounded-2xl border bg-card px-7 h-[80px] w-[180px] shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-default group">
       {!imgError ? (
         <img
           src={company.logo}
           alt={company.name}
-          className="h-10 w-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+          className="max-h-10 w-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
           onError={() => setImgError(true)}
         />
       ) : (
-        <span className="text-sm font-bold text-muted-foreground">{company.name}</span>
+        <span className="text-xs font-bold tracking-wide text-muted-foreground">{company.name}</span>
       )}
-      <span className="text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wide">{company.sector}</span>
     </div>
   );
 }
 
 function ReferencesSlider() {
-  const mid = Math.ceil(REFERENCES.length / 2);
-  const row1 = REFERENCES.slice(0, mid);
-  const row2 = REFERENCES.slice(mid);
-
   return (
     <section className="w-full py-16 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 md:px-6 mb-8">
@@ -779,23 +774,11 @@ function ReferencesSlider() {
         </div>
       </div>
 
-      {/* Satır 1 — soldan sağa */}
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <InfiniteSlider gap={14} duration={40} durationOnHover={110} className="py-2">
-          {row1.map((item) => (
-            <RefCard key={item.name} company={item} />
-          ))}
-        </InfiniteSlider>
-      </div>
-
-      {/* Satır 2 — sağdan sola */}
-      <div className="relative mt-3">
-        <div className="absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <InfiniteSlider gap={14} duration={38} durationOnHover={110} reverse className="py-2">
-          {row2.map((item) => (
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <InfiniteSlider gap={14} duration={45} durationOnHover={120} className="py-2">
+          {REFERENCES.map((item) => (
             <RefCard key={item.name} company={item} />
           ))}
         </InfiniteSlider>
