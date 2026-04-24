@@ -725,11 +725,11 @@ const REFERENCES = [
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
   { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png", invert: true },
   { name: "Beztaş",         logo: "https://www.beztas.com/images/logo.png" },
-  { name: "Sarı Ankolaj",   logo: "http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png" },
+  { name: "Sarı Ankolaj",   logo: "/api/img-proxy?url=" + encodeURIComponent("http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png") },
   { name: "Ermetal",        logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
-  { name: "Derhan Tekstil", logo: "http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png" },
-  { name: "Birel",          logo: "http://birel.com.tr/wp-content/uploads/2018/05/Logo144x88.png" },
-  { name: "Feka",           logo: "https://www.feka.com.tr/build/assets/feka-logo-aacea3ac.svg" },
+  { name: "Derhan Tekstil", logo: "/api/img-proxy?url=" + encodeURIComponent("http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png") },
+  { name: "Birel",          logo: "/api/img-proxy?url=" + encodeURIComponent("http://birel.com.tr/wp-content/uploads/2018/05/Logo144x88.png") },
+  { name: "Feka Otomotiv",  logo: "https://www.feka.com.tr/build/assets/feka-logo-aacea3ac.svg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {

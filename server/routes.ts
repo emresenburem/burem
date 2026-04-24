@@ -92,5 +92,20 @@ export async function registerRoutes(
     res.status(204).send();
   });
 
+  app.get("/api/img-proxy", async (req, res) => {
+    const url = req.query.url as string;
+    if (!url) return res.status(400).send("Missing url");
+    try {
+      const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+      const ct = r.headers.get("content-type") ?? "image/png";
+      const buf = await r.arrayBuffer();
+      res.setHeader("Content-Type", ct);
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      res.send(Buffer.from(buf));
+    } catch {
+      res.status(502).send("Failed to fetch image");
+    }
+  });
+
   return httpServer;
 }
