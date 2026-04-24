@@ -721,18 +721,14 @@ const REFERENCES = [
   { name: "Özdilek",        logo: "https://www.ozdilek.com.tr/tr/images/logo/logo.svg" },
   { name: "İpekiş",         logo: "https://www.ipekis.com.tr/wp-content/uploads/2025/11/logo.png" },
   { name: "Bursa CNC",      logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
-  { name: "Bursalı",        logo: "https://www.bursaliteksil.com/wp-content/uploads/2023/08/bursali-tekstil-logo-2.png" },
-  { name: "Uludağ İçecek",  logo: "https://www.uludagicecek.com.tr/_assets/img/logo.png" },
-  { name: "Coşkunöz",       logo: "https://www.coskunoz.com.tr/wp-content/themes/coskunoz/assets/images/logo.png" },
-  { name: "Brisa",          logo: "https://www.brisa.com.tr/assets/images/brisa-logo.svg" },
-  { name: "İpeks",          logo: "https://ipeks.com/wp-content/uploads/2020/02/ipeks-logo.png" },
-  { name: "Yataş",          logo: "https://www.yatas.com.tr/Content/Images/logo.png" },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
   { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png", invert: true },
-  { name: "Beztaş",        logo: "https://www.beztas.com/images/logo.png" },
-  { name: "Sarı Ankolaj",  logo: "http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png" },
-  { name: "Ermetal",       logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
+  { name: "Beztaş",         logo: "https://www.beztas.com/images/logo.png" },
+  { name: "Sarı Ankolaj",   logo: "http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png" },
+  { name: "Ermetal",        logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
+  { name: "Derhan Tekstil", logo: "http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png" },
+  { name: "Birel",          logo: "http://birel.com.tr/wp-content/uploads/2018/05/Logo144x88.png" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
@@ -744,7 +740,7 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
         <img
           src={company.logo}
           alt={company.name}
-          className={`max-h-10 w-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
+          className={`max-h-10 max-w-full w-auto mx-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
           onError={() => setImgError(true)}
         />
       ) : (
