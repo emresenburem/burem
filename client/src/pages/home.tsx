@@ -729,22 +729,23 @@ const REFERENCES = [
   { name: "Yataş",          logo: "https://www.yatas.com.tr/Content/Images/logo.png" },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
-  { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png" },
+  { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png", darkBg: true },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
   const [imgError, setImgError] = useState(false);
+  const dark = (company as any).darkBg;
   return (
-    <div className="flex-shrink-0 flex items-center justify-center rounded-2xl border bg-card px-7 h-[80px] w-[180px] shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-default group">
+    <div className={`flex-shrink-0 flex items-center justify-center rounded-2xl border px-7 h-[80px] w-[180px] shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-default group ${dark ? "bg-slate-800 border-slate-700" : "bg-card"}`}>
       {!imgError ? (
         <img
           src={company.logo}
           alt={company.name}
-          className="max-h-10 w-full object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+          className="max-h-10 w-full object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300"
           onError={() => setImgError(true)}
         />
       ) : (
-        <span className="text-xs font-bold tracking-wide text-muted-foreground">{company.name}</span>
+        <span className={`text-xs font-bold tracking-wide ${dark ? "text-slate-300" : "text-muted-foreground"}`}>{company.name}</span>
       )}
     </div>
   );
