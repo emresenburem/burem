@@ -711,27 +711,28 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
   );
 }
 
+const WC = "https://upload.wikimedia.org/wikipedia/commons/";
 const REFERENCES = [
-  { name: "Bosch",       logo: "https://cdn.worldvectorlogo.com/logos/bosch-2.svg" },
-  { name: "Tofaş",      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Tofas_logo.svg/320px-Tofas_logo.svg.png" },
-  { name: "Valeo",       logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Valeo_Logo.svg/320px-Valeo_Logo.svg.png" },
-  { name: "Ford",        logo: "https://cdn.worldvectorlogo.com/logos/ford-motor.svg" },
-  { name: "Arçelik",    logo: "https://upload.wikimedia.org/wikipedia/commons/6/60/Arcelik-logo.svg" },
-  { name: "Beko",        logo: "https://cdn.worldvectorlogo.com/logos/beko-2.svg" },
-  { name: "Vestel",      logo: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Vestel_logo.svg" },
-  { name: "Renault",     logo: "https://cdn.worldvectorlogo.com/logos/renault-9.svg" },
-  { name: "Toyota",      logo: "https://cdn.worldvectorlogo.com/logos/toyota-6.svg" },
-  { name: "Fiat",        logo: "https://cdn.worldvectorlogo.com/logos/fiat-6.svg" },
-  { name: "Honeywell",   logo: "https://cdn.worldvectorlogo.com/logos/honeywell-1.svg" },
-  { name: "Parker",      logo: "https://cdn.worldvectorlogo.com/logos/parker-hannifin.svg" },
-  { name: "Eaton",       logo: "https://cdn.worldvectorlogo.com/logos/eaton-1.svg" },
-  { name: "Continental", logo: "https://cdn.worldvectorlogo.com/logos/continental-2.svg" },
-  { name: "ZF",          logo: "https://upload.wikimedia.org/wikipedia/commons/4/49/ZF_logo.svg" },
-  { name: "Hella",       logo: "https://cdn.worldvectorlogo.com/logos/hella-1.svg" },
-  { name: "Magna",       logo: "https://cdn.worldvectorlogo.com/logos/magna-international.svg" },
-  { name: "Emerson",     logo: "https://cdn.worldvectorlogo.com/logos/emerson-2.svg" },
-  { name: "Aselsan",     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Aselsan_logo.svg/320px-Aselsan_logo.svg.png" },
-  { name: "Delphi",      logo: "https://cdn.worldvectorlogo.com/logos/delphi-1.svg" },
+  { name: "Bosch",       logo: WC + "1/16/Bosch-logo.svg" },
+  { name: "Tofaş",      logo: WC + "9/99/TOFAS_Logo.svg" },
+  { name: "Valeo",       logo: WC + "2/2b/Valeo_Logo.svg" },
+  { name: "Ford",        logo: WC + "a/a0/Ford_Motor_Company_Logo.svg" },
+  { name: "Arçelik",    logo: WC + "a/aa/Arcelik_Logo.svg" },
+  { name: "Beko",        logo: WC + "d/d1/Beko_logo.svg" },
+  { name: "Vestel",      logo: WC + "8/8b/Vestel_logo.svg" },
+  { name: "Renault",     logo: WC + "a/a5/Renault_2021.svg" },
+  { name: "Toyota",      logo: WC + "c/c8/Toyota_logo.svg" },
+  { name: "Fiat",        logo: WC + "f/f8/Fiat_logo.svg" },
+  { name: "Honeywell",   logo: WC + "2/2a/Honeywell_logo.svg" },
+  { name: "Parker",      logo: WC + "9/9e/Parker_Hannifin.svg" },
+  { name: "Eaton",       logo: WC + "2/2b/Eaton_Corporation_logo.svg" },
+  { name: "Continental", logo: WC + "3/3f/Continental_logo.svg" },
+  { name: "ZF",          logo: WC + "9/94/ZF_logo_STD_Blue_3CC.svg" },
+  { name: "Hella",       logo: WC + "3/38/Hella-logo.svg" },
+  { name: "Magna",       logo: WC + "6/63/Magna_logo.svg" },
+  { name: "Emerson",     logo: WC + "5/50/Logo_Emerson.svg" },
+  { name: "Aselsan",     logo: WC + "c/c4/ASELSAN_logo.svg" },
+  { name: "Delphi",      logo: WC + "5/55/Delphi_Logo_12.svg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
