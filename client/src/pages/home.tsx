@@ -729,8 +729,8 @@ const REFERENCES = [
   { name: "Ermetal",        logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
   { name: "Derhan Tekstil", logo: "/api/img-proxy?url=" + encodeURIComponent("http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png") },
   { name: "Birel Tekstil",  logo: "https://static.ticimax.cloud/48912/customcss/ticimax/images/logo.png" },
-  { name: "Feka Otomotiv",  logo: "https://fekaautomotive.com/images/logo.png" },
-  { name: "Erkalıp",        logo: "https://www.erkalip.com/wp-content/uploads/2021/03/erkalip_logo.png" },
+  { name: "Feka Otomotiv",  logo: "https://fekaautomotive.com/images/feka-logo.png" },
+  { name: "Erkalıp",        logo: "https://www.erkalip.com.tr/images/logos/erkalip_logo_renkli.jpg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
