@@ -729,6 +729,7 @@ const REFERENCES = [
   { name: "Ermetal",        logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
   { name: "Derhan Tekstil", logo: "http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png" },
   { name: "Birel",          logo: "http://birel.com.tr/wp-content/uploads/2018/05/Logo144x88.png" },
+  { name: "Feka",           logo: "https://www.feka.com.tr/build/assets/feka-logo-aacea3ac.svg" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
