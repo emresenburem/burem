@@ -728,8 +728,9 @@ const REFERENCES = [
   { name: "Sarı Ankolaj",   logo: "/api/img-proxy?url=" + encodeURIComponent("http://www.sariankolaj.com/wp-content/uploads/2014/07/sari_ankolaj_logo1-300x54.png") },
   { name: "Ermetal",        logo: "https://www.ermetal.com.tr/uploads/gnl/ermetal_logo_beyaz_195_40.png", invert: true },
   { name: "Derhan Tekstil", logo: "/api/img-proxy?url=" + encodeURIComponent("http://derhantekstil.com/wp-content/uploads/2022/02/derhan-logo-golge-small.png") },
-  { name: "Birel",          logo: "/api/img-proxy?url=" + encodeURIComponent("http://birel.com.tr/wp-content/uploads/2018/05/Logo144x88.png") },
-  { name: "Feka Otomotiv",  logo: "https://www.feka.com.tr/build/assets/feka-logo-aacea3ac.svg" },
+  { name: "Birel Tekstil",  logo: "https://static.ticimax.cloud/48912/customcss/ticimax/images/logo.png" },
+  { name: "Feka Otomotiv",  logo: "https://fekaautomotive.com/images/logo.png" },
+  { name: "Erkalıp",        logo: "https://www.erkalip.com/wp-content/uploads/2021/03/erkalip_logo.png" },
 ];
 
 function RefCard({ company }: { company: typeof REFERENCES[0] }) {
