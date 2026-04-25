@@ -714,12 +714,8 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
 const WC = "https://upload.wikimedia.org/wikipedia/commons/";
 const REFERENCES = [
   { name: "Valeo",          logo: WC + "2/2b/Valeo_Logo.svg" },
-  { name: "Tofaş",         logo: WC + "9/99/TOFAS_Logo.svg" },
-  { name: "Karsan",         logo: WC + "0/03/Karsan_logo.svg" },
   { name: "Borusan",        logo: WC + "4/4c/Borusan.png" },
-  { name: "Sütaş",         logo: "https://www.sutas.com.tr/assets/img/sutas-logo-2026-v2.webp" },
   { name: "Özdilek",        logo: "https://www.ozdilek.com.tr/tr/images/logo/logo.svg" },
-  { name: "İpekiş",         logo: "https://www.ipekis.com.tr/wp-content/uploads/2025/11/logo.png" },
   { name: "Bursa CNC",      logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
