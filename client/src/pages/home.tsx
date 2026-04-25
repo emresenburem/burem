@@ -32,6 +32,7 @@ import {
   PackageCheck,
   Package,
   ChevronRight,
+  ChevronLeft,
   ChevronDown,
   Cpu,
   Settings,
@@ -753,8 +754,48 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
 }
 
 function ReferencesSlider() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+
+  const scroll = (dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === "left" ? -360 : 360, behavior: "smooth" });
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    if (scrollRef.current) scrollRef.current.style.cursor = "grabbing";
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - (scrollRef.current.offsetLeft ?? 0);
+    const walk = (x - startX.current) * 1.2;
+    scrollRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const stopDrag = () => {
+    isDragging.current = false;
+    if (scrollRef.current) scrollRef.current.style.cursor = "grab";
+  };
+
   return (
-    <section className="w-full py-16 overflow-hidden">
+    <section className="w-full py-16">
       <div className="mx-auto max-w-6xl px-4 md:px-6 mb-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
@@ -768,20 +809,44 @@ function ReferencesSlider() {
               Güvendikleri için teşekkür ederiz.
             </h2>
           </div>
-          <p className="text-sm text-muted-foreground max-w-xs text-right hidden sm:block">
-            Türkiye'nin önde gelen sanayi kuruluşlarına servis veriyoruz.
-          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              className="rounded-full border bg-card w-9 h-9 flex items-center justify-center shadow-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              data-testid="button-refs-prev"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              className="rounded-full border bg-card w-9 h-9 flex items-center justify-center shadow-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              data-testid="button-refs-next"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <InfiniteSlider gap={14} duration={45} durationOnHover={120} className="py-2">
+      <div className="relative mx-auto max-w-6xl px-4 md:px-6">
+        <div className="absolute inset-y-0 left-4 md:left-6 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-4 md:right-6 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div
+          ref={scrollRef}
+          onScroll={checkScroll}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={stopDrag}
+          onMouseLeave={stopDrag}
+          className="flex gap-[14px] overflow-x-auto py-2 select-none scrollbar-hide"
+          style={{ cursor: "grab", scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {REFERENCES.map((item) => (
             <RefCard key={item.name} company={item} />
           ))}
-        </InfiniteSlider>
+        </div>
       </div>
     </section>
   );
