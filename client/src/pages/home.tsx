@@ -754,48 +754,62 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
 }
 
 function ReferencesSlider() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef(0);
+  const halfRef = useRef(0);
+  const draggingRef = useRef(false);
+  const [grabbing, setGrabbing] = useState(false);
+  const dragStartX = useRef(0);
+  const dragStartPos = useRef(0);
+  const rafRef = useRef<number>();
+  const SPEED = 0.55;
 
-  const checkScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  useEffect(() => {
+    const measure = () => {
+      if (trackRef.current) halfRef.current = trackRef.current.scrollWidth / 2;
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  useEffect(() => {
+    const tick = () => {
+      if (!draggingRef.current && trackRef.current) {
+        posRef.current -= SPEED;
+        if (halfRef.current > 0 && Math.abs(posRef.current) >= halfRef.current)
+          posRef.current += halfRef.current;
+        trackRef.current.style.transform = `translateX(${posRef.current}px)`;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current!);
+  }, []);
+
+  const startDrag = (clientX: number) => {
+    draggingRef.current = true;
+    setGrabbing(true);
+    dragStartX.current = clientX;
+    dragStartPos.current = posRef.current;
   };
 
-  const scroll = (dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir === "left" ? -360 : 360, behavior: "smooth" });
+  const moveDrag = (clientX: number) => {
+    if (!draggingRef.current || !trackRef.current) return;
+    let newPos = dragStartPos.current + (clientX - dragStartX.current);
+    const half = halfRef.current;
+    if (half > 0) {
+      while (newPos > 0) newPos -= half;
+      while (newPos < -half) newPos += half;
+    }
+    posRef.current = newPos;
+    trackRef.current.style.transform = `translateX(${newPos}px)`;
   };
 
-  const onMouseDown = (e: React.MouseEvent) => {
-    isDragging.current = true;
-    startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
-    scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
-    if (scrollRef.current) scrollRef.current.style.cursor = "grabbing";
-  };
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - (scrollRef.current.offsetLeft ?? 0);
-    const walk = (x - startX.current) * 1.2;
-    scrollRef.current.scrollLeft = scrollLeft.current - walk;
-  };
-
-  const stopDrag = () => {
-    isDragging.current = false;
-    if (scrollRef.current) scrollRef.current.style.cursor = "grab";
-  };
+  const endDrag = () => { draggingRef.current = false; setGrabbing(false); };
 
   return (
-    <section className="w-full py-16">
+    <section className="w-full py-16 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 md:px-6 mb-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
@@ -809,43 +823,30 @@ function ReferencesSlider() {
               Güvendikleri için teşekkür ederiz.
             </h2>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => scroll("left")}
-              disabled={!canScrollLeft}
-              className="rounded-full border bg-card w-9 h-9 flex items-center justify-center shadow-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              data-testid="button-refs-prev"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              disabled={!canScrollRight}
-              className="rounded-full border bg-card w-9 h-9 flex items-center justify-center shadow-sm hover:bg-muted transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              data-testid="button-refs-next"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+          <p className="text-sm text-muted-foreground max-w-xs text-right hidden sm:block">
+            Türkiye'nin önde gelen sanayi kuruluşlarına servis veriyoruz.
+          </p>
         </div>
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 md:px-6">
-        <div className="absolute inset-y-0 left-4 md:left-6 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-4 md:right-6 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         <div
-          ref={scrollRef}
-          onScroll={checkScroll}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={stopDrag}
-          onMouseLeave={stopDrag}
-          className="flex gap-[14px] overflow-x-auto py-2 select-none scrollbar-hide"
-          style={{ cursor: "grab", scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="py-2 select-none overflow-hidden"
+          style={{ cursor: grabbing ? "grabbing" : "grab" }}
+          onMouseDown={(e) => startDrag(e.clientX)}
+          onMouseMove={(e) => moveDrag(e.clientX)}
+          onMouseUp={endDrag}
+          onMouseLeave={endDrag}
+          onTouchStart={(e) => startDrag(e.touches[0].clientX)}
+          onTouchMove={(e) => moveDrag(e.touches[0].clientX)}
+          onTouchEnd={endDrag}
         >
-          {REFERENCES.map((item) => (
-            <RefCard key={item.name} company={item} />
-          ))}
+          <div ref={trackRef} className="flex w-max" style={{ gap: "14px" }}>
+            {REFERENCES.map((item) => <RefCard key={item.name + "_a"} company={item} />)}
+            {REFERENCES.map((item) => <RefCard key={item.name + "_b"} company={item} />)}
+          </div>
         </div>
       </div>
     </section>
