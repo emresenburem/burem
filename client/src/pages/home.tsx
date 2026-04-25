@@ -762,7 +762,7 @@ function ReferencesSlider() {
   const dragStartX = useRef(0);
   const dragStartPos = useRef(0);
   const rafRef = useRef<number>();
-  const SPEED = 0.55;
+  const SPEED = 1.1;
 
   useEffect(() => {
     const measure = () => {
