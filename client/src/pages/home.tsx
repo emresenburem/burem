@@ -50,9 +50,9 @@ import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 
 const BRANDS = [
-  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2  },
+  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png" },
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg"  },
-  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.45 },
+  { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg" },
   { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg" },
   { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg" },
   { name: "Yaskawa", color: "#004098", logo: "https://www.logo.wine/a/logo/Yaskawa_Electric_Corporation/Yaskawa_Electric_Corporation-Logo.wine.svg" },
@@ -62,7 +62,7 @@ const BRANDS = [
   { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
   { name: "Delta", color: "#003A8C", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png" },
   { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
-  { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png", scale: 1.5 },
+  { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png" },
   { name: "Fuji", color: "#E60012", logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
   { name: "HAAS", color: "#E60012", logo: "https://images.seeklogo.com/logo-png/32/1/haas-logo-png_seeklogo-321914.png" },
   { name: "SEW", color: "#003366", logo: "https://images.seeklogo.com/logo-png/23/1/sew-eurodrive-logo-png_seeklogo-236154.png" },
@@ -980,8 +980,7 @@ function BrandsDropdown() {
                       <img
                         src={brand.logo}
                         alt={brand.name}
-                        className="h-12 w-full object-contain"
-                        style={brand.scale ? { transform: `scale(${brand.scale * 0.7})` } : undefined}
+                        className="w-full h-full object-contain"
                         onError={(e) => {
                           const img = e.target as HTMLImageElement;
                           img.style.display = "none";
@@ -1146,12 +1145,11 @@ export default function HomePage() {
           <div className="relative h-16 w-full">
             <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
               {BRANDS.map((brand) => (
-                <div key={brand.name} className="flex items-center justify-center h-12 w-32 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
+                <div key={brand.name} className="flex items-center justify-center h-10 w-28 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="max-h-9 w-auto object-contain"
-                    style={{ transform: `scale(${brand.scale ?? 1})` }}
+                    className="w-full h-full object-contain"
                   />
                 </div>
               ))}
