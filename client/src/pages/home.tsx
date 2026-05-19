@@ -50,7 +50,7 @@ import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 
 const BRANDS = [
-  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 1.8 },
+  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg", scale: 1.4 },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.5 },
   { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg", scale: 1.4 },
@@ -68,7 +68,7 @@ const BRANDS = [
   { name: "SEW", color: "#003366", logo: "https://images.seeklogo.com/logo-png/23/1/sew-eurodrive-logo-png_seeklogo-236154.png", scale: 1.4 },
   { name: "MAZAK", color: "#E60012", logo: "https://images.seeklogo.com/logo-png/32/1/mazak-logo-png_seeklogo-321946.png", scale: 1.4 },
   { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg", scale: 1.4 },
-  { name: "Panasonic", color: "#003087", logo: "https://cdn.simpleicons.org/panasonic/003087", scale: 1.9 },
+  { name: "Panasonic", color: "#003087", logo: "https://cdn.simpleicons.org/panasonic/003087", scale: 2.2 },
   { name: "B&R", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/B%26R_Logo_Tagline_below_RGB_HD.jpg", scale: 0.65 },
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg", scale: 2.2 },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg", scale: 0.65 },
