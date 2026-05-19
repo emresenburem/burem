@@ -1134,15 +1134,20 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028 + 0.15, ease: [0.22, 1, 0.36, 1] }}
           />
 
-          {/* Hover silüet */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center">
+          {/* Silüet — açılışta yazıyla aynı efektle gelir */}
+          <motion.div
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center"
+            initial={{ opacity: 0, y: -6, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, delay: 0.4 + 34 * 0.028 + 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
             <img
               src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
               alt="Atatürk silüeti"
-              className="h-16 w-auto object-contain opacity-0 scale-90 group-hover:opacity-80 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
+              className="h-16 w-auto object-contain drop-shadow-md"
               style={{ filter: "grayscale(1) contrast(1.15)" }}
             />
-          </div>
+          </motion.div>
         </div>
 
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
