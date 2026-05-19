@@ -904,8 +904,8 @@ function BrandsDropdown() {
       <button
         className={`relative overflow-hidden flex items-center gap-2 px-5 pb-3 pt-2 text-sm font-medium border-b-2 transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out ${
           open
-            ? "border-primary text-foreground"
-            : "border-transparent text-muted-foreground hover:border-primary hover:text-foreground"
+            ? "border-primary/50 text-foreground"
+            : "border-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground"
         }`}
       >
         Markalar
@@ -1071,7 +1071,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="relative sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
+      <header className="relative sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div
           className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
@@ -1164,7 +1164,7 @@ export default function HomePage() {
                 key={item.id}
                 onClick={() => scrollToId(item.id)}
                 data-testid={`nav-item-${item.id}`}
-                className="relative overflow-hidden px-5 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+                className="relative overflow-hidden px-5 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary/50 hover:text-foreground transition-colors -mb-px before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
               >
                 {item.label}
               </button>
