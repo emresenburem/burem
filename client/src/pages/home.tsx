@@ -1092,7 +1092,10 @@ export default function HomePage() {
       
       <header className="relative sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
-        <div className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 pointer-events-none">
+        <div
+          className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
+          style={{ zIndex: 50 }}
+        >
           <motion.span
             className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
             initial={{ scaleX: 0 }}
@@ -1130,6 +1133,16 @@ export default function HomePage() {
             style={{ transformOrigin: "left" }}
             transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028 + 0.15, ease: [0.22, 1, 0.36, 1] }}
           />
+
+          {/* Hover silüet */}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/62/Ataturk.svg"
+              alt="Atatürk silüeti"
+              className="h-28 w-auto object-contain opacity-0 scale-90 group-hover:opacity-75 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-sm"
+              style={{ filter: "grayscale(1) contrast(1.1)" }}
+            />
+          </div>
         </div>
 
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
