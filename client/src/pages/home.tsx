@@ -1167,26 +1167,28 @@ export default function HomePage() {
               </button>
             ))}
             <BrandsDropdown />
-          </nav>
 
-          {/* CTA butonları */}
-          <div className="flex items-center gap-2">
+            {/* Ayırıcı */}
+            <div className="mx-3 self-center h-4 w-px bg-border" />
+
+            {/* CTA butonları — nav satırında */}
             <MagneticButton
               variant="secondary"
-              className="hidden md:inline-flex"
+              className="self-center mb-1"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
             >
               Teklif iste
             </MagneticButton>
             <MagneticButton
+              className="self-center mb-1"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
             >
               İletişim
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </MagneticButton>
-          </div>
+          </nav>
         </div>
       </header>
 
