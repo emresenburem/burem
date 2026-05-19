@@ -1139,7 +1139,7 @@ export default function HomePage() {
             <img
               src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
               alt="Atatürk silüeti"
-              className="h-32 w-auto object-contain opacity-0 scale-90 group-hover:opacity-80 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
+              className="h-16 w-auto object-contain opacity-0 scale-90 group-hover:opacity-80 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
               style={{ filter: "grayscale(1) contrast(1.15)" }}
             />
           </div>
