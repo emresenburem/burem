@@ -715,7 +715,6 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
 
 const WC = "https://upload.wikimedia.org/wikipedia/commons/";
 const REFERENCES = [
-  { name: "Valeo",          logo: WC + "2/2b/Valeo_Logo.svg" },
   { name: "Bursa CNC",      logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
@@ -1433,7 +1432,6 @@ export default function HomePage() {
 
         <AnimatedProcessSection />
 
-        <ProductsShowcase />
 
         <ReferencesSlider />
 
