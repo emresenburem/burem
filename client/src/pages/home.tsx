@@ -918,13 +918,12 @@ function BrandsDropdown() {
     >
       {/* Tetikleyici buton */}
       <button
-        className={`flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium border-b-2 transition-colors ${
+        className={`flex items-center gap-2 px-5 pb-3 pt-2 text-sm font-medium border-b-2 transition-colors ${
           open
             ? "border-primary text-foreground"
             : "border-transparent text-muted-foreground hover:border-primary hover:text-foreground"
         }`}
       >
-        <Package className="h-3.5 w-3.5 shrink-0" />
         Markalar
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
           <ChevronDown className="h-3 w-3" />
@@ -1169,25 +1168,22 @@ export default function HomePage() {
             <HeaderLogo />
           </div>
 
-          {/* Nav — alt border'a yapışık */}
+          {/* Nav */}
           <nav aria-label="Ana menü" className="hidden md:flex self-end gap-0">
             {[
-              { label: "Hizmetler", icon: Wrench,   id: "services", onClick: () => scrollToId("services") },
-              { label: "Süreç",     icon: Settings, id: "process",  onClick: () => scrollToId("process")  },
-              { label: "İletişim",  icon: Phone,    id: "contact",  onClick: () => scrollToId("contact")  },
+              { label: "Hizmetler", id: "services" },
+              { label: "Süreç",     id: "process"  },
+              { label: "İletişim",  id: "contact"  },
             ].map((item) => (
               <button
-                key={item.label}
-                onClick={item.onClick}
+                key={item.id}
+                onClick={() => scrollToId(item.id)}
                 data-testid={`nav-item-${item.id}`}
-                className="group flex items-center gap-2 px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px"
+                className="px-5 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary hover:text-foreground transition-colors -mb-px"
               >
-                <item.icon className="h-3.5 w-3.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
                 {item.label}
               </button>
             ))}
-
-            {/* Markalar — hover dropdown */}
             <BrandsDropdown />
           </nav>
 
