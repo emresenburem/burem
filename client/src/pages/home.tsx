@@ -1091,18 +1091,19 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       {/* Atatürk şeridi */}
-      <div className="w-full bg-background/80 backdrop-blur-md px-4 py-1.5 flex items-center justify-center gap-4">
-        <p className="text-[11px] text-foreground italic tracking-wide font-light hidden sm:block">
-          "Hayatta en hakiki mürşit ilimdir."
-        </p>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
-          alt="Mustafa Kemal Atatürk imzası"
-          className="h-6 opacity-80"
-        />
-        <p className="text-[11px] text-foreground italic tracking-wide font-light sm:hidden">
-          "Hayatta en hakiki mürşit ilimdir."
-        </p>
+      <div className="w-full bg-background/80 backdrop-blur-md px-6 py-2 flex items-center justify-center gap-3">
+        <span className="hidden sm:block flex-shrink-0 w-16 h-px bg-foreground/20" />
+        <div className="flex items-center gap-3">
+          <p className="text-[11px] text-foreground/70 italic tracking-widest font-light">
+            Hayatta en hakiki mürşit ilimdir.
+          </p>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
+            alt="Mustafa Kemal Atatürk imzası"
+            className="h-7 opacity-60"
+          />
+        </div>
+        <span className="hidden sm:block flex-shrink-0 w-16 h-px bg-foreground/20" />
       </div>
 
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
