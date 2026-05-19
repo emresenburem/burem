@@ -1091,7 +1091,7 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       {/* Atatürk şeridi */}
-      <div className="w-full bg-background/80 backdrop-blur-md border-b px-4 py-1.5 flex items-center justify-center gap-4">
+      <div className="w-full bg-background/80 backdrop-blur-md px-4 py-1.5 flex items-center justify-center gap-4">
         <p className="text-[11px] text-foreground italic tracking-wide font-light hidden sm:block">
           "Hayatta en hakiki mürşit ilimdir."
         </p>
