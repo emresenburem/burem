@@ -1137,10 +1137,10 @@ export default function HomePage() {
           {/* Hover silüet */}
           <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/6/62/Ataturk.svg"
+              src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
               alt="Atatürk silüeti"
-              className="h-28 w-auto object-contain opacity-0 scale-90 group-hover:opacity-75 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-sm"
-              style={{ filter: "grayscale(1) contrast(1.1)" }}
+              className="h-32 w-auto object-contain opacity-0 scale-90 group-hover:opacity-80 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
+              style={{ filter: "grayscale(1) contrast(1.15)" }}
             />
           </div>
         </div>
