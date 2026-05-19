@@ -123,23 +123,7 @@ function SlideNavTab({
   );
 }
 
-function WhatsAppButton() {
-  return (
-    <motion.a
-      href="https://wa.me/905322664764"
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/20 transition-transform"
-      data-testid="button-whatsapp"
-    >
-      <MessageCircle className="h-7 w-7 fill-white/" />
-    </motion.a>
-  );
-}
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -948,8 +932,6 @@ function BrandsDropdown() {
             </div>
 
             <div className="w-[860px] rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden">
-              {/* Üst renkli şerit */}
-              <div className="h-1 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
 
               <div className="p-6">
                 {/* Başlık */}
@@ -996,7 +978,7 @@ function BrandsDropdown() {
 
                 {/* Alt not */}
                 <div className="mt-4 flex items-center justify-center gap-2 border-t pt-3">
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="text-[30px] text-muted-foreground">
                     Listemizde olmayan markalar için —
                   </span>
                   <button
@@ -1078,7 +1060,7 @@ export default function HomePage() {
           />
         </div>
       )}
-      <WhatsAppButton />
+
       <a
         href="#contact"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:shadow-soft"
