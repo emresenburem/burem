@@ -1137,13 +1137,21 @@ export default function HomePage() {
           {/* Silüet — soldan fade-in, bir süre durur, sonra kaybolur */}
           <motion.div
             className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center"
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: [0, 1, 1, 0], x: [-24, 0, 0, 0] }}
+            initial={{ opacity: 0, filter: "blur(6px) brightness(0.3)" }}
+            animate={{
+              opacity:  [0, 1, 1, 0],
+              filter:   [
+                "blur(6px) brightness(0.3)",
+                "blur(0px) brightness(1)",
+                "blur(0px) brightness(1)",
+                "blur(4px) brightness(0.3)",
+              ],
+            }}
             transition={{
-              duration: 3.2,
+              duration: 3.6,
               delay: 0.4 + 34 * 0.028 + 0.2,
               times: [0, 0.18, 0.72, 1],
-              ease: "easeOut",
+              ease: "easeInOut",
             }}
           >
             <img
