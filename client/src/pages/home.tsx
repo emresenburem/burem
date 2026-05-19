@@ -978,12 +978,12 @@ function BrandsDropdown() {
 
                 {/* Alt not */}
                 <div className="mt-4 flex items-center justify-center gap-2 border-t pt-3">
-                  <span className="text-[30px] text-muted-foreground">
+                  <span className="text-[20px] text-muted-foreground">
                     Listemizde olmayan markalar için —
                   </span>
                   <button
                     onClick={() => { document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); setOpen(false); }}
-                    className="text-[10px] font-semibold text-primary hover:underline"
+                    className="text-[20px] font-semibold text-primary hover:underline"
                   >
                     bize danışın →
                   </button>
