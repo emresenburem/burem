@@ -1172,14 +1172,14 @@ export default function HomePage() {
             <BrandsDropdown />
           </nav>
 
-          {/* CTA butonları — sağ, referans stili */}
+          {/* CTA butonları — sağ, shimmer hover */}
           <div className="hidden md:flex items-center gap-2 self-end pb-2">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
-              className="text-sm font-medium"
+              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
             >
               Teklif iste
             </Button>
@@ -1188,7 +1188,7 @@ export default function HomePage() {
               size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
-              className="text-sm font-medium"
+              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
             >
               İletişim
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
