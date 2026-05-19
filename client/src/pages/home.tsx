@@ -1217,7 +1217,7 @@ export default function HomePage() {
 
       <main id="top">
         <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
-          <div className="grid items-start gap-8 md:grid-cols-[1.35fr_.65fr] md:gap-10">
+          <div className="grid items-start gap-8">
             <div>
               <motion.div
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
@@ -1306,87 +1306,6 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            <motion.div
-              initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
-              animate={preferReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Card className="overflow-hidden rounded-3xl border bg-card/70 shadow-elevated">
-                <div className="p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p
-                        className="text-sm text-muted-foreground"
-                        data-testid="text-hero-card-eyebrow"
-                      >
-                        Servis özeti
-                      </p>
-                      <p
-                        className="bg-blue-700/2 mt-1 text-lg font-semibold tracking-tight"
-                        style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                        data-testid="text-hero-card-title"
-                      >
-                        Sürücü · Kart · Güç elektroniği
-                      </p>
-                    </div>
-                    <span
-                      className="rounded-full border bg-background/70 px-2.5 py-1 text-xs text-muted-foreground"
-                      data-testid="badge-hero-card"
-                    >
-                      TR
-                    </span>
-                  </div>
-
-                  <div className="mt-5 h-[220px]" data-testid="card-kpi-accordion">
-                    <ImageAccordion
-                      direction="vertical"
-                      defaultActive={0}
-                      items={[
-                        {
-                          id: 1,
-                          title: "24–72 saat",
-                          description: "Ortalama işlem süresi. Parça durumuna göre değişir.",
-                          icon: <Timer strokeWidth={1.3} />,
-                          particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                        },
-                        {
-                          id: 2,
-                          title: "Yük altında test",
-                          description: "Stabilite ve ısı kontrolü teslimden önce yapılır.",
-                          icon: <Zap strokeWidth={1.3} />,
-                          particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                        },
-                        {
-                          id: 3,
-                          title: "Şeffaf raporlama",
-                          description: "Yapılan tüm işlemler müşteriye net biçimde aktarılır.",
-                          icon: <ClipboardList strokeWidth={1.3} />,
-                          particleColor: "#94a3b8",
-                          gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                        },
-                      ]}
-                    />
-                  </div>
-                </div>
-
-                <div className="border-t bg-transparent p-4 shadow-elevated">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs text-muted-foreground" data-testid="text-hero-card-note">
-                      Cihaz bilgisi ile hızlı fiyat/termin.
-                    </p>
-                    <Button
-                      size="sm"
-                      onClick={() => scrollToId("contact")}
-                      data-testid="button-hero-card-action"
-                    >
-                      Teklif al
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
           </div>
         </section>
 
