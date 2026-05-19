@@ -1072,15 +1072,13 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       <header className="sticky top-0 z-40 border-b border-border/40 bg-background/90 backdrop-blur-md">
-        {/* Üst satır — logo ortalı */}
-        <div className="flex w-full items-center justify-center py-3">
-          <img
-            src="/burem-logo-full.png"
-            alt="Burem Elektronik"
-            className="h-16 w-auto object-contain"
-            data-testid="img-logo"
-          />
-        </div>
+        {/* Üst satır — tam genişlik banner logo */}
+        <img
+          src="/burem-logo-banner.png"
+          alt="Burem Elektronik"
+          className="w-full h-auto block"
+          data-testid="img-logo"
+        />
 
         {/* Alt satır — nav ortada, CTA sağda */}
         <div className="relative flex w-full items-center justify-center px-6 md:px-8 pb-1">
