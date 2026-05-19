@@ -1148,7 +1148,7 @@ export default function HomePage() {
               opacity: [0, 1, 1, 0],
             }}
             transition={{
-              duration: 5,
+              duration: 9,
               delay: 0.4 + 34 * 0.028 + 0.2,
               times: [0, 0.22, 0.78, 1],
               ease: [0.22, 1, 0.36, 1],
