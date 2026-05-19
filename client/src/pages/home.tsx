@@ -980,6 +980,7 @@ function BrandsDropdown() {
                         src={brand.logo}
                         alt={brand.name}
                         className="w-full h-full object-contain"
+                        style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
                         onError={(e) => {
                           const img = e.target as HTMLImageElement;
                           img.style.display = "none";
