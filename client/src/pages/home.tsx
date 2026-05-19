@@ -1090,6 +1090,21 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
+      {/* Atatürk şeridi */}
+      <div className="w-full bg-[#1a1a2e] border-b border-white/10 px-4 py-1.5 flex items-center justify-center gap-4">
+        <p className="text-[11px] text-white/80 italic tracking-wide font-light hidden sm:block">
+          "Hayatta en hakiki mürşit ilimdir."
+        </p>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
+          alt="Mustafa Kemal Atatürk imzası"
+          className="h-6 opacity-90 invert"
+        />
+        <p className="text-[11px] text-white/80 italic tracking-wide font-light sm:hidden">
+          "Hayatta en hakiki mürşit ilimdir."
+        </p>
+      </div>
+
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
           {/* Logo */}
