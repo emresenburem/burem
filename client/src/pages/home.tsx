@@ -1144,14 +1144,17 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
-          {/* Logo */}
+        <div className="relative flex w-full items-center justify-between gap-3 px-4 md:px-6">
+          {/* Logo — sol */}
           <div className="-ml-25 -mt-12 mb-[-2.5rem] flex-shrink-0">
             <HeaderLogo />
           </div>
 
-          {/* Nav */}
-          <nav aria-label="Ana menü" className="hidden md:flex self-end gap-0">
+          {/* Nav — sayfada ortalı, alt kenara yaslanmış */}
+          <nav
+            aria-label="Ana menü"
+            className="hidden md:flex absolute bottom-0 left-1/2 -translate-x-1/2 gap-0"
+          >
             {[
               { label: "Hizmetler", id: "services" },
               { label: "Süreç",     id: "process"  },
@@ -1167,28 +1170,29 @@ export default function HomePage() {
               </button>
             ))}
             <BrandsDropdown />
+          </nav>
 
-            {/* Ayırıcı */}
-            <div className="mx-3 self-center h-4 w-px bg-border" />
-
-            {/* CTA butonları — nav satırında */}
-            <MagneticButton
-              variant="secondary"
-              className="self-center mb-1"
+          {/* CTA butonları — sağ, referans stili */}
+          <div className="hidden md:flex items-center gap-2 self-end pb-2">
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
+              className="text-sm font-medium"
             >
               Teklif iste
-            </MagneticButton>
-            <MagneticButton
-              className="self-center mb-1"
+            </Button>
+            <Button
+              size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
+              className="text-sm font-medium"
             >
               İletişim
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </MagneticButton>
-          </nav>
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            </Button>
+          </div>
         </div>
       </header>
 

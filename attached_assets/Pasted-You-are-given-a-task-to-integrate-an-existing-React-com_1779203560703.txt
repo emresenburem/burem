@@ -1,0 +1,1668 @@
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+navigation-menu-4.tsx
+import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+// Navigation links array to be used in both desktop and mobile menus
+const navigationLinks = [
+  { href: "#", label: "Home" },
+  {
+    label: "Features",
+    submenu: true,
+    type: "description",
+    items: [
+      {
+        href: "#",
+        label: "Components",
+        description: "Browse all components in the library.",
+      },
+      {
+        href: "#",
+        label: "Documentation",
+        description: "Learn how to use the library.",
+      },
+      {
+        href: "#",
+        label: "Templates",
+        description: "Pre-built layouts for common use cases.",
+      },
+    ],
+  },
+  {
+    label: "Pricing",
+    submenu: true,
+    type: "simple",
+    items: [
+      { href: "#", label: "Product A" },
+      { href: "#", label: "Product B" },
+      { href: "#", label: "Product C" },
+      { href: "#", label: "Product D" },
+    ],
+  },
+  {
+    label: "About",
+    submenu: true,
+    type: "icon",
+    items: [
+      { href: "#", label: "Getting Started", icon: "BookOpenIcon" },
+      { href: "#", label: "Tutorials", icon: "LifeBuoyIcon" },
+      { href: "#", label: "About Us", icon: "InfoIcon" },
+    ],
+  },
+]
+
+export default function Component() {
+  return (
+    <header className="border-b px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between gap-4">
+        {/* Left side */}
+        <div className="flex items-center gap-2">
+          {/* Mobile menu trigger */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                className="group size-8 md:hidden"
+                variant="ghost"
+                size="icon"
+              >
+                <svg
+                  className="pointer-events-none"
+                  width={16}
+                  height={16}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 12L20 12"
+                    className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
+                  />
+                  <path
+                    d="M4 12H20"
+                    className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
+                  />
+                  <path
+                    d="M4 12H20"
+                    className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
+                  />
+                </svg>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-64 p-1 md:hidden">
+              <NavigationMenu className="max-w-none *:w-full">
+                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
+                  {navigationLinks.map((link, index) => (
+                    <NavigationMenuItem key={index} className="w-full">
+                      {link.submenu ? (
+                        <>
+                          <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
+                            {link.label}
+                          </div>
+                          <ul>
+                            {link.items.map((item, itemIndex) => (
+                              <li key={itemIndex}>
+                                <NavigationMenuLink
+                                  href={item.href}
+                                  className="py-1.5"
+                                >
+                                  {item.label}
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      ) : (
+                        <NavigationMenuLink href={link.href} className="py-1.5">
+                          {link.label}
+                        </NavigationMenuLink>
+                      )}
+                      {/* Add separator between different types of items */}
+                      {index < navigationLinks.length - 1 &&
+                        // Show separator if:
+                        // 1. One is submenu and one is simple link OR
+                        // 2. Both are submenus but with different types
+                        ((!link.submenu &&
+                          navigationLinks[index + 1].submenu) ||
+                          (link.submenu &&
+                            !navigationLinks[index + 1].submenu) ||
+                          (link.submenu &&
+                            navigationLinks[index + 1].submenu &&
+                            link.type !== navigationLinks[index + 1].type)) && (
+                          <div
+                            role="separator"
+                            aria-orientation="horizontal"
+                            className="bg-border -mx-1 my-1 h-px w-full"
+                          />
+                        )}
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </PopoverContent>
+          </Popover>
+          {/* Main nav */}
+          <div className="flex items-center gap-6">
+            <a href="#" className="text-primary hover:text-primary/90">
+              Logo
+            </a>
+            {/* Navigation menu */}
+            <div className="max-md:hidden">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {navigationLinks.map((link, index) => (
+                    <NavigationMenuItem key={index}>
+                      {link.submenu ? (
+                        <>
+                          <NavigationMenuTrigger className="text-muted-foreground hover:text-primary bg-transparent px-2 py-1.5 font-medium">
+                            {link.label}
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className={cn(
+                              "grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]",
+                              link.type === "description" && "md:grid-cols-1"
+                            )}>
+                              {link.items.map((item, itemIndex) => (
+                                <li key={itemIndex}>
+                                  <NavigationMenuLink asChild>
+                                    <a
+                                      href={item.href}
+                                      className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                    >
+                                      {/* Display icon if present */}
+                                      {link.type === "icon" && "icon" in item && (
+                                        <div className="flex items-center gap-2">
+                                          {item.icon === "BookOpenIcon" && (
+                                            <BookOpenIcon
+                                              size={16}
+                                              className="text-foreground opacity-60"
+                                              aria-hidden="true"
+                                            />
+                                          )}
+                                          {item.icon === "LifeBuoyIcon" && (
+                                            <LifeBuoyIcon
+                                              size={16}
+                                              className="text-foreground opacity-60"
+                                              aria-hidden="true"
+                                            />
+                                          )}
+                                          {item.icon === "InfoIcon" && (
+                                            <InfoIcon
+                                              size={16}
+                                              className="text-foreground opacity-60"
+                                              aria-hidden="true"
+                                            />
+                                          )}
+                                          <div className="text-sm font-medium leading-none">
+                                            {item.label}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Display label with description if present */}
+                                      {link.type === "description" && "description" in item && (
+                                        <>
+                                          <div className="text-sm font-medium leading-none">
+                                            {item.label}
+                                          </div>
+                                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                            {item.description}
+                                          </p>
+                                        </>
+                                      )}
+
+                                      {/* Display simple label if simple type */}
+                                      {link.type === "simple" && (
+                                        <div className="text-sm font-medium leading-none">
+                                          {item.label}
+                                        </div>
+                                      )}
+                                    </a>
+                                  </NavigationMenuLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
+                        <NavigationMenuLink asChild>
+                          <a
+                            href={link.href}
+                            className="text-muted-foreground hover:text-primary py-1.5 px-2 font-medium"
+                          >
+                            {link.label}
+                          </a>
+                        </NavigationMenuLink>
+                      )}
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+                <NavigationMenuViewport />
+              </NavigationMenu>
+            </div>
+          </div>
+        </div>
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="text-sm">
+            <a href="#">Sign In</a>
+          </Button>
+          <Button asChild size="sm" className="text-sm">
+            <a href="#">Get Started</a>
+          </Button>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+demo.tsx
+import { Button } from "@/components/ui/button"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+// Navigation links array - removed the active property to let hover work properly
+const navigationLinks = [
+  { href: "#", label: "Home" },
+  { href: "#", label: "Features" },
+  { href: "#", label: "Pricing" },
+  { href: "#", label: "About" },
+]
+
+export default function Component() {
+  return (
+    <header className="border-b px-4 md:px-6">
+      <div className="flex h-16 justify-between gap-4">
+        {/* Left side */}
+        <div className="flex gap-2">
+          <div className="flex items-center md:hidden">
+            {/* Mobile menu trigger */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button className="group size-8" variant="ghost" size="icon">
+                  <svg
+                    className="pointer-events-none"
+                    width={16}
+                    height={16}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 12L20 12"
+                      className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
+                    />
+                    <path
+                      d="M4 12H20"
+                      className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
+                    />
+                    <path
+                      d="M4 12H20"
+                      className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
+                    />
+                  </svg>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" className="w-36 p-1 md:hidden">
+                <NavigationMenu className="max-w-none *:w-full">
+                  <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
+                    {navigationLinks.map((link, index) => (
+                      <NavigationMenuItem key={index} className="w-full">
+                        <NavigationMenuLink
+                          href={link.href}
+                          className="py-1.5"
+                        >
+                          {link.label}
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    ))}
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </PopoverContent>
+            </Popover>
+          </div>
+          {/* Main nav */}
+          <div className="flex items-center gap-6">
+            <a href="#" className="text-primary hover:text-primary/90">
+              <h2> Logo </h2>
+            </a>
+            {/* Navigation menu - removed h-full classes and simplified styling */}
+            <NavigationMenu className="max-md:hidden">
+              <NavigationMenuList className="gap-2">
+                {navigationLinks.map((link, index) => (
+                  <NavigationMenuItem key={index}>
+                    <NavigationMenuLink
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary border-b-2 border-transparent hover:border-b-primary px-3 py-2 font-medium transition-colors"
+                    >
+                      {link.label}
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+        </div>
+        {/* Right side */}
+        <div className="flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="text-sm">
+            <a href="#">Sign In</a>
+          </Button>
+          <Button asChild size="sm" className="text-sm">
+            <a href="#">Get Started</a>
+          </Button>
+        </div>
+      </div>
+    </header>
+  )
+}
+```
+
+Copy-paste these files for dependencies:
+```tsx
+originui/navigation-bar
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+export const Component = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div className={cn("flex flex-col items-center gap-4 p-4 rounded-lg")}>
+      <h1 className="text-2xl font-bold mb-2">Component Example</h1>
+      <h2 className="text-xl font-semibold">{count}</h2>
+      <div className="flex gap-2">
+        <button onClick={() => setCount((prev) => prev - 1)}>-</button>
+        <button onClick={() => setCount((prev) => prev + 1)}>+</button>
+      </div>
+    </div>
+  );
+};
+
+```
+```tsx
+originui/button
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-sm shadow-black/5 hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm shadow-black/5 hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background shadow-sm shadow-black/5 hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-sm shadow-black/5 hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-lg px-3 text-xs",
+        lg: "h-10 rounded-lg px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+    );
+  },
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
+
+```
+```tsx
+shadcn/navigation-menu
+import * as React from "react"
+import { ChevronDownIcon } from "@radix-ui/react-icons"
+import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
+import { cva } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const NavigationMenu = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative z-10 flex max-w-max flex-1 items-center justify-center",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Root>
+))
+NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName
+
+const NavigationMenuList = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.List
+    ref={ref}
+    className={cn(
+      "group flex flex-1 list-none items-center justify-center space-x-1",
+      className
+    )}
+    {...props}
+  />
+))
+NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName
+
+const NavigationMenuItem = NavigationMenuPrimitive.Item
+
+const navigationMenuTriggerStyle = cva(
+  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+)
+
+const NavigationMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Trigger
+    ref={ref}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
+    {...props}
+  >
+    {children}{" "}
+    <ChevronDownIcon
+      className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
+      aria-hidden="true"
+    />
+  </NavigationMenuPrimitive.Trigger>
+))
+NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName
+
+const NavigationMenuContent = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto ",
+      className
+    )}
+    {...props}
+  />
+))
+NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName
+
+const NavigationMenuLink = NavigationMenuPrimitive.Link
+
+const NavigationMenuViewport = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      className={cn(
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
+))
+NavigationMenuViewport.displayName =
+  NavigationMenuPrimitive.Viewport.displayName
+
+const NavigationMenuIndicator = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Indicator
+    ref={ref}
+    className={cn(
+      "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+      className
+    )}
+    {...props}
+  >
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+  </NavigationMenuPrimitive.Indicator>
+))
+NavigationMenuIndicator.displayName =
+  NavigationMenuPrimitive.Indicator.displayName
+
+export {
+  navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+}
+
+```
+```tsx
+shadcn/popover
+"use client"
+
+import * as React from "react"
+import * as PopoverPrimitive from "@radix-ui/react-popover"
+
+import { cn } from "@/lib/utils"
+
+const Popover = PopoverPrimitive.Root
+
+const PopoverTrigger = PopoverPrimitive.Trigger
+
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+))
+PopoverContent.displayName = PopoverPrimitive.Content.displayName
+
+export { Popover, PopoverTrigger, PopoverContent }
+
+```
+```tsx
+originui/navigation-menu
+import * as React from "react";
+import { cva } from "class-variance-authority";
+import { ChevronDownIcon } from "lucide-react";
+import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
+import { cn } from "@/lib/utils";
+
+const NavigationMenu = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative z-10 flex max-w-max flex-1 items-center justify-center",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <NavigationMenuViewport />
+  </NavigationMenuPrimitive.Root>
+));
+NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;
+
+const NavigationMenuList = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.List
+    ref={ref}
+    className={cn(
+      "group flex flex-1 list-none items-center justify-center space-x-1",
+      className
+    )}
+    {...props}
+  />
+));
+NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
+
+const NavigationMenuItem = NavigationMenuPrimitive.Item;
+
+const navigationMenuTriggerStyle = cva(
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+);
+
+const NavigationMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <NavigationMenuPrimitive.Trigger
+    ref={ref}
+    className={cn(navigationMenuTriggerStyle(), "group", className)}
+    {...props}
+  >
+    {children}{" "}
+    <ChevronDownIcon
+      className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+      aria-hidden="true"
+    />
+  </NavigationMenuPrimitive.Trigger>
+));
+NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName;
+
+const NavigationMenuContent = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Content
+    ref={ref}
+    className={cn(
+      "left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto ",
+      className
+    )}
+    {...props}
+  />
+));
+NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
+
+const NavigationMenuLink = NavigationMenuPrimitive.Link;
+
+const NavigationMenuViewport = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <div className={cn("absolute left-0 top-full flex justify-center")}>
+    <NavigationMenuPrimitive.Viewport
+      className={cn(
+        "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  </div>
+));
+NavigationMenuViewport.displayName =
+  NavigationMenuPrimitive.Viewport.displayName;
+
+const NavigationMenuIndicator = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Indicator>
+>(({ className, ...props }, ref) => (
+  <NavigationMenuPrimitive.Indicator
+    ref={ref}
+    className={cn(
+      "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in",
+      className
+    )}
+    {...props}
+  >
+    <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+  </NavigationMenuPrimitive.Indicator>
+));
+NavigationMenuIndicator.displayName =
+  NavigationMenuPrimitive.Indicator.displayName;
+
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+};
+```
+```tsx
+shadcn/button
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  },
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+
+```
+```tsx
+originui/popover
+"use client";
+
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Popover = PopoverPrimitive.Root;
+
+const PopoverTrigger = PopoverPrimitive.Trigger;
+
+const PopoverAnchor = PopoverPrimitive.Anchor;
+
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
+    showArrow?: boolean;
+  }
+>(({ className, align = "center", sideOffset = 4, showArrow = false, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 max-h-[var(--radix-popover-content-available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-lg border border-border bg-popover p-4 text-popover-foreground shadow-lg shadow-black/5 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    >
+      {props.children}
+      {showArrow && (
+        <PopoverPrimitive.Arrow className="-my-px fill-popover drop-shadow-[0_1px_0_hsl(var(--border))]" />
+      )}
+    </PopoverPrimitive.Content>
+  </PopoverPrimitive.Portal>
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+
+export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger };
+
+```
+```tsx
+originui/input
+import { cn } from "@/lib/utils";
+import * as React from "react";
+
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50",
+          type === "search" &&
+            "[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none",
+          type === "file" &&
+            "p-0 pr-3 italic text-muted-foreground/70 file:me-3 file:h-full file:border-0 file:border-r file:border-solid file:border-input file:bg-transparent file:px-3 file:text-sm file:font-medium file:not-italic file:text-foreground",
+          className,
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
+Input.displayName = "Input";
+
+export { Input };
+
+```
+```tsx
+originui/dropdown-menu
+"use client";
+
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+import { CheckIcon, ChevronRightIcon, DotFilledIcon } from "@radix-ui/react-icons";
+
+type PointerDownEvent = Parameters<
+  NonNullable<DropdownMenuPrimitive.DropdownMenuContentProps["onPointerDown"]>
+>[0];
+type PointerDownOutsideEvent = Parameters<
+  NonNullable<DropdownMenuPrimitive.DropdownMenuContentProps["onPointerDownOutside"]>
+>[0];
+
+const DropdownMenu = DropdownMenuPrimitive.Root;
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+
+const DropdownMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRightIcon className="ml-auto text-muted-foreground/80" />
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-40 overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg shadow-black/5 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName;
+
+const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(
+  (
+    { className, sideOffset = 4, onPointerDown, onPointerDownOutside, onCloseAutoFocus, ...props },
+    ref,
+  ) => {
+    const isCloseFromMouse = React.useRef<boolean>(false);
+
+    const handlePointerDown = React.useCallback(
+      (e: PointerDownEvent) => {
+        isCloseFromMouse.current = true;
+        onPointerDown?.(e);
+      },
+      [onPointerDown],
+    );
+
+    const handlePointerDownOutside = React.useCallback(
+      (e: PointerDownOutsideEvent) => {
+        isCloseFromMouse.current = true;
+        onPointerDownOutside?.(e);
+      },
+      [onPointerDownOutside],
+    );
+
+    const handleCloseAutoFocus = React.useCallback(
+      (e: Event) => {
+        if (onCloseAutoFocus) {
+          return onCloseAutoFocus(e);
+        }
+
+        if (!isCloseFromMouse.current) {
+          return;
+        }
+
+        e.preventDefault();
+        isCloseFromMouse.current = false;
+      },
+      [onCloseAutoFocus],
+    );
+
+    return (
+      <DropdownMenuPrimitive.Portal>
+        <DropdownMenuPrimitive.Content
+          ref={ref}
+          sideOffset={sideOffset}
+          className={cn(
+            "z-50 min-w-40 overflow-hidden rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg shadow-black/5 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+            className,
+          )}
+          onPointerDown={handlePointerDown}
+          onPointerDownOutside={handlePointerDownOutside}
+          onCloseAutoFocus={handleCloseAutoFocus}
+          {...props}
+        />
+      </DropdownMenuPrimitive.Portal>
+    );
+  },
+);
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
+
+const DropdownMenuItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+
+const DropdownMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className,
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <CheckIcon className="h-4 w-4" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+));
+DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
+
+const DropdownMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <DotFilledIcon className="h-2 w-2 fill-current" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+));
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
+
+const DropdownMenuLabel = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+    inset?: boolean;
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-xs font-medium text-muted-foreground",
+      inset && "pl-8",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
+
+const DropdownMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-border", className)}
+    {...props}
+  />
+));
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+
+const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn(
+        "-me-1 ms-auto inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70",
+        className,
+      )}
+      {...props}
+    />
+  );
+};
+DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
+
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+};
+
+```
+```tsx
+shadcn/toggle
+"use client"
+
+import * as React from "react"
+import * as TogglePrimitive from "@radix-ui/react-toggle"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const toggleVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
+  {
+    variants: {
+      variant: {
+        default: "bg-transparent",
+        outline:
+          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+      },
+      size: {
+        default: "h-10 px-3",
+        sm: "h-9 px-2.5",
+        lg: "h-11 px-5",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+const Toggle = React.forwardRef<
+  React.ElementRef<typeof TogglePrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
+    VariantProps<typeof toggleVariants>
+>(({ className, variant, size, ...props }, ref) => (
+  <TogglePrimitive.Root
+    ref={ref}
+    className={cn(toggleVariants({ variant, size, className }))}
+    {...props}
+  />
+))
+
+Toggle.displayName = TogglePrimitive.Root.displayName
+
+export { Toggle, toggleVariants }
+
+```
+```tsx
+originui/select
+"use client";
+
+import * as SelectPrimitive from "@radix-ui/react-select";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+
+const Select = SelectPrimitive.Root;
+
+const SelectGroup = SelectPrimitive.Group;
+
+const SelectValue = SelectPrimitive.Value;
+
+const SelectTrigger = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-input bg-background px-3 py-2 text-start text-sm text-foreground shadow-sm shadow-black/5 focus:border-ring focus:outline-none focus:ring-[3px] focus:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70 [&>span]:min-w-0",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDownIcon size={16} strokeWidth={2} className="shrink-0 text-muted-foreground/80" />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+));
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+
+const SelectScrollUpButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollUpButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronUpIcon size={16} strokeWidth={2} />
+  </SelectPrimitive.ScrollUpButton>
+));
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
+
+const SelectScrollDownButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollDownButton
+    ref={ref}
+    className={cn("flex cursor-default items-center justify-center py-1", className)}
+    {...props}
+  >
+    <ChevronDownIcon size={16} strokeWidth={2} />
+  </SelectPrimitive.ScrollDownButton>
+));
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
+
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={cn(
+        "relative z-50 max-h-[min(24rem,var(--radix-select-content-available-height))] min-w-[8rem] overflow-hidden rounded-lg border border-input bg-popover text-popover-foreground shadow-lg shadow-black/5 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 [&_[role=group]]:py-1",
+        position === "popper" &&
+          "w-full min-w-[var(--radix-select-trigger-width)] data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className,
+      )}
+      position={position}
+      {...props}
+    >
+      <SelectScrollUpButton />
+      <SelectPrimitive.Viewport
+        className={cn("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)]")}
+      >
+        {children}
+      </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+));
+SelectContent.displayName = SelectPrimitive.Content.displayName;
+
+const SelectLabel = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Label
+    ref={ref}
+    className={cn("py-1.5 pe-2 ps-8 text-xs font-medium text-muted-foreground", className)}
+    {...props}
+  />
+));
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
+
+const SelectItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pe-2 ps-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute start-2 flex size-3.5 items-center justify-center">
+      <SelectPrimitive.ItemIndicator>
+        <CheckIcon size={16} strokeWidth={2} />
+      </SelectPrimitive.ItemIndicator>
+    </span>
+
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+));
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-border", className)}
+    {...props}
+  />
+));
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+};
+
+```
+```tsx
+originui/tooltip
+"use client";
+
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const TooltipProvider = TooltipPrimitive.Provider;
+
+const Tooltip = TooltipPrimitive.Root;
+
+const TooltipTrigger = TooltipPrimitive.Trigger;
+
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & {
+    showArrow?: boolean;
+  }
+>(({ className, sideOffset = 4, showArrow = false, ...props }, ref) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "relative z-50 max-w-[280px] rounded-lg border border-border bg-popover px-3 py-1.5 text-sm text-popover-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className,
+      )}
+      {...props}
+    >
+      {props.children}
+      {showArrow && (
+        <TooltipPrimitive.Arrow className="-my-px fill-popover drop-shadow-[0_1px_0_hsl(var(--border))]" />
+      )}
+    </TooltipPrimitive.Content>
+  </TooltipPrimitive.Portal>
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+
+```
+```tsx
+originui/avatar
+"use client";
+
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Root
+    ref={ref}
+    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    {...props}
+  />
+));
+Avatar.displayName = AvatarPrimitive.Root.displayName;
+
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
+));
+AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-[inherit] bg-secondary text-xs",
+      className,
+    )}
+    {...props}
+  />
+));
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+export { Avatar, AvatarFallback, AvatarImage };
+
+```
+```tsx
+originui/breadcrumb
+import { Slot } from "@radix-ui/react-slot";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+import { ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+
+const Breadcrumb = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<"nav"> & {
+    separator?: React.ReactNode;
+  }
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
+Breadcrumb.displayName = "Breadcrumb";
+
+const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<"ol">>(
+  ({ className, ...props }, ref) => (
+    <ol
+      ref={ref}
+      className={cn(
+        "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+        className,
+      )}
+      {...props}
+    />
+  ),
+);
+BreadcrumbList.displayName = "BreadcrumbList";
+
+const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<"li">>(
+  ({ className, ...props }, ref) => (
+    <li ref={ref} className={cn("inline-flex items-center gap-1.5", className)} {...props} />
+  ),
+);
+BreadcrumbItem.displayName = "BreadcrumbItem";
+
+const BreadcrumbLink = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<"a"> & {
+    asChild?: boolean;
+  }
+>(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a";
+
+  return (
+    <Comp
+      ref={ref}
+      className={cn("transition-colors hover:text-foreground", className)}
+      {...props}
+    />
+  );
+});
+BreadcrumbLink.displayName = "BreadcrumbLink";
+
+const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<"span">>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      role="link"
+      aria-disabled="true"
+      aria-current="page"
+      className={cn("text-foreground", className)}
+      {...props}
+    />
+  ),
+);
+BreadcrumbPage.displayName = "BreadcrumbPage";
+
+const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
+  <li role="presentation" aria-hidden="true" className={className} {...props}>
+    {children ?? <ChevronRightIcon size={16} strokeWidth={2} />}
+  </li>
+);
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
+
+const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
+  <span
+    role="presentation"
+    aria-hidden="true"
+    className={cn("flex size-5 items-center justify-center", className)}
+    {...props}
+  >
+    <DotsHorizontalIcon size={16} strokeWidth={2} />
+  </span>
+);
+BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
+
+export {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+};
+
+```
+```tsx
+shadcn/scroll-area
+"use client"
+
+import * as React from "react"
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
+
+import { cn } from "@/lib/utils"
+
+const ScrollArea = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root
+    ref={ref}
+    className={cn("relative overflow-hidden", className)}
+    {...props}
+  >
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+      {children}
+    </ScrollAreaPrimitive.Viewport>
+    <ScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+))
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
+
+const ScrollBar = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+>(({ className, orientation = "vertical", ...props }, ref) => (
+  <ScrollAreaPrimitive.ScrollAreaScrollbar
+    ref={ref}
+    orientation={orientation}
+    className={cn(
+      "flex touch-none select-none transition-colors",
+      orientation === "vertical" &&
+        "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      orientation === "horizontal" &&
+        "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      className,
+    )}
+    {...props}
+  >
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+  </ScrollAreaPrimitive.ScrollAreaScrollbar>
+))
+ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
+
+export { ScrollArea, ScrollBar }
+
+```
+```tsx
+shadcn/separator
+"use client"
+
+import * as React from "react"
+import * as SeparatorPrimitive from "@radix-ui/react-separator"
+
+import { cn } from "@/lib/utils"
+
+const Separator = React.forwardRef<
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(
+  (
+    { className, orientation = "horizontal", decorative = true, ...props },
+    ref
+  ) => (
+    <SeparatorPrimitive.Root
+      ref={ref}
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border",
+        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+Separator.displayName = SeparatorPrimitive.Root.displayName
+
+export { Separator }
+
+```
+
+Install NPM dependencies:
+```bash
+lucide-react, @radix-ui/react-slot, class-variance-authority, @radix-ui/react-icons, @radix-ui/react-navigation-menu, @radix-ui/react-popover, radix-ui, @radix-ui/react-dropdown-menu, @radix-ui/react-toggle, @radix-ui/react-select, @radix-ui/react-tooltip, @radix-ui/react-avatar, @radix-ui/react-scroll-area, @radix-ui/react-separator
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them
