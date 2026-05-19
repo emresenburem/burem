@@ -902,10 +902,10 @@ function BrandsDropdown() {
     >
       {/* Tetikleyici buton */}
       <button
-        className={`relative overflow-hidden flex items-center gap-2 px-5 pb-3 pt-2 text-sm font-medium border-b-2 transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out ${
+        className={`relative overflow-hidden flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out ${
           open
-            ? "border-primary/50 text-foreground"
-            : "border-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground"
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
         Markalar
@@ -1164,7 +1164,7 @@ export default function HomePage() {
                 key={item.id}
                 onClick={() => scrollToId(item.id)}
                 data-testid={`nav-item-${item.id}`}
-                className="relative overflow-hidden px-5 pb-3 pt-2 text-sm font-medium text-muted-foreground border-b-2 border-transparent hover:border-primary/50 hover:text-foreground transition-colors -mb-px before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+                className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
               >
                 {item.label}
               </button>
