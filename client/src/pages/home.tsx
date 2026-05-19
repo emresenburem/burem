@@ -1071,100 +1071,42 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="relative sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
-        {/* Atatürk şeridi — tam ortada üstte, absolute */}
-        <div
-          className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
-          style={{ zIndex: 50 }}
-        >
-          <motion.span
-            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            style={{ transformOrigin: "left" }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          />
-          <motion.p
-            className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap flex"
-            aria-label="Hayatta en hakiki mürşit ilimdir."
-          >
-            {"Hayatta en hakiki mürşit ilimdir.".split("").map((char, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, x: -4 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.35, delay: 0.4 + i * 0.028, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </motion.span>
-            ))}
-          </motion.p>
-          <motion.img
-            src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
-            alt="Mustafa Kemal Atatürk imzası"
-            className="h-6"
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028, ease: [0.22, 1, 0.36, 1] }}
-          />
-          <motion.span
-            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            style={{ transformOrigin: "left" }}
-            transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028 + 0.15, ease: [0.22, 1, 0.36, 1] }}
-          />
+      <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
 
-          {/* Silüet — soldan fade-in, bir süre durur, sonra kaybolur */}
-          <motion.div
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center"
-            initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
-            animate={{
-              clipPath: [
-                "inset(0 100% 0 0)",
-                "inset(0 0% 0 0)",
-                "inset(0 0% 0 0)",
-                "inset(0 0% 100% 0)",
-              ],
-              opacity: [0, 1, 1, 0],
-            }}
-            transition={{
-              duration: 9,
-              delay: 0.4 + 34 * 0.028 + 0.2,
-              times: [0, 0.38, 0.82, 1],
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            <img
-              src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
-              alt="Atatürk silüeti"
-              className="h-16 w-auto object-contain drop-shadow-md"
-              style={{ filter: "grayscale(1) contrast(1.15)" }}
-            />
-          </motion.div>
+        {/* Satır 1 — Logo büyük, ortalı */}
+        <div className="w-full flex justify-center pt-3 pb-1">
+          <img
+            src="/burem-logo-big.png"
+            alt="Burem Elektronik"
+            className="h-[150px] w-auto block"
+            data-testid="img-header-logo"
+          />
         </div>
 
-        <div className="relative flex w-full items-end justify-between gap-3 px-4 md:px-6 pt-12 pb-0">
-          {/* Dengeleyici spacer — sağdaki CTA genişliğini dengeler */}
-          <div className="hidden md:flex items-center gap-2 opacity-0 pointer-events-none pb-2" aria-hidden="true">
-            <Button variant="ghost" size="sm" className="text-sm font-medium">Teklif iste</Button>
-            <Button variant="ghost" size="sm" className="text-sm font-medium">İletişim <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Button>
-          </div>
+        {/* Satır 2 — Nav + CTA */}
+        <div className="relative flex w-full items-center justify-between px-4 md:px-6 pb-1">
 
-          {/* Logo — ortada, absolute */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-            <img
-              src="/burem-logo-big.png"
-              alt="Burem Elektronik"
-              className="h-14 w-auto object-contain"
-              data-testid="img-header-logo"
+          {/* Atatürk sözü — sol */}
+          <div className="hidden lg:flex items-center gap-2">
+            <motion.span
+              className="w-6 h-px bg-foreground/40 flex-shrink-0 block"
+              initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+              style={{ transformOrigin: "left" }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             />
+            <motion.p
+              className="text-[10px] text-foreground/50 italic tracking-widest font-light whitespace-nowrap"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              Hayatta en hakiki mürşit ilimdir.
+            </motion.p>
           </div>
 
-          {/* Nav — sayfada ortalı, alt kenara yaslanmış */}
+          {/* Nav — ortalı, absolute */}
           <nav
             aria-label="Ana menü"
-            className="hidden md:flex absolute bottom-0 left-1/2 -translate-x-1/2 gap-0"
+            className="hidden md:flex absolute left-1/2 -translate-x-1/2 gap-0"
           >
             {[
               { label: "Hizmetler", id: "services" },
@@ -1183,23 +1125,21 @@ export default function HomePage() {
             <BrandsDropdown />
           </nav>
 
-          {/* CTA butonları — sağ, shimmer hover */}
-          <div className="hidden md:flex items-center gap-2 self-end pb-2">
+          {/* CTA butonları — sağ */}
+          <div className="hidden md:flex items-center gap-2 ml-auto">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="ghost" size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-quote"
-              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
+              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
             >
               Teklif iste
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="ghost" size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
-              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
+              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
             >
               İletişim
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
