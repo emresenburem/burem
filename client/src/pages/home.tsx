@@ -1139,7 +1139,7 @@ export default function HomePage() {
             <img
               src="https://www.ataturkhediyelik.com/cdn/shop/products/ataturk-ve-turkiye-haritasi-metal-tablo-siyah-renk_1_720x.jpg?v=1751372287"
               alt="Atatürk silüeti"
-              className="h-[5px] w-auto object-contain opacity-0 scale-90 group-hover:opacity-40 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
+              className="h-[200px] w-auto object-contain opacity-0 scale-90 group-hover:opacity-40 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
               style={{ filter: "grayscale(1) contrast(1.15)" }}
             />
           </div>
