@@ -1135,7 +1135,7 @@ export default function HomePage() {
           />
 
           {/* Hover silüet */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none flex justify-center">
+          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 pointer-events-none flex justify-center">
             <img
               src="https://www.ataturkhediyelik.com/cdn/shop/products/ataturk-ve-turkiye-haritasi-metal-tablo-siyah-renk_1_720x.jpg?v=1751372287"
               alt="Atatürk silüeti"
