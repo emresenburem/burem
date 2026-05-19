@@ -68,7 +68,7 @@ const BRANDS = [
   { name: "SEW", color: "#003366", logo: "https://images.seeklogo.com/logo-png/23/1/sew-eurodrive-logo-png_seeklogo-236154.png" },
   { name: "MAZAK", color: "#E60012", logo: "https://images.seeklogo.com/logo-png/32/1/mazak-logo-png_seeklogo-321946.png" },
   { name: "Rexroth", color: "#003366", logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
-  { name: "Panasonic", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Panasonic_logo_%28Blue%29.svg" },
+  { name: "Panasonic", color: "#003087", logo: "https://cdn.simpleicons.org/panasonic/003087", scale: 1.6 },
   { name: "B&R", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/B%26R_Logo_Tagline_below_RGB_HD.jpg" },
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg" },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg" },
@@ -1190,6 +1190,7 @@ export default function HomePage() {
                     src={brand.logo}
                     alt={brand.name}
                     className="w-full h-full object-contain"
+                    style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
                   />
                 </div>
               ))}
