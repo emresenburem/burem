@@ -1200,7 +1200,7 @@ export default function HomePage() {
             className="fixed top-[64px] left-1/2 -translate-x-1/2 z-30 pointer-events-none flex justify-center"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/6/62/Ataturk.svg"
+              src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
               alt="Atatürk silüeti"
               className="h-[150px] w-auto object-contain drop-shadow-md"
               style={{ opacity: 0.4, filter: "grayscale(1) contrast(1.15)" }}
