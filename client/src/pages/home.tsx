@@ -1021,6 +1021,7 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
+  const [quoteHover, setQuoteHover] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     setIsMobile(mq.matches);
@@ -1093,8 +1094,10 @@ export default function HomePage() {
       <header className="relative sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div
-          className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
+          className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 cursor-default"
           style={{ zIndex: 50 }}
+          onMouseEnter={() => setQuoteHover(true)}
+          onMouseLeave={() => setQuoteHover(false)}
         >
           <motion.span
             className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
@@ -1134,15 +1137,6 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028 + 0.15, ease: [0.22, 1, 0.36, 1] }}
           />
 
-          {/* Hover silüet */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 pointer-events-none flex justify-center">
-            <img
-              src="https://www.ataturkhediyelik.com/cdn/shop/products/ataturk-ve-turkiye-haritasi-metal-tablo-siyah-renk_1_720x.jpg?v=1751372287"
-              alt="Atatürk silüeti"
-              className="h-[150px] w-auto object-contain opacity-0 scale-90 group-hover:opacity-40 group-hover:scale-100 transition-all duration-400 ease-out drop-shadow-md"
-              style={{ filter: "grayscale(1) contrast(1.15)" }}
-            />
-          </div>
         </div>
 
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
@@ -1193,6 +1187,27 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      {/* Atatürk hover silüeti — header'ın hemen altında fixed */}
+      <AnimatePresence>
+        {quoteHover && (
+          <motion.div
+            key="ataturk-silhouette"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed top-[64px] left-1/2 -translate-x-1/2 z-30 pointer-events-none flex justify-center"
+          >
+            <img
+              src="https://www.ataturkhediyelik.com/cdn/shop/products/ataturk-ve-turkiye-haritasi-metal-tablo-siyah-renk_1_720x.jpg?v=1751372287"
+              alt="Atatürk silüeti"
+              className="h-[150px] w-auto object-contain drop-shadow-md"
+              style={{ opacity: 0.4, filter: "grayscale(1) contrast(1.15)" }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Marka logoları sonsuz slider */}
         <div className="relative w-full pt-8 pb-3 overflow-hidden">
