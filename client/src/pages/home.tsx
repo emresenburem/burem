@@ -1095,9 +1095,10 @@ export default function HomePage() {
         <div className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 pointer-events-none">
           <motion.span
             className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
-            initial={{ scaleX: 0, originX: 0 }}
+            initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+            style={{ transformOrigin: "left" }}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           />
           <motion.p
             className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap flex"
@@ -1106,9 +1107,9 @@ export default function HomePage() {
             {"Hayatta en hakiki mürşit ilimdir.".split("").map((char, i) => (
               <motion.span
                 key={i}
-                initial={{ opacity: 0, x: -6 }}
+                initial={{ opacity: 0, x: -4 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: 0.3 + i * 0.032, ease: "easeOut" }}
+                transition={{ duration: 0.35, delay: 0.4 + i * 0.028, ease: [0.22, 1, 0.36, 1] }}
               >
                 {char === " " ? "\u00A0" : char}
               </motion.span>
@@ -1118,15 +1119,16 @@ export default function HomePage() {
             src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
             alt="Mustafa Kemal Atatürk imzası"
             className="h-6"
-            initial={{ opacity: 0, x: -8 }}
+            initial={{ opacity: 0, x: -6 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: 0.3 + 34 * 0.032 }}
+            transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028, ease: [0.22, 1, 0.36, 1] }}
           />
           <motion.span
             className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
-            initial={{ scaleX: 0, originX: 0 }}
+            initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 0.4, delay: 0.3 + 34 * 0.032 + 0.1 }}
+            style={{ transformOrigin: "left" }}
+            transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028 + 0.15, ease: [0.22, 1, 0.36, 1] }}
           />
         </div>
 
