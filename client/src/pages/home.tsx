@@ -1093,16 +1093,16 @@ export default function HomePage() {
       <header className="relative sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 pointer-events-none">
-          <span className="w-8 h-px bg-foreground/40 flex-shrink-0" />
-          <p className="text-[10px] text-foreground/80 italic tracking-widest font-light whitespace-nowrap">
+          <span className="w-8 h-px bg-foreground/60 flex-shrink-0" />
+          <p className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap">
             Hayatta en hakiki mürşit ilimdir.
           </p>
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
             alt="Mustafa Kemal Atatürk imzası"
-            className="h-5 opacity-75"
+            className="h-6 opacity-100"
           />
-          <span className="w-8 h-px bg-foreground/40 flex-shrink-0" />
+          <span className="w-8 h-px bg-foreground/60 flex-shrink-0" />
         </div>
 
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
