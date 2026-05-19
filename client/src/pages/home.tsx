@@ -1097,6 +1097,20 @@ export default function HomePage() {
             <HeaderLogo />
           </div>
 
+          {/* Atatürk şeridi — nav'ın solunda, sadece geniş ekran */}
+          <div className="hidden lg:flex items-center gap-2 self-center">
+            <span className="w-8 h-px bg-foreground/20 flex-shrink-0" />
+            <p className="text-[10px] text-foreground/50 italic tracking-widest font-light whitespace-nowrap">
+              Hayatta en hakiki mürşit ilimdir.
+            </p>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
+              alt="Mustafa Kemal Atatürk imzası"
+              className="h-5 opacity-40"
+            />
+            <span className="w-8 h-px bg-foreground/20 flex-shrink-0" />
+          </div>
+
           {/* Nav — alt border'a yapışık */}
           <nav aria-label="Ana menü" className="hidden md:flex self-end gap-0">
             {[
