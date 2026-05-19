@@ -1184,6 +1184,7 @@ export default function HomePage() {
               Teklif iste
             </Button>
             <Button
+              variant="ghost"
               size="sm"
               onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
