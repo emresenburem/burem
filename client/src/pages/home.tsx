@@ -1144,10 +1144,21 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <div className="relative flex w-full items-center justify-between gap-3 px-4 md:px-6">
-          {/* Logo — sol */}
-          <div className="-ml-25 -mt-12 mb-[-2.5rem] flex-shrink-0">
-            <HeaderLogo />
+        <div className="relative flex w-full items-end justify-between gap-3 px-4 md:px-6 pt-12 pb-0">
+          {/* Dengeleyici spacer — sağdaki CTA genişliğini dengeler */}
+          <div className="hidden md:flex items-center gap-2 opacity-0 pointer-events-none pb-2" aria-hidden="true">
+            <Button variant="ghost" size="sm" className="text-sm font-medium">Teklif iste</Button>
+            <Button variant="ghost" size="sm" className="text-sm font-medium">İletişim <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Button>
+          </div>
+
+          {/* Logo — ortada, absolute */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+            <img
+              src="/burem-logo-big.png"
+              alt="Burem Elektronik"
+              className="h-14 w-auto object-contain"
+              data-testid="img-header-logo"
+            />
           </div>
 
           {/* Nav — sayfada ortalı, alt kenara yaslanmış */}
