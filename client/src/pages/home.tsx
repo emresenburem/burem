@@ -1200,7 +1200,7 @@ export default function HomePage() {
             className="fixed top-[64px] left-1/2 -translate-x-1/2 z-30 pointer-events-none flex justify-center"
           >
             <img
-              src="https://www.ataturkhediyelik.com/cdn/shop/products/ataturk-ve-turkiye-haritasi-metal-tablo-siyah-renk_1_720x.jpg?v=1751372287"
+              src="https://upload.wikimedia.org/wikipedia/commons/6/62/Ataturk.svg"
               alt="Atatürk silüeti"
               className="h-[150px] w-auto object-contain drop-shadow-md"
               style={{ opacity: 0.4, filter: "grayscale(1) contrast(1.15)" }}
