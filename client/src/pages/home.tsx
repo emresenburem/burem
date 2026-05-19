@@ -1072,21 +1072,18 @@ export default function HomePage() {
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
       <header className="sticky top-0 z-40 border-b border-border/40 bg-background/90 backdrop-blur-md">
-        <div className="flex h-16 w-full items-center justify-between px-6 md:px-8">
+        {/* Üst satır — logo tam genişlik, ortadan kırp */}
+        <img
+          src="/burem-logo-full.png"
+          alt="Burem Elektronik"
+          className="w-full h-28 object-cover object-center"
+          data-testid="img-logo"
+        />
 
-          {/* Logo */}
-          <img
-            src="/burem-logo-full.png"
-            alt="Burem Elektronik"
-            className="h-10 w-auto object-contain"
-            data-testid="img-logo"
-          />
-
-          {/* Nav — ortada */}
-          <nav
-            aria-label="Ana menü"
-            className="hidden md:flex items-center gap-1"
-          >
+        {/* Alt satır — nav ortada, CTA sağda */}
+        <div className="relative flex w-full items-center justify-center px-6 md:px-8 pb-1">
+          {/* Nav — ortalı */}
+          <nav aria-label="Ana menü" className="hidden md:flex items-center gap-1">
             {[
               { label: "Hizmetler", id: "services" },
               { label: "Süreç",     id: "process"  },
@@ -1104,8 +1101,8 @@ export default function HomePage() {
             <BrandsDropdown />
           </nav>
 
-          {/* CTA butonları — sağ */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* CTA — sağda absolute */}
+          <div className="hidden md:flex absolute right-6 md:right-8 items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
