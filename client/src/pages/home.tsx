@@ -1197,7 +1197,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-[64px] left-1/2 -translate-x-1/2 z-30 pointer-events-none flex justify-center"
+            className="fixed top-[64px] left-1/2 -translate-x-1/2 z-50 pointer-events-none flex justify-center"
           >
             <img
               src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
