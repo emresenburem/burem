@@ -1093,16 +1093,41 @@ export default function HomePage() {
       <header className="relative sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 pointer-events-none">
-          <span className="w-8 h-px bg-foreground/60 flex-shrink-0" />
-          <p className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap">
-            Hayatta en hakiki mürşit ilimdir.
-          </p>
-          <img
+          <motion.span
+            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          />
+          <motion.p
+            className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap flex"
+            aria-label="Hayatta en hakiki mürşit ilimdir."
+          >
+            {"Hayatta en hakiki mürşit ilimdir.".split("").map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: 0.3 + i * 0.032, ease: "easeOut" }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </motion.p>
+          <motion.img
             src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
             alt="Mustafa Kemal Atatürk imzası"
-            className="h-6 opacity-100"
+            className="h-6"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 + 34 * 0.032 }}
           />
-          <span className="w-8 h-px bg-foreground/60 flex-shrink-0" />
+          <motion.span
+            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.4, delay: 0.3 + 34 * 0.032 + 0.1 }}
+          />
         </div>
 
         <div className="flex w-full items-center justify-between gap-3 px-4 md:px-6">
