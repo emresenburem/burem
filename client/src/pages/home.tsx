@@ -1309,21 +1309,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Atatürk şeridi */}
-        <div className="w-full px-6 py-3 flex items-center justify-center gap-3">
-          <span className="hidden sm:block flex-shrink-0 w-16 h-px bg-foreground/20" />
-          <div className="flex items-center gap-3">
-            <p className="text-[11px] text-foreground/60 italic tracking-widest font-light">
-              Hayatta en hakiki mürşit ilimdir.
-            </p>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
-              alt="Mustafa Kemal Atatürk imzası"
-              className="h-7 opacity-50"
-            />
-          </div>
-          <span className="hidden sm:block flex-shrink-0 w-16 h-px bg-foreground/20" />
-        </div>
 
         {/* İnverter Video Bölümü */}
         <section ref={inverterSectionRef} className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
