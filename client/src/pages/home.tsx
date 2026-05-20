@@ -1077,18 +1077,18 @@ export default function HomePage() {
       <header className="relative sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div
-          className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
+          className="flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-1.5 group cursor-default"
           style={{ zIndex: 50 }}
         >
           <motion.span
-            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
+            className="w-5 lg:w-8 h-px bg-foreground/60 flex-shrink-0 block"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             style={{ transformOrigin: "left" }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           />
           <motion.p
-            className="text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap flex"
+            className="text-[9px] lg:text-[11px] text-foreground italic tracking-widest font-medium whitespace-nowrap flex"
             aria-label="Hayatta en hakiki mürşit ilimdir."
           >
             {"Hayatta en hakiki mürşit ilimdir.".split("").map((char, i) => (
@@ -1105,13 +1105,13 @@ export default function HomePage() {
           <motion.img
             src="https://upload.wikimedia.org/wikipedia/commons/4/46/Signature_of_Mustafa_Kemal_Atat%C3%BCrk.svg"
             alt="Mustafa Kemal Atatürk imzası"
-            className="h-6"
+            className="h-4 lg:h-6"
             initial={{ opacity: 0, x: -6 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 + 34 * 0.028, ease: [0.22, 1, 0.36, 1] }}
           />
           <motion.span
-            className="w-8 h-px bg-foreground/60 flex-shrink-0 block"
+            className="w-5 lg:w-8 h-px bg-foreground/60 flex-shrink-0 block"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             style={{ transformOrigin: "left" }}
@@ -1141,7 +1141,7 @@ export default function HomePage() {
             <img
               src="https://www.artepera.com/cdn/shop/files/APT828-Ataturk-Metal-Duvar-Tablosu_1.jpg?v=1751374066&width=1080"
               alt="Atatürk silüeti"
-              className="h-16 w-auto object-contain drop-shadow-md"
+              className="h-10 lg:h-16 w-auto object-contain drop-shadow-md"
               style={{ filter: "grayscale(1) contrast(1.15)" }}
             />
           </motion.div>
