@@ -10,74 +10,79 @@ const BRANDS = [
   { name: "Mitsubishi", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg" },
   { name: "Beckhoff",   logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg" },
   { name: "Fuji",       logo: "https://www.logo.wine/a/logo/Fuji_Electric/Fuji_Electric-Logo.wine.svg" },
-  { name: "Rexroth",    logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
   { name: "Lenze",      logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png" },
   { name: "Danfoss",    logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png" },
+  { name: "Rexroth",    logo: "https://www.logo.wine/a/logo/Bosch_Rexroth/Bosch_Rexroth-Logo.wine.svg" },
 ];
 
 const ORIGINAL_FAVICON = "/favicon.svg";
 const ORIGINAL_TITLE   = "Burem Elektronik | Endüstriyel Sürücü Tamiri";
-const INTERVAL_MS      = 900;
-
-const SLIDE_CHARS = 14;
+const TICK_MS          = 60;   // ms per character frame
+const HOLD_FRAMES      = 18;   // frames to hold full name
+const PAD              = 10;   // blank padding width
 
 function setFavicon(href: string) {
-  let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
-  }
+  const link = document.querySelector<HTMLLinkElement>("link[rel~='icon']")
+    ?? Object.assign(document.createElement("link"), { rel: "icon" });
+  if (!link.parentNode) document.head.appendChild(link);
   link.type = href.endsWith(".svg") ? "image/svg+xml" : "image/png";
-  link.href = href + (href.includes("?") ? "&" : "?") + "_t=" + Date.now();
+  link.href = href;
 }
 
 function restoreFavicon() {
-  let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
+  setFavicon(ORIGINAL_FAVICON);
+}
+
+// Build frame sequence for one brand: slide-in → hold → slide-out
+function buildFrames(name: string): string[] {
+  const label = `◀ ${name}`;
+  const frames: string[] = [];
+  const pad = " ".repeat(PAD);
+
+  // slide in: reveal characters left-to-right from right edge
+  for (let i = 1; i <= label.length; i++) {
+    frames.push(pad.slice(0, label.length - i) + label.slice(0, i));
   }
-  link.type = "image/svg+xml";
-  link.href = ORIGINAL_FAVICON;
+  // hold
+  for (let h = 0; h < HOLD_FRAMES; h++) frames.push(label);
+  // slide out: erase characters from left
+  for (let i = 1; i <= label.length; i++) {
+    frames.push(" ".repeat(i) + label.slice(i));
+  }
+
+  return frames;
 }
 
 export function useTabFavicon() {
   useEffect(() => {
-    let intervalId: ReturnType<typeof setInterval> | null = null;
-    let tickerInterval: ReturnType<typeof setInterval> | null = null;
-    let idx = 0;
+    let stopped = false;
+    let brandIdx = 0;
 
-    // Ticker: marquee-style title using the brand name
-    function startTicker(brandName: string) {
-      if (tickerInterval !== null) clearInterval(tickerInterval);
-      const label = `  ·  ${brandName}  ·  Burem Elektronik`;
-      let pos = 0;
-      tickerInterval = setInterval(() => {
-        const visible = (label + label).slice(pos, pos + SLIDE_CHARS);
-        document.title = visible + "  ◀";
-        pos = (pos + 1) % label.length;
-      }, 80);
+    async function runAnimation() {
+      while (!stopped) {
+        const brand = BRANDS[brandIdx % BRANDS.length];
+
+        // Switch favicon + start this brand's slide
+        setFavicon(brand.logo);
+        const frames = buildFrames(brand.name);
+
+        for (const frame of frames) {
+          if (stopped) return;
+          document.title = frame;
+          await new Promise<void>((r) => setTimeout(r, TICK_MS));
+        }
+
+        brandIdx++;
+      }
     }
 
     function onVisibilityChange() {
       if (document.hidden) {
-        idx = 0;
-        const brand = BRANDS[idx % BRANDS.length];
-        setFavicon(brand.logo);
-        startTicker(brand.name);
-
-        intervalId = setInterval(() => {
-          idx++;
-          const b = BRANDS[idx % BRANDS.length];
-          setFavicon(b.logo);
-          startTicker(b.name);
-        }, INTERVAL_MS);
+        stopped = false;
+        brandIdx = 0;
+        runAnimation();
       } else {
-        if (intervalId !== null)   { clearInterval(intervalId);  intervalId = null; }
-        if (tickerInterval !== null) { clearInterval(tickerInterval); tickerInterval = null; }
-        idx = 0;
+        stopped = true;
         restoreFavicon();
         document.title = ORIGINAL_TITLE;
       }
@@ -85,9 +90,8 @@ export function useTabFavicon() {
 
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
+      stopped = true;
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      if (intervalId !== null)    clearInterval(intervalId);
-      if (tickerInterval !== null) clearInterval(tickerInterval);
       restoreFavicon();
       document.title = ORIGINAL_TITLE;
     };
