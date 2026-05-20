@@ -416,7 +416,7 @@ function AnimatedServicesSection() {
   return (
     <section
       id="services"
-      className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20"
+      className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20 scroll-mt-24"
       data-testid="section-services"
     >
       <div className="flex flex-col items-center text-center gap-4 mb-14">
@@ -499,7 +499,7 @@ function AnimatedProcessSection() {
   return (
     <section
       id="process"
-      className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24"
+      className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24 scroll-mt-24"
       data-testid="section-process"
     >
       <div className="flex flex-col items-center text-center gap-4 mb-14">
@@ -853,7 +853,7 @@ function ProductsShowcase() {
 
   if (isLoading) {
     return (
-      <section id="products" className="mx-auto w-full max-w-6xl px-4 md:px-6">
+      <section id="products" className="mx-auto w-full max-w-6xl px-4 md:px-6 scroll-mt-24">
         <div className="flex items-center gap-3 mb-6 px-4">
           <Package className="h-6 w-6 text-primary" />
           <div className="h-7 w-48 bg-muted rounded animate-pulse" />
@@ -872,7 +872,7 @@ function ProductsShowcase() {
   }
 
   return (
-    <section id="products" className="mx-auto w-full max-w-6xl md:px-2" data-testid="products-showcase">
+    <section id="products" className="mx-auto w-full max-w-6xl md:px-2 scroll-mt-24" data-testid="products-showcase">
       <ProductCarousel
         title="Yedek Parça Mağazası"
         products={products}
@@ -1341,7 +1341,7 @@ export default function HomePage() {
 
         <section
           id="contact"
-          className="mx-auto w-full max-w-6xl px-4 pb-16 md:px-6"
+          className="mx-auto w-full max-w-6xl px-4 pb-16 md:px-6 scroll-mt-24"
         >
           <div className="grid gap-5 md:grid-cols-[1fr_1fr]">
             <Card className="rounded-3xl border bg-card p-6 shadow-elevated">
