@@ -265,7 +265,7 @@ export function CinematicFooter() {
                 <GsapButton
                   as="a"
                   href="#services"
-                  onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById("services")?.scrollIntoView({ behavior: "smooth" }); }}
+                  onClick={(e: React.MouseEvent) => { e.preventDefault(); const el = document.getElementById("services"); if (el) { const h = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 80; window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - h - 16, behavior: "smooth" }); } }}
                   className="cf-pill px-5 py-2.5 rounded-full text-muted-foreground font-medium text-xs hover:text-foreground"
                 >
                   Hizmetler
@@ -273,7 +273,7 @@ export function CinematicFooter() {
                 <GsapButton
                   as="a"
                   href="#process"
-                  onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById("process")?.scrollIntoView({ behavior: "smooth" }); }}
+                  onClick={(e: React.MouseEvent) => { e.preventDefault(); const el = document.getElementById("process"); if (el) { const h = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 80; window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - h - 16, behavior: "smooth" }); } }}
                   className="cf-pill px-5 py-2.5 rounded-full text-muted-foreground font-medium text-xs hover:text-foreground"
                 >
                   Süreç
@@ -281,7 +281,7 @@ export function CinematicFooter() {
                 <GsapButton
                   as="a"
                   href="#products"
-                  onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById("products")?.scrollIntoView({ behavior: "smooth" }); }}
+                  onClick={(e: React.MouseEvent) => { e.preventDefault(); const el = document.getElementById("products"); if (el) { const h = (document.querySelector("header") as HTMLElement)?.offsetHeight ?? 80; window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - h - 16, behavior: "smooth" }); } }}
                   className="cf-pill px-5 py-2.5 rounded-full text-muted-foreground font-medium text-xs hover:text-foreground"
                 >
                   Yedek Parça

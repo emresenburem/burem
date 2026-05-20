@@ -645,7 +645,10 @@ function useScrollSpy(ids: string[]) {
 function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const header = document.querySelector("header");
+  const offset = header ? header.getBoundingClientRect().height : 80;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset - 16;
+  window.scrollTo({ top, behavior: "smooth" });
 }
 
 function InteractiveGradient() {
@@ -982,7 +985,7 @@ function BrandsDropdown() {
                     Listemizde olmayan markalar için —
                   </span>
                   <button
-                    onClick={() => { document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); setOpen(false); }}
+                    onClick={() => { scrollToId("contact"); setOpen(false); }}
                     className="text-[20px] font-semibold text-primary hover:underline"
                   >
                     bize danışın →
