@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home";
 import BrandPage from "@/pages/brand-detail";
 import { useGlobalClickSound } from "@/hooks/use-click-sound";
+import { useTabFavicon } from "@/hooks/use-tab-favicon";
 import { motion } from "framer-motion";
 
 function WhatsAppButton() {
@@ -45,6 +46,7 @@ function Router() {
 
 function ClickSoundProvider({ children }: { children: React.ReactNode }) {
   useGlobalClickSound();
+  useTabFavicon();
   return <>{children}</>;
 }
 
