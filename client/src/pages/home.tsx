@@ -727,7 +727,7 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
         <img
           src={company.logo}
           alt={company.name}
-          className={`max-h-10 max-w-full w-auto mx-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
+          className={`w-full h-10 object-contain object-center opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
           onError={() => setImgError(true)}
         />
       ) : (
