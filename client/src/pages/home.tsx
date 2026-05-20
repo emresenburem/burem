@@ -1286,27 +1286,6 @@ export default function HomePage() {
                 </MagneticButton>
               </motion.div>
 
-              <motion.div
-                className="mt-8 grid gap-3 sm:grid-cols-3"
-                initial={preferReducedMotion ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.80, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {["Hızlı dönüş", "Testli teslim", "Kontrollü onarım"].map((t) => (
-                  <div
-                    key={t}
-                    className="flex items-center gap-2 rounded-2xl border bg-muted px-3 py-2 text-sm shadow-soft"
-                    data-testid={`pill-${t}`}
-                  >
-                    <CheckCircle2
-                      className="h-4 w-4"
-                      style={{ color: "hsl(var(--accent))" }}
-                      aria-hidden="true"
-                    />
-                    <span className="text-muted-foreground">{t}</span>
-                  </div>
-                ))}
-              </motion.div>
             </div>
 
           </div>
@@ -1429,14 +1408,6 @@ export default function HomePage() {
                     title: "Detaylı arıza analizi",
                     description: "Komponent düzeyinde inceleme; gereksiz parça değişimi yapılmaz.",
                     icon: <ScanLine strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                  {
-                    id: 6,
-                    title: "Test ile teslim",
-                    description: "Her cihaz yük altında test edilip, stabilite kontrolünden geçirilerek teslim edilir.",
-                    icon: <PackageCheck strokeWidth={1.3} />,
                     particleColor: "#94a3b8",
                     gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
                   },
