@@ -1303,12 +1303,23 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                <Badge
-                  className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
-                  data-testid="badge-hero"
-                >
-                  Elektronik sürücü tamiri · Endüstriyel servis
-                </Badge>
+                <div className="flex flex-wrap gap-2" data-testid="badge-hero-group">
+                  {[
+                    "Sürücü tamiri",
+                    "Endüstriyel elektronik",
+                    "Hızlı arıza tespiti",
+                    "PLC tamiri",
+                    "Ultrasonik Kaynak tamiri",
+                  ].map((label) => (
+                    <Badge
+                      key={label}
+                      className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                      data-testid={`badge-hero-${label}`}
+                    >
+                      {label}
+                    </Badge>
+                  ))}
+                </div>
               </motion.div>
 
               <motion.h1
