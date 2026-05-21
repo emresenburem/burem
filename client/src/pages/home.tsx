@@ -423,10 +423,10 @@ function AnimatedServicesSection() {
   return (
     <section
       id="services"
-      className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20 scroll-mt-24"
+      className="w-full pb-10 md:pb-20 scroll-mt-24"
       data-testid="section-services"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      <div className="flex flex-col items-center text-center gap-4 mb-14 px-4 md:px-6">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-services-eyebrow">
           Neler yapıyoruz
         </p>
@@ -499,7 +499,7 @@ function AnimatedServicesSection() {
             icon: <CircuitBoard strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/plc.jpg",
+            image: "/services/plc.png",
           },
           {
             id: 5,
@@ -527,10 +527,10 @@ function AnimatedProcessSection() {
   return (
     <section
       id="process"
-      className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24 scroll-mt-24"
+      className="w-full pb-14 md:pb-24 scroll-mt-24"
       data-testid="section-process"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      <div className="flex flex-col items-center text-center gap-4 mb-14 px-4 md:px-6">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-process-eyebrow">
           Nasıl çalışıyoruz
         </p>
@@ -624,7 +624,7 @@ function AnimatedProcessSection() {
             icon: <Wrench strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/step-repair.webp",
+            image: "/services/step-repair.jpg",
           },
         ]}
       />
