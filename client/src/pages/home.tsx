@@ -72,6 +72,7 @@ const BRANDS = [
   { name: "B&R", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/B%26R_Logo_Tagline_below_RGB_HD.jpg", scale: 0.65 },
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg", scale: 2.2 },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg", scale: 0.65 },
+  { name: "Mecasonic", color: "#003366", logo: "https://www.mecasonic.com/wp-content/uploads/2020/07/LOGO-MECA.png", scale: 1.3 },
 ];
 
 
@@ -911,7 +912,7 @@ function BrandsDropdown() {
             : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        Markalar
+        Satış
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
           <ChevronDown className="h-3 w-3" />
         </motion.span>
@@ -940,7 +941,7 @@ function BrandsDropdown() {
                 {/* Başlık */}
                 <div className="flex items-center justify-between mb-5">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Tamir ettiğimiz markalar
+                    
                   </p>
                   <span className="text-[10px] text-muted-foreground/60">{BRANDS.length} marka</span>
                 </div>
