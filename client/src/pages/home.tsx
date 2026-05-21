@@ -1219,74 +1219,75 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        <section className="relative min-h-screen overflow-hidden bg-[#050914] text-white">
-          {/* Ana koyu gradient */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(34,93,180,0.22),transparent_35%),radial-gradient(circle_at_80%_60%,rgba(0,180,255,0.12),transparent_30%),linear-gradient(135deg,#050914_0%,#071120_45%,#02040a_100%)]" />
-
-          {/* Teknik grid */}
-          <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.25)_1px,transparent_1px)] bg-[size:48px_48px]" />
-
-          {/* İnce scan çizgileri */}
-          <div className="absolute inset-0 opacity-[0.06] bg-[repeating-linear-gradient(0deg,transparent_0px,transparent_6px,rgba(255,255,255,0.5)_7px)]" />
-
-          {/* Logo watermark */}
-          <img
-            src="/logo.png"
-            alt=""
-            className="absolute right-[-80px] top-1/2 w-[520px] -translate-y-1/2 opacity-[0.035] blur-[1px] pointer-events-none select-none"
-          />
-
-          {/* Hafif ışık çizgisi */}
-          <div className="absolute left-0 top-24 h-px w-full bg-gradient-to-r from-transparent via-blue-400/30 to-transparent" />
-
-          {/* İçerik */}
-          <div className="relative z-10 mx-auto max-w-7xl px-6 py-28">
-            <motion.h1
-              className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl"
-              style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-              data-testid="text-hero-title"
-              initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              Endüstriyel Sürücü Onarımında Güvenilir Teknik Çözüm
-            </motion.h1>
-
-            <motion.p
-              className="mt-6 max-w-2xl text-lg text-slate-300"
-              data-testid="text-hero-subtitle"
-              initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
-            >
-              İnverter, servo sürücü ve endüstriyel elektronik kartlarda doğru arıza tespiti,
-              profesyonel onarım ve kontrollü teslim süreci.
-            </motion.p>
-
-            <motion.div
-              className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center"
-              initial={preferReducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.62, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <MagneticButton
-                className="h-11"
-                onClick={() => scrollToId("contact")}
-                data-testid="button-hero-contact"
+        <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
+          <div className="grid items-start gap-8">
+            <div>
+              <motion.div
+                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                Hemen iletişime geç
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </MagneticButton>
+                <Badge
+                  className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                  data-testid="badge-hero"
+                >
+                  Elektronik sürücü tamiri · Endüstriyel servis
+                </Badge>
+              </motion.div>
 
-              <MagneticButton
-                variant="secondary"
-                className="h-11 border-white/20 bg-white/5 text-white hover:bg-white/10"
-                onClick={() => scrollToId("services")}
-                data-testid="button-hero-services"
+              <motion.h1
+                className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-6xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+                data-testid="text-hero-title"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
-                Hizmetleri gör
-              </MagneticButton>
-            </motion.div>
+                Sürücünüz arızalandıysa,
+                <span className="block text-foreground">
+                  doğru teşhisle hızlıca ayağa kaldıralım.
+                </span>
+              </motion.h1>
+
+              <motion.p
+                className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
+                data-testid="text-hero-subtitle"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.56, ease: [0.22, 1, 0.36, 1] }}
+              >
+                Burem Elektronik; inverter, servo sürücü ve endüstriyel elektronik
+                kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
+                şekilde yönetir.
+              </motion.p>
+
+              <motion.div
+                className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
+                initial={preferReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <MagneticButton
+                  className="h-11"
+                  onClick={() => scrollToId("contact")}
+                  data-testid="button-hero-contact"
+                >
+                  Hemen iletişime geç
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                </MagneticButton>
+
+                <MagneticButton
+                  variant="secondary"
+                  className="h-11"
+                  onClick={() => scrollToId("services")}
+                  data-testid="button-hero-services"
+                >
+                  Hizmetleri gör
+                </MagneticButton>
+              </motion.div>
+
+            </div>
+
           </div>
         </section>
 
