@@ -242,6 +242,16 @@ const SERVICES = [
     desc: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
     icon: Timer,
   },
+  {
+    title: "PLC Tamiri",
+    desc: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
+    icon: Binary,
+  },
+  {
+    title: "Ultrasonik Kaynak Tamiri",
+    desc: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
+    icon: Flame,
+  },
 ];
 
 const STEPS = [
@@ -480,6 +490,22 @@ function AnimatedServicesSection() {
             title: "Hızlı Arıza Tespiti",
             description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
             icon: <Search strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+          },
+          {
+            id: 4,
+            title: "PLC Tamiri",
+            description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
+            icon: <Binary strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+          },
+          {
+            id: 5,
+            title: "Ultrasonik Kaynak Tamiri",
+            description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
+            icon: <Flame strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
