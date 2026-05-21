@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -411,6 +412,39 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
   );
 }
 
+const SERVICE_CARDS = [
+  {
+    id: 1,
+    title: "Sürücü Tamiri",
+    description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
+    image: "/services/drive.png",
+  },
+  {
+    id: 2,
+    title: "Endüstriyel Elektronik",
+    description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
+    image: "/services/pcb.jpg",
+  },
+  {
+    id: 3,
+    title: "Hızlı Arıza Tespiti",
+    description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+    image: "/services/step-inspection.jpg",
+  },
+  {
+    id: 4,
+    title: "PLC Tamiri",
+    description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
+    image: "/services/plc.jpg",
+  },
+  {
+    id: 5,
+    title: "Ultrasonik Kaynak Tamiri",
+    description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
+    image: "/services/ultrasonic.jpg",
+  },
+];
+
 function AnimatedServicesSection() {
   return (
     <section
@@ -418,57 +452,41 @@ function AnimatedServicesSection() {
       className="w-full pb-10 md:pb-20 scroll-mt-24"
       data-testid="section-services"
     >
-      <div className="px-4 md:px-6">
-      <ImageAccordion
-        defaultActive={0}
-        items={[
-          {
-            id: 1,
-            title: "Sürücü Tamiri",
-            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
-            icon: <Zap strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/drive.png",
-          },
-          {
-            id: 2,
-            title: "Endüstriyel Elektronik",
-            description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
-            icon: <Cpu strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/pcb.jpg",
-          },
-          {
-            id: 3,
-            title: "Hızlı Arıza Tespiti",
-            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
-            icon: <Search strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/diagnostic.jpg",
-          },
-          {
-            id: 4,
-            title: "PLC Tamiri",
-            description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
-            icon: <CircuitBoard strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/plc.jpg",
-          },
-          {
-            id: 5,
-            title: "Ultrasonik Kaynak Tamiri",
-            description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
-            icon: <Waves strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/ultrasonic.jpg",
-          },
-        ]}
-      />
+      <div className="relative w-full overflow-hidden">
+        <InfiniteSlider duration={40} durationOnHover={80} gap={20} className="py-2">
+          {SERVICE_CARDS.map((card) => (
+            <div
+              key={card.id}
+              data-testid={`card-service-${card.id}`}
+              className="relative flex-shrink-0 w-[320px] md:w-[400px] h-[480px] rounded-2xl overflow-hidden group cursor-pointer"
+            >
+              <img
+                src={card.image}
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="text-white text-xl font-bold mb-2" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+                  {card.title}
+                </h3>
+                <p className="text-white/75 text-sm leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </InfiniteSlider>
+        <ProgressiveBlur
+          className="pointer-events-none absolute top-0 left-0 h-full w-[180px]"
+          direction="left"
+          blurIntensity={0.8}
+        />
+        <ProgressiveBlur
+          className="pointer-events-none absolute top-0 right-0 h-full w-[180px]"
+          direction="right"
+          blurIntensity={0.8}
+        />
       </div>
     </section>
   );
