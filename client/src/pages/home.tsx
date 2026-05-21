@@ -423,10 +423,10 @@ function AnimatedServicesSection() {
   return (
     <section
       id="services"
-      className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-20 scroll-mt-24"
+      className="w-full pb-10 md:pb-20 scroll-mt-24"
       data-testid="section-services"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      <div className="mx-auto max-w-6xl px-4 md:px-6 flex flex-col items-center text-center gap-4 mb-14">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-services-eyebrow">
           Neler yapıyoruz
         </p>
@@ -462,6 +462,7 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
+      <div className="px-4 md:px-6">
       <ImageAccordion
         defaultActive={0}
         items={[
@@ -512,6 +513,7 @@ function AnimatedServicesSection() {
           },
         ]}
       />
+      </div>
     </section>
   );
 }
@@ -527,10 +529,10 @@ function AnimatedProcessSection() {
   return (
     <section
       id="process"
-      className="mx-auto w-full max-w-5xl px-4 pb-14 md:px-6 md:pb-24 scroll-mt-24"
+      className="w-full pb-14 md:pb-24 scroll-mt-24"
       data-testid="section-process"
     >
-      <div className="flex flex-col items-center text-center gap-4 mb-14">
+      <div className="mx-auto max-w-5xl px-4 md:px-6 flex flex-col items-center text-center gap-4 mb-14">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-process-eyebrow">
           Nasıl çalışıyoruz
         </p>
@@ -596,6 +598,7 @@ function AnimatedProcessSection() {
         </div>
       </div>
 
+      <div className="px-4 md:px-6">
       <ImageAccordion
         defaultActive={0}
         items={[
@@ -628,6 +631,7 @@ function AnimatedProcessSection() {
           },
         ]}
       />
+      </div>
     </section>
   );
 }
