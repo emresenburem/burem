@@ -72,7 +72,7 @@ const BRANDS = [
   { name: "B&R", color: "#003366", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/B%26R_Logo_Tagline_below_RGB_HD.jpg", scale: 0.65 },
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg", scale: 2.2 },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg", scale: 0.65 },
-  { name: "Mecasonic", color: "#003366", logo: new URL("../assets/logos/mecasonic.png", import.meta.url).href, scale: 1.3 },
+  { name: "Mecasonic", color: "#003366", logo: new URL("../assets/logos/mecasonic.png", import.meta.url).href, w: 180 },
 ];
 
 
@@ -1197,12 +1197,16 @@ export default function HomePage() {
           <div className="relative h-16 w-full">
             <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
               {BRANDS.map((brand) => (
-                <div key={brand.name} className="flex items-center justify-center h-10 w-28 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105">
+                <div
+                  key={brand.name}
+                  className="flex items-center justify-center h-10 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105"
+                  style={{ width: (brand as any).w ? `${(brand as any).w}px` : "7rem" }}
+                >
                   <img
                     src={brand.logo}
                     alt={brand.name}
                     className="w-full h-full object-contain"
-                    style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
+                    style={(brand as any).scale && !(brand as any).w ? { transform: `scale(${(brand as any).scale})` } : undefined}
                   />
                 </div>
               ))}
@@ -1248,7 +1252,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.56, ease: [0.22, 1, 0.36, 1] }}
               >
-                Burem Elektronik; inverter, servo sürücü ve endüstriyel elektronik
+                Burem Elektronik; inverter, servo sürücü, PLC, ultrasonik kaynak makinaları ve endüstriyel elektronik
                 kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
                 şekilde yönetir.
               </motion.p>
