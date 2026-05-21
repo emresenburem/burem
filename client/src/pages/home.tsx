@@ -751,9 +751,9 @@ function DockBrandSlider() {
     rafRef.current = requestAnimationFrame(() => {
       if (!containerRef.current) return;
       const items = containerRef.current.querySelectorAll<HTMLElement>(".dock-logo");
-      const RANGE = 120;
-      const MAX_SCALE = 2.2;
-      const MID_SCALE = 1.5;
+      const RANGE = 100;
+      const MAX_SCALE = 3.0;
+      const MID_SCALE = 1.9;
       items.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
@@ -785,20 +785,26 @@ function DockBrandSlider() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full pt-8 pb-3 overflow-hidden"
+      className="relative w-full pt-10 pb-10"
+      style={{ overflow: "visible" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="relative h-16 w-full">
-        <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
+      <div className="relative h-14 w-full" style={{ overflow: "visible" }}>
+        <InfiniteSlider
+          className="flex h-full w-full items-center !overflow-visible"
+          duration={35}
+          gap={48}
+        >
           {BRANDS.map((brand) => (
             <div
               key={brand.name}
               className="dock-logo flex items-center justify-center h-10 flex-shrink-0 opacity-70"
               style={{
                 width: (brand as any).w ? `${(brand as any).w}px` : "7rem",
-                transition: "transform 0.18s cubic-bezier(0.34,1.56,0.64,1), opacity 0.18s ease",
-                transformOrigin: "bottom center",
+                transition: "transform 0.15s cubic-bezier(0.34,1.4,0.64,1), opacity 0.15s ease",
+                transformOrigin: "center bottom",
+                willChange: "transform",
               }}
             >
               <img
