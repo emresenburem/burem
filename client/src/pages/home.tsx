@@ -429,7 +429,7 @@ const SERVICE_CARDS = [
     id: 3,
     title: "Hızlı Arıza Tespiti",
     description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
-    image: "/services/step-diagnostic.jpg",
+    image: "/services/step-inspection.jpg",
   },
   {
     id: 4,
