@@ -478,7 +478,7 @@ function AnimatedServicesSection() {
             icon: <Zap strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/drive.jpg",
+            image: "/services/drive.png",
           },
           {
             id: 2,
