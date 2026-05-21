@@ -50,7 +50,6 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
-import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
@@ -463,45 +462,57 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
-      <div className="relative w-full overflow-hidden">
-        <InfiniteSlider className="flex h-full w-full items-stretch !overflow-visible" duration={40} gap={20}>
-          {[
-            { title: "Sürücü Tamiri", desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.", image: "/services/drive.png", icon: <Zap className="h-5 w-5" /> },
-            { title: "Endüstriyel Elektronik", desc: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.", image: "/services/pcb.jpg", icon: <Cpu className="h-5 w-5" /> },
-            { title: "Hızlı Arıza Tespiti", desc: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.", image: "/services/diagnostic.jpg", icon: <Search className="h-5 w-5" /> },
-            { title: "PLC Tamiri", desc: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.", image: "/services/plc.jpg", icon: <CircuitBoard className="h-5 w-5" /> },
-            { title: "Ultrasonik Kaynak Tamiri", desc: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.", image: "/services/ultrasonic.jpg", icon: <Waves className="h-5 w-5" /> },
-          ].map((s) => (
-            <div
-              key={s.title}
-              className="relative flex-shrink-0 w-72 md:w-96 h-[480px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm group"
-              data-testid={`card-service-${s.title}`}
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url(${s.image})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="flex items-center gap-2 mb-2 text-white/80">
-                  {s.icon}
-                </div>
-                <p className="text-white text-xl font-bold leading-tight tracking-tight">{s.title}</p>
-                <p className="text-white/70 text-sm mt-2 leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </InfiniteSlider>
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 left-0 h-full w-40 md:w-56"
-          direction="left"
-          blurIntensity={0.8}
-        />
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 right-0 h-full w-40 md:w-56"
-          direction="right"
-          blurIntensity={0.8}
-        />
+      <div className="px-4 md:px-6">
+      <ImageAccordion
+        defaultActive={0}
+        items={[
+          {
+            id: 1,
+            title: "Sürücü Tamiri",
+            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
+            icon: <Zap strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/drive.png",
+          },
+          {
+            id: 2,
+            title: "Endüstriyel Elektronik",
+            description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
+            icon: <Cpu strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/pcb.jpg",
+          },
+          {
+            id: 3,
+            title: "Hızlı Arıza Tespiti",
+            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
+            icon: <Search strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/diagnostic.jpg",
+          },
+          {
+            id: 4,
+            title: "PLC Tamiri",
+            description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
+            icon: <CircuitBoard strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/plc.jpg",
+          },
+          {
+            id: 5,
+            title: "Ultrasonik Kaynak Tamiri",
+            description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
+            icon: <Waves strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/ultrasonic.jpg",
+          },
+        ]}
+      />
       </div>
     </section>
   );
@@ -515,19 +526,13 @@ function AnimatedProcessSection() {
     return () => clearInterval(id);
   }, []);
 
-  const processCards = [
-    { title: "Ön İnceleme", desc: "Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır.", image: "/services/step-inspection.jpg", icon: <ClipboardList className="h-5 w-5" />, step: "01" },
-    { title: "Arıza Tespiti", desc: "Komponent düzeyinde detaylı teknik arıza analizi yapılır.", image: "/services/step-diagnostic.jpg", icon: <ScanLine className="h-5 w-5" />, step: "02" },
-    { title: "Onarım + Parça", desc: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.", image: "/services/step-repair.webp", icon: <Wrench className="h-5 w-5" />, step: "03" },
-  ];
-
   return (
     <section
       id="process"
-      className="w-full pb-10 md:pb-20 scroll-mt-24"
+      className="w-full pb-14 md:pb-24 scroll-mt-24"
       data-testid="section-process"
     >
-      <div className="mx-auto max-w-6xl px-4 md:px-6 flex flex-col items-center text-center gap-4 mb-14">
+      <div className="mx-auto max-w-5xl px-4 md:px-6 flex flex-col items-center text-center gap-4 mb-14">
         <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-process-eyebrow">
           Nasıl çalışıyoruz
         </p>
@@ -558,47 +563,74 @@ function AnimatedProcessSection() {
             ))}
           </span>
         </h2>
-        <p className="text-base text-muted-foreground max-w-md" data-testid="text-process-subtitle">
-          Her arıza için aynı titizlik: net tespit, temiz onarım, güvenilir teslim.
-        </p>
+
+        <div className="relative h-10 overflow-hidden w-full max-w-lg">
+          {STEPS.map((step, i) => (
+            <motion.p
+              key={i}
+              className="absolute inset-x-0 text-sm text-muted-foreground"
+              initial={{ opacity: 0, y: 24 }}
+              animate={
+                current === i
+                  ? { y: 0, opacity: 1 }
+                  : { y: current > i ? -24 : 24, opacity: 0 }
+              }
+              transition={{ type: "spring", stiffness: 60, damping: 15, delay: 0.05 }}
+              data-testid={`text-process-step-desc-${i}`}
+            >
+              {step.desc}
+            </motion.p>
+          ))}
+        </div>
+
+        <div className="flex gap-2 mt-2">
+          {STEPS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                current === i ? "w-8 bg-primary" : "w-2 bg-muted-foreground/30"
+              }`}
+              data-testid={`dot-process-${i}`}
+              aria-label={`Adım ${i + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="relative w-full overflow-hidden">
-        <InfiniteSlider className="flex h-full w-full items-stretch !overflow-visible" duration={35} gap={20} reverse>
-          {[...processCards, ...processCards].map((s, idx) => (
-            <div
-              key={`${s.title}-${idx}`}
-              className="relative flex-shrink-0 w-72 md:w-96 h-[480px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm group"
-              data-testid={`card-process-${s.title}`}
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url(${s.image})` }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute top-5 left-5">
-                <span className="text-white/40 text-5xl font-black leading-none select-none">{s.step}</span>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="flex items-center gap-2 mb-2 text-white/80">
-                  {s.icon}
-                </div>
-                <p className="text-white text-xl font-bold leading-tight tracking-tight">{s.title}</p>
-                <p className="text-white/70 text-sm mt-2 leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </InfiniteSlider>
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 left-0 h-full w-40 md:w-56"
-          direction="left"
-          blurIntensity={0.8}
-        />
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 right-0 h-full w-40 md:w-56"
-          direction="right"
-          blurIntensity={0.8}
-        />
+      <div className="px-4 md:px-6">
+      <ImageAccordion
+        defaultActive={0}
+        items={[
+          {
+            id: 1,
+            title: "Ön İnceleme",
+            description: "Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır.",
+            icon: <ClipboardList strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-inspection.jpg",
+          },
+          {
+            id: 2,
+            title: "Arıza Tespiti",
+            description: "Komponent düzeyinde detaylı teknik arıza analizi yapılır.",
+            icon: <ScanLine strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-diagnostic.jpg",
+          },
+          {
+            id: 3,
+            title: "Onarım + Parça",
+            description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
+            icon: <Wrench strokeWidth={1.2} />,
+            particleColor: "#94a3b8",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-repair.webp",
+          },
+        ]}
+      />
       </div>
     </section>
   );
@@ -1413,8 +1445,6 @@ export default function HomePage() {
         </section>
 
         <AnimatedServicesSection />
-
-        <AnimatedProcessSection />
 
         <ProductsShowcase />
 
