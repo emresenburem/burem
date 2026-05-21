@@ -477,16 +477,6 @@ function AnimatedServicesSection() {
             </div>
           ))}
         </InfiniteSlider>
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 left-0 h-full w-[180px]"
-          direction="left"
-          blurIntensity={0.8}
-        />
-        <ProgressiveBlur
-          className="pointer-events-none absolute top-0 right-0 h-full w-[180px]"
-          direction="right"
-          blurIntensity={0.8}
-        />
       </div>
     </section>
   );
