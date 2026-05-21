@@ -1369,8 +1369,8 @@ export default function HomePage() {
         </section>
 
         {/* İnverter Video Bölümü */}
-        <section ref={inverterSectionRef} className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6 md:pb-16" data-testid="section-inverter-3d">
-          <div className="relative w-full h-[480px] md:h-[560px] rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-elevated">
+        <section ref={inverterSectionRef} className="w-full pb-10 md:pb-16" data-testid="section-inverter-3d">
+          <div className="relative w-full h-[480px] md:h-[560px] overflow-hidden bg-zinc-950">
             {/* Video — tam karta dolu */}
             <InverterScrollVideo sectionRef={inverterSectionRef} />
 
