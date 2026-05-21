@@ -1285,15 +1285,24 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        <section className="mx-auto w-full max-w-6xl px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
-          <div className="grid items-start gap-8">
-            <div>
+        {/* Hero — Video + Yazı Birleşik */}
+        <section ref={inverterSectionRef} className="w-full pb-10 md:pb-16" data-testid="section-inverter-3d">
+          <div className="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-zinc-950">
+            {/* Video arka plan */}
+            <InverterScrollVideo sectionRef={inverterSectionRef} />
+
+            {/* Karartma overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/40 to-zinc-950/20" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+
+            {/* Hero yazıları — sol altta */}
+            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-12 md:py-14 max-w-3xl">
               <motion.div
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="flex flex-wrap gap-2" data-testid="badge-hero-group">
+                <div className="flex flex-wrap gap-2 mb-5" data-testid="badge-hero-group">
                   {[
                     "Sürücü tamiri",
                     "Endüstriyel elektronik",
@@ -1303,7 +1312,7 @@ export default function HomePage() {
                   ].map((label) => (
                     <Badge
                       key={label}
-                      className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                      className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white shadow-soft"
                       data-testid={`badge-hero-${label}`}
                     >
                       {label}
@@ -1313,7 +1322,7 @@ export default function HomePage() {
               </motion.div>
 
               <motion.h1
-                className="mt-4 text-balance text-4xl font-semibold tracking-tight md:text-6xl"
+                className="text-balance text-4xl font-semibold tracking-tight text-white md:text-6xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-hero-title"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
@@ -1321,21 +1330,20 @@ export default function HomePage() {
                 transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 Sürücünüz arızalandıysa,
-                <span className="block text-foreground">
+                <span className="block text-white">
                   doğru teşhisle hızlıca ayağa kaldıralım.
                 </span>
               </motion.h1>
 
               <motion.p
-                className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
+                className="mt-4 max-w-xl text-pretty text-base text-zinc-300 md:text-lg"
                 data-testid="text-hero-subtitle"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.56, ease: [0.22, 1, 0.36, 1] }}
               >
                 Burem Elektronik; inverter, servo sürücü, PLC, ultrasonik kaynak makinaları ve endüstriyel elektronik
-                kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir
-                şekilde yönetir.
+                kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir şekilde yönetir.
               </motion.p>
 
               <motion.div
@@ -1355,55 +1363,13 @@ export default function HomePage() {
 
                 <MagneticButton
                   variant="secondary"
-                  className="h-11"
+                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
                   Hizmetleri gör
                 </MagneticButton>
               </motion.div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* İnverter Video Bölümü */}
-        <section ref={inverterSectionRef} className="w-full pb-10 md:pb-16" data-testid="section-inverter-3d">
-          <div className="relative w-full h-[480px] md:h-[560px] overflow-hidden bg-zinc-950">
-            {/* Video — tam karta dolu */}
-            <InverterScrollVideo sectionRef={inverterSectionRef} />
-
-            {/* Gradient overlay — soldan metin okunabilirliği için */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/60 to-transparent" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent" />
-
-            {/* Metin — sol altta */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-end px-8 py-10 md:max-w-[52%]">
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-3" data-testid="text-inverter-eyebrow">
-                Uzmanlık Alanımız
-              </p>
-              <h2
-                className="text-3xl md:text-5xl font-bold leading-tight text-white"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                data-testid="text-inverter-title"
-              >
-                Frekans İnverteri&nbsp;&amp; Sürücü Tamiri
-              </h2>
-              <p className="mt-4 text-sm text-zinc-400 max-w-sm leading-relaxed" data-testid="text-inverter-desc">
-                ABB, Siemens, Danfoss, Schneider ve daha fazlasının frekans inverterleri — kart seviyesinde onarım, test ve devreye alma.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {["AC Sürücü", "DC Sürücü", "Servo", "Güç Kartı"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-zinc-700 bg-zinc-800/60 px-3 py-1 text-xs text-zinc-300"
-                    data-testid={`tag-inverter-${tag}`}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </section>
