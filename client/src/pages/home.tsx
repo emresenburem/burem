@@ -751,9 +751,9 @@ function DockBrandSlider() {
     rafRef.current = requestAnimationFrame(() => {
       if (!containerRef.current) return;
       const items = containerRef.current.querySelectorAll<HTMLElement>(".dock-logo");
-      const RANGE = 100;
-      const MAX_SCALE = 3.0;
-      const MID_SCALE = 1.9;
+      const RANGE = 110;
+      const MAX_SCALE = 4.5;
+      const MID_SCALE = 2.6;
       items.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
