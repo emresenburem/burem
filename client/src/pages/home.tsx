@@ -412,56 +412,12 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
 }
 
 function AnimatedServicesSection() {
-  const serviceWords = ["AC/DC Sürücüler", "İnverterler", "Servo Sürücüler", "Güç Kartları"];
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setCurrent((p) => (p + 1) % serviceWords.length), 2200);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <section
       id="services"
       className="w-full pb-10 md:pb-20 scroll-mt-24"
       data-testid="section-services"
     >
-      <div className="mx-auto max-w-6xl px-4 md:px-6 flex flex-col items-center text-center gap-4 mb-14">
-        <p className="text-xs font-semibold tracking-[0.2em] uppercase text-muted-foreground" data-testid="text-services-eyebrow">
-          Neler yapıyoruz
-        </p>
-        <h2
-          className="text-4xl md:text-6xl font-bold tracking-tight leading-tight"
-          style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-          data-testid="text-services-title"
-        >
-          Tamir ediyoruz
-          <span
-            className="relative block overflow-hidden"
-            style={{ height: "1.25em" }}
-          >
-            {serviceWords.map((word, i) => (
-              <motion.span
-                key={i}
-                className="absolute inset-x-0 text-primary font-bold"
-                initial={{ opacity: 0, y: 80 }}
-                animate={
-                  current === i
-                    ? { y: 0, opacity: 1 }
-                    : { y: current > i ? -80 : 80, opacity: 0 }
-                }
-                transition={{ type: "spring", stiffness: 55, damping: 14 }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </span>
-        </h2>
-        <p className="text-base text-muted-foreground max-w-md" data-testid="text-services-subtitle">
-          Endüstriyel sürücü ve elektronik kartlarını fabrikadan çıkmış gibi teslim ediyoruz.
-        </p>
-      </div>
-
       <div className="px-4 md:px-6">
       <ImageAccordion
         defaultActive={0}
