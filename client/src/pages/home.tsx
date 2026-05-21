@@ -275,12 +275,6 @@ const STEPS = [
     desc: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
     icon: Flame,
   },
-  {
-    k: "Test",
-    title: "Test + Teslim",
-    desc: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
-    icon: PackageCheck,
-  },
 ];
 
 
@@ -611,7 +605,8 @@ function AnimatedProcessSection() {
             description: "Arıza belirtisi ve model bilgisiyle hızlı değerlendirme başlatılır.",
             icon: <ClipboardList strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-inspection.jpg",
           },
           {
             id: 2,
@@ -619,7 +614,8 @@ function AnimatedProcessSection() {
             description: "Komponent düzeyinde detaylı teknik arıza analizi yapılır.",
             icon: <ScanLine strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-diagnostic.webp",
           },
           {
             id: 3,
@@ -627,15 +623,8 @@ function AnimatedProcessSection() {
             description: "Ölçüm, izolasyon kontrolü, komponent değişimi ve temiz işçilik.",
             icon: <Wrench strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-          },
-          {
-            id: 4,
-            title: "Test + Teslim",
-            description: "Yük altında test, stabilite kontrolü ve teslim öncesi rapor.",
-            icon: <PackageCheck strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/step-repair.jpg",
           },
         ]}
       />
