@@ -38,7 +38,7 @@ function HorizontalPanel({
     <div
       className={`
         relative rounded-2xl overflow-hidden cursor-pointer flex-shrink-0
-        transition-all duration-700 ease-in-out h-[420px]
+        transition-all duration-700 ease-in-out h-[560px]
         border border-slate-200
         ${isActive ? "flex-[4] shadow-md" : "flex-[0.55]"}
       `}
@@ -214,7 +214,7 @@ export function ImageAccordion({
   }
 
   return (
-    <div className={`flex flex-row items-stretch gap-3 w-full h-[420px] ${className}`}>
+    <div className={`flex flex-row items-stretch gap-3 w-full h-[560px] ${className}`}>
       {items.map((item, index) => (
         <HorizontalPanel
           key={item.id}

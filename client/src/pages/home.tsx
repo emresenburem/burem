@@ -1446,8 +1446,6 @@ export default function HomePage() {
 
         <AnimatedServicesSection />
 
-        <AnimatedProcessSection />
-
         <ProductsShowcase />
 
         <ReferencesSlider />
