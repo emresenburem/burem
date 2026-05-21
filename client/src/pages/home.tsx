@@ -356,16 +356,15 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end end"],
   });
 
-  // Scroll değiştikçe video zamanını güncelle
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     const video = videoRef.current;
     if (!video || !readyRef.current) return;
     const dur = video.duration;
     if (!isFinite(dur) || dur === 0) return;
-    video.currentTime = Math.min(p * 1.5 * dur, dur);
+    video.currentTime = Math.min(p * dur, dur);
   });
 
   useEffect(() => {
@@ -376,12 +375,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
       if (readyRef.current) return;
       readyRef.current = true;
       video.pause();
-      // Mevcut scroll pozisyonuna göre başlangıç karesi
-      const p = scrollYProgress.get();
-      const dur = video.duration;
-      if (isFinite(dur) && dur > 0) {
-        video.currentTime = Math.min(p * 1.5 * dur, dur);
-      }
+      video.currentTime = 0;
     };
 
     video.addEventListener("canplay", markReady, { once: true });
@@ -392,7 +386,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
       video.removeEventListener("canplay", markReady);
       video.removeEventListener("canplaythrough", markReady);
     };
-  }, [scrollYProgress]);
+  }, []);
 
   return (
     <div className="absolute inset-0" data-testid="container-inverter-video">
@@ -400,7 +394,6 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
         ref={videoRef}
         src="/inverter-video.mp4"
         className="h-full w-full object-cover"
-        style={{ mixBlendMode: "screen" }}
         muted
         playsInline
         preload="auto"
@@ -1286,8 +1279,8 @@ export default function HomePage() {
 
       <main id="top">
         {/* Hero — Video + Yazı Birleşik */}
-        <section ref={inverterSectionRef} className="w-full pb-10 md:pb-16" data-testid="section-inverter-3d">
-          <div className="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-zinc-950">
+        <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
+          <div className="sticky top-0 relative w-full h-screen overflow-hidden bg-zinc-950">
             {/* Video arka plan */}
             <InverterScrollVideo sectionRef={inverterSectionRef} />
 
