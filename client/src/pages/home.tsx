@@ -468,56 +468,73 @@ function AnimatedServicesSection() {
         </p>
       </div>
 
-      <ImageAccordion
-        defaultActive={0}
-        items={[
+      <div className="flex flex-col md:flex-row gap-3 w-full" data-testid="services-grid">
+        {[
           {
-            id: 1,
             title: "Sürücü Tamiri",
-            description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
-            icon: <Zap strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            desc: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
             image: "/services/drive.png",
+            icon: <Zap className="w-5 h-5" strokeWidth={1.4} />,
           },
           {
-            id: 2,
             title: "Endüstriyel Elektronik",
-            description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
-            icon: <Cpu strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            desc: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
             image: "/services/pcb.jpg",
+            icon: <Cpu className="w-5 h-5" strokeWidth={1.4} />,
           },
           {
-            id: 3,
             title: "Hızlı Arıza Tespiti",
-            description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
-            icon: <Search strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            desc: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
             image: "/services/diagnostic.jpg",
+            icon: <Search className="w-5 h-5" strokeWidth={1.4} />,
           },
           {
-            id: 4,
             title: "PLC Tamiri",
-            description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
-            icon: <CircuitBoard strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            desc: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
             image: "/services/plc.jpg",
+            icon: <CircuitBoard className="w-5 h-5" strokeWidth={1.4} />,
           },
           {
-            id: 5,
-            title: "Ultrasonik Kaynak Tamiri",
-            description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
-            icon: <Waves strokeWidth={1.2} />,
-            particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            title: "Ultrasonik Kaynak",
+            desc: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
             image: "/services/ultrasonic.jpg",
+            icon: <Waves className="w-5 h-5" strokeWidth={1.4} />,
           },
-        ]}
-      />
+        ].map((svc) => (
+          <div
+            key={svc.title}
+            className="group relative flex-1 rounded-2xl overflow-hidden border border-slate-200 h-[380px] cursor-default"
+            data-testid={`card-service-${svc.title}`}
+          >
+            {/* Arka plan görseli */}
+            <div
+              className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105"
+              style={{
+                backgroundImage: `url(${svc.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+            {/* Statik gradient — altta başlık için */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/0" />
+            {/* Hover overlay */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+
+            {/* İkon — üstte */}
+            <div className="absolute top-5 left-5 text-white/70 group-hover:text-white transition-colors duration-300">
+              {svc.icon}
+            </div>
+
+            {/* Alt içerik */}
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <p className="text-white font-bold text-lg leading-tight">{svc.title}</p>
+              <p className="text-white/0 group-hover:text-white/85 text-sm mt-2 leading-relaxed transition-all duration-400 max-h-0 group-hover:max-h-24 overflow-hidden">
+                {svc.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
