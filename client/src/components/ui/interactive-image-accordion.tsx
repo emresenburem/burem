@@ -1,5 +1,4 @@
 import { useState, useId, useEffect } from "react";
-import { SparklesCore } from "@/components/ui/sparkles-core";
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() =>
@@ -22,6 +21,7 @@ export interface AccordionItem {
   icon: React.ReactNode;
   particleColor: string;
   gradient: string;
+  image?: string;
 }
 
 /* ─── Yatay panel ─── */
@@ -34,8 +34,6 @@ function HorizontalPanel({
   isActive: boolean;
   onMouseEnter: () => void;
 }) {
-  const uid = useId();
-  const isMobile = useIsMobile();
   return (
     <div
       className={`
@@ -47,31 +45,39 @@ function HorizontalPanel({
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
     >
-      {/* Sparkles — mobilde atlanır */}
-      {!isMobile && (
-        <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-30"}`}>
-          <SparklesCore
-            id={uid}
-            background="transparent"
-            minSize={0.5}
-            maxSize={isActive ? 1.6 : 0.8}
-            particleDensity={isActive ? 90 : 30}
-            particleColor={item.particleColor}
-            speed={isActive ? 1.2 : 0.4}
-            className="w-full h-full"
+      {/* Arka plan görseli */}
+      {item.image ? (
+        <>
+          <div
+            className={`absolute inset-0 transition-all duration-700 ${
+              isActive ? "scale-105 opacity-100" : "scale-100 opacity-90"
+            }`}
+            style={{
+              backgroundImage: `url(${item.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           />
+          {/* Gradient overlay — aktifken daha açık */}
+          <div
+            className={`absolute inset-0 transition-all duration-700 ${
+              isActive
+                ? "bg-gradient-to-t from-white/95 via-white/30 to-white/10"
+                : "bg-gradient-to-t from-white/80 via-white/50 to-white/60"
+            }`}
+          />
+        </>
+      ) : (
+        /* İkon (görsel yoksa) */
+        <div
+          className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
+            isActive ? "opacity-20 scale-150" : "opacity-70 scale-100"
+          }`}
+          style={{ color: item.particleColor }}
+        >
+          <div className="w-24 h-24 [&>svg]:w-full [&>svg]:h-full">{item.icon}</div>
         </div>
       )}
-
-      {/* İkon (arka planda büyür) */}
-      <div
-        className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-          isActive ? "opacity-20 scale-150" : "opacity-70 scale-100"
-        }`}
-        style={{ color: item.particleColor }}
-      >
-        <div className="w-24 h-24 [&>svg]:w-full [&>svg]:h-full">{item.icon}</div>
-      </div>
 
       {/* Aktif: başlık + açıklama */}
       <div
@@ -90,7 +96,7 @@ function HorizontalPanel({
         }`}
       >
         <span
-          className="text-slate-400 text-[13px] font-semibold whitespace-nowrap tracking-wide"
+          className="text-slate-600 text-[13px] font-semibold whitespace-nowrap tracking-wide"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
           {item.title}
@@ -110,8 +116,6 @@ function VerticalPanel({
   isActive: boolean;
   onMouseEnter: () => void;
 }) {
-  const uid = useId();
-  const isMobile = useIsMobile();
   return (
     <div
       className={`
@@ -123,33 +127,39 @@ function VerticalPanel({
       style={{ background: item.gradient }}
       onMouseEnter={onMouseEnter}
     >
-      {/* Sparkles — mobilde atlanır */}
-      {!isMobile && (
-        <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-20"}`}>
-          <SparklesCore
-            id={uid}
-            background="transparent"
-            minSize={0.4}
-            maxSize={isActive ? 1.2 : 0.6}
-            particleDensity={isActive ? 70 : 20}
-            particleColor={item.particleColor}
-            speed={isActive ? 1.0 : 0.3}
-            className="w-full h-full"
+      {/* Arka plan görseli */}
+      {item.image ? (
+        <>
+          <div
+            className={`absolute inset-0 transition-all duration-700 ${
+              isActive ? "scale-105 opacity-100" : "scale-100 opacity-80"
+            }`}
+            style={{
+              backgroundImage: `url(${item.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           />
+          <div
+            className={`absolute inset-0 transition-all duration-700 ${
+              isActive
+                ? "bg-gradient-to-r from-white/95 via-white/40 to-white/10"
+                : "bg-gradient-to-r from-white/85 via-white/60 to-white/50"
+            }`}
+          />
+        </>
+      ) : (
+        <div
+          className={`absolute inset-0 flex items-center justify-end pr-4 transition-all duration-500 ${
+            isActive ? "opacity-15 scale-125" : "opacity-40 scale-100"
+          }`}
+          style={{ color: item.particleColor }}
+        >
+          <div className="w-14 h-14 [&>svg]:w-full [&>svg]:h-full">{item.icon}</div>
         </div>
       )}
 
-      {/* İkon arka planda */}
-      <div
-        className={`absolute inset-0 flex items-center justify-end pr-4 transition-all duration-500 ${
-          isActive ? "opacity-15 scale-125" : "opacity-40 scale-100"
-        }`}
-        style={{ color: item.particleColor }}
-      >
-        <div className="w-14 h-14 [&>svg]:w-full [&>svg]:h-full">{item.icon}</div>
-      </div>
-
-      {/* Pasif: yatay ikon + başlık */}
+      {/* Pasif: ikon + başlık */}
       <div
         className={`absolute inset-0 flex items-center gap-3 px-4 transition-all duration-300 ${
           isActive ? "opacity-0" : "opacity-100"
@@ -158,7 +168,7 @@ function VerticalPanel({
         <div className="w-5 h-5 shrink-0 [&>svg]:w-full [&>svg]:h-full text-slate-400">
           {item.icon}
         </div>
-        <span className="text-slate-500 text-sm font-semibold truncate">{item.title}</span>
+        <span className="text-slate-600 text-sm font-semibold truncate">{item.title}</span>
       </div>
 
       {/* Aktif: başlık + açıklama */}

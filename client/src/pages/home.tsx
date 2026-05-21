@@ -477,7 +477,8 @@ function AnimatedServicesSection() {
             description: "AC/DC sürücüler, inverterler, servo sürücüler. Arıza tespiti, onarım ve yük altında test.",
             icon: <Zap strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/drive.jpg",
           },
           {
             id: 2,
@@ -485,7 +486,8 @@ function AnimatedServicesSection() {
             description: "Güç kartları, kontrol kartları, SMPS ve CNC/PLC çevre ekipmanları onarımı.",
             icon: <Cpu strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/pcb.jpg",
           },
           {
             id: 3,
@@ -493,7 +495,8 @@ function AnimatedServicesSection() {
             description: "Ön değerlendirme ve net raporlama. Gereksiz parça değişimi yok.",
             icon: <Search strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/diagnostic.jpg",
           },
           {
             id: 4,
@@ -501,7 +504,8 @@ function AnimatedServicesSection() {
             description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
             icon: <CircuitBoard strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/plc.jpg",
           },
           {
             id: 5,
@@ -509,7 +513,8 @@ function AnimatedServicesSection() {
             description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
             icon: <Waves strokeWidth={1.2} />,
             particleColor: "#94a3b8",
-            gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
+            gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+            image: "/services/ultrasonic.jpg",
           },
         ]}
       />
