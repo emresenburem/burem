@@ -1149,7 +1149,7 @@ export default function HomePage() {
 
       {/* Arka plan InteractiveGradient içinde yönetiliyor */}
       
-      <header className="relative sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <header className="relative sticky top-0 z-50 px-5 md:px-10 lg:px-14 pt-2 pb-3">
         {/* Atatürk şeridi — tam ortada üstte, absolute */}
         <div
           className="hidden lg:flex absolute top-1.5 left-1/2 -translate-x-1/2 items-center gap-2 group cursor-default"
@@ -1222,16 +1222,26 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        <div className="relative flex w-full items-center justify-between gap-3 px-4 md:px-6">
+        <div className="liquid-glass rounded-xl px-5 py-2.5 flex items-center justify-between lg:mt-6">
           {/* Logo — sol */}
-          <div className="-ml-25 -mt-12 mb-[-2.5rem] flex-shrink-0">
-            <HeaderLogo />
-          </div>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            data-testid="button-logo-home"
+            className="flex items-center flex-shrink-0"
+          >
+            <img
+              src="/logo.png"
+              alt="Burem Elektronik"
+              className="h-9 w-auto object-contain"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
+          </button>
 
-          {/* Nav — sayfada ortalı, alt kenara yaslanmış */}
+          {/* Nav — orta */}
           <nav
             aria-label="Ana menü"
-            className="hidden md:flex absolute bottom-0 left-1/2 -translate-x-1/2 gap-0"
+            className="hidden md:flex items-center gap-1"
           >
             {[
               { label: "Hizmetler", id: "services" },
@@ -1242,7 +1252,7 @@ export default function HomePage() {
                 key={item.id}
                 onClick={() => scrollToId(item.id)}
                 data-testid={`nav-item-${item.id}`}
-                className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+                className="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-md transition-colors"
               >
                 {item.label}
               </button>
@@ -1250,18 +1260,17 @@ export default function HomePage() {
             <BrandsDropdown />
           </nav>
 
-          {/* CTA butonları — sağ, shimmer hover */}
-          <div className="hidden md:flex items-center gap-2 self-end pb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => scrollToId("contact")}
+          {/* CTA — sağ */}
+          <div className="hidden md:flex items-center">
+            <a
+              href="https://wa.me/905322664764"
+              target="_blank"
+              rel="noopener noreferrer"
               data-testid="button-cta-contact"
-              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
+              className="bg-white text-black px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
             >
-              İletişim
-              <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
-            </Button>
+              WhatsApp
+            </a>
           </div>
         </div>
       </header>
