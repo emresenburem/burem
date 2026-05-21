@@ -350,50 +350,13 @@ function ProcessStepsGrid() {
   );
 }
 
-function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLElement> }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const readyRef = useRef(false);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
-    const video = videoRef.current;
-    if (!video || !readyRef.current) return;
-    const dur = video.duration;
-    if (!isFinite(dur) || dur === 0) return;
-    video.currentTime = Math.min(p * dur, dur);
-  });
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const markReady = () => {
-      if (readyRef.current) return;
-      readyRef.current = true;
-      video.pause();
-      video.currentTime = 0;
-    };
-
-    video.addEventListener("canplay", markReady, { once: true });
-    video.addEventListener("canplaythrough", markReady, { once: true });
-    video.load();
-
-    return () => {
-      video.removeEventListener("canplay", markReady);
-      video.removeEventListener("canplaythrough", markReady);
-    };
-  }, []);
-
+function InverterScrollVideo({ sectionRef: _ }: { sectionRef: React.RefObject<HTMLElement> }) {
   return (
     <div className="absolute inset-0" data-testid="container-inverter-video">
       <video
-        ref={videoRef}
         src="/inverter-video.mp4"
         className="h-full w-full object-cover"
+        autoPlay
         muted
         playsInline
         preload="auto"
