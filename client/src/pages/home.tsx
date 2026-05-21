@@ -28,6 +28,8 @@ import {
   Binary,
   Telescope,
   Flame,
+  CircuitBoard,
+  Waves,
   PenLine,
   PackageCheck,
   Package,
@@ -245,12 +247,12 @@ const SERVICES = [
   {
     title: "PLC Tamiri",
     desc: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
-    icon: Binary,
+    icon: CircuitBoard,
   },
   {
     title: "Ultrasonik Kaynak Tamiri",
     desc: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
-    icon: Flame,
+    icon: Waves,
   },
 ];
 
@@ -497,7 +499,7 @@ function AnimatedServicesSection() {
             id: 4,
             title: "PLC Tamiri",
             description: "Programlanabilir lojik kontrolörler. Siemens, Mitsubishi, Omron ve diğer markalar.",
-            icon: <Binary strokeWidth={1.2} />,
+            icon: <CircuitBoard strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
@@ -505,7 +507,7 @@ function AnimatedServicesSection() {
             id: 5,
             title: "Ultrasonik Kaynak Tamiri",
             description: "Ultrasonik kaynak makinası elektroniği, transdüser ve generatör onarımı.",
-            icon: <Flame strokeWidth={1.2} />,
+            icon: <Waves strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
           },
