@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -741,6 +741,80 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
   );
 }
 
+function DockBrandSlider() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>();
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const mx = e.clientX;
+    rafRef.current = requestAnimationFrame(() => {
+      if (!containerRef.current) return;
+      const items = containerRef.current.querySelectorAll<HTMLElement>(".dock-logo");
+      const RANGE = 160;
+      const MAX_SCALE = 1.55;
+      const MID_SCALE = 1.28;
+      items.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const dist = Math.abs(mx - cx);
+        let scale = 1;
+        if (dist < RANGE) {
+          const t = 1 - dist / RANGE;
+          scale = 1 + (MAX_SCALE - 1) * Math.pow(t, 1.6);
+        } else if (dist < RANGE * 2) {
+          const t = 1 - (dist - RANGE) / RANGE;
+          scale = 1 + (MID_SCALE - 1) * Math.pow(t, 2);
+        }
+        el.style.transform = `scale(${scale.toFixed(3)})`;
+        el.style.opacity = dist < RANGE * 2 ? "1" : "0.7";
+      });
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (!containerRef.current) return;
+    const items = containerRef.current.querySelectorAll<HTMLElement>(".dock-logo");
+    items.forEach((el) => {
+      el.style.transform = "scale(1)";
+      el.style.opacity = "0.7";
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full pt-8 pb-3 overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="relative h-16 w-full">
+        <InfiniteSlider className="flex h-full w-full items-center" duration={35} gap={48}>
+          {BRANDS.map((brand) => (
+            <div
+              key={brand.name}
+              className="dock-logo flex items-center justify-center h-10 flex-shrink-0 opacity-70"
+              style={{
+                width: (brand as any).w ? `${(brand as any).w}px` : "7rem",
+                transition: "transform 0.18s cubic-bezier(0.34,1.56,0.64,1), opacity 0.18s ease",
+                transformOrigin: "bottom center",
+              }}
+            >
+              <img
+                src={brand.logo}
+                alt={brand.name}
+                className="w-full h-full object-contain pointer-events-none"
+                style={(brand as any).scale && !(brand as any).w ? { transform: `scale(${(brand as any).scale})` } : undefined}
+              />
+            </div>
+          ))}
+        </InfiniteSlider>
+      </div>
+    </div>
+  );
+}
+
 function ReferencesSlider() {
   const trackRef = useRef<HTMLDivElement>(null);
   const posRef = useRef(0);
@@ -912,12 +986,12 @@ function BrandsDropdown() {
             : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        Satış
+        Markalar
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
           <ChevronDown className="h-3 w-3" />
         </motion.span>
       </button>
-
+      
       {/* Dropdown paneli */}
       <AnimatePresence>
         {open && (
