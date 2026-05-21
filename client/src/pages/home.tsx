@@ -1181,15 +1181,6 @@ export default function HomePage() {
               variant="ghost"
               size="sm"
               onClick={() => scrollToId("contact")}
-              data-testid="button-cta-quote"
-              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
-            >
-              Teklif iste
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => scrollToId("contact")}
               data-testid="button-cta-contact"
               className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
             >
