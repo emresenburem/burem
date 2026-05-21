@@ -615,7 +615,7 @@ function AnimatedProcessSection() {
             icon: <ScanLine strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/step-diagnostic.webp",
+            image: "/services/step-diagnostic.jpg",
           },
           {
             id: 3,
@@ -624,7 +624,7 @@ function AnimatedProcessSection() {
             icon: <Wrench strokeWidth={1.2} />,
             particleColor: "#94a3b8",
             gradient: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            image: "/services/step-repair.jpg",
+            image: "/services/step-repair.webp",
           },
         ]}
       />
