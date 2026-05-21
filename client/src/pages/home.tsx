@@ -353,6 +353,8 @@ function ProcessStepsGrid() {
 function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLElement> }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const readyRef = useRef(false);
+  const rafRef = useRef<number | null>(null);
+  const pendingRef = useRef<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -360,11 +362,19 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
   });
 
   useMotionValueEvent(scrollYProgress, "change", (p) => {
-    const video = videoRef.current;
-    if (!video || !readyRef.current) return;
-    const dur = video.duration;
-    if (!isFinite(dur) || dur === 0) return;
-    video.currentTime = Math.min(p * dur, dur);
+    pendingRef.current = p;
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const video = videoRef.current;
+      if (!video || !readyRef.current || pendingRef.current === null) return;
+      const dur = video.duration;
+      if (!isFinite(dur) || dur === 0) return;
+      const target = Math.min(pendingRef.current * dur, dur);
+      if (Math.abs(video.currentTime - target) > 0.04) {
+        video.currentTime = target;
+      }
+    });
   });
 
   useEffect(() => {
@@ -385,6 +395,7 @@ function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLE
     return () => {
       video.removeEventListener("canplay", markReady);
       video.removeEventListener("canplaythrough", markReady);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
