@@ -31,7 +31,7 @@ export function HeaderLogo() {
     >
       <motion.div
         className="flex items-center justify-center overflow-hidden ml-2"
-        style={{ width: 380, height: 100, willChange: "opacity" }}
+        style={{ width: 160, height: 80, willChange: "opacity" }}
         aria-hidden="true"
         initial={{ opacity: 1 }}
         animate={isFlickering ? {

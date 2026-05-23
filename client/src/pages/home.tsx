@@ -1288,6 +1288,15 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Kurban Bayramı Bandı */}
+        <div className="w-full bg-white border-y border-gray-100 py-3 flex justify-center">
+          <img
+            src="/kurban-bayram.png"
+            alt="Kurban Bayramımız Mübarek Olsun"
+            className="h-28 md:h-40 object-contain"
+          />
+        </div>
+
       <main id="top">
         {/* Hero — Video + Yazı Birleşik */}
         <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
