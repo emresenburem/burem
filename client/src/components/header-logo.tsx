@@ -30,9 +30,9 @@ export function HeaderLogo() {
       data-testid="button-logo-home"
     >
       <motion.div
-        className="h-52 w-80 flex items-center justify-center overflow-hidden ml-2 mt-4"
+        className="flex items-center justify-center overflow-hidden ml-2"
+        style={{ width: 380, height: 100, willChange: "opacity" }}
         aria-hidden="true"
-        style={{ willChange: "opacity" }}
         initial={{ opacity: 1 }}
         animate={isFlickering ? {
           opacity: [1, 0, 1, 0, 1, 0.2, 0.8, 0, 1, 0.4, 1],
@@ -46,7 +46,7 @@ export function HeaderLogo() {
         <img
           src="/logo.png"
           alt="Burem Elektronik Logo"
-          className="h-80 w-80 object-contain"
+          className="w-full h-full object-contain"
           decoding="async"
           draggable={false}
         />
