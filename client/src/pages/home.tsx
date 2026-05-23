@@ -1291,7 +1291,7 @@ export default function HomePage() {
       <main id="top">
         {/* Hero — Video + Yazı Birleşik */}
         <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
-          <div className="sticky top-0 relative w-full h-screen overflow-hidden bg-zinc-950">
+          <div className="sticky top-0 relative w-full h-[500px] md:h-[600px] overflow-hidden bg-zinc-950">
             {/* Video arka plan */}
             <InverterScrollVideo sectionRef={inverterSectionRef} />
 
