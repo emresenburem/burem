@@ -1124,21 +1124,15 @@ export default function HomePage() {
         transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
         style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
-      {!isMobile && <InteractiveGradient />}
-      {/* Arka plan partikülleri — mobilde atlanır */}
-      {!isMobile && (
-        <div className="fixed inset-0 z-[-1] pointer-events-none">
-          <SparklesCore
-            background="transparent"
-            particleColor="#1e293b"
-            particleDensity={10}
-            minSize={0.4}
-            maxSize={1.0}
-            speed={0.4}
-            className="h-full w-full"
-          />
-        </div>
-      )}
+      {/* Ethereal Shadow — site geneli sabit arka plan */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <EtherealShadow
+          color="rgba(180, 180, 180, 1)"
+          animation={{ scale: 100, speed: 90 }}
+          noise={{ opacity: 0.5, scale: 1.2 }}
+          sizing="fill"
+        />
+      </div>
 
       <a
         href="#contact"
@@ -1290,16 +1284,9 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        {/* Hero — Ethereal Shadow */}
+        {/* Hero */}
         <section className="w-full" data-testid="section-hero">
           <div className="relative w-full h-[500px] md:h-[620px]">
-            <EtherealShadow
-              color="rgba(180, 180, 180, 1)"
-              animation={{ scale: 100, speed: 90 }}
-              noise={{ opacity: 0.6, scale: 1.2 }}
-              sizing="fill"
-              style={{ position: "absolute", inset: 0 }}
-            />
             {/* Hero yazıları — sol altta */}
             <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-16 md:py-16 max-w-4xl">
               <motion.div
