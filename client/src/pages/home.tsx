@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { BeamsBackground } from "@/components/ui/beams-background";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -1117,17 +1116,28 @@ export default function HomePage() {
       transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
     />
     <motion.div 
-        className="min-h-screen bg-transparent text-foreground" 
+        className="min-h-screen bg-background text-foreground" 
         onClick={handleGlobalClick}
         initial={isMobile ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)" }}
         animate={isMobile ? { opacity: 1 } : { opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
         style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
-      {/* Beams Background — site geneli sabit arka plan */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none">
-        <BeamsBackground intensity="strong" />
-      </div>
+      {!isMobile && <InteractiveGradient />}
+      {/* Arka plan partikülleri — mobilde atlanır */}
+      {!isMobile && (
+        <div className="fixed inset-0 z-[-1] pointer-events-none">
+          <SparklesCore
+            background="transparent"
+            particleColor="#1e293b"
+            particleDensity={10}
+            minSize={0.4}
+            maxSize={1.0}
+            speed={0.4}
+            className="h-full w-full"
+          />
+        </div>
+      )}
 
       <a
         href="#contact"
@@ -1279,11 +1289,18 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        {/* Hero */}
-        <section className="w-full" data-testid="section-hero">
-          <div className="relative w-full h-[500px] md:h-[620px]">
+        {/* Hero — Video + Yazı Birleşik */}
+        <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
+          <div className="sticky top-0 relative w-full h-[500px] md:h-[600px] overflow-hidden bg-zinc-950">
+            {/* Video arka plan */}
+            <InverterScrollVideo sectionRef={inverterSectionRef} />
+
+            {/* Karartma overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/40 to-zinc-950/20" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+
             {/* Hero yazıları — sol altta */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-16 md:py-16 max-w-4xl">
+            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-12 md:py-14 max-w-3xl">
               <motion.div
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1299,7 +1316,7 @@ export default function HomePage() {
                   ].map((label) => (
                     <Badge
                       key={label}
-                      className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white shadow-soft"
+                      className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white shadow-soft"
                       data-testid={`badge-hero-${label}`}
                     >
                       {label}
@@ -1323,7 +1340,7 @@ export default function HomePage() {
               </motion.h1>
 
               <motion.p
-                className="mt-4 max-w-xl text-pretty text-base text-white/70 md:text-lg"
+                className="mt-4 max-w-xl text-pretty text-base text-zinc-300 md:text-lg"
                 data-testid="text-hero-subtitle"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1350,7 +1367,7 @@ export default function HomePage() {
 
                 <MagneticButton
                   variant="secondary"
-                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20"
+                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
