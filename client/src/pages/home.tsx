@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { FloatingPaths } from "@/components/ui/background-paths";
+import { BeamsBackground } from "@/components/ui/beams-background";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -1117,17 +1117,16 @@ export default function HomePage() {
       transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
     />
     <motion.div 
-        className="min-h-screen bg-background text-foreground" 
+        className="min-h-screen bg-transparent text-foreground" 
         onClick={handleGlobalClick}
         initial={isMobile ? { opacity: 0 } : { opacity: 0, filter: "blur(12px)" }}
         animate={isMobile ? { opacity: 1 } : { opacity: 1, filter: "blur(0px)" }}
         transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
         style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
-      {/* Background Paths — site geneli sabit arka plan */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden bg-white">
-        <FloatingPaths position={1} />
-        <FloatingPaths position={-1} />
+      {/* Beams Background — site geneli sabit arka plan */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <BeamsBackground intensity="strong" />
       </div>
 
       <a
@@ -1300,7 +1299,7 @@ export default function HomePage() {
                   ].map((label) => (
                     <Badge
                       key={label}
-                      className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
+                      className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white shadow-soft"
                       data-testid={`badge-hero-${label}`}
                     >
                       {label}
@@ -1310,7 +1309,7 @@ export default function HomePage() {
               </motion.div>
 
               <motion.h1
-                className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-6xl"
+                className="text-balance text-4xl font-semibold tracking-tight text-white md:text-6xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-hero-title"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
@@ -1318,13 +1317,13 @@ export default function HomePage() {
                 transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 Sürücünüz arızalandıysa,
-                <span className="block text-foreground">
+                <span className="block text-white">
                   doğru teşhisle hızlıca ayağa kaldıralım.
                 </span>
               </motion.h1>
 
               <motion.p
-                className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
+                className="mt-4 max-w-xl text-pretty text-base text-white/70 md:text-lg"
                 data-testid="text-hero-subtitle"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1351,7 +1350,7 @@ export default function HomePage() {
 
                 <MagneticButton
                   variant="secondary"
-                  className="h-11"
+                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
