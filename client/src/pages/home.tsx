@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { EtherealShadow } from "@/components/ui/etheral-shadow";
+import { FloatingPaths } from "@/components/ui/background-paths";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -1124,14 +1124,10 @@ export default function HomePage() {
         transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
         style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
-      {/* Ethereal Shadow — site geneli sabit arka plan */}
-      <div className="fixed inset-0 z-[-1] pointer-events-none">
-        <EtherealShadow
-          color="rgba(180, 180, 180, 1)"
-          animation={{ scale: 100, speed: 90 }}
-          noise={{ opacity: 0.5, scale: 1.2 }}
-          sizing="fill"
-        />
+      {/* Background Paths — site geneli sabit arka plan */}
+      <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden bg-white">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
       </div>
 
       <a
