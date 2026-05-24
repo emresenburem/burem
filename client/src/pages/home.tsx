@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
+import { EtherealShadow } from "@/components/ui/etheral-shadow";
 import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
@@ -1289,18 +1290,18 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        {/* Hero — Video + Yazı Birleşik */}
-        <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
-          <div className="sticky top-0 relative w-full h-[500px] md:h-[600px] overflow-hidden bg-zinc-950">
-            {/* Video arka plan */}
-            <InverterScrollVideo sectionRef={inverterSectionRef} />
-
-            {/* Karartma overlay */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/40 to-zinc-950/20" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
-
+        {/* Hero — Ethereal Shadow */}
+        <section className="w-full" data-testid="section-hero">
+          <div className="relative w-full h-[500px] md:h-[620px]">
+            <EtherealShadow
+              color="rgba(180, 180, 180, 1)"
+              animation={{ scale: 100, speed: 90 }}
+              noise={{ opacity: 0.6, scale: 1.2 }}
+              sizing="fill"
+              style={{ position: "absolute", inset: 0 }}
+            />
             {/* Hero yazıları — sol altta */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-12 md:py-14 max-w-3xl">
+            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-16 md:py-16 max-w-4xl">
               <motion.div
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1316,7 +1317,7 @@ export default function HomePage() {
                   ].map((label) => (
                     <Badge
                       key={label}
-                      className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white shadow-soft"
+                      className="rounded-full border bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-soft"
                       data-testid={`badge-hero-${label}`}
                     >
                       {label}
@@ -1326,7 +1327,7 @@ export default function HomePage() {
               </motion.div>
 
               <motion.h1
-                className="text-balance text-4xl font-semibold tracking-tight text-white md:text-6xl"
+                className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-6xl"
                 style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
                 data-testid="text-hero-title"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
@@ -1334,13 +1335,13 @@ export default function HomePage() {
                 transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 Sürücünüz arızalandıysa,
-                <span className="block text-white">
+                <span className="block text-foreground">
                   doğru teşhisle hızlıca ayağa kaldıralım.
                 </span>
               </motion.h1>
 
               <motion.p
-                className="mt-4 max-w-xl text-pretty text-base text-zinc-300 md:text-lg"
+                className="mt-4 max-w-xl text-pretty text-base text-muted-foreground md:text-lg"
                 data-testid="text-hero-subtitle"
                 initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1367,7 +1368,7 @@ export default function HomePage() {
 
                 <MagneticButton
                   variant="secondary"
-                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
+                  className="h-11"
                   onClick={() => scrollToId("services")}
                   data-testid="button-hero-services"
                 >
