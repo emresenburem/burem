@@ -21,7 +21,7 @@ function BlinqButton() {
       transition={{ delay: 0.15 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-24 right-6 z-[9999] flex h-10 w-16 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700 transition-shadow"
+      className="fixed bottom-24 right-6 z-[9999] flex h-16 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700 transition-shadow"
       data-testid="button-blinq"
       title="Dijital Kartvizit"
     >
