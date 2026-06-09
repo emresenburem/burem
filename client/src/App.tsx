@@ -10,6 +10,32 @@ import { useGlobalClickSound } from "@/hooks/use-click-sound";
 import { useTabFavicon } from "@/hooks/use-tab-favicon";
 import { motion } from "framer-motion";
 
+function BlinqButton() {
+  return (
+    <motion.a
+      href="https://blinq.me/BLINQ_URL"
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 0.15 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      className="fixed bottom-24 right-6 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700 transition-shadow"
+      data-testid="button-blinq"
+      title="Dijital Kartvizit"
+    >
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="1.5"/>
+        <path d="M7 9h4" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M7 12h6" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        <circle cx="17" cy="10.5" r="2" stroke="white" strokeWidth="1.5"/>
+        <path d="M14 15c0-1.657 1.343-2 3-2s3 .343 3 2" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    </motion.a>
+  );
+}
+
 function WhatsAppButton() {
   return (
     <motion.a
@@ -23,7 +49,6 @@ function WhatsAppButton() {
       className="fixed bottom-6 right-6 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/30 transition-shadow"
       data-testid="button-whatsapp"
     >
-      {/* Official WhatsApp logo SVG */}
       <svg viewBox="0 0 32 32" className="h-8 w-8" xmlns="http://www.w3.org/2000/svg">
         <path
           fill="white"
@@ -57,6 +82,7 @@ function App() {
         <ClickSoundProvider>
           <Toaster />
           <Router />
+          <BlinqButton />
           <WhatsAppButton />
         </ClickSoundProvider>
       </TooltipProvider>
