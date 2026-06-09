@@ -69,7 +69,7 @@ function BusinessCardModal() {
               {/* 3D flip container */}
               <div
                 className="cursor-pointer select-none"
-                style={{ perspective: "1000px", width: 340, height: 190 }}
+                style={{ perspective: "1200px", width: 380, height: 460 }}
                 onClick={() => setFlipped((f) => !f)}
               >
                 <motion.div
@@ -80,48 +80,18 @@ function BusinessCardModal() {
                     transformStyle: "preserve-3d",
                   }}
                   animate={{ rotateY: flipped ? 180 : 0 }}
-                  transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  {/* FRONT — contact info */}
+                  {/* FRONT — iki kart görsel */}
                   <div
                     style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                     className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
                   >
-                    <div className="w-full h-full bg-white flex flex-col">
-                      {/* Main area */}
-                      <div className="flex flex-1 px-5 py-4 gap-4">
-                        {/* Logo left */}
-                        <div className="flex flex-col items-center justify-center w-[90px] flex-shrink-0">
-                          <img src="/logo.png" alt="Burem Elektronik" className="w-full object-contain" />
-                        </div>
-                        {/* Divider */}
-                        <div className="w-px bg-[#1a2a6c]/20 self-stretch my-1" />
-                        {/* Info right */}
-                        <div className="flex flex-col justify-center gap-1.5 flex-1 min-w-0">
-                          <p className="text-[#1a2a6c] font-bold text-sm tracking-wide">BURHANETTİN ŞEN</p>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[#1a2a6c] text-[10px]">📞</span>
-                            <span className="text-[#1a2a6c] text-[11px]">0532 266 47 64</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[#1a2a6c] text-[10px]">✉</span>
-                            <span className="text-[#1a2a6c] text-[11px]">info@buremelektronik.com</span>
-                          </div>
-                          <div className="flex items-start gap-1.5">
-                            <span className="text-[#1a2a6c] text-[10px] mt-0.5">📍</span>
-                            <span className="text-[#1a2a6c] text-[10px] leading-tight">
-                              Alaaddinbey Mah. 626. Sk. No:22<br />
-                              SAM 1 Plaza İç Kapı No:B14<br />
-                              Nilüfer / Bursa
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Bottom strip */}
-                      <div className="bg-[#1a2a6c] py-2 px-5 flex items-center justify-center">
-                        <span className="text-white text-[11px] tracking-widest">www.buremelektronik.com</span>
-                      </div>
-                    </div>
+                    <img
+                      src="/card-front.png"
+                      alt="Burem Elektronik Kartvizit"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
 
                   {/* BACK — logo only */}
