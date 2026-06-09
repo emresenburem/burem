@@ -69,7 +69,7 @@ function BusinessCardModal() {
               {/* 3D flip container */}
               <div
                 className="cursor-pointer select-none"
-                style={{ perspective: "1200px", width: "min(90vw, 700px)", height: "min(108vw, 840px)" }}
+                style={{ perspective: "1200px", width: "min(96vw, 700px)", height: "min(80dvh, 840px)" }}
                 onClick={() => setFlipped((f) => !f)}
               >
                 <motion.div
