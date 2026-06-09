@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 function BlinqButton() {
   return (
     <motion.a
-      href="https://blinq.me/BLINQ_URL"
+      href="https://s1.blinq.me/cmq6jvgm5042j0bs658lq2m1j?bs=icl"
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
