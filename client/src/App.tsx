@@ -26,11 +26,12 @@ function BlinqButton() {
       title="Dijital Kartvizit"
     >
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="1.5"/>
-        <path d="M7 9h4" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M7 12h6" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="17" cy="10.5" r="2" stroke="white" strokeWidth="1.5"/>
-        <path d="M14 15c0-1.657 1.343-2 3-2s3 .343 3 2" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x="2" y="4" width="20" height="16" rx="3" fill="white" fillOpacity="0.12" stroke="white" strokeWidth="1.4"/>
+        <rect x="2" y="4" width="20" height="5" rx="3" fill="white" fillOpacity="0.18"/>
+        <rect x="2" y="7" width="20" height="2" fill="white" fillOpacity="0.10"/>
+        <circle cx="7.5" cy="15" r="2.2" fill="white" fillOpacity="0.85"/>
+        <path d="M12 13.5h5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+        <path d="M12 16h3.5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
       </svg>
     </motion.a>
   );
