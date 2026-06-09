@@ -8,32 +8,152 @@ import HomePage from "@/pages/home";
 import BrandPage from "@/pages/brand-detail";
 import { useGlobalClickSound } from "@/hooks/use-click-sound";
 import { useTabFavicon } from "@/hooks/use-tab-favicon";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
-function BlinqButton() {
+function BusinessCardModal() {
+  const [open, setOpen] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+
   return (
-    <motion.a
-      href="https://s1.blinq.me/cmq6jvgm5042j0bs658lq2m1j?bs=icl"
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 0.15 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className="fixed bottom-24 right-6 z-[9999] flex h-16 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700 transition-shadow"
-      data-testid="button-blinq"
-      title="Dijital Kartvizit"
-    >
-      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="4" width="20" height="16" rx="3" fill="white" fillOpacity="0.12" stroke="white" strokeWidth="1.4"/>
-        <rect x="2" y="4" width="20" height="5" rx="3" fill="white" fillOpacity="0.18"/>
-        <rect x="2" y="7" width="20" height="2" fill="white" fillOpacity="0.10"/>
-        <circle cx="7.5" cy="15" r="2.2" fill="white" fillOpacity="0.85"/>
-        <path d="M12 13.5h5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
-        <path d="M12 16h3.5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
-      </svg>
-    </motion.a>
+    <>
+      {/* Trigger button — dikey kartvizit şekli */}
+      <motion.button
+        onClick={() => { setOpen(true); setFlipped(false); }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.93 }}
+        className="fixed bottom-24 right-6 z-[9999] flex h-16 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700"
+        data-testid="button-businesscard"
+        title="Kartvizit"
+      >
+        <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="20" height="16" rx="3" fill="white" fillOpacity="0.12" stroke="white" strokeWidth="1.4"/>
+          <rect x="2" y="4" width="20" height="5" rx="3" fill="white" fillOpacity="0.18"/>
+          <rect x="2" y="7" width="20" height="2" fill="white" fillOpacity="0.10"/>
+          <circle cx="7.5" cy="15" r="2.2" fill="white" fillOpacity="0.85"/>
+          <path d="M12 13.5h5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+          <path d="M12 16h3.5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+        </svg>
+      </motion.button>
+
+      {/* Modal overlay */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-[99999] flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setOpen(false)}
+          >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+            {/* Card wrapper */}
+            <motion.div
+              className="relative z-10"
+              initial={{ scale: 0.7, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 40 }}
+              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Flip hint */}
+              <p className="text-center text-white/50 text-xs mb-3 select-none">
+                Kartı çevirmek için tıkla
+              </p>
+
+              {/* 3D flip container */}
+              <div
+                className="cursor-pointer select-none"
+                style={{ perspective: "1000px", width: 340, height: 190 }}
+                onClick={() => setFlipped((f) => !f)}
+              >
+                <motion.div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "relative",
+                    transformStyle: "preserve-3d",
+                  }}
+                  animate={{ rotateY: flipped ? 180 : 0 }}
+                  transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  {/* FRONT — contact info */}
+                  <div
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
+                  >
+                    <div className="w-full h-full bg-white flex flex-col">
+                      {/* Main area */}
+                      <div className="flex flex-1 px-5 py-4 gap-4">
+                        {/* Logo left */}
+                        <div className="flex flex-col items-center justify-center w-[90px] flex-shrink-0">
+                          <img src="/logo.png" alt="Burem Elektronik" className="w-full object-contain" />
+                        </div>
+                        {/* Divider */}
+                        <div className="w-px bg-[#1a2a6c]/20 self-stretch my-1" />
+                        {/* Info right */}
+                        <div className="flex flex-col justify-center gap-1.5 flex-1 min-w-0">
+                          <p className="text-[#1a2a6c] font-bold text-sm tracking-wide">BURHANETTİN ŞEN</p>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[#1a2a6c] text-[10px]">📞</span>
+                            <span className="text-[#1a2a6c] text-[11px]">0532 266 47 64</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[#1a2a6c] text-[10px]">✉</span>
+                            <span className="text-[#1a2a6c] text-[11px]">info@buremelektronik.com</span>
+                          </div>
+                          <div className="flex items-start gap-1.5">
+                            <span className="text-[#1a2a6c] text-[10px] mt-0.5">📍</span>
+                            <span className="text-[#1a2a6c] text-[10px] leading-tight">
+                              Alaaddinbey Mah. 626. Sk. No:22<br />
+                              SAM 1 Plaza İç Kapı No:B14<br />
+                              Nilüfer / Bursa
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Bottom strip */}
+                      <div className="bg-[#1a2a6c] py-2 px-5 flex items-center justify-center">
+                        <span className="text-white text-[11px] tracking-widest">www.buremelektronik.com</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BACK — logo only */}
+                  <div
+                    style={{
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      transform: "rotateY(180deg)",
+                    }}
+                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
+                  >
+                    <img
+                      src="/card-back.png"
+                      alt="Burem Elektronik"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Close */}
+              <button
+                onClick={() => setOpen(false)}
+                className="mt-4 block mx-auto text-white/40 hover:text-white/80 text-xs transition-colors"
+              >
+                Kapat
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -83,7 +203,7 @@ function App() {
         <ClickSoundProvider>
           <Toaster />
           <Router />
-          <BlinqButton />
+          <BusinessCardModal />
           <WhatsAppButton />
         </ClickSoundProvider>
       </TooltipProvider>
