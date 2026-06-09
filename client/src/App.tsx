@@ -66,10 +66,10 @@ function BusinessCardModal() {
                 Kartı çevirmek için tıkla
               </p>
 
-              {/* 3D flip container — tek kart oranı */}
+              {/* 3D flip container */}
               <div
                 className="cursor-pointer select-none"
-                style={{ perspective: "1200px", width: "min(92vw, 520px)", height: "min(58vw, 328px)" }}
+                style={{ perspective: "1200px", width: "min(96vw, 700px)", height: "min(80dvh, 840px)" }}
                 onClick={() => setFlipped((f) => !f)}
               >
                 <motion.div
@@ -82,34 +82,33 @@ function BusinessCardModal() {
                   animate={{ rotateY: flipped ? 180 : 0 }}
                   transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  {/* FRONT — Burhanettin Şen (üst kart) */}
+                  {/* FRONT — iki kart transparan */}
                   <div
-                    style={{
-                      backfaceVisibility: "hidden",
-                      WebkitBackfaceVisibility: "hidden",
-                      backgroundImage: "url('/card-front-nobg.png')",
-                      backgroundSize: "100% 200%",
-                      backgroundPosition: "center top",
-                      backgroundRepeat: "no-repeat",
-                      filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
-                    }}
-                    className="absolute inset-0 rounded-2xl"
-                  />
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <img
+                      src="/card-front-nobg.png"
+                      alt="Burem Elektronik Kartvizit"
+                      className="w-full h-full object-contain drop-shadow-2xl"
+                    />
+                  </div>
 
-                  {/* BACK — Emre Şen (alt kart) */}
+                  {/* BACK — logo transparan */}
                   <div
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(180deg)",
-                      backgroundImage: "url('/card-front-nobg.png')",
-                      backgroundSize: "100% 200%",
-                      backgroundPosition: "center bottom",
-                      backgroundRepeat: "no-repeat",
-                      filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
                     }}
-                    className="absolute inset-0 rounded-2xl"
-                  />
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <img
+                      src="/card-back-nobg.png"
+                      alt="Burem Elektronik"
+                      className="w-full h-full object-contain drop-shadow-2xl"
+                    />
+                  </div>
                 </motion.div>
               </div>
 
