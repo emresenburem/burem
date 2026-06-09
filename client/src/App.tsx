@@ -61,11 +61,6 @@ function BusinessCardModal() {
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Flip hint */}
-              <p className="text-center text-white/50 text-xs mb-3 select-none">
-                Kartı çevirmek için tıkla
-              </p>
-
               {/* 3D flip container */}
               <div
                 className="cursor-pointer select-none"
@@ -112,13 +107,6 @@ function BusinessCardModal() {
                 </motion.div>
               </div>
 
-              {/* Close */}
-              <button
-                onClick={() => setOpen(false)}
-                className="mt-4 block mx-auto text-white/40 hover:text-white/80 text-xs transition-colors"
-              >
-                Kapat
-              </button>
             </motion.div>
           </motion.div>
         )}
