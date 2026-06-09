@@ -94,19 +94,19 @@ function BusinessCardModal() {
                     />
                   </div>
 
-                  {/* BACK — logo only */}
+                  {/* BACK — logo transparan */}
                   <div
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(180deg)",
                     }}
-                    className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl"
+                    className="absolute inset-0 flex items-center justify-center"
                   >
                     <img
-                      src="/card-back.png"
+                      src="/card-back-nobg.png"
                       alt="Burem Elektronik"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain drop-shadow-2xl"
                     />
                   </div>
                 </motion.div>
