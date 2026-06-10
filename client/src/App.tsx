@@ -25,7 +25,7 @@ function BusinessCardModal() {
         transition={{ delay: 0.15 }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.93 }}
-        className="fixed bottom-24 right-6 z-[9999] flex h-16 w-10 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700"
+        className="fixed bottom-24 right-6 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg shadow-black/30 border border-zinc-700"
         data-testid="button-businesscard"
         title="Kartvizit"
       >
@@ -64,7 +64,7 @@ function BusinessCardModal() {
               {/* 3D flip container */}
               <div
                 className="cursor-pointer select-none"
-                style={{ perspective: "1200px", width: "min(96vw, 700px)", height: "min(80dvh, 840px)" }}
+                style={{ perspective: "1200px", width: "min(98vw, 800px)", height: "min(90dvh, 960px)" }}
                 onClick={() => setFlipped((f) => !f)}
               >
                 <motion.div
