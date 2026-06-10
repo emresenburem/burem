@@ -86,6 +86,7 @@ function BusinessCardModal() {
                       src="/card-front-nobg.png"
                       alt="Burem Elektronik Kartvizit"
                       className="w-full h-full object-contain drop-shadow-2xl"
+                      style={{ borderRadius: "6px" }}
                     />
                   </div>
 
@@ -102,6 +103,7 @@ function BusinessCardModal() {
                       src="/card-back-nobg.png"
                       alt="Burem Elektronik"
                       className="w-full h-full object-contain drop-shadow-2xl"
+                      style={{ borderRadius: "6px" }}
                     />
                   </div>
                 </motion.div>
