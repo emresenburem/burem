@@ -1,0 +1,65 @@
+Mevcut Burem Elektronik web sitem React + Vite kullanıyor. Mevcut tasarımı, renkleri, animasyonları, iletişim bilgilerini ve çalışan özellikleri bozma.
+
+Önce projeyi ve mevcut route yapısını analiz et. Daha sonra aşağıdaki SEO altyapısını uygula:
+
+1. Ana sayfanın title bilgisini:
+"Bursa Sürücü Tamiri | Burem Elektronik"
+olarak değiştir.
+
+2. Ana sayfanın meta description bilgisini:
+"Bursa’da inverter, servo sürücü, PLC, HMI ve endüstriyel elektronik kart tamiri. Profesyonel arıza tespiti, onarım ve test hizmeti."
+olarak değiştir.
+
+3. Mevcut router sistemini kullanarak aşağıdaki gerçek ve ayrı URL'leri oluştur:
+
+/bursa-surucu-tamiri
+/servo-surucu-tamiri
+/inverter-tamiri
+/plc-tamiri
+/hmi-operator-panel-tamiri
+/endustriyel-elektronik-kart-tamiri
+/siemens-surucu-tamiri
+/fanuc-servo-surucu-tamiri
+/abb-surucu-tamiri
+/lenze-surucu-tamiri
+/mitsubishi-servo-surucu-tamiri
+
+4. Her URL için ayrı React sayfası oluştur. Her sayfada:
+- Yalnızca bir adet H1
+- Özgün title
+- Özgün meta description
+- Canonical URL
+- Open Graph etiketleri
+- Hizmet açıklaması
+- Sık görülen arızalar
+- Onarım süreci
+- Hizmet verilen seri ve modeller
+- WhatsApp iletişim butonu
+- Telefonla arama butonu
+- Diğer ilgili hizmetlere dahili bağlantılar
+bulunsun.
+
+5. Tekrar kullanılabilir bir SEO componenti oluştur. Her sayfanın title, description, canonical ve sosyal medya etiketleri bu component üzerinden yönetilsin.
+
+6. public klasörüne robots.txt ve sitemap.xml ekle. Sitemap içinde oluşturulan bütün URL'ler ve ana sayfa bulunsun. Site adresi:
+https://www.buremelektronik.com
+
+7. Ana sayfaya LocalBusiness JSON-LD yapılandırılmış verisi ekle. İşletme adı, telefon, e-posta ve adres için projede hâlihazırda bulunan gerçek iletişim bilgilerini kullan. Bilgi uydurma.
+
+8. HTML dilini Türkçe olarak ayarla:
+<html lang="tr">
+
+9. Bütün görsellere açıklayıcı alt etiketleri ekle.
+
+10. Sayfalarda semantic HTML kullan:
+header, nav, main, section, article ve footer.
+
+11. Olmayan sayfalara özel bir 404 sayfası oluştur.
+
+12. "Ücretsiz arıza tespiti", "6 ay garanti", "aynı gün teslim" gibi işletmenin açıkça belirtmediği hiçbir vaat ekleme.
+
+13. Mobil tasarımı bozma. Telefon ve WhatsApp butonlarının mobilde rahat kullanılmasını sağla.
+
+14. İşlemlerden sonra npm run build komutunu çalıştır. Oluşan bütün TypeScript, React ve build hatalarını düzelt.
+
+15. Sonuçta değiştirdiğin ve oluşturduğun dosyaları bana listele.

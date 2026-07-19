@@ -1010,6 +1010,33 @@ function BrandsDropdown() {
   );
 }
 
+function LocalBusinessJsonLd() {
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Burem Elektronik",
+    "telephone": "+90-532-266-47-64",
+    "email": "info@buremelektronik.com",
+    "url": "https://www.buremelektronik.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Alaaddinbey Mah. 626. Sk. No:22 SAM 1 Plaza İç Kapı No:B14",
+      "addressLocality": "Nilüfer",
+      "addressRegion": "Bursa",
+      "addressCountry": "TR"
+    },
+    "description": "Bursa'da inverter, servo sürücü, PLC, HMI ve endüstriyel elektronik kart tamiri.",
+    "areaServed": "Bursa",
+    "sameAs": ["https://www.instagram.com/buremelektronik"]
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+    />
+  );
+}
+
 export default function HomePage() {
   const preferReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(() =>
@@ -1057,6 +1084,7 @@ export default function HomePage() {
         transition={{ duration: isMobile ? 0.4 : 0.9, ease: [0.22, 1, 0.36, 1] }}
         style={isMobile ? undefined : { willChange: "opacity, filter" }}
       >
+      <LocalBusinessJsonLd />
       {!isMobile && <InteractiveGradient />}
       {/* Arka plan partikülleri — mobilde atlanır */}
       {!isMobile && (
