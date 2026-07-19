@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import BuremFooter from "@/components/ui/footer";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { motion, useReducedMotion, AnimatePresence, useScroll, useMotionValueEvent, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useReducedMotion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocation } from "wouter";
 import { SparklesCore } from "@/components/ui/sparkles-core";
 import { HeaderLogo } from "@/components/header-logo";
@@ -350,71 +350,6 @@ function ProcessStepsGrid() {
   );
 }
 
-function InverterScrollVideo({ sectionRef }: { sectionRef: React.RefObject<HTMLElement> }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const readyRef = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const pendingRef = useRef<number | null>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
-    pendingRef.current = p;
-    if (rafRef.current !== null) return;
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      const video = videoRef.current;
-      if (!video || !readyRef.current || pendingRef.current === null) return;
-      const dur = video.duration;
-      if (!isFinite(dur) || dur === 0) return;
-      const target = Math.min(pendingRef.current * dur, dur);
-      if (Math.abs(video.currentTime - target) > 0.04) {
-        video.currentTime = target;
-      }
-    });
-  });
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const markReady = () => {
-      if (readyRef.current) return;
-      readyRef.current = true;
-      video.pause();
-      video.currentTime = 0;
-    };
-
-    video.addEventListener("canplay", markReady, { once: true });
-    video.addEventListener("canplaythrough", markReady, { once: true });
-    video.load();
-
-    return () => {
-      video.removeEventListener("canplay", markReady);
-      video.removeEventListener("canplaythrough", markReady);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  return (
-    <div className="absolute inset-0" data-testid="container-inverter-video">
-      <video
-        ref={videoRef}
-        src="/inverter-video.mp4"
-        className="h-full w-full object-cover"
-        muted
-        playsInline
-        preload="auto"
-        loop={false}
-        disablePictureInPicture
-        data-testid="video-inverter"
-      />
-    </div>
-  );
-}
 
 const SERVICE_CARDS = [
   {
@@ -1087,7 +1022,6 @@ export default function HomePage() {
     mq.addEventListener("change", h);
     return () => mq.removeEventListener("change", h);
   }, []);
-  const inverterSectionRef = useRef<HTMLElement>(null);
   const [playClick] = useSound("/sounds/click.mp3", { volume: 0.1, preload: true, interrupt: true });
 
   const handleGlobalClick = () => {
@@ -1289,95 +1223,6 @@ export default function HomePage() {
         </div>
 
       <main id="top">
-        {/* Hero — Video + Yazı Birleşik */}
-        <section ref={inverterSectionRef} style={{ height: "300vh" }} className="w-full" data-testid="section-inverter-3d">
-          <div className="sticky top-0 relative w-full h-[500px] md:h-[600px] overflow-hidden bg-zinc-950">
-            {/* Video arka plan */}
-            <InverterScrollVideo sectionRef={inverterSectionRef} />
-
-            {/* Karartma overlay */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-zinc-950/85 via-zinc-950/40 to-zinc-950/20" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
-
-            {/* Hero yazıları — sol altta */}
-            <div className="absolute inset-0 z-10 flex flex-col justify-end px-6 py-10 md:px-12 md:py-14 max-w-3xl">
-              <motion.div
-                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="flex flex-wrap gap-2 mb-5" data-testid="badge-hero-group">
-                  {[
-                    "Sürücü tamiri",
-                    "Endüstriyel elektronik",
-                    "Hızlı arıza tespiti",
-                    "PLC tamiri",
-                    "Ultrasonik Kaynak tamiri",
-                  ].map((label) => (
-                    <Badge
-                      key={label}
-                      className="rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white shadow-soft"
-                      data-testid={`badge-hero-${label}`}
-                    >
-                      {label}
-                    </Badge>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.h1
-                className="text-balance text-4xl font-semibold tracking-tight text-white md:text-6xl"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-                data-testid="text-hero-title"
-                initial={preferReducedMotion ? false : { opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
-              >
-                Sürücünüz arızalandıysa,
-                <span className="block text-white">
-                  doğru teşhisle hızlıca ayağa kaldıralım.
-                </span>
-              </motion.h1>
-
-              <motion.p
-                className="mt-4 max-w-xl text-pretty text-base text-zinc-300 md:text-lg"
-                data-testid="text-hero-subtitle"
-                initial={preferReducedMotion ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.56, ease: [0.22, 1, 0.36, 1] }}
-              >
-                Burem Elektronik; inverter, servo sürücü, PLC, ultrasonik kaynak makinaları ve endüstriyel elektronik
-                kartlarda arıza tespiti, onarım ve test sürecini net ve güvenilir şekilde yönetir.
-              </motion.p>
-
-              <motion.div
-                className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
-                initial={preferReducedMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.68, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <MagneticButton
-                  className="h-11"
-                  onClick={() => scrollToId("contact")}
-                  data-testid="button-hero-contact"
-                >
-                  Hemen iletişime geç
-                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </MagneticButton>
-
-                <MagneticButton
-                  variant="secondary"
-                  className="h-11 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
-                  onClick={() => scrollToId("services")}
-                  data-testid="button-hero-services"
-                >
-                  Hizmetleri gör
-                </MagneticButton>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
         <AnimatedServicesSection />
 
         <ProductsShowcase />
