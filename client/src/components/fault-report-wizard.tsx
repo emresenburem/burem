@@ -1,26 +1,17 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  CheckCircle2, ChevronRight, ChevronLeft, MessageCircle,
-  Loader2, Zap, Cpu, LayoutGrid, Monitor, CircuitBoard, HelpCircle,
-  Mail,
-} from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle, Mail, Loader2, Zap, Cpu, LayoutGrid, Monitor, CircuitBoard, HelpCircle } from "lucide-react";
 
-/* ─────────────────────────────────────────────
-   CİHAZ TÜRLERİ
-───────────────────────────────────────────── */
+/* ── veri ── */
 const DEVICE_TYPES = [
-  { id: "inverter", label: "İnverter",          sub: "Frekans Dönüştürücü", Icon: Zap },
-  { id: "servo",    label: "Servo Sürücü",       sub: "Servo amplifikatör",  Icon: Cpu },
-  { id: "plc",      label: "PLC",                sub: "Lojik kontrolör",     Icon: LayoutGrid },
-  { id: "hmi",      label: "HMI Panel",          sub: "Operatör paneli",     Icon: Monitor },
-  { id: "kart",     label: "Elektronik Kart",    sub: "Güç / kontrol kartı", Icon: CircuitBoard },
-  { id: "diger",    label: "Diğer",              sub: "Belirtmek istiyorum", Icon: HelpCircle },
+  { id: "inverter", label: "İnverter / Frekans Dönüştürücü", Icon: Zap },
+  { id: "servo",    label: "Servo Sürücü",                   Icon: Cpu },
+  { id: "plc",      label: "PLC",                            Icon: LayoutGrid },
+  { id: "hmi",      label: "HMI / Operatör Panel",           Icon: Monitor },
+  { id: "kart",     label: "Elektronik Kart",                Icon: CircuitBoard },
+  { id: "diger",    label: "Diğer",                          Icon: HelpCircle },
 ];
 
-/* ─────────────────────────────────────────────
-   MARKA LİSTELERİ
-───────────────────────────────────────────── */
 const BRANDS_BY_TYPE: Record<string, string[]> = {
   inverter: ["Siemens","ABB","Schneider","Danfoss","Yaskawa","Lenze","Mitsubishi","Omron","SEW-Eurodrive","Allen Bradley","Bosch Rexroth","Diğer"],
   servo:    ["Fanuc","Siemens","Yaskawa","Mitsubishi","Bosch Rexroth","Lenze","Panasonic","Beckhoff","ABB","Omron","Diğer"],
@@ -30,9 +21,6 @@ const BRANDS_BY_TYPE: Record<string, string[]> = {
   diger:    ["Siemens","ABB","Fanuc","Yaskawa","Lenze","Mitsubishi","Schneider","SEW-Eurodrive","Bosch Rexroth","Danfoss","Omron","Allen Bradley","Beckhoff","Panasonic","Diğer"],
 };
 
-/* ─────────────────────────────────────────────
-   MODEL LİSTELERİ
-───────────────────────────────────────────── */
 const MODELS: Record<string, Record<string, string[]>> = {
   inverter: {
     "Siemens": ["MICROMASTER 410","MICROMASTER 420","MICROMASTER 430","MICROMASTER 440","SINAMICS V20","SINAMICS G110","SINAMICS G120","SINAMICS G120C","SINAMICS G120D","SINAMICS G120P","SINAMICS G130","SINAMICS G150","SINAMICS G180","SINAMICS S120","SINAMICS S150"],
@@ -91,122 +79,55 @@ const MODELS: Record<string, Record<string, string[]>> = {
   },
 };
 
-/* ─────────────────────────────────────────────
-   SABİTLER
-───────────────────────────────────────────── */
 const WA_NUMBER = "905322664764";
 
-interface WizardState {
+interface State {
   deviceType: string; deviceLabel: string;
   brand: string; model: string; modelCustom: string;
   errorCode: string; faultDesc: string;
   name: string; phone: string; userEmail: string;
 }
-const INIT: WizardState = {
-  deviceType: "", deviceLabel: "", brand: "", model: "", modelCustom: "",
-  errorCode: "", faultDesc: "", name: "", phone: "", userEmail: "",
-};
+const INIT: State = { deviceType:"",deviceLabel:"",brand:"",model:"",modelCustom:"",errorCode:"",faultDesc:"",name:"",phone:"",userEmail:"" };
 
-const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit:  (dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 }),
-};
+/* ── input styles ── */
+const inp = "w-full bg-transparent border-b border-foreground/20 py-2.5 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground/60 transition-colors";
+const sel = "w-full bg-background border border-foreground/20 rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-foreground/50 transition-colors";
 
-/* ─────────────────────────────────────────────
-   ADIM GÖSTERGESİ
-───────────────────────────────────────────── */
-const STEPS = ["Cihaz Türü", "Marka & Model", "Bildirim"];
-
-function StepBar({ current }: { current: number }) {
-  return (
-    <div className="mb-7">
-      <div className="flex items-center">
-        {STEPS.map((label, i) => {
-          const n = i + 1;
-          const done   = current > n;
-          const active = current === n;
-          return (
-            <div key={i} className="flex items-center flex-1 min-w-0">
-              <div className="flex flex-col items-center">
-                <div className={`relative flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
-                  done   ? "bg-green-500 text-white shadow-[0_0_12px_rgba(34,197,94,0.4)]"
-                  : active ? "bg-white text-black shadow-[0_0_16px_rgba(255,255,255,0.2)]"
-                  : "bg-white/8 text-white/40 border border-white/10"
-                }`}>
-                  {done ? <CheckCircle2 className="h-4 w-4" /> : n}
-                  {active && (
-                    <span className="absolute inset-0 rounded-full animate-ping bg-white/20" />
-                  )}
-                </div>
-                <span className={`mt-1.5 text-[10px] font-medium leading-none whitespace-nowrap ${
-                  active ? "text-white" : done ? "text-green-400" : "text-white/30"
-                }`}>{label}</span>
-              </div>
-              {i < STEPS.length - 1 && (
-                <div className="relative flex-1 mx-2 mb-4">
-                  <div className="h-px w-full bg-white/10" />
-                  <motion.div
-                    className="absolute inset-0 h-px bg-green-500"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: done ? 1 : 0 }}
-                    style={{ originX: 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   SHARED INPUT STYLE
-───────────────────────────────────────────── */
-const inputCls = "w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/30 focus:bg-white/8 transition-colors";
-const selectCls = "w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 focus:bg-white/8 transition-colors";
-
-/* ─────────────────────────────────────────────
-   ANA BİLEŞEN
-───────────────────────────────────────────── */
 export function FaultReportWizard() {
-  const [step,       setStep]       = useState(1);
-  const [direction,  setDirection]  = useState(1);
-  const [data,       setData]       = useState<WizardState>(INIT);
-  const [sentVia,    setSentVia]    = useState<"whatsapp" | "email" | null>(null);
+  const [step, setStep] = useState(1);
+  const [dir,  setDir]  = useState(1);
+  const [data, setData] = useState<State>(INIT);
+  const [sentVia,    setSentVia]    = useState<"whatsapp"|"email"|null>(null);
   const [sending,    setSending]    = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  const go = (n: number) => { setDirection(n > step ? 1 : -1); setStep(n); };
-  const set = (k: keyof WizardState, v: string) => setData(d => ({ ...d, [k]: v }));
+  const go  = (n: number) => { setDir(n > step ? 1 : -1); setStep(n); };
+  const set = (k: keyof State, v: string) => setData(d => ({ ...d, [k]: v }));
 
-  const modelList    = MODELS[data.deviceType]?.[data.brand] ?? [];
-  const isCustom     = data.model === "__custom__";
-  const effectModel  = isCustom ? data.modelCustom.trim() : data.model;
-  const effectBrand  = data.brand === "Diğer" ? data.modelCustom : data.brand;
+  const models      = MODELS[data.deviceType]?.[data.brand] ?? [];
+  const isCustom    = data.model === "__custom__";
+  const effModel    = isCustom ? data.modelCustom.trim() : data.model;
+  const effBrand    = data.brand === "Diğer" ? data.modelCustom : data.brand;
 
-  const canNext2 = !!data.brand && !!effectModel;
-  const canBase  = !!data.faultDesc.trim() && !!data.name.trim();
-  const canEmail = canBase && !!data.userEmail.trim();
+  const okNext2     = !!data.brand && !!effModel;
+  const okBase      = !!data.faultDesc.trim() && !!data.name.trim();
+  const okEmail     = okBase && !!data.userEmail.trim();
 
-  function waMessage() {
+  function waUrl() {
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent([
-      "🔧 *Arıza Bildirimi — Burem Elektronik*", "",
+      "🔧 *Arıza Bildirimi — Burem Elektronik*","",
       `📦 *Cihaz Türü:* ${data.deviceLabel}`,
-      `🏷️ *Marka:* ${effectBrand}`,
-      `🔩 *Model:* ${effectModel}`,
-      data.errorCode ? `⚠️ *Hata Kodu:* ${data.errorCode}` : null, "",
-      `📋 *Arıza Açıklaması:*\n${data.faultDesc}`, "",
+      `🏷️ *Marka:* ${effBrand}`,
+      `🔩 *Model:* ${effModel}`,
+      data.errorCode ? `⚠️ *Hata Kodu:* ${data.errorCode}` : null,"",
+      `📋 *Arıza Açıklaması:*\n${data.faultDesc}`,"",
       `👤 *Ad Soyad:* ${data.name}`,
       data.phone ? `📞 *Telefon:* ${data.phone}` : null,
     ].filter(Boolean).join("\n"))}`;
   }
 
   function handleWA() {
-    window.open(waMessage(), "_blank", "noopener,noreferrer");
+    window.open(waUrl(), "_blank", "noopener,noreferrer");
     setSentVia("whatsapp");
   }
 
@@ -215,309 +136,232 @@ export function FaultReportWizard() {
     setEmailError(""); setSending(true);
     try {
       const res = await fetch("/api/fault-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ deviceLabel: data.deviceLabel, brand: effectBrand, model: effectModel, errorCode: data.errorCode, faultDesc: data.faultDesc, name: data.name, phone: data.phone, userEmail: data.userEmail }),
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ deviceLabel:data.deviceLabel, brand:effBrand, model:effModel, errorCode:data.errorCode, faultDesc:data.faultDesc, name:data.name, phone:data.phone, userEmail:data.userEmail }),
       });
-      if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
-        setEmailError(d.error || "Mail gönderilemedi, tekrar deneyin.");
-        setSending(false); return;
-      }
-    } catch {
-      setEmailError("Bağlantı hatası, tekrar deneyin.");
-      setSending(false); return;
-    }
+      if (!res.ok) { const d = await res.json().catch(()=>({})); setEmailError(d.error||"Gönderilemedi."); setSending(false); return; }
+    } catch { setEmailError("Bağlantı hatası."); setSending(false); return; }
     setSending(false); setSentVia("email");
   }
 
   function reset() { setData(INIT); setStep(1); setSentVia(null); setSending(false); setEmailError(""); }
 
-  /* ── BAŞARILI ── */
-  if (sentVia) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center gap-4 py-8 text-center"
-        data-testid="wizard-success"
-      >
-        <div className={`flex h-16 w-16 items-center justify-center rounded-full ${sentVia === "whatsapp" ? "bg-[#25D366]/15" : "bg-blue-500/15"}`}>
-          {sentVia === "whatsapp"
-            ? <MessageCircle className="h-8 w-8 text-[#25D366]" />
-            : <Mail className="h-8 w-8 text-blue-400" />
-          }
-        </div>
-        <div>
-          <p className="text-lg font-bold text-white">
-            {sentVia === "whatsapp" ? "WhatsApp Açıldı!" : "Mesajınız İletildi!"}
-          </p>
-          <p className="mt-1.5 text-sm text-white/50 max-w-xs">
-            {sentVia === "whatsapp"
-              ? "Hazırlanan mesajı göndermek için WhatsApp'ta \"Gönder\" tuşuna basın."
-              : "Arıza bildiriminiz info@buremelektronik.com adresine gönderildi. En kısa sürede dönüş yapacağız."
-            }
-          </p>
-        </div>
-        <button
-          onClick={reset}
-          className="mt-1 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
-          data-testid="button-wizard-reset"
-        >
-          Yeni Bildirim
-        </button>
-      </motion.div>
-    );
-  }
+  /* success */
+  if (sentVia) return (
+    <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} className="py-10 text-center space-y-3" data-testid="wizard-success">
+      <div className={`mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full ${sentVia==="whatsapp"?"bg-[#25D366]/15":"bg-blue-500/10"}`}>
+        {sentVia==="whatsapp" ? <MessageCircle className="h-7 w-7 text-[#25D366]"/> : <Mail className="h-7 w-7 text-blue-400"/>}
+      </div>
+      <p className="font-semibold text-foreground">{sentVia==="whatsapp" ? "WhatsApp açıldı!" : "Mesajınız iletildi!"}</p>
+      <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+        {sentVia==="whatsapp"
+          ? "Mesajı göndermek için WhatsApp'ta \"Gönder\" tuşuna basın."
+          : "info@buremelektronik.com adresine gönderildi. En kısa sürede dönüş yapacağız."}
+      </p>
+      <button onClick={reset} className="mt-2 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors" data-testid="button-wizard-reset">
+        Yeni bildirim
+      </button>
+    </motion.div>
+  );
+
+  /* step progress bar */
+  const pct = step === 1 ? 0 : step === 2 ? 50 : 100;
 
   return (
-    <div className="mt-5" data-testid="wizard-fault-report">
-      <StepBar current={step} />
+    <div className="mt-6" data-testid="wizard-fault-report">
 
-      <div className="relative overflow-hidden">
-        <AnimatePresence mode="wait" custom={direction}>
+      {/* ── sade üst bant ── */}
+      <div className="mb-6">
+        <div className="flex justify-between text-[11px] text-muted-foreground mb-2">
+          <span className={step >= 1 ? "text-foreground font-medium" : ""}>Cihaz Türü</span>
+          <span className={step >= 2 ? "text-foreground font-medium" : ""}>Marka & Model</span>
+          <span className={step >= 3 ? "text-foreground font-medium" : ""}>Bildirim</span>
+        </div>
+        <div className="relative h-0.5 bg-foreground/10 rounded-full overflow-hidden">
           <motion.div
-            key={step}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.22, ease: "easeOut" }}
-          >
+            className="absolute inset-y-0 left-0 bg-foreground rounded-full"
+            animate={{ width: `${pct}%` }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+          />
+        </div>
+      </div>
 
-            {/* ─── ADIM 1: Cihaz Türü ─── */}
-            {step === 1 && (
-              <div data-testid="wizard-step-1">
-                <p className="mb-3 text-xs text-white/40 font-medium uppercase tracking-wider">Arızalı cihazın türünü seçin</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {DEVICE_TYPES.map(({ id, label, sub, Icon }) => {
-                    const active = data.deviceType === id;
-                    return (
-                      <button
-                        key={id}
-                        onClick={() => { set("deviceType", id); set("deviceLabel", label + " / " + sub); set("brand", ""); set("model", ""); set("modelCustom", ""); }}
-                        className={`group relative flex flex-col gap-1.5 rounded-2xl border p-3.5 text-left transition-all duration-200 ${
-                          active
-                            ? "border-white/40 bg-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                            : "border-white/8 bg-white/[0.03] hover:border-white/20 hover:bg-white/6"
-                        }`}
-                        data-testid={`button-device-${id}`}
-                      >
-                        <div className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${active ? "bg-white text-black" : "bg-white/8 text-white/50 group-hover:bg-white/12 group-hover:text-white/70"}`}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <p className={`text-sm font-semibold leading-tight ${active ? "text-white" : "text-white/70"}`}>{label}</p>
-                          <p className={`text-[11px] leading-tight mt-0.5 ${active ? "text-white/50" : "text-white/30"}`}>{sub}</p>
-                        </div>
-                        {active && (
-                          <div className="absolute top-2.5 right-2.5">
-                            <CheckCircle2 className="h-4 w-4 text-green-400" />
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
+      <AnimatePresence mode="wait" custom={dir}>
+        <motion.div key={step} custom={dir}
+          variants={{ enter: (d:number)=>({x:d>0?24:-24,opacity:0}), center:{x:0,opacity:1}, exit:(d:number)=>({x:d>0?-24:24,opacity:0}) }}
+          initial="enter" animate="center" exit="exit"
+          transition={{duration:0.2,ease:"easeOut"}}
+        >
+
+          {/* ── ADIM 1 ── */}
+          {step === 1 && (
+            <div data-testid="wizard-step-1">
+              <p className="text-xs text-muted-foreground mb-4">Arızalı cihazın türünü seçin</p>
+              <div className="space-y-1.5">
+                {DEVICE_TYPES.map(({ id, label, Icon }) => {
+                  const active = data.deviceType === id;
+                  return (
+                    <button key={id} onClick={() => { set("deviceType",id); set("deviceLabel",label); set("brand",""); set("model",""); set("modelCustom",""); }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${
+                        active ? "bg-foreground text-background" : "bg-foreground/5 hover:bg-foreground/10 text-foreground"
+                      }`} data-testid={`button-device-${id}`}>
+                      <Icon className={`h-4 w-4 flex-shrink-0 ${active ? "opacity-80" : "opacity-40"}`} />
+                      <span className="text-sm font-medium">{label}</span>
+                      {active && <CheckCircle2 className="ml-auto h-4 w-4 opacity-70" />}
+                    </button>
+                  );
+                })}
+              </div>
+              <button onClick={() => go(2)} disabled={!data.deviceType}
+                className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-20"
+                data-testid="button-wizard-next-1">
+                Devam <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
+          {/* ── ADIM 2 ── */}
+          {step === 2 && (
+            <div className="space-y-5" data-testid="wizard-step-2">
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">Marka *</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {(BRANDS_BY_TYPE[data.deviceType]??[]).map(b => (
+                    <button key={b} onClick={() => { set("brand",b); set("model",""); set("modelCustom",""); }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                        data.brand===b ? "bg-foreground text-background border-foreground" : "border-foreground/20 text-foreground/70 hover:border-foreground/50 hover:text-foreground"
+                      }`} data-testid={`button-brand-${b}`}>
+                      {b}
+                    </button>
+                  ))}
                 </div>
-                <button
-                  onClick={() => go(2)}
-                  disabled={!data.deviceType}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-3 text-sm font-bold text-black hover:bg-white/90 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
-                  data-testid="button-wizard-next-1"
-                >
+              </div>
+
+              {data.brand && data.brand !== "Diğer" && (
+                <div>
+                  <label className="block text-xs text-muted-foreground mb-2">Model *</label>
+                  {models.length > 0 ? (
+                    <>
+                      <select value={data.model} onChange={e => { set("model",e.target.value); set("modelCustom",""); }} className={sel} data-testid="select-model">
+                        <option value="">Seçin...</option>
+                        {models.map(m => <option key={m} value={m}>{m}</option>)}
+                        <option value="__custom__">Listede yok / Manuel giriş</option>
+                      </select>
+                      {isCustom && (
+                        <input type="text" value={data.modelCustom} onChange={e => set("modelCustom",e.target.value)}
+                          placeholder="Model adını yazın..." className={`mt-3 ${inp}`} data-testid="input-model-custom" />
+                      )}
+                    </>
+                  ) : (
+                    <input type="text" value={data.modelCustom} onChange={e => { set("modelCustom",e.target.value); set("model","__custom__"); }}
+                      placeholder="Ör: SINAMICS G120..." className={inp} data-testid="input-model" />
+                  )}
+                </div>
+              )}
+
+              {data.brand === "Diğer" && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-2">Marka adı *</label>
+                    <input type="text" value={data.modelCustom} onChange={e => { set("modelCustom",e.target.value); set("model","__custom__"); }}
+                      placeholder="Marka..." className={inp} data-testid="input-brand-custom" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-muted-foreground mb-2">Model *</label>
+                    <input type="text" value={data.model==="__custom__"?"":data.model} onChange={e => set("model",e.target.value)}
+                      placeholder="Model..." className={inp} data-testid="input-model-other" />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">Hata Kodu <span className="opacity-50">(varsa)</span></label>
+                <input type="text" value={data.errorCode} onChange={e => set("errorCode",e.target.value)}
+                  placeholder="F0001, AL.10, Err01..." className={inp} data-testid="input-error-code" />
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <button onClick={() => go(1)} className="flex items-center gap-1 px-4 py-2.5 rounded-xl border border-foreground/15 text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="button-wizard-back-2">
+                  <ChevronLeft className="h-4 w-4" /> Geri
+                </button>
+                <button onClick={() => go(3)} disabled={!okNext2}
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-foreground text-background text-sm font-semibold hover:opacity-90 disabled:opacity-20 transition-opacity"
+                  data-testid="button-wizard-next-2">
                   Devam <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* ─── ADIM 2: Marka & Model ─── */}
-            {step === 2 && (
-              <div className="space-y-3" data-testid="wizard-step-2">
-                {/* Seçilen cihaz chip */}
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/60">
-                    <CheckCircle2 className="h-3 w-3 text-green-400" />
-                    {data.deviceLabel}
+          {/* ── ADIM 3 ── */}
+          {step === 3 && (
+            <div className="space-y-5" data-testid="wizard-step-3">
+              {/* özet */}
+              <div className="flex flex-wrap gap-1.5">
+                {[data.deviceLabel, effBrand, effModel].filter(Boolean).map((v,i) => (
+                  <span key={i} className="flex items-center gap-1 text-xs text-muted-foreground bg-foreground/5 border border-foreground/10 rounded-full px-2.5 py-1">
+                    <CheckCircle2 className="h-3 w-3 text-green-500" /> {v}
                   </span>
-                </div>
+                ))}
+              </div>
 
+              <div>
+                <label className="block text-xs text-muted-foreground mb-2">Arıza Açıklaması *</label>
+                <textarea value={data.faultDesc} onChange={e => set("faultDesc",e.target.value)} rows={3}
+                  placeholder="Cihazın belirtileri, ne zaman başladığı..."
+                  className={`${inp} resize-none`} data-testid="textarea-fault-desc" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Marka *</label>
-                  <select
-                    value={data.brand}
-                    onChange={e => { set("brand", e.target.value); set("model", ""); set("modelCustom", ""); }}
-                    className={selectCls}
-                    data-testid="select-brand"
-                  >
-                    <option value="">Marka seçin...</option>
-                    {(BRANDS_BY_TYPE[data.deviceType] ?? []).map(b => <option key={b} value={b}>{b}</option>)}
-                  </select>
+                  <label className="block text-xs text-muted-foreground mb-2">Ad Soyad *</label>
+                  <input type="text" value={data.name} onChange={e => set("name",e.target.value)} placeholder="Ad Soyad" className={inp} data-testid="input-wizard-name" />
                 </div>
-
-                {data.brand && data.brand !== "Diğer" && (
-                  <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Model *</label>
-                    {modelList.length > 0 ? (
-                      <>
-                        <select
-                          value={data.model}
-                          onChange={e => { set("model", e.target.value); set("modelCustom", ""); }}
-                          className={selectCls}
-                          data-testid="select-model"
-                        >
-                          <option value="">Model seçin...</option>
-                          {modelList.map(m => <option key={m} value={m}>{m}</option>)}
-                          <option value="__custom__">Listede yok / Manuel giriş</option>
-                        </select>
-                        {isCustom && (
-                          <input
-                            type="text" value={data.modelCustom}
-                            onChange={e => set("modelCustom", e.target.value)}
-                            placeholder="Model adını yazın..."
-                            className={`mt-2 ${inputCls}`}
-                            data-testid="input-model-custom"
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <input type="text" value={data.modelCustom}
-                        onChange={e => { set("modelCustom", e.target.value); set("model", "__custom__"); }}
-                        placeholder="Ör: SINAMICS G120, ACS550..."
-                        className={inputCls} data-testid="input-model" />
-                    )}
-                  </div>
-                )}
-
-                {data.brand === "Diğer" && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Marka adı *</label>
-                      <input type="text" value={data.modelCustom}
-                        onChange={e => { set("modelCustom", e.target.value); set("model", "__custom__"); }}
-                        placeholder="Marka..." className={inputCls} data-testid="input-brand-custom" />
-                    </div>
-                    <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Model *</label>
-                      <input type="text" value={data.model === "__custom__" ? "" : data.model}
-                        onChange={e => set("model", e.target.value)}
-                        placeholder="Model..." className={inputCls} data-testid="input-model-other" />
-                    </div>
-                  </div>
-                )}
-
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Hata Kodu <span className="normal-case font-normal">(varsa)</span></label>
-                  <input type="text" value={data.errorCode}
-                    onChange={e => set("errorCode", e.target.value)}
-                    placeholder="Ör: F0001, AL.10, Err01..."
-                    className={inputCls} data-testid="input-error-code" />
-                </div>
-
-                <div className="flex gap-2 pt-1">
-                  <button onClick={() => go(1)} className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/60 hover:bg-white/10 hover:text-white transition-colors" data-testid="button-wizard-back-2">
-                    <ChevronLeft className="h-4 w-4" /> Geri
-                  </button>
-                  <button onClick={() => go(3)} disabled={!canNext2}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-sm font-bold text-black hover:bg-white/90 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
-                    data-testid="button-wizard-next-2">
-                    Devam <ChevronRight className="h-4 w-4" />
-                  </button>
+                  <label className="block text-xs text-muted-foreground mb-2">Telefon</label>
+                  <input type="tel" value={data.phone} onChange={e => set("phone",e.target.value)} placeholder="05xx..." className={inp} data-testid="input-wizard-phone" />
                 </div>
               </div>
-            )}
 
-            {/* ─── ADIM 3: Arıza Detayı & Gönderim ─── */}
-            {step === 3 && (
-              <div className="space-y-4" data-testid="wizard-step-3">
-                {/* Özet chips */}
-                <div className="flex flex-wrap gap-1.5">
-                  {[data.deviceLabel.split(" / ")[0], effectBrand, effectModel].filter(Boolean).map((v, i) => (
-                    <span key={i} className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-2.5 py-1 text-xs text-white/50">
-                      <CheckCircle2 className="h-3 w-3 text-green-400 flex-shrink-0" /> {v}
-                    </span>
-                  ))}
-                </div>
+              {/* gönderim seçenekleri */}
+              <div className="pt-1 space-y-2">
+                <p className="text-xs text-muted-foreground mb-3">Nasıl iletmek istersiniz?</p>
 
-                <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Arıza Açıklaması *</label>
-                  <textarea value={data.faultDesc} onChange={e => set("faultDesc", e.target.value)}
-                    placeholder="Cihazın belirtileri, ne zaman başladığı, varsa denenen işlemler..."
-                    rows={3}
-                    className={`${inputCls} resize-none`}
-                    data-testid="textarea-fault-desc" />
-                </div>
+                <button onClick={handleWA} disabled={!okBase}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-[#25D366] text-white font-semibold text-sm hover:bg-[#20ba5a] transition-colors disabled:opacity-30"
+                  data-testid="button-wizard-whatsapp">
+                  <MessageCircle className="h-5 w-5" />
+                  <span>WhatsApp ile Gönder</span>
+                  <span className="ml-auto text-xs font-normal opacity-70">Hazır mesaj açılır</span>
+                </button>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Ad Soyad *</label>
-                    <input type="text" value={data.name} onChange={e => set("name", e.target.value)}
-                      placeholder="Ad Soyad" className={inputCls} data-testid="input-wizard-name" />
+                <div className="rounded-xl border border-foreground/10 overflow-hidden">
+                  <div className="px-4 py-3 flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-sm font-semibold">E-posta ile Gönder</span>
+                    <span className="ml-auto text-xs text-muted-foreground">info@buremelektronik.com</span>
                   </div>
-                  <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-white/40 uppercase tracking-wider">Telefon</label>
-                    <input type="tel" value={data.phone} onChange={e => set("phone", e.target.value)}
-                      placeholder="05xx..." className={inputCls} data-testid="input-wizard-phone" />
-                  </div>
-                </div>
-
-                {/* Gönderim seçenekleri */}
-                <div className="space-y-2 pt-1">
-                  <p className="text-xs font-semibold text-white/30 uppercase tracking-wider">Nasıl iletmek istersiniz?</p>
-
-                  {/* WhatsApp */}
-                  <button onClick={handleWA} disabled={!canBase}
-                    className="group flex w-full items-center gap-3.5 rounded-2xl border border-[#25D366]/25 bg-[#25D366]/8 px-4 py-3.5 text-left transition-all hover:border-[#25D366]/50 hover:bg-[#25D366]/15 disabled:opacity-30 disabled:cursor-not-allowed"
-                    data-testid="button-wizard-whatsapp">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#25D366]/20 transition-colors group-hover:bg-[#25D366]/30">
-                      <MessageCircle className="h-5 w-5 text-[#25D366]" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white">WhatsApp ile Gönder</p>
-                      <p className="text-xs text-white/40">Hazır mesaj açılır, siz onaylarsınız</p>
-                    </div>
-                    <ChevronRight className="ml-auto h-4 w-4 text-white/20 flex-shrink-0 group-hover:text-white/40 transition-colors" />
-                  </button>
-
-                  {/* E-posta */}
-                  <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-3.5 space-y-2.5">
-                    <div className="flex items-center gap-3.5">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-500/15">
-                        <Mail className="h-5 w-5 text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white">E-posta ile Gönder</p>
-                        <p className="text-xs text-white/40">info@buremelektronik.com adresine iletilir</p>
-                      </div>
-                    </div>
-                    <input type="email" value={data.userEmail}
-                      onChange={e => { set("userEmail", e.target.value); setEmailError(""); }}
-                      placeholder="E-posta adresiniz (yanıt için)..."
-                      className={inputCls}
-                      data-testid="input-user-email" />
-                    {emailError && <p className="text-xs text-red-400" data-testid="text-email-error">{emailError}</p>}
-                    <button onClick={handleEmail} disabled={!canEmail || sending}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-2.5 text-sm font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  <div className="px-4 pb-4 space-y-2 border-t border-foreground/8">
+                    <input type="email" value={data.userEmail} onChange={e => { set("userEmail",e.target.value); setEmailError(""); }}
+                      placeholder="E-posta adresiniz..." className={`mt-3 ${inp}`} data-testid="input-user-email" />
+                    {emailError && <p className="text-xs text-red-500" data-testid="text-email-error">{emailError}</p>}
+                    <button onClick={handleEmail} disabled={!okEmail||sending}
+                      className="w-full py-2.5 rounded-lg bg-foreground text-background text-sm font-semibold hover:opacity-90 disabled:opacity-25 transition-opacity"
                       data-testid="button-wizard-email">
-                      {sending ? <><Loader2 className="h-4 w-4 animate-spin" /> Gönderiliyor...</> : "Maili Gönder"}
+                      {sending ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin"/>Gönderiliyor...</span> : "Gönder"}
                     </button>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <button onClick={() => go(2)} className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-medium text-white/40 hover:bg-white/8 hover:text-white/70 transition-colors" data-testid="button-wizard-back-3">
-                    <ChevronLeft className="h-3.5 w-3.5" /> Geri
-                  </button>
-                  <p className="text-[11px] text-white/25 leading-snug">
-                    Bilgileriniz yalnızca arızanızı değerlendirmek amacıyla kullanılır.
-                  </p>
-                </div>
               </div>
-            )}
 
-          </motion.div>
-        </AnimatePresence>
-      </div>
+              <button onClick={() => go(2)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors" data-testid="button-wizard-back-3">
+                <ChevronLeft className="h-3.5 w-3.5" /> Geri
+              </button>
+            </div>
+          )}
+
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
