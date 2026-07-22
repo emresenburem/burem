@@ -290,12 +290,13 @@ interface WizardState {
   faultDesc:   string;
   name:        string;
   phone:       string;
+  userEmail:   string;
 }
 
 const INIT: WizardState = {
   deviceType: "", deviceLabel: "", brand: "",
   model: "", modelCustom: "", errorCode: "",
-  faultDesc: "", name: "", phone: "",
+  faultDesc: "", name: "", phone: "", userEmail: "",
 };
 
 /* ─────────────────────────────────────────────
@@ -338,53 +339,56 @@ function StepIndicator({ current }: { current: number }) {
 export function FaultReportWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardState>(INIT);
-  const [sent, setSent] = useState(false);
+  const [sentVia, setSentVia] = useState<"whatsapp" | "email" | null>(null);
   const [sending, setSending] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const set = (k: keyof WizardState, v: string) =>
     setData((d) => ({ ...d, [k]: v }));
 
-  /* modeller: seçili cihaz+marka kombinasyonu */
   const modelList: string[] = (() => {
     const typeModels = MODELS[data.deviceType];
     if (!typeModels) return [];
     return typeModels[data.brand] ?? [];
   })();
 
-  const isCustomModel = data.model === "__custom__";
+  const isCustomModel  = data.model === "__custom__";
   const effectiveModel = isCustomModel ? data.modelCustom.trim() : data.model;
+  const effectiveBrand = data.brand === "Diğer" ? data.modelCustom : data.brand;
 
-  const canNext1 = !!data.deviceType;
-  const canNext2 = !!data.brand && !!effectiveModel;
-  const canSend  = !!data.faultDesc.trim() && !!data.name.trim();
+  const canNext1   = !!data.deviceType;
+  const canNext2   = !!data.brand && !!effectiveModel;
+  const canBase    = !!data.faultDesc.trim() && !!data.name.trim();
+  const canEmail   = canBase && !!data.userEmail.trim();
 
   function buildWAMessage() {
     const lines = [
-      "🔧 *Arıza Bildirimi — Burem Elektronik*",
-      "",
+      "🔧 *Arıza Bildirimi — Burem Elektronik*", "",
       `📦 *Cihaz Türü:* ${data.deviceLabel}`,
-      `🏷️ *Marka:* ${data.brand === "Diğer" ? data.modelCustom : data.brand}`,
+      `🏷️ *Marka:* ${effectiveBrand}`,
       `🔩 *Model:* ${effectiveModel}`,
-      data.errorCode ? `⚠️ *Hata Kodu:* ${data.errorCode}` : null,
-      "",
-      `📋 *Arıza Açıklaması:*\n${data.faultDesc}`,
-      "",
+      data.errorCode ? `⚠️ *Hata Kodu:* ${data.errorCode}` : null, "",
+      `📋 *Arıza Açıklaması:*\n${data.faultDesc}`, "",
       `👤 *Ad Soyad:* ${data.name}`,
       data.phone ? `📞 *Telefon:* ${data.phone}` : null,
     ].filter(Boolean).join("\n");
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
   }
 
-  async function handleSend() {
+  function handleWhatsApp() {
+    window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
+    setSentVia("whatsapp");
+  }
+
+  async function handleEmail() {
+    if (!data.userEmail.trim()) {
+      setEmailError("E-posta adresinizi girin.");
+      return;
+    }
+    setEmailError("");
     setSending(true);
-    const effectiveBrand = data.brand === "Diğer" ? data.modelCustom : data.brand;
-
-    // WhatsApp'ı hemen aç (popup blocker önlemek için tıklama anında)
-    const waWin = window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
-
-    // Mail gönderimi arka planda
     try {
-      await fetch("/api/fault-report", {
+      const res = await fetch("/api/fault-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -395,34 +399,48 @@ export function FaultReportWizard() {
           faultDesc:   data.faultDesc,
           name:        data.name,
           phone:       data.phone,
+          userEmail:   data.userEmail,
         }),
       });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        setEmailError(d.error || "Mail gönderilemedi, lütfen tekrar deneyin.");
+        setSending(false);
+        return;
+      }
     } catch {
-      // Mail hatası kullanıcıyı engellemesin
+      setEmailError("Bağlantı hatası, lütfen tekrar deneyin.");
+      setSending(false);
+      return;
     }
-
     setSending(false);
-    setSent(true);
+    setSentVia("email");
   }
 
-  function reset() { setData(INIT); setStep(1); setSent(false); setSending(false); }
+  function reset() { setData(INIT); setStep(1); setSentVia(null); setSending(false); setEmailError(""); }
 
   /* ── BAŞARILI ── */
-  if (sent) {
+  if (sentVia) {
     return (
       <div className="flex flex-col items-center gap-3 py-8 text-center" data-testid="wizard-success">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500/15">
           <CheckCircle2 className="h-7 w-7 text-green-500" />
         </div>
-        <p className="text-lg font-semibold">Bildirim gönderildi!</p>
-        <div className="flex flex-col gap-1.5 mt-1">
-          <p className="text-sm text-muted-foreground">
-            📱 <span className="font-medium text-foreground">WhatsApp</span> açıldı — "Gönder" tuşuna basın.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            📧 Arıza bildirimi <span className="font-medium text-foreground">info@buremelektronik.com</span> adresine iletildi.
-          </p>
-        </div>
+        {sentVia === "whatsapp" ? (
+          <>
+            <p className="text-lg font-semibold">WhatsApp açıldı!</p>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Hazırlanan mesajı göndermek için WhatsApp'ta <strong>"Gönder"</strong> tuşuna basın.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-lg font-semibold">Mesajınız iletildi!</p>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Arıza bildiriminiz <strong>info@buremelektronik.com</strong> adresine gönderildi. En kısa sürede dönüş yapacağız.
+            </p>
+          </>
+        )}
         <button
           onClick={reset}
           className="mt-3 rounded-full border border-border bg-muted px-5 py-2 text-sm font-medium hover:bg-accent transition-colors"
@@ -604,9 +622,9 @@ export function FaultReportWizard() {
       {/* ── ADIM 3 — Arıza Detayı & İletişim ── */}
       {step === 3 && (
         <div className="space-y-3" data-testid="wizard-step-3">
-          {/* Özet chip'leri */}
+          {/* Seçilen bilgiler özet */}
           <div className="flex flex-wrap gap-1.5">
-            {[data.deviceLabel, data.brand === "Diğer" ? data.modelCustom : data.brand, effectiveModel]
+            {[data.deviceLabel, effectiveBrand, effectiveModel]
               .filter(Boolean)
               .map((v, i) => (
                 <span key={i} className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-xs text-muted-foreground">
@@ -653,26 +671,71 @@ export function FaultReportWizard() {
             </div>
           </div>
 
-          <div className="flex gap-2 pt-1">
+          {/* Geri butonu */}
+          <button
+            onClick={() => setStep(2)}
+            className="flex items-center gap-1 rounded-2xl border border-border bg-muted/40 px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+            data-testid="button-wizard-back-3"
+          >
+            <ChevronLeft className="h-4 w-4" /> Geri
+          </button>
+
+          {/* ─── Gönderim seçenekleri ─── */}
+          <div className="rounded-2xl border border-border bg-muted/20 p-3 space-y-2">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nasıl iletmek istersiniz?</p>
+
+            {/* WhatsApp */}
             <button
-              onClick={() => setStep(2)}
-              className="flex items-center gap-1 rounded-2xl border border-border bg-muted/40 px-4 py-2.5 text-sm font-medium hover:bg-muted transition-colors"
-              data-testid="button-wizard-back-3"
+              onClick={handleWhatsApp}
+              disabled={!canBase}
+              className="flex w-full items-center gap-3 rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 px-4 py-3 text-left hover:bg-[#25D366]/20 transition-colors disabled:opacity-40"
+              data-testid="button-wizard-whatsapp"
             >
-              <ChevronLeft className="h-4 w-4" /> Geri
+              <MessageCircle className="h-5 w-5 flex-shrink-0 text-[#25D366]" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">WhatsApp ile Gönder</p>
+                <p className="text-xs text-muted-foreground">Hazır mesajla WhatsApp açılır, siz onaylarsınız</p>
+              </div>
             </button>
-            <button
-              onClick={handleSend}
-              disabled={!canSend || sending}
-              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#20ba5a] transition-colors disabled:opacity-40"
-              data-testid="button-wizard-send"
-            >
-              {sending
-                ? <><Loader2 className="h-4 w-4 animate-spin" /> Gönderiliyor...</>
-                : <><MessageCircle className="h-4 w-4" /> WhatsApp &amp; Mail Gönder</>
-              }
-            </button>
+
+            {/* E-posta */}
+            <div className={`rounded-xl border transition-colors ${data.userEmail ? "border-blue-500/40 bg-blue-500/10" : "border-border bg-muted/30"}`}>
+              <div className="flex items-center gap-3 px-4 pt-3">
+                <svg className="h-5 w-5 flex-shrink-0 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">E-posta ile Gönder</p>
+                  <p className="text-xs text-muted-foreground">info@buremelektronik.com adresine iletilir</p>
+                </div>
+              </div>
+              <div className="px-4 pb-3 pt-2 space-y-2">
+                <input
+                  type="email"
+                  value={data.userEmail}
+                  onChange={(e) => { set("userEmail", e.target.value); setEmailError(""); }}
+                  placeholder="E-posta adresiniz (yanıt için)"
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  data-testid="input-user-email"
+                />
+                {emailError && (
+                  <p className="text-xs text-red-500" data-testid="text-email-error">{emailError}</p>
+                )}
+                <button
+                  onClick={handleEmail}
+                  disabled={!canEmail || sending}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:opacity-40"
+                  data-testid="button-wizard-email"
+                >
+                  {sending
+                    ? <><Loader2 className="h-4 w-4 animate-spin" /> Gönderiliyor...</>
+                    : "Maili Gönder"
+                  }
+                </button>
+              </div>
+            </div>
           </div>
+
           <p className="text-[11px] text-muted-foreground text-center leading-snug">
             Bilgileriniz yalnızca arızanızı değerlendirmek amacıyla kullanılır.
           </p>

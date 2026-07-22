@@ -74,7 +74,7 @@ export async function registerRoutes(
 
   app.post("/api/fault-report", async (req, res) => {
     try {
-      const { deviceLabel, brand, model, errorCode, faultDesc, name, phone } = req.body ?? {};
+      const { deviceLabel, brand, model, errorCode, faultDesc, name, phone, userEmail } = req.body ?? {};
 
       if (!deviceLabel || !brand || !model || !faultDesc || !name) {
         return res.status(400).json({ error: "Zorunlu alanlar eksik" });
@@ -85,7 +85,8 @@ export async function registerRoutes(
       }
 
       const to   = process.env.CONTACT_TO_EMAIL   || "info@buremelektronik.com";
-      const from = process.env.CONTACT_FROM_EMAIL || "noreply@buremelektronik.com";
+      // onboarding@resend.dev domain doğrulaması gerektirmez (tüm Resend hesaplarında çalışır)
+      const from = process.env.CONTACT_FROM_EMAIL || "Burem Elektronik <onboarding@resend.dev>";
 
       const html = `
 <!DOCTYPE html>
@@ -158,6 +159,7 @@ export async function registerRoutes(
         to,
         subject: `Arıza Bildirimi: ${brand} ${model} — ${name}`,
         html,
+        ...(userEmail ? { replyTo: userEmail } : {}),
       });
 
       if (error) {
