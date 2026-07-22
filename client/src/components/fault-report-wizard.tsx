@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle, PenLine } from "lucide-react";
+import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle, Loader2 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
    CİHAZ TÜRLERİ
@@ -339,6 +339,7 @@ export function FaultReportWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardState>(INIT);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const set = (k: keyof WizardState, v: string) =>
     setData((d) => ({ ...d, [k]: v }));
@@ -362,7 +363,7 @@ export function FaultReportWizard() {
       "🔧 *Arıza Bildirimi — Burem Elektronik*",
       "",
       `📦 *Cihaz Türü:* ${data.deviceLabel}`,
-      `🏷️ *Marka:* ${data.brand}`,
+      `🏷️ *Marka:* ${data.brand === "Diğer" ? data.modelCustom : data.brand}`,
       `🔩 *Model:* ${effectiveModel}`,
       data.errorCode ? `⚠️ *Hata Kodu:* ${data.errorCode}` : null,
       "",
@@ -374,27 +375,57 @@ export function FaultReportWizard() {
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
   }
 
-  function handleSend() {
-    window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
+  async function handleSend() {
+    setSending(true);
+    const effectiveBrand = data.brand === "Diğer" ? data.modelCustom : data.brand;
+
+    // WhatsApp'ı hemen aç (popup blocker önlemek için tıklama anında)
+    const waWin = window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
+
+    // Mail gönderimi arka planda
+    try {
+      await fetch("/api/fault-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deviceLabel: data.deviceLabel,
+          brand:       effectiveBrand,
+          model:       effectiveModel,
+          errorCode:   data.errorCode,
+          faultDesc:   data.faultDesc,
+          name:        data.name,
+          phone:       data.phone,
+        }),
+      });
+    } catch {
+      // Mail hatası kullanıcıyı engellemesin
+    }
+
+    setSending(false);
     setSent(true);
   }
 
-  function reset() { setData(INIT); setStep(1); setSent(false); }
+  function reset() { setData(INIT); setStep(1); setSent(false); setSending(false); }
 
   /* ── BAŞARILI ── */
   if (sent) {
     return (
       <div className="flex flex-col items-center gap-3 py-8 text-center" data-testid="wizard-success">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500/15">
-          <MessageCircle className="h-7 w-7 text-green-500" />
+          <CheckCircle2 className="h-7 w-7 text-green-500" />
         </div>
-        <p className="text-lg font-semibold">WhatsApp açıldı!</p>
-        <p className="text-sm text-muted-foreground max-w-xs">
-          Mesajı göndermek için WhatsApp'ta "Gönder" tuşuna basın. En kısa sürede dönüş yapacağız.
-        </p>
+        <p className="text-lg font-semibold">Bildirim gönderildi!</p>
+        <div className="flex flex-col gap-1.5 mt-1">
+          <p className="text-sm text-muted-foreground">
+            📱 <span className="font-medium text-foreground">WhatsApp</span> açıldı — "Gönder" tuşuna basın.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            📧 Arıza bildirimi <span className="font-medium text-foreground">info@buremelektronik.com</span> adresine iletildi.
+          </p>
+        </div>
         <button
           onClick={reset}
-          className="mt-2 rounded-full border border-border bg-muted px-5 py-2 text-sm font-medium hover:bg-accent transition-colors"
+          className="mt-3 rounded-full border border-border bg-muted px-5 py-2 text-sm font-medium hover:bg-accent transition-colors"
           data-testid="button-wizard-reset"
         >
           Yeni Bildirim
@@ -632,12 +663,14 @@ export function FaultReportWizard() {
             </button>
             <button
               onClick={handleSend}
-              disabled={!canSend}
+              disabled={!canSend || sending}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#20ba5a] transition-colors disabled:opacity-40"
               data-testid="button-wizard-send"
             >
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp'tan Gönder
+              {sending
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Gönderiliyor...</>
+                : <><MessageCircle className="h-4 w-4" /> WhatsApp &amp; Mail Gönder</>
+              }
             </button>
           </div>
           <p className="text-[11px] text-muted-foreground text-center leading-snug">
