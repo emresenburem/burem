@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle } from "lucide-react";
 
 /* ─────────────────────────────────────────────
    CİHAZ TÜRLERİ
@@ -334,13 +334,71 @@ function StepIndicator({ current }: { current: number }) {
 }
 
 /* ─────────────────────────────────────────────
-   ANA BILEŞEN
+   PROGRESS BAR bileşeni
 ───────────────────────────────────────────── */
+function SendProgressBar({
+  active,
+  color,
+  label,
+}: {
+  active: boolean;
+  color: "green" | "blue";
+  label: string;
+}) {
+  const [width, setWidth] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!active) { setWidth(0); return; }
+
+    setWidth(0);
+    let current = 0;
+
+    timerRef.current = setInterval(() => {
+      // Hızlı başla, 85'te yavaşla (API bekleniyor)
+      const step = current < 40 ? 6 : current < 70 ? 3 : current < 85 ? 1 : 0;
+      current = Math.min(current + step, 85);
+      setWidth(current);
+    }, 80);
+
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [active]);
+
+  // Dışarıdan %100 sinyali geldiğinde bar dolsun
+  useEffect(() => {
+    if (!active && width > 0) {
+      setWidth(100);
+      const t = setTimeout(() => setWidth(0), 600);
+      return () => clearTimeout(t);
+    }
+  }, [active]);
+
+  if (width === 0 && !active) return null;
+
+  const bg = color === "green" ? "bg-[#25D366]" : "bg-blue-500";
+
+  return (
+    <div className="mt-2 space-y-1" data-testid="progress-bar-wrapper">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <span className="text-xs text-muted-foreground">{Math.round(width)}%</span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+        <div
+          className={`h-full rounded-full transition-all duration-150 ease-out ${bg}`}
+          style={{ width: `${width}%` }}
+          data-testid="progress-bar-fill"
+        />
+      </div>
+    </div>
+  );
+}
+
 export function FaultReportWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardState>(INIT);
   const [sentVia, setSentVia] = useState<"whatsapp" | "email" | null>(null);
-  const [sending, setSending] = useState(false);
+  const [sendingVia, setSendingVia] = useState<"whatsapp" | "email" | null>(null);
   const [emailError, setEmailError] = useState("");
 
   const set = (k: keyof WizardState, v: string) =>
@@ -356,10 +414,11 @@ export function FaultReportWizard() {
   const effectiveModel = isCustomModel ? data.modelCustom.trim() : data.model;
   const effectiveBrand = data.brand === "Diğer" ? data.modelCustom : data.brand;
 
-  const canNext1   = !!data.deviceType;
-  const canNext2   = !!data.brand && !!effectiveModel;
-  const canBase    = !!data.faultDesc.trim() && !!data.name.trim();
-  const canEmail   = canBase && !!data.userEmail.trim();
+  const canNext1  = !!data.deviceType;
+  const canNext2  = !!data.brand && !!effectiveModel;
+  const canBase   = !!data.faultDesc.trim() && !!data.name.trim();
+  const canEmail  = canBase && !!data.userEmail.trim();
+  const isSending = !!sendingVia;
 
   function buildWAMessage() {
     const lines = [
@@ -375,18 +434,19 @@ export function FaultReportWizard() {
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
   }
 
-  function handleWhatsApp() {
+  async function handleWhatsApp() {
+    setSendingVia("whatsapp");
+    // Kısa animasyon — 1.2 sn sonra WA aç + başarı
+    await new Promise((r) => setTimeout(r, 1200));
     window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
+    setSendingVia(null);
     setSentVia("whatsapp");
   }
 
   async function handleEmail() {
-    if (!data.userEmail.trim()) {
-      setEmailError("E-posta adresinizi girin.");
-      return;
-    }
+    if (!data.userEmail.trim()) { setEmailError("E-posta adresinizi girin."); return; }
     setEmailError("");
-    setSending(true);
+    setSendingVia("email");
     try {
       const res = await fetch("/api/fault-report", {
         method: "POST",
@@ -405,19 +465,22 @@ export function FaultReportWizard() {
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
         setEmailError(d.error || "Mail gönderilemedi, lütfen tekrar deneyin.");
-        setSending(false);
+        setSendingVia(null);
         return;
       }
     } catch {
       setEmailError("Bağlantı hatası, lütfen tekrar deneyin.");
-      setSending(false);
+      setSendingVia(null);
       return;
     }
-    setSending(false);
+    setSendingVia(null);
     setSentVia("email");
   }
 
-  function reset() { setData(INIT); setStep(1); setSentVia(null); setSending(false); setEmailError(""); }
+  function reset() {
+    setData(INIT); setStep(1);
+    setSentVia(null); setSendingVia(null); setEmailError("");
+  }
 
   /* ── BAŞARILI ── */
   if (sentVia) {
@@ -685,18 +748,27 @@ export function FaultReportWizard() {
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nasıl iletmek istersiniz?</p>
 
             {/* WhatsApp */}
-            <button
-              onClick={handleWhatsApp}
-              disabled={!canBase}
-              className="flex w-full items-center gap-3 rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 px-4 py-3 text-left hover:bg-[#25D366]/20 transition-colors disabled:opacity-40"
-              data-testid="button-wizard-whatsapp"
-            >
-              <MessageCircle className="h-5 w-5 flex-shrink-0 text-[#25D366]" />
-              <div>
-                <p className="text-sm font-semibold text-foreground">WhatsApp ile Gönder</p>
-                <p className="text-xs text-muted-foreground">Hazır mesajla WhatsApp açılır, siz onaylarsınız</p>
-              </div>
-            </button>
+            <div>
+              <button
+                onClick={handleWhatsApp}
+                disabled={!canBase || isSending}
+                className="flex w-full items-center gap-3 rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 px-4 py-3 text-left hover:bg-[#25D366]/20 transition-colors disabled:opacity-40"
+                data-testid="button-wizard-whatsapp"
+              >
+                <MessageCircle className="h-5 w-5 flex-shrink-0 text-[#25D366]" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">
+                    {sendingVia === "whatsapp" ? "WhatsApp açılıyor…" : "WhatsApp ile Gönder"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Hazır mesajla WhatsApp açılır, siz onaylarsınız</p>
+                </div>
+              </button>
+              <SendProgressBar
+                active={sendingVia === "whatsapp"}
+                color="green"
+                label="WhatsApp'a bağlanıyor…"
+              />
+            </div>
 
             {/* E-posta */}
             <div className={`rounded-xl border transition-colors ${data.userEmail ? "border-blue-500/40 bg-blue-500/10" : "border-border bg-muted/30"}`}>
@@ -723,15 +795,17 @@ export function FaultReportWizard() {
                 )}
                 <button
                   onClick={handleEmail}
-                  disabled={!canEmail || sending}
+                  disabled={!canEmail || isSending}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:opacity-40"
                   data-testid="button-wizard-email"
                 >
-                  {sending
-                    ? <><Loader2 className="h-4 w-4 animate-spin" /> Gönderiliyor...</>
-                    : "Maili Gönder"
-                  }
+                  {sendingVia === "email" ? "Gönderiliyor…" : "Maili Gönder"}
                 </button>
+                <SendProgressBar
+                  active={sendingVia === "email"}
+                  color="blue"
+                  label="Mail sunucusuna iletiliyor…"
+                />
               </div>
             </div>
           </div>
