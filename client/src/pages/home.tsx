@@ -129,6 +129,7 @@ function SlideNavTab({
 
 
 import { Button } from "@/components/ui/button";
+import { FaultReportWizard } from "@/components/fault-report-wizard";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -1277,10 +1278,10 @@ export default function HomePage() {
                 className="mt-3 text-sm text-muted-foreground"
                 data-testid="text-contact-subtitle"
               >
-                Cihazın marka/modeli ve arıza belirtisini yazın; hızlıca dönüş yapalım.
+                Birkaç adımda arızanızı tanımlayın; WhatsApp üzerinden hemen iletişime geçelim.
               </p>
 
-              <ContactForm />
+              <FaultReportWizard />
             </Card>
 
             <div className="h-full min-h-[520px]">
