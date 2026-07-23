@@ -175,6 +175,15 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/products", async (req, res) => {
+    const parsed = insertProductSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.errors });
+    }
+    const product = await storage.createProduct(parsed.data);
+    res.status(201).json(product);
+  });
+
   app.put("/api/products/:id", async (req, res) => {
     const parsed = insertProductSchema.partial().safeParse(req.body);
     if (!parsed.success) {
