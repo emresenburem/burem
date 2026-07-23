@@ -305,13 +305,19 @@ export default function MagazaPage() {
               </a>
             </div>
           ) : (
-            <div
-              ref={scrollRef}
-              className="flex h-full overflow-x-auto"
-              style={{ scrollbarWidth: "thin" }}
-              data-testid="strip-products"
-            >
-              {filtered.map((p) => <ProductCard key={p.id} p={p} />)}
+            <div className="relative h-full">
+              <div
+                ref={scrollRef}
+                className="flex h-full overflow-x-auto"
+                style={{ scrollbarWidth: "thin" }}
+                data-testid="strip-products"
+              >
+                {filtered.map((p) => <ProductCard key={p.id} p={p} />)}
+              </div>
+              {/* Sol kenar fade */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
+              {/* Sağ kenar fade */}
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
             </div>
           )}
         </div>
