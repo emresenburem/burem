@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import type { Product } from "@shared/schema";
-import { MessageCircle, Phone, Search, SlidersHorizontal, X, Package, CheckCircle2, XCircle } from "lucide-react";
+import { MessageCircle, Phone, Search, SlidersHorizontal, X, Package, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import BuremFooter from "@/components/ui/footer";
 import { SEO } from "@/components/seo";
 
@@ -22,11 +22,12 @@ function waLink(p: Product) {
 function ProductCard({ p }: { p: Product }) {
   return (
     <div
-      className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden hover:border-border/80 hover:shadow-lg transition-all duration-200"
+      className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden hover:border-border/80 hover:shadow-xl transition-all duration-200 flex-shrink-0"
+      style={{ width: 260 }}
       data-testid={`card-product-${p.id}`}
     >
       {/* Görsel */}
-      <div className="relative aspect-[4/3] bg-muted overflow-hidden">
+      <div className="relative bg-muted overflow-hidden" style={{ height: 200 }}>
         {p.imageUrl ? (
           <img
             src={p.imageUrl}
@@ -38,7 +39,6 @@ function ProductCard({ p }: { p: Product }) {
             <Package className="h-12 w-12 text-muted-foreground/30" />
           </div>
         )}
-        {/* Stok durumu */}
         <span className={`absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
           p.inStock ? "bg-green-500/15 text-green-600 border border-green-500/30" : "bg-red-500/10 text-red-500 border border-red-500/20"
         }`}>
@@ -47,7 +47,6 @@ function ProductCard({ p }: { p: Product }) {
             : <><XCircle className="h-3 w-3" />Stok Dışı</>
           }
         </span>
-        {/* Durum etiketi */}
         {p.condition && p.condition !== "new" && (
           <span className="absolute top-2 left-2 rounded-full border border-border bg-background/90 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
             {CONDITIONS[p.condition] ?? p.condition}
@@ -93,9 +92,10 @@ function ProductCard({ p }: { p: Product }) {
 }
 
 export default function MagazaPage() {
-  const [search, setSearch]   = useState("");
-  const [brand, setBrand]     = useState("Tümü");
-  const [cat, setCat]         = useState("Tümü");
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [search, setSearch]       = useState("");
+  const [brand, setBrand]         = useState("Tümü");
+  const [cat, setCat]             = useState("Tümü");
   const [stockOnly, setStockOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -127,6 +127,12 @@ export default function MagazaPage() {
     stockOnly && "Stokta",
   ].filter(Boolean) as string[];
 
+  function scroll(dir: "left" | "right") {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === "right" ? 560 : -560, behavior: "smooth" });
+  }
+
   return (
     <>
       <SEO
@@ -135,10 +141,10 @@ export default function MagazaPage() {
         canonical="/magaza"
       />
 
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground flex flex-col">
         {/* Nav */}
         <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
-          <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+          <nav className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-3">
             <Link href="/" className="flex items-center gap-2" aria-label="Ana sayfa">
               <img src="/logo.png" alt="Burem Elektronik" className="h-9 w-auto" />
             </Link>
@@ -164,23 +170,44 @@ export default function MagazaPage() {
           </nav>
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 py-8 md:px-6">
-          {/* Başlık */}
-          <div className="mb-6">
-            <Link href="/" className="mb-3 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              ← Ana Sayfa
-            </Link>
-            <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
-              Yedek Parça Kataloğu
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              {isLoading ? "Yükleniyor…" : `${filtered.length} ürün listelendi`}
-            </p>
+        {/* Kontrol şeridi — tam genişlik */}
+        <div className="border-b border-border bg-background px-6 py-5">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <Link href="/" className="mb-1 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                ← Ana Sayfa
+              </Link>
+              <h1 className="text-2xl font-bold tracking-tight" style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}>
+                Yedek Parça Kataloğu
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {isLoading ? "Yükleniyor…" : `${filtered.length} ürün`}
+              </p>
+            </div>
+            {/* Ok butonları */}
+            <div className="flex items-center gap-2 pt-6">
+              <button
+                onClick={() => scroll("left")}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-muted/40 text-foreground hover:bg-muted transition-colors"
+                data-testid="button-scroll-left"
+                aria-label="Sola kaydır"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-foreground text-background hover:bg-foreground/80 transition-colors"
+                data-testid="button-scroll-right"
+                aria-label="Sağa kaydır"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
-          {/* Arama + Filtre satırı */}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
+          {/* Arama + Filtre */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="search"
@@ -208,12 +235,29 @@ export default function MagazaPage() {
                 </span>
               )}
             </button>
+
+            {/* Aktif filtre chip'leri */}
+            {activeFilters.length > 0 && !filtersOpen && (
+              <div className="flex flex-wrap gap-2">
+                {activeFilters.map((f) => (
+                  <span key={f} className="flex items-center gap-1 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-foreground">
+                    {f}
+                    <button onClick={() => {
+                      if (f === brand) setBrand("Tümü");
+                      else if (f === cat) setCat("Tümü");
+                      else setStockOnly(false);
+                    }} className="ml-0.5 hover:text-red-500 transition-colors">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Filtre paneli */}
           {filtersOpen && (
-            <div className="mb-6 rounded-2xl border border-border bg-card p-4 space-y-4">
-              {/* Marka */}
+            <div className="mt-4 rounded-2xl border border-border bg-card p-4 space-y-4">
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Marka</p>
                 <div className="flex flex-wrap gap-2">
@@ -231,7 +275,6 @@ export default function MagazaPage() {
                   ))}
                 </div>
               </div>
-              {/* Kategori */}
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kategori</p>
                 <div className="flex flex-wrap gap-2">
@@ -249,7 +292,6 @@ export default function MagazaPage() {
                   ))}
                 </div>
               </div>
-              {/* Stok */}
               <div className="flex items-center gap-3">
                 <button
                   role="switch"
@@ -262,7 +304,6 @@ export default function MagazaPage() {
                 </button>
                 <span className="text-sm text-foreground">Sadece stokta olanlar</span>
               </div>
-              {/* Sıfırla */}
               {activeFilters.length > 0 && (
                 <button
                   onClick={() => { setBrand("Tümü"); setCat("Tümü"); setStockOnly(false); }}
@@ -274,30 +315,14 @@ export default function MagazaPage() {
               )}
             </div>
           )}
+        </div>
 
-          {/* Aktif filtre chip'leri */}
-          {activeFilters.length > 0 && !filtersOpen && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              {activeFilters.map((f) => (
-                <span key={f} className="flex items-center gap-1 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-foreground">
-                  {f}
-                  <button onClick={() => {
-                    if (f === brand) setBrand("Tümü");
-                    else if (f === cat) setCat("Tümü");
-                    else setStockOnly(false);
-                  }} className="ml-0.5 hover:text-red-500 transition-colors">
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Ürün grid */}
+        {/* Yatay ürün şeridi — tam genişlik */}
+        <div className="flex-1 overflow-hidden relative">
           {isLoading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-muted" />
+            <div className="flex gap-4 px-6 py-8 overflow-hidden">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="flex-shrink-0 animate-pulse rounded-2xl bg-muted" style={{ width: 260, height: 380 }} />
               ))}
             </div>
           ) : filtered.length === 0 ? (
@@ -316,11 +341,18 @@ export default function MagazaPage() {
               </a>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" data-testid="grid-products">
+            <div
+              ref={scrollRef}
+              className="flex gap-4 px-6 py-8 overflow-x-auto scroll-smooth"
+              style={{ scrollbarWidth: "thin" }}
+              data-testid="strip-products"
+            >
               {filtered.map((p) => <ProductCard key={p.id} p={p} />)}
+              {/* Sağ boşluk */}
+              <div className="flex-shrink-0 w-2" />
             </div>
           )}
-        </main>
+        </div>
 
         <BuremFooter />
       </div>
