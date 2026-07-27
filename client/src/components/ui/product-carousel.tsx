@@ -101,6 +101,12 @@ export const ProductCarousel = React.forwardRef<HTMLDivElement, ProductCarouselP
           <div className="px-4 sm:px-6 py-12 text-center text-muted-foreground text-sm">
             {emptyMessage ?? "Henüz ürün eklenmemiş."}
           </div>
+        ) : products.length < 4 ? (
+          <div className="flex gap-4 px-4 sm:px-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} onClick={onProductClick} />
+            ))}
+          </div>
         ) : (
           <div className="relative h-[290px]">
             <InfiniteSlider
