@@ -1,8 +1,10 @@
 import * as React from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
+
+const WA = "905322664764";
 
 export interface CarouselProduct {
   id: string | number;
@@ -12,6 +14,13 @@ export interface CarouselProduct {
   imageUrl?: string | null;
   inStock: boolean;
   description?: string | null;
+  partNumber?: string | null;
+}
+
+function waLink(p: CarouselProduct) {
+  const pn = p.partNumber ? ` — P/N: ${p.partNumber}` : "";
+  const msg = `Merhaba, *${p.name}* (${p.brand}${pn}) hakkında teklif almak istiyorum.`;
+  return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
 }
 
 interface ProductCardProps {
@@ -54,13 +63,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
             {product.brand} · {product.category}
           </p>
 
-          <motion.button
+          <motion.a
+            href={waLink(product)}
+            target="_blank"
+            rel="noopener noreferrer"
             whileTap={{ scale: 0.95 }}
-            className="w-full rounded-lg border border-primary bg-background py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#25D366] py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#20ba5a]"
             data-testid={`button-add-${product.id}`}
           >
-            Teklif al
-          </motion.button>
+            <MessageCircle className="h-3 w-3" />
+            Teklif Al
+          </motion.a>
         </div>
       </div>
     </div>
