@@ -1,0 +1,45 @@
+Endüstriyel elektronik kart ve sürücü tamir servisi için Otomatik SMS ve WhatsApp bildirim özelliklerine sahip, modern ve duyarlı (responsive) bir "Servis Arıza Takip Sistemi" web uygulaması oluşturmanı istiyorum.
+
+### 🛠️ TEKNOLOJİ YIĞINI (TECH STACK)
+- **Backend:** Node.js (Express) veya Python (Flask/FastAPI)
+- **Veritabanı:** SQLite veya Replit DB (Hafif ve pratik)
+- **Frontend:** HTML5, Tailwind CSS ve Vanilya JavaScript
+- **API Servisleri:** NetGSM (SMS için) veya Twilio/Green API (WhatsApp için) yapılandırmasına uygun modüler API entegrasyonu.
+
+---
+
+### 🔑 TEMEL ÖZELLİKLER & MİMARİ
+
+Uygulama 2 ana bölümden oluşmalıdır:
+
+#### 1. MÜŞTERİ SORGU EKRANI (Public - `/`)
+- **Arayüz:** Temiz, kurumsal, endüstriyel mavi/gri tonlarında, tek bir arama girdisi (input) ve "Sorgula" butonu içeren ana sayfa.
+- **Fonksiyon:** Müşteri `Takip No` (Örn: `BRM-1042`) veya `Telefon Numarası` girerek sorgulama yapar.
+- **Sonuç Ekranı:** Sorgulama başarılıysa kartın mevcut durumu görsel bir adım çubuğu (stepper / progress bar) üzerinde gösterilir.
+  - **Durum Adımları:** 
+    1. Kart Teslim Alındı
+    2. Arıza Tespiti / İncelemede
+    3. Müşteri Onayı Bekleniyor
+    4. Bileşen/Parça Bekleniyor
+    5. Onarım & Yük Testinde
+    6. Teslimata Hazır
+- **Detay Kartı:** Adımların altında Cihaz Modeli (Örn: *Siemens Masterdrive*), Son Güncelleme Tarihi ve Teknisyen Notu görünmelidir.
+
+#### 2. YÖNETİCİ PANELİ & BİLDİRİM MERKEZİ (Private - `/admin`)
+- **Giriş:** Basit bir kullanıcı adı ve şifre ile korunan oturum açma (Auth) ekranı.
+- **Yeni Kayıt & Otomatik Karşılama Mesajı:**
+  - Müşteri Adı, Telefonu, Cihaz Modeli ve Arıza Açıklaması girilip kaydedildiğinde benzersiz bir `Takip No` üretilir.
+  - **Otomatik Bildirim:** Kayıt oluşturulduğu an müşterinin telefonuna otomatik karşılama mesajı (SMS veya WhatsApp) gönderilir: *"Cihazınız teslim alınmıştır. Takip No: BRM-1042. Sitemizden durumunu takip edebilirsiniz."*
+- **Servis Listesi & Durum Güncelleme:**
+  - Tek tıkla cihaz durumunu değiştirme (Durum 1-6).
+  - Durum değiştirilirken yanında bir onay kutusu (checkbox) bulunsun: `[X] Müşteriye Güncelleme Mesajı (SMS/WhatsApp) Gönder`.
+  - Onay seçiliyse, backend arka planda SMS API isteği atarak müşteriyi bilgilendirsin.
+- **Ayarlar Sayfası (`/admin/settings`):**
+  - NetGSM API Kullanıcı Adı, Şifre, Başlık (Header) veya Twilio API Key verilerinin girilebileceği ve Replit Environment Variables (Secrets) ile eşleşen basit bir ayar paneli.
+
+---
+
+### 🎨 TASARIM & GÜVENLİK REHBERİ
+- Koyu lacivert, endüstriyel gri ve vurgu rengi olarak güven veren mavi/yeşil tonları kullan.
+- Mobil cihazlarla %100 uyumlu olsun.
+- Sadece sorgulanan Takip No veri döndürsün, veritabanı güvenliği sağlansın.
