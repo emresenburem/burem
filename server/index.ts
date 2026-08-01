@@ -5,11 +5,19 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { seedProducts } from "./seed";
+import { runMigrations } from "./migrate";
 
 const app = express();
 app.use(express.json());
 
 const PgSession = connectPgSimple(session);
+
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET ortam değişkeni tanımlanmamış — sunucu başlatılamıyor.");
+}
+
+// Replit ve benzeri ters proxy arkasında güvenli cookie için gerekli
+app.set("trust proxy", 1);
 
 app.use(
   session({
@@ -18,7 +26,7 @@ app.use(
       tableName: "session",
       createTableIfMissing: true,
     }),
-    secret: process.env.SESSION_SECRET || "burem-fallback-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -59,15 +67,21 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
-app.get((req, res, next) => {
+// Hassas endpoint'lerin yanıtları loglanmamalı
+const SENSITIVE_PATHS = ["/api/service/settings", "/api/admin/login"];
+
+app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+  const isSensitive = SENSITIVE_PATHS.some((p) => path.startsWith(p));
+  let capturedJsonResponse: Record<string, unknown> | undefined = undefined;
 
   const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+  res.json = function (bodyJson: unknown) {
+    if (!isSensitive) {
+      capturedJsonResponse = bodyJson as Record<string, unknown>;
+    }
+    return originalResJson.call(res, bodyJson);
   };
 
   res.on("finish", () => {
@@ -77,7 +91,6 @@ app.get((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       log(logLine);
     }
   });
@@ -86,6 +99,7 @@ app.get((req, res, next) => {
 });
 
 (async () => {
+  await runMigrations();
   await seedProducts();
   await registerRoutes(httpServer, app);
 

@@ -42,8 +42,11 @@ export async function registerRoutes(
   /* ══ Admin Auth ══════════════════════════════════════════════ */
   app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body ?? {};
-    const adminUser = process.env.ADMIN_USERNAME || "admin";
-    const adminPass = process.env.ADMIN_PASSWORD || "burem2024";
+    const adminUser = process.env.ADMIN_USERNAME;
+    const adminPass = process.env.ADMIN_PASSWORD;
+    if (!adminUser || !adminPass) {
+      return res.status(503).json({ error: "Admin kimlik bilgileri yapılandırılmamış" });
+    }
     if (username === adminUser && password === adminPass) {
       (req.session as any).adminLoggedIn = true;
       return res.json({ ok: true });
@@ -85,7 +88,7 @@ export async function registerRoutes(
     if (!customerName || !customerPhone || !deviceModel || !faultDescription) {
       return res.status(400).json({ error: "Zorunlu alanlar eksik" });
     }
-    const record = await createServiceRecord({ customerName, customerPhone, deviceModel, faultDescription, technicianNote: technicianNote || null, status: 1, trackingNo: "" });
+    const record = await createServiceRecord({ customerName, customerPhone, deviceModel, faultDescription, technicianNote: technicianNote || null, status: 1 });
     // Bildirim
     if (sendNotif) {
       const settings = await getServiceSettings();
@@ -98,15 +101,16 @@ export async function registerRoutes(
 
   // Admin: durum güncelle
   app.put("/api/service/:id", requireAdmin, async (req, res) => {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const { status, technicianNote, sendNotif } = req.body ?? {};
-    const record = await updateServiceRecord(req.params.id, {
+    const record = await updateServiceRecord(id, {
       ...(status !== undefined ? { status: Number(status) } : {}),
       ...(technicianNote !== undefined ? { technicianNote } : {}),
     });
     if (!record) return res.status(404).json({ error: "Kayıt bulunamadı" });
     if (sendNotif && status) {
       const settings = await getServiceSettings();
-      const siteUrl = settings.siteUrl || "https://www.buremelektronik.com";
+      const siteUrl = settings?.siteUrl || "https://www.buremelektronik.com";
       const statusLabel = STATUS_LABELS[Number(status)] ?? String(status);
       const msg = buildStatusMessage(record.trackingNo, statusLabel, siteUrl);
       sendNotification(settings as any, record.customerPhone, msg); // fire & forget
@@ -116,23 +120,36 @@ export async function registerRoutes(
 
   // Admin: kayıt sil
   app.delete("/api/service/:id", requireAdmin, async (req, res) => {
-    const deleted = await deleteServiceRecord(req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const deleted = await deleteServiceRecord(id);
     if (!deleted) return res.status(404).json({ error: "Kayıt bulunamadı" });
     res.status(204).send();
   });
 
-  // Admin: ayarlar oku
+  // Admin: ayarlar oku — hassas alanları maskeleyerek döndür
   app.get("/api/service/settings", requireAdmin, async (_req, res) => {
     const s = await getServiceSettings();
-    // Şifreleri maskele (okuma için göster, ama loglama vs. için)
-    res.json(s);
+    const MASK = "••••••••";
+    res.json({
+      notifType: s.notifType,
+      netgsmUser: s.netgsmUser || "",
+      netgsmPass: s.netgsmPass ? MASK : "",
+      netgsmHeader: s.netgsmHeader || "",
+      greenApiInstance: s.greenApiInstance || "",
+      greenApiToken: s.greenApiToken ? MASK : "",
+      siteUrl: s.siteUrl || "https://www.buremelektronik.com",
+    });
   });
 
-  // Admin: ayarlar güncelle
+  // Admin: ayarlar güncelle — maskelenmiş değerleri atla (değişmemiş alan)
   app.put("/api/service/settings", requireAdmin, async (req, res) => {
     const { notifType, netgsmUser, netgsmPass, netgsmHeader, greenApiInstance, greenApiToken, siteUrl } = req.body ?? {};
-    const updated = await updateServiceSettings({ notifType, netgsmUser, netgsmPass, netgsmHeader, greenApiInstance, greenApiToken, siteUrl });
-    res.json(updated);
+    const MASK = "••••••••";
+    const patch: Record<string, unknown> = { notifType, netgsmUser, netgsmHeader, greenApiInstance, siteUrl };
+    if (netgsmPass && netgsmPass !== MASK) patch.netgsmPass = netgsmPass;
+    if (greenApiToken && greenApiToken !== MASK) patch.greenApiToken = greenApiToken;
+    await updateServiceSettings(patch as Parameters<typeof updateServiceSettings>[0]);
+    res.json({ ok: true });
   });
 
   app.get("/api/products", async (req, res) => {

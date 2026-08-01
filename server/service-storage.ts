@@ -58,8 +58,18 @@ export async function deleteServiceRecord(id: string): Promise<boolean> {
 
 /* ── Settings ── */
 export async function getServiceSettings(): Promise<ServiceSettingsRow> {
-  const [s] = await db.select().from(serviceSettings).where(eq(serviceSettings.id, "default"));
-  return s;
+  const [existing] = await db.select().from(serviceSettings).where(eq(serviceSettings.id, "default"));
+  if (existing) return existing;
+  // Satır yoksa oluştur (yeni ortam / migration sonrası)
+  const [inserted] = await db
+    .insert(serviceSettings)
+    .values({ id: "default" })
+    .onConflictDoNothing()
+    .returning();
+  if (inserted) return inserted;
+  // Yarış durumu: tekrar oku
+  const [fallback] = await db.select().from(serviceSettings).where(eq(serviceSettings.id, "default"));
+  return fallback;
 }
 
 export async function updateServiceSettings(
