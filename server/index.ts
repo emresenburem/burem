@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { seedProducts } from "./seed";
 
 const app = express();
 app.use(express.json());
@@ -63,6 +64,7 @@ app.get((req, res, next) => {
 });
 
 (async () => {
+  await seedProducts();
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
