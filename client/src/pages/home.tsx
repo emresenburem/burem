@@ -1217,6 +1217,13 @@ export default function HomePage() {
             >
               Mağaza
             </a>
+            <a
+              href="/takip"
+              data-testid="nav-item-takip"
+              className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+            >
+              Servis Takip
+            </a>
             <BrandsDropdown />
           </nav>
 

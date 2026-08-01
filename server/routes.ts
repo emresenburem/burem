@@ -1,8 +1,32 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { Resend } from "resend";
 import { storage } from "./storage";
 import { insertProductSchema } from "@shared/schema";
+import {
+  createServiceRecord,
+  getServiceRecords,
+  queryServiceRecord,
+  updateServiceRecord,
+  deleteServiceRecord,
+  getServiceSettings,
+  updateServiceSettings,
+} from "./service-storage";
+import { sendNotification, buildWelcomeMessage, buildStatusMessage } from "./notification";
+
+const STATUS_LABELS: Record<number, string> = {
+  1: "Teslim Alındı",
+  2: "Arıza Tespiti / İncelemede",
+  3: "Müşteri Onayı Bekleniyor",
+  4: "Parça Bekleniyor",
+  5: "Onarım & Yük Testinde",
+  6: "Teslimata Hazır",
+};
+
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  if ((req.session as any)?.adminLoggedIn) return next();
+  res.status(401).json({ error: "Yetkisiz" });
+}
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -14,6 +38,102 @@ export async function registerRoutes(
   // Eski siteye ait URL'leri ana sayfaya yönlendir
   app.get("/default.asp", (_req, res) => res.redirect(301, "/"));
   app.get("/Default.asp", (_req, res) => res.redirect(301, "/"));
+
+  /* ══ Admin Auth ══════════════════════════════════════════════ */
+  app.post("/api/admin/login", (req, res) => {
+    const { username, password } = req.body ?? {};
+    const adminUser = process.env.ADMIN_USERNAME || "admin";
+    const adminPass = process.env.ADMIN_PASSWORD || "burem2024";
+    if (username === adminUser && password === adminPass) {
+      (req.session as any).adminLoggedIn = true;
+      return res.json({ ok: true });
+    }
+    res.status(401).json({ error: "Kullanıcı adı veya şifre hatalı" });
+  });
+
+  app.post("/api/admin/logout", (req, res) => {
+    req.session.destroy(() => {});
+    res.json({ ok: true });
+  });
+
+  app.get("/api/admin/me", requireAdmin, (_req, res) => {
+    res.json({ ok: true });
+  });
+
+  /* ══ Servis Takip ════════════════════════════════════════════ */
+
+  // Müşteri sorgulama (public)
+  app.get("/api/service/query", async (req, res) => {
+    const q = (req.query.q as string || "").trim();
+    if (!q) return res.status(400).json({ error: "q parametresi zorunlu" });
+    const record = await queryServiceRecord(q);
+    if (!record) return res.status(404).json({ error: "Kayıt bulunamadı" });
+    // Güvenlik: telefon numarasını gizle
+    const { customerPhone: _ph, faultDescription: _fd, ...safe } = record as any;
+    res.json(safe);
+  });
+
+  // Admin: tüm kayıtlar
+  app.get("/api/service", requireAdmin, async (_req, res) => {
+    const records = await getServiceRecords();
+    res.json(records);
+  });
+
+  // Admin: yeni kayıt
+  app.post("/api/service", requireAdmin, async (req, res) => {
+    const { customerName, customerPhone, deviceModel, faultDescription, technicianNote, sendNotif } = req.body ?? {};
+    if (!customerName || !customerPhone || !deviceModel || !faultDescription) {
+      return res.status(400).json({ error: "Zorunlu alanlar eksik" });
+    }
+    const record = await createServiceRecord({ customerName, customerPhone, deviceModel, faultDescription, technicianNote: technicianNote || null, status: 1, trackingNo: "" });
+    // Bildirim
+    if (sendNotif) {
+      const settings = await getServiceSettings();
+      const siteUrl = settings.siteUrl || "https://www.buremelektronik.com";
+      const msg = buildWelcomeMessage(record.trackingNo, siteUrl);
+      sendNotification(settings as any, record.customerPhone, msg); // fire & forget
+    }
+    res.status(201).json(record);
+  });
+
+  // Admin: durum güncelle
+  app.put("/api/service/:id", requireAdmin, async (req, res) => {
+    const { status, technicianNote, sendNotif } = req.body ?? {};
+    const record = await updateServiceRecord(req.params.id, {
+      ...(status !== undefined ? { status: Number(status) } : {}),
+      ...(technicianNote !== undefined ? { technicianNote } : {}),
+    });
+    if (!record) return res.status(404).json({ error: "Kayıt bulunamadı" });
+    if (sendNotif && status) {
+      const settings = await getServiceSettings();
+      const siteUrl = settings.siteUrl || "https://www.buremelektronik.com";
+      const statusLabel = STATUS_LABELS[Number(status)] ?? String(status);
+      const msg = buildStatusMessage(record.trackingNo, statusLabel, siteUrl);
+      sendNotification(settings as any, record.customerPhone, msg); // fire & forget
+    }
+    res.json(record);
+  });
+
+  // Admin: kayıt sil
+  app.delete("/api/service/:id", requireAdmin, async (req, res) => {
+    const deleted = await deleteServiceRecord(req.params.id);
+    if (!deleted) return res.status(404).json({ error: "Kayıt bulunamadı" });
+    res.status(204).send();
+  });
+
+  // Admin: ayarlar oku
+  app.get("/api/service/settings", requireAdmin, async (_req, res) => {
+    const s = await getServiceSettings();
+    // Şifreleri maskele (okuma için göster, ama loglama vs. için)
+    res.json(s);
+  });
+
+  // Admin: ayarlar güncelle
+  app.put("/api/service/settings", requireAdmin, async (req, res) => {
+    const { notifType, netgsmUser, netgsmPass, netgsmHeader, greenApiInstance, greenApiToken, siteUrl } = req.body ?? {};
+    const updated = await updateServiceSettings({ notifType, netgsmUser, netgsmPass, netgsmHeader, greenApiInstance, greenApiToken, siteUrl });
+    res.json(updated);
+  });
 
   app.get("/api/products", async (req, res) => {
     const products = await storage.getProducts();

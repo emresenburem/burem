@@ -19,6 +19,8 @@ import LenzeSurucu from "@/pages/lenze-surucu-tamiri";
 import MitsubishiServoSurucu from "@/pages/mitsubishi-servo-surucu-tamiri";
 import MagazaPage from "@/pages/magaza";
 import AdminPage from "@/pages/admin";
+import TakipPage from "@/pages/takip";
+import AdminServisPage from "@/pages/admin-servis";
 import { useGlobalClickSound } from "@/hooks/use-click-sound";
 import { useTabFavicon } from "@/hooks/use-tab-favicon";
 import { motion, AnimatePresence } from "framer-motion";
@@ -163,6 +165,8 @@ function Router() {
       <Route path="/mitsubishi-servo-surucu-tamiri" component={MitsubishiServoSurucu} />
       <Route path="/magaza" component={MagazaPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/takip" component={TakipPage} />
+      <Route path="/admin/servis" component={AdminServisPage} />
       <Route component={NotFound} />
     </Switch>
   );
