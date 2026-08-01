@@ -12,7 +12,7 @@ const PHONE_DISPLAY = "+90 532 266 47 64";
 
 const CATEGORIES = ["Tümü", "İnverter", "Servo Sürücü", "PLC", "HMI", "Elektronik Kart", "Motor", "Sensör", "Diğer"];
 const BRANDS     = ["Tümü", "Siemens", "ABB", "Fanuc", "Yaskawa", "Mitsubishi", "Lenze", "Schneider", "Danfoss", "Omron", "SEW-Eurodrive", "Bosch Rexroth", "Beckhoff", "Allen Bradley", "Panasonic"];
-const CONDITIONS: Record<string, string> = { new: "Sıfır", used: "İkinci El", refurbished: "Yenilenmiş" };
+const CONDITIONS: Record<string, string> = { new: "Sıfır", used: "2. El", refurbished: "Yenilenmiş" };
 
 function waLink(p: Product) {
   const msg = `Merhaba, *${p.name}* (${p.brand}${p.partNumber ? ` — ${p.partNumber}` : ""}) hakkında fiyat almak istiyorum.`;
