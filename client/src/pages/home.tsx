@@ -43,6 +43,8 @@ import {
   FileSearch,
   Truck,
   ScanLine,
+  Menu,
+  X,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -1043,6 +1045,7 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     setIsMobile(mq.matches);
@@ -1227,6 +1230,17 @@ export default function HomePage() {
             <BrandsDropdown />
           </nav>
 
+          {/* Mobil hamburger butonu */}
+          <button
+            className="md:hidden ml-auto flex items-center justify-center rounded-md p-2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            data-testid="mobile-menu-toggle"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+
           {/* CTA butonları — sağ, shimmer hover */}
           <div className="hidden md:flex items-center gap-2 self-end pb-2">
             <Button
@@ -1241,6 +1255,54 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
+
+        {/* Mobil menü drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              key="mobile-menu"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden md:hidden border-t border-border/40"
+              data-testid="mobile-menu-drawer"
+            >
+              <nav className="flex flex-col gap-1 px-4 py-3" aria-label="Mobil menü">
+                {[
+                  { label: "Hizmetler", id: "services" },
+                  { label: "Süreç",     id: "process"  },
+                  { label: "İletişim",  id: "contact"  },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => { scrollToId(item.id); setMobileMenuOpen(false); }}
+                    className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                    data-testid={`mobile-nav-${item.id}`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <a
+                  href="/magaza"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                  data-testid="mobile-nav-magaza"
+                >
+                  Mağaza
+                </a>
+                <a
+                  href="/takip"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2.5 rounded-md text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors font-semibold"
+                  data-testid="mobile-nav-takip"
+                >
+                  Servis Takip
+                </a>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Marka logoları sonsuz slider */}
