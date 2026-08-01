@@ -3,6 +3,9 @@ import path from "path";
 import pg from "pg";
 
 export async function runMigrations() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL environment variable is not set. Please configure it in your hosting provider.");
+  }
   const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
   try {
     await client.connect();
