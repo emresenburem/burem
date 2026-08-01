@@ -3,7 +3,6 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { seedProducts } from "./seed";
-import { runMigrations } from "./migrate";
 
 const app = express();
 app.use(express.json());
@@ -65,7 +64,6 @@ app.get((req, res, next) => {
 });
 
 (async () => {
-  await runMigrations();
   await seedProducts();
   await registerRoutes(httpServer, app);
 
