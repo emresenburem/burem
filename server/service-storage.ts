@@ -4,10 +4,14 @@ import { eq, or, sql } from "drizzle-orm";
 
 /* ── Tracking No üretimi ── */
 export async function generateTrackingNo(): Promise<string> {
-  const result = await db.select({ count: sql<number>`count(*)` }).from(serviceRecords);
-  const count = Number(result[0]?.count ?? 0);
-  const num = String(count + 1).padStart(4, "0");
-  return `BRM-${num}`;
+  const result = await db
+    .select({ maxNo: sql<string>`max(tracking_no)` })
+    .from(serviceRecords);
+  const maxNo = result[0]?.maxNo ?? null;
+  // maxNo örn. "BRM-0042" — sayısal kısmı çıkar, 1 artır
+  const lastNum = maxNo ? parseInt(maxNo.replace(/^BRM-/, ""), 10) : 0;
+  const next = isNaN(lastNum) ? 1 : lastNum + 1;
+  return `BRM-${String(next).padStart(4, "0")}`;
 }
 
 /* ── CRUD ── */
