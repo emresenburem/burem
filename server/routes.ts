@@ -10,7 +10,11 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  
+
+  // Eski siteye ait URL'leri ana sayfaya yönlendir
+  app.get("/default.asp", (_req, res) => res.redirect(301, "/"));
+  app.get("/Default.asp", (_req, res) => res.redirect(301, "/"));
+
   app.get("/api/products", async (req, res) => {
     const products = await storage.getProducts();
     res.json(products);
