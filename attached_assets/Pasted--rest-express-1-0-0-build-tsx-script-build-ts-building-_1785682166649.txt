@@ -1,0 +1,44 @@
+> rest-express@1.0.0 build
+> tsx script/build.ts
+building client...
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 2546 modules transformed.
+rendering chunks...
+[meta-images] no Replit deployment domain found, skipping meta tag updates
+computing gzip size...
+../dist/public/index.html                       2.22 kB │ gzip:   0.75 kB
+../dist/public/assets/mecasonic-CECf824F.png  135.70 kB
+../dist/public/assets/index-BeMnzudq.css      155.47 kB │ gzip:  24.72 kB
+../dist/public/assets/howler-sqnAwFde.js       36.53 kB │ gzip:   9.98 kB
+../dist/public/assets/index-BnReaIZx.js       780.90 kB │ gzip: 236.48 kB
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.08s
+building server...
+  dist/index.cjs  1.0mb ⚠️
+⚡ Done in 144ms
+==> Uploading build...
+==> Uploaded in 7.9s. Compression took 2.4s
+==> Build successful 🎉
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'node dist/index.cjs'
+/opt/render/project/src/dist/index.cjs:170
+  `),console.log("[migrate] Servis tablolar\u0131 haz\u0131r.")}var qt=(0,ma.default)();qt.use(ma.default.json());var bN=(0,CS.default)(nf.default);if(!process.env.SESSION_SECRET)throw new Error("SESSION_SECRET ortam de\u011Fi\u015Fkeni tan\u0131mlanmam\u0131\u015F \u2014 sunucu ba\u015Flat\u0131lam\u0131yor.");qt.set("trust proxy",1);qt.use((0,nf.default)({store:new bN({conString:process.env.DATABASE_URL,tableName:"session",createTableIfMissing:!0}),secret:process.env.SESSION_SECRET,resave:!1,saveUninitialized:!1,cookie:{secure:!0,httpOnly:!0,maxAge:10080*60*1e3}}));var TS=(0,kS.createServer)(qt);qt.use(ma.default.json({verify:(t,e,r)=>{t.rawBody=r}}));qt.use(ma.default.urlencoded({extended:!1}));function af(t,e="express"){let r=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",second:"2-digit",hour12:!0});console.log(`${r} [${e}] ${t}`)}var wN=["/api/service/settings","/api/admin/login"];qt.use((t,e,r)=>{let n=Date.now(),i=t.path,a=wN.some(u=>i.startsWith(u)),s,o=e.json;e.json=function(u){return a||(s=u),o.call(e,u)},e.on("finish",()=>{let u=Date.now()-n;if(i.startsWith("/api")){let c=`${t.method} ${i} ${e.statusCode} in ${u}ms`;s&&(c+=` :: ${JSON.stringify(s)}`),af(c)}}),r()});(async()=>{await ES(),await _S(),await xS(TS,qt),qt.use((e,r,n,i)=>{let a=e.status||e.statusCode||500,s=e.message||"Internal Server Error";return console.error("Internal Server Error:",e),n.headersSent?i(e):n.status(a).json({message:s})}),SS(qt);let t=parseInt(process.env.PORT||"5000",10);TS.listen({port:t,host:"0.0.0.0",reusePort:!0},()=>{af(`serving on port ${t}`)})})();0&&(module.exports={log});
+                                                                                                                                                                                   ^
+Error: SESSION_SECRET ortam değişkeni tanımlanmamış — sunucu başlatılamıyor.
+    at Object.<anonymous> (/opt/render/project/src/dist/index.cjs:170:186)
+    at Module._compile (node:internal/modules/cjs/loader:1706:14)
+    at Object..js (node:internal/modules/cjs/loader:1839:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49
+Node.js v22.22.0
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
