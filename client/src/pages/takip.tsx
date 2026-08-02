@@ -173,7 +173,7 @@ export default function TakipPage() {
               Cihazınızın Durumunu<br />Takip Edin
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              Takip numaranızı (BRM-1042) veya kayıtlı telefon numaranızı girin
+              Takip numaranızı (BRM-XXXX) veya kayıtlı telefon numaranızı girin
             </p>
           </div>
 
@@ -184,7 +184,7 @@ export default function TakipPage() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="BRM-1042 veya 05xxxxxxxxx"
+                placeholder="BRM-XXXX veya 05xxxxxxxxx"
                 className="w-full rounded-2xl border border-border bg-muted/30 pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 transition-all"
                 data-testid="input-tracking"
               />
