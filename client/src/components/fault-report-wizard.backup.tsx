@@ -436,30 +436,9 @@ export function FaultReportWizard() {
 
   async function handleWhatsApp() {
     setSendingVia("whatsapp");
-
-    try {
-      await fetch("/api/public/fault-report", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          companyName: data.name,
-          phone: data.phone,
-          deviceBrand: effectiveBrand,
-          deviceModel: effectiveModel,
-          serialNumber: "",
-          faultDescription: data.faultDesc,
-        }),
-      });
-    } catch (err) {
-      console.error("Burem İş Takip kayıt hatası:", err);
-    }
-
+    // Kısa animasyon — 1.2 sn sonra WA aç + başarı
     await new Promise((r) => setTimeout(r, 1200));
-
     window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
-
     setSendingVia(null);
     setSentVia("whatsapp");
   }
@@ -469,7 +448,7 @@ export function FaultReportWizard() {
     setEmailError("");
     setSendingVia("email");
     try {
-      const res = await fetch("/api/public/fault-report", {
+      const res = await fetch("/api/fault-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
