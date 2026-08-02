@@ -397,8 +397,8 @@ function SendProgressBar({
 export function FaultReportWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardState>(INIT);
-  const [sentVia, setSentVia] = useState<"whatsapp" | "email" | null>(null);
-  const [sendingVia, setSendingVia] = useState<"whatsapp" | "email" | null>(null);
+  const [sentVia, setSentVia] = useState<"whatsapp" | "email" | "job" | null>(null);
+  const [sendingVia, setSendingVia] = useState<"whatsapp" | "email" | "job" | null>(null);
   const [emailError, setEmailError] = useState("");
 
   const set = (k: keyof WizardState, v: string) =>
@@ -434,11 +434,41 @@ export function FaultReportWizard() {
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
   }
 
+
+  async function handleCreateJob() {
+    setSendingVia("job");
+
+    try {
+      const res = await fetch("/api/fault-report", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName: data.name,
+          phone: data.phone,
+          deviceBrand: effectiveBrand,
+          deviceModel: effectiveModel,
+          serialNumber: "",
+          faultDescription: data.faultDesc,
+        }),
+      });
+
+      if (res.ok) {
+        setSentVia("job");
+      }
+    } catch (err) {
+      console.error("Arıza kayıt hatası:", err);
+    }
+
+    setSendingVia(null);
+  }
+
   async function handleWhatsApp() {
     setSendingVia("whatsapp");
 
     try {
-      await fetch("/api/public/fault-report", {
+      await fetch("/api/fault-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -469,7 +499,7 @@ export function FaultReportWizard() {
     setEmailError("");
     setSendingVia("email");
     try {
-      const res = await fetch("/api/public/fault-report", {
+      const res = await fetch("/api/fault-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -767,6 +797,28 @@ export function FaultReportWizard() {
           {/* ─── Gönderim seçenekleri ─── */}
           <div className="rounded-2xl border border-border bg-muted/20 p-3 space-y-2">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nasıl iletmek istersiniz?</p>
+
+            {/* İş Takip Kaydı */}
+            <div>
+              <button
+                onClick={handleCreateJob}
+                disabled={!canBase || isSending}
+                className="flex w-full items-center gap-3 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3 text-left hover:bg-orange-500/20 transition-colors disabled:opacity-40"
+                data-testid="button-wizard-create-job"
+              >
+                <svg className="h-5 w-5 flex-shrink-0 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">
+                    {sendingVia === "job" ? "Kaydediliyor…" : "Arıza Kaydı Oluştur"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Doğrudan iş takip sistemine kayıt açılır
+                  </p>
+                </div>
+              </button>
+            </div>
 
             {/* WhatsApp */}
             <div>

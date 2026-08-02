@@ -221,26 +221,6 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Zorunlu alanlar eksik" });
       }
 
-      // Burem İş Takip'e otomatik kayıt oluştur
-      try {
-        await fetch("https://ce812aba-a843-4bc0-9c3c-8a98a65d447b-00-1zcn3g85lam95.sisko.replit.dev/api/fault-report", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            companyName: name,
-            phone,
-            deviceBrand: brand,
-            deviceModel: model,
-            serialNumber: "",
-            faultDescription: faultDesc,
-          }),
-        });
-      } catch (err) {
-        console.error("İş takip kayıt hatası:", err);
-      }
-
       if (!resend) {
         return res.json({ ok: true, warning: "E-posta servisi yapılandırılmamış" });
       }
