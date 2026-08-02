@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, CheckCircle2, Clock, AlertCircle, Package, Wrench, Truck, ChevronRight, ArrowLeft } from "lucide-react";
 import BuremFooter from "@/components/ui/footer";
@@ -99,9 +99,8 @@ export default function TakipPage() {
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
+  const searchRecord = async (searchQuery: string) => {
+    const q = searchQuery.trim();
     if (!q) return;
     setLoading(true);
     setResult(null);
@@ -120,6 +119,22 @@ export default function TakipPage() {
       setLoading(false);
     }
   };
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await searchRecord(query);
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const takipParam = params.get("takip");
+    if (takipParam) {
+      const normalized = takipParam.trim().toUpperCase();
+      setQuery(normalized);
+      searchRecord(normalized);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const activeStep = STATUS_STEPS.find((s) => s.id === result?.status);
   const updatedDate = result?.updatedAt
