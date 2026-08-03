@@ -3,15 +3,20 @@ import { serviceRecords, serviceSettings, type ServiceRecord, type InsertService
 import { eq, or, sql } from "drizzle-orm";
 
 /* ── Tracking No üretimi ── */
+// Format: BRM-YYYY-XXXXXX  (örn. BRM-2026-000001)
 export async function generateTrackingNo(): Promise<string> {
+  const year = new Date().getFullYear();
+  const prefix = `BRM-${year}-`;
+  // Bu yılın en büyük sıra numarasını bul
   const result = await db
     .select({ maxNo: sql<string>`max(tracking_no)` })
-    .from(serviceRecords);
+    .from(serviceRecords)
+    .where(sql`tracking_no LIKE ${prefix + "%"}`);
   const maxNo = result[0]?.maxNo ?? null;
-  // maxNo örn. "BRM-0042" — sayısal kısmı çıkar, 1 artır
-  const lastNum = maxNo ? parseInt(maxNo.replace(/^BRM-/, ""), 10) : 0;
+  // maxNo örn. "BRM-2026-000042" → "000042" → 42
+  const lastNum = maxNo ? parseInt(maxNo.replace(new RegExp(`^BRM-${year}-`), ""), 10) : 0;
   const next = isNaN(lastNum) ? 1 : lastNum + 1;
-  return `BRM-${String(next).padStart(4, "0")}`;
+  return `${prefix}${String(next).padStart(6, "0")}`;
 }
 
 /* ── CRUD ── */
