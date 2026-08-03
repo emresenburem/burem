@@ -1,0 +1,458 @@
+Burem İş Takip uygulamasındaki çalışma, giriş, API, servis takip ve performans sorunlarını uçtan uca düzelt.
+
+ÖNEMLİ KURALLAR
+
+- Mevcut müşteri, iş, cihaz, fatura, tahsilat ve diğer kayıtları kesinlikle silme.
+- Veritabanını sıfırlama, yeniden oluşturma veya seed verileriyle ezme.
+- Mevcut çalışan özellikleri bozma.
+- Değişiklik öncesinde etkilenecek dosyaların yedeğini al.
+- Sahte veri, geçici mock endpoint veya yalnızca görsel çözüm oluşturma.
+- Yapılan her değişikliği gerçek API, gerçek PostgreSQL ve gerçek kullanıcı akışıyla test et.
+- Uygulamayı sadece Replit üzerinden kullanıyorum; şu anda GitHub veya Render’a bağlı değil.
+- Shell üzerinden çalıştırılabilir ve kalıcı çözümler üret.
+- Gerekmedikçe yeni paket ekleme.
+- İş tamamlanmadan “düzeldi” deme.
+
+PROJE YAPISI
+
+Monorepo içinde temel uygulamalar:
+
+- Frontend:
+  artifacts/burem-is-takip
+
+- API:
+  artifacts/api-server
+
+- Veritabanı:
+  lib/db ve PostgreSQL
+
+Frontend daha önce 25816 portunda, API ise 3001 portunda çalıştırıldı. Fakat Replit dış adresi, frontend ve API süreçlerini zaman zaman yanlış yönlendiriyor veya 502 hatası veriyor.
+
+Şu Replit geliştirme adresi kullanılıyor:
+
+https://ce812aba-a843-4bc0-9c3c-8a98a65d447b-00-1zcn3g85lam95.sisko.replit.dev
+
+1. ÖNCE GİRİŞ SORUNUNU DÜZELT
+
+Şu anda Burem İş Takip’e giriş yapamıyorum.
+
+Aşağıdakileri kontrol et:
+
+- Frontend’in giriş isteğinin hangi endpoint’e gittiği
+- API login endpoint’i
+- Session oluşturulması
+- connect.sid cookie’si
+- Express session yapılandırması
+- PgSession bağlantısı ve session tablosu
+- CORS
+- credentials: include
+- SameSite
+- Secure
+- trust proxy
+- Replit iframe ve dış adres davranışı
+- Frontend ile API proxy yapılandırması
+- Port yönlendirmesi
+- SESSION_SECRET
+- DATABASE_URL
+- Kullanıcının gerçekten veritabanında bulunması
+
+Önceden terminal testiyle şu giriş çalışmıştı:
+
+POST /api/auth/login
+
+Gönderilen örnek:
+
+{
+  "username": "admin",
+  "password": "burem2024"
+}
+
+Ve cevap:
+
+{
+  "id": 1,
+  "username": "admin"
+}
+
+Cookie de oluşmuştu. Ancak uygulama arayüzünde şu an giriş yapılamıyor.
+
+Giriş işlemi tamamlandıktan sonra şu endpoint’leri oturumla test et:
+
+- GET /api/auth/me
+- GET /api/dashboard/summary
+- GET /api/jobs
+- GET /api/customers
+
+Başarılı girişten sonra sayfa yenilendiğinde oturum kaybolmamalı.
+
+Not: Kaynak kodda düz metin parola tutma. Mevcut parola sistemi zayıfsa veriyi bozmadan güvenli parola doğrulamasına geçir.
+
+2. REPLIT ÇALIŞTIRMA YAPISINI DÜZELT
+
+Şu anda frontend ve API ayrı ayrı elle çalıştırıldığı için:
+
+- 502 hatası
+- Port kullanımda hatası
+- Siyah ekran
+- Preview bekleme ekranı
+- API’nin eski build ile çalışması
+- Süreçlerin iki defa başlaması
+
+gibi sorunlar yaşanıyor.
+
+Tek bir kalıcı Replit workflow oluştur veya mevcut “Project” workflow’unu düzelt.
+
+Hedef:
+
+- Run butonuna bir kez basıldığında frontend ve API birlikte başlasın.
+- Aynı süreç iki kez başlamasın.
+- Eski süreçler temiz biçimde sonlandırılsın.
+- Ctrl+C ile tüm alt süreçler kapansın.
+- Frontend doğru Replit portunda dinlesin.
+- API frontend tarafından erişilebilir olsun.
+- Replit dış adresinde `/giris`, uygulama sayfaları ve `/api/*` endpoint’leri birlikte çalışsın.
+- Kullanıcının elle PORT=3001 ve PORT=25816 yazmasına gerek kalmasın.
+- API kodu değiştiğinde eski dist/index.mjs kullanılmasın; gerekiyorsa yeniden build edilsin.
+
+Gerekirse kökte güvenli bir start script oluştur. Script:
+
+- set -euo pipefail kullansın
+- gerekli environment variable’ları kontrol etsin
+- child process PID’lerini takip etsin
+- trap ile süreçleri kapatsın
+- port kullanım hatalarını anlaşılır biçimde göstersin
+- rastgele çalışan başka süreçleri öldürmesin
+
+Mockup sandbox üretim akışı için gerekli değilse otomatik çalıştırma.
+
+3. WEB SİTESİNDEN GELEN ARIZA KAYDI
+
+Bu özellik şu an çalışıyor ve bozulmamalı.
+
+İş Takip public route dosyası:
+
+artifacts/api-server/src/routes/public.ts
+
+Mevcut public endpoint:
+
+POST /api/public/fault-report
+
+Web sitesi buraya istek gönderiyor ve yeni müşteri/iş oluşturuyor.
+
+Bu akışı koru ve şu iyileştirmeleri yap:
+
+- Zorunlu alan doğrulaması
+- Hız sınırlaması
+- Basit spam koruması
+- İstek boyutu sınırı
+- Beklenmeyen alanları yok sayma
+- Hata durumlarında doğru HTTP kodları
+- Aynı isteğin kısa sürede tekrar gönderilmesinde mükerrer kayıt önleme
+- İç hata ayrıntılarını müşteriye göstermeme
+- Sunucu logunda anlaşılır hata kaydı
+
+Public arıza bildirimi login istememeli.
+
+4. SERVİS TAKİP SORUNUNU KALICI DÜZELT
+
+İş Takip kayıtları için takip numarası şu formatta üretiliyor:
+
+BRM-2026-000041
+
+İş ID’sinden üreten fonksiyon daha önce şöyleydi:
+
+function getTrackingNo(jobId: number): string {
+  return `BRM-${new Date().getFullYear()}-${String(jobId).padStart(6, "0")}`;
+}
+
+İş Takip’e daha önce şu public endpoint eklendi:
+
+GET /api/public/service-query?q=BRM-2026-000041
+
+Dosya:
+
+artifacts/api-server/src/routes/public.ts
+
+Bu endpoint lokal API’de çalıştı:
+
+http://127.0.0.1:3001/api/public/service-query?q=BRM-2026-000041
+
+ve 200 OK ile kayıt döndürdü.
+
+Fakat Replit dış adresinden aynı endpoint daha önce 502 verdi. Bunun gerçek sebebini çöz. Sadece local çalışan çözüm bırakma.
+
+Endpoint şu iki formatı kabul edebilir:
+
+- BRM-2026-000041
+- BRM-000041
+
+Ancak cevapta her zaman standart formatı kullan:
+
+BRM-YYYY-XXXXXX
+
+Yıl değerini sorgu anındaki güncel yıldan körlemesine üretme. Mümkünse işin oluşturulma yılını kullan. Takip numarası gelecekte yıl değiştiğinde bozulmamalı.
+
+Takip numarasından iş ID’si çıkarılırken:
+
+- Sadece geçerli format kabul edilsin.
+- Negatif, sıfır, NaN ve aşırı büyük değerler reddedilsin.
+- Silinmiş işler bulunmasın.
+- Silinmiş müşteriler bulunmasın.
+- SQL injection’a açık kod yazılmasın.
+
+5. MÜŞTERİYE TEKNİK DETAY GÖSTERME
+
+Bu kesin bir iş kuralıdır.
+
+Public servis takip endpoint’i müşteriye yalnızca şunları döndürebilir:
+
+- trackingNo
+- customerName
+- deviceModel veya genel cihaz adı
+- genel servis durumu
+- createdAt
+- updatedAt
+- müşteriye özel, genel açıklama varsa sadece o alan
+
+Kesinlikle döndürülmemesi gereken alanlar:
+
+- technicianNote
+- notes
+- faultDescription içindeki teknik ayrıntılar
+- workDescription
+- partsUsed
+- değişen parçalar
+- parça kodları
+- yapılan ölçümler
+- arızanın gerçek sebebi
+- uygulanan onarım yöntemi
+- parça maliyetleri
+- işçilik maliyeti
+- kâr
+- iç fotoğraflar
+- tedarikçi bilgileri
+- kullanıcı veya personel iç notları
+
+Şu anda public endpoint cevabında yanlışlıkla:
+
+technicianNote: jobsTable.notes
+
+kullanılmış olabilir. Bunu tamamen kaldır. Alanı null döndürmek yerine mümkünse API cevabından hiç çıkar.
+
+Müşteriye gösterilecek durumlar genel ve ticari sır içermeyen biçimde olsun:
+
+1: Teslim Alındı
+2: İnceleme Yapılıyor
+3: Onay Bekleniyor
+4: Onarım Sürecinde
+5: Test Ediliyor
+6: Teslime Hazır
+7: Teslim Edildi
+
+İş Takip içindeki mevcut jobStatus değerlerinin tamamını bu genel durumlara doğru eşleştir. Örneğin:
+
+- new, received, accepted → 1
+- inspection, examining, diagnosis, fault_detection → 2
+- quote, quote_ready, quote_pending, approval_pending, waiting_approval → 3
+- repair, repairing, in_repair, in_progress, approved → 4
+- test, testing, in_test → 5
+- completed, repaired, repair_completed, ready_for_delivery, invoiced → 6
+- delivered → 7
+
+Bilinmeyen durumlarda güvenli varsayılan kullan ama hata logla.
+
+6. WEB SİTESİ SERVİS TAKİP ENTEGRASYONU
+
+Web sitesi ayrı bir Replit projesidir. Bu agent yalnızca mevcut İş Takip projesine erişiyorsa, İş Takip tarafını tamamen hazırla ve web sitesinde yapılması gereken değişikliği açık bir patch veya shell komutu olarak raporla.
+
+Web sitesindeki mevcut ekran:
+
+client/src/pages/takip.tsx
+
+Şu endpoint’i çağırıyor:
+
+GET /api/service/query?q=...
+
+Web sitesindeki eski backend route’u daha önce kendi service_records tablosunu sorguluyordu. Sonra Burem İş Takip dış URL’sine yönlendirilecek şekilde değiştirildi.
+
+Kalıcı ve güvenilir mimariyi belirle:
+
+Tercih sırası:
+
+1. Replit dış adresi üzerinden güvenilir public API erişimi gerçekten çalışıyorsa web sitesi bu endpoint’i kullansın.
+2. Dış Replit geliştirme adresi kararsızsa, iki uygulamanın aynı PostgreSQL veritabanını kullanması halinde web sitesi yalnızca güvenli alanları doğrudan veritabanından sorgulasın.
+3. Geliştirme amaçlı geçici `*.replit.dev` adresini canlı sistemin kalıcı bağımlılığı yapma.
+
+Hangi yöntemin kullanıldığını açıkça raporla.
+
+Web sitesine uygulanacak çözüm, teknik notları kesinlikle döndürmemeli.
+
+7. PERFORMANS SORUNUNU İNCELE
+
+İş Takip yavaş çalışıyor.
+
+Önceden ölçülenler:
+
+- RAM yeterliydi.
+- CPU düşük kullanımdı.
+- Replit dış adresi ilk veriyi yaklaşık 0.12 saniyede veriyordu.
+- Frontend ana JS paketi yaklaşık 1.50 MB idi.
+- Büyük PNG dosyaları 0.8 MB civarındaydı.
+- Veritabanı Frankfurt Render PostgreSQL üzerindeydi.
+- Dashboard summary endpoint’i çok sayıda sorgu ve liste döndürüyor olabilir.
+- mockup-sandbox gereksiz yere çalışıyordu.
+
+Şunları ölç:
+
+- Login süresi
+- `/api/auth/me` süresi
+- `/api/dashboard/summary` süresi
+- `/api/jobs` süresi
+- PostgreSQL bağlantı süresi
+- En yavaş SQL sorguları
+- İlk frontend yükleme süresi
+- JS ve görsel boyutları
+
+Sonra güvenli optimizasyonlar yap:
+
+- Gereksiz çalışan mockup-sandbox sürecini kaldır.
+- Dashboard’da yalnızca gereken kolonları çek.
+- Liste limitlerini uygula.
+- N+1 sorguları kaldır.
+- Gerekli veritabanı indexlerini migration ile ekle.
+- Frontend sayfalarını lazy-load et.
+- Ağır bileşenleri dynamic import ile böl.
+- Büyük görselleri optimize et ama logoyu görsel olarak bozma.
+- Gereksiz tekrar sorguları ve kısa cache sürelerini düzelt.
+- React Query kullanımını kontrol et.
+
+8. GÜVENLİK KONTROLÜ
+
+Tüm API route’larını listele ve sınıflandır:
+
+- Public olması gerekenler
+- Login gerektirenler
+- Admin gerektirenler
+
+Public olarak yalnızca gerçekten gerekli route’lar açık kalsın.
+
+Özellikle kontrol et:
+
+- customers
+- jobs
+- invoices
+- payments
+- dashboard
+- reports
+- attachments
+- exports
+- device photos
+- shipments
+- technical information
+
+Bunların login olmadan veri döndürmediğini curl testleriyle doğrula.
+
+Public endpoint’lere rate limit ekle.
+
+Hata cevaplarında stack trace veya veritabanı ayrıntısı gösterme.
+
+CORS’u herkese sınırsız açma. Gerekiyorsa yalnızca:
+
+- Burem İş Takip Replit origin’i
+- buremelektronik.com
+- www.buremelektronik.com
+
+origin’lerine izin ver.
+
+Veritabanı şifresi veya SESSION_SECRET kaynak kodda bulunmasın.
+
+9. YEDEK VE TEMİZLİK
+
+Şu yedek dosyaları incele:
+
+- artifacts/api-server/src/routes/public.ts.bak
+- artifacts/api-server/src/routes/public.ts.before-service-query
+- app.backup.ts gibi diğer yedekler
+
+Ana dosyanın doğru çalıştığını doğruladıktan sonra gereksiz yedekleri sil veya gitignore’a al. Ancak önce içerik karşılaştırması yap ve kullanıcı verisine dokunma.
+
+Nano kurulumu nedeniyle değişmiş olabilecek `.replit` dosyasını incele. Gereksiz Nix paket değişikliklerini kaldır fakat çalışan workflow’u bozma.
+
+10. TESTLER
+
+Değişikliklerden sonra aşağıdaki testlerin tamamını uygula:
+
+A. Build ve typecheck
+
+- pnpm typecheck
+- ilgili workspace build komutları
+- API build
+- frontend build
+
+B. Giriş testi
+
+- Yanlış şifre → 401
+- Doğru şifre → 200 ve session cookie
+- Cookie ile `/api/auth/me` → 200
+- Sayfa yenileme sonrası oturum devam ediyor
+
+C. Güvenlik testi
+
+Login olmadan:
+
+- `/api/dashboard/summary` → 401
+- `/api/jobs` → 401
+- `/api/customers` → 401
+- `/api/invoices` → 401
+- `/api/payments` → 401
+
+Public:
+
+- `POST /api/public/fault-report` → geçerli veriyle 201
+- Eksik veriyle 400
+- `GET /api/public/service-query?q=BRM-2026-000041` → 200
+- Geçersiz takip numarası → 404 veya 400
+- Silinmiş kayıt → 404
+
+D. Gizlilik testi
+
+Public servis takip cevabında şu anahtarların bulunmadığını otomatik doğrula:
+
+- technicianNote
+- notes
+- faultDescription
+- workDescription
+- partsUsed
+- laborCost
+- partsCost
+- totalAmount
+- amount
+- paymentStatus
+- invoiceNumber
+
+E. Replit dış erişim testi
+
+- Replit Preview açılıyor
+- `/giris` açılıyor
+- Giriş yapılabiliyor
+- Dış URL’den public servis sorgusu 200 dönüyor
+- 502 oluşmuyor
+- Run butonuna ikinci kez basıldığında port çakışması oluşmuyor
+
+11. RAPORLAMA
+
+İş sonunda bana şu formatta net bir rapor ver:
+
+1. Sorunların gerçek nedenleri
+2. Değiştirilen dosyalar
+3. Eklenen migration veya indexler
+4. Giriş sorununun nasıl çözüldüğü
+5. Replit workflow’unun nasıl çalıştığı
+6. Servis takip mimarisi
+7. Public endpoint’lerde gösterilen alanlar
+8. Gizlenen teknik alanlar
+9. Yapılan performans iyileştirmeleri
+10. Çalıştırılan testler ve gerçek sonuçları
+11. Hâlâ manuel yapılması gereken bir işlem varsa kesin komutları
+
+Önce sistemi incele, sonra plan çıkar, ardından değişiklikleri uygula. Her aşamada çalışan mevcut özelliklerin bozulmadığını doğrula.

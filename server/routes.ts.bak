@@ -65,60 +65,15 @@ export async function registerRoutes(
 
   /* ══ Servis Takip ════════════════════════════════════════════ */
 
-  // Müşteri sorgulama (public) — Burem İş Takip üzerinden
+  // Müşteri sorgulama (public)
   app.get("/api/service/query", async (req, res) => {
-    const q = String(req.query.q ?? "").trim();
-
-    if (!q) {
-      return res.status(400).json({ error: "q parametresi zorunlu" });
-    }
-
-    try {
-      const url =
-        "https://ce812aba-a843-4bc0-9c3c-8a98a65d447b-00-1zcn3g85lam95.sisko.replit.dev" +
-        "/api/public/service-query?q=" +
-        encodeURIComponent(q);
-
-      const upstream = await fetch(url, {
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      const text = await upstream.text();
-
-      if (!upstream.ok) {
-        if (upstream.status === 404) {
-          return res.status(404).json({ error: "Kayıt bulunamadı" });
-        }
-
-        console.error("İş Takip servis sorgu hatası:", upstream.status, text);
-
-        return res.status(502).json({
-          error: "Servis takip sistemine ulaşılamadı",
-        });
-      }
-
-      const record = JSON.parse(text);
-
-      // Teknik detaylar müşteriye kesinlikle aktarılmaz.
-      return res.json({
-        id: String(record.id ?? ""),
-        trackingNo: record.trackingNo,
-        customerName: record.customerName,
-        deviceModel: record.deviceModel,
-        status: record.status,
-        technicianNote: null,
-        updatedAt: record.updatedAt,
-        createdAt: record.createdAt,
-      });
-    } catch (error) {
-      console.error("İş Takip bağlantı hatası:", error);
-
-      return res.status(502).json({
-        error: "Servis takip sistemine ulaşılamadı",
-      });
-    }
+    const q = (req.query.q as string || "").trim();
+    if (!q) return res.status(400).json({ error: "q parametresi zorunlu" });
+    const record = await queryServiceRecord(q);
+    if (!record) return res.status(404).json({ error: "Kayıt bulunamadı" });
+    // Güvenlik: telefon numarasını gizle
+    const { customerPhone: _ph, faultDescription: _fd, ...safe } = record as any;
+    res.json(safe);
   });
 
   // Admin: tüm kayıtlar
