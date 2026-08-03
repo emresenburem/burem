@@ -213,7 +213,7 @@ export async function registerRoutes(
   });
 
 
-  app.post("/public/fault-report", async (req, res) => {
+  app.post("/api/fault-report", async (req, res) => {
     try {
       const { deviceLabel, brand, model, errorCode, faultDesc, name, phone, userEmail } = req.body ?? {};
 
@@ -223,7 +223,7 @@ export async function registerRoutes(
 
       // Burem İş Takip'e otomatik kayıt oluştur
       try {
-        await fetch("https://ce812aba-a843-4bc0-9c3c-8a98a65d447b-00-1zcn3g85lam95.sisko.replit.dev/public/fault-report", {
+        const r = await fetch("https://ce812aba-a843-4bc0-9c3c-8a98a65d447b-00-1zcn3g85lam95.sisko.replit.dev/api/public/fault-report", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -237,6 +237,10 @@ export async function registerRoutes(
             faultDescription: faultDesc,
           }),
         });
+
+        console.log("İş Takip HTTP:", r.status);
+        console.log(await r.text());
+
       } catch (err) {
         console.error("İş takip kayıt hatası:", err);
       }

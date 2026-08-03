@@ -445,12 +445,13 @@ export function FaultReportWizard() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          companyName: data.name,
+          deviceLabel: data.deviceLabel,
+          brand: effectiveBrand,
+          model: effectiveModel,
+          errorCode: data.errorCode,
+          faultDesc: data.faultDesc,
+          name: data.name,
           phone: data.phone,
-          deviceBrand: effectiveBrand,
-          deviceModel: effectiveModel,
-          serialNumber: "",
-          faultDescription: data.faultDesc,
         }),
       });
 
