@@ -7,6 +7,12 @@ import { sql } from "drizzle-orm";
 
 export async function runMigrations(): Promise<void> {
   await db.execute(sql`
+    ALTER TABLE products
+      ADD COLUMN IF NOT EXISTS price integer,
+      ADD COLUMN IF NOT EXISTS stock_quantity integer
+  `);
+
+  await db.execute(sql`
     CREATE TABLE IF NOT EXISTS service_records (
       id varchar PRIMARY KEY DEFAULT gen_random_uuid(),
       tracking_no text NOT NULL UNIQUE,

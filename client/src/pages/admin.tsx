@@ -5,10 +5,10 @@ import { Plus, Pencil, Trash2, X, Save, Package, CheckCircle2 } from "lucide-rea
 import { Link } from "wouter";
 
 const CATEGORIES = ["İnverter", "Servo Sürücü", "PLC", "HMI", "Elektronik Kart", "Motor", "Sensör", "Diğer"];
-const BRANDS     = ["Siemens", "ABB", "Fanuc", "Yaskawa", "Mitsubishi", "Lenze", "Schneider", "Danfoss", "Omron", "SEW-Eurodrive", "Bosch Rexroth", "Beckhoff", "Allen Bradley", "Panasonic", "Diğer"];
+const BRANDS     = ["Siemens", "ABB", "Fanuc", "Yaskawa", "Mitsubishi", "Lenze", "KEB", "Schneider", "Danfoss", "Omron", "SEW-Eurodrive", "Bosch Rexroth", "Beckhoff", "Allen Bradley", "Panasonic", "Diğer"];
 const CONDITIONS = [{ value: "new", label: "Sıfır" }, { value: "refurbished", label: "Yenilenmiş" }, { value: "used", label: "İkinci El" }];
 
-const EMPTY: InsertProduct = { name: "", brand: "Siemens", category: "İnverter", description: "", imageUrl: "", partNumber: "", condition: "new", inStock: true };
+const EMPTY: InsertProduct = { name: "", brand: "Siemens", category: "İnverter", description: "", imageUrl: "", partNumber: "", condition: "new", inStock: true, price: null, stockQuantity: null };
 
 function apiReq(method: string, url: string, body?: unknown) {
   return fetch(url, {
@@ -70,6 +70,14 @@ function ProductForm({
           <select value={form.condition ?? "new"} onChange={(e) => set("condition", e.target.value)} className={inputCls} data-testid="select-condition">
             {CONDITIONS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
           </select>
+        </div>
+        <div>
+          <label className={labelCls}>Fiyat (TL)</label>
+          <input type="number" min="0" step="1" value={form.price ?? ""} onChange={(e) => set("price", e.target.value === "" ? null : Number(e.target.value))} placeholder="Ör: 90000" className={inputCls} data-testid="input-price" />
+        </div>
+        <div>
+          <label className={labelCls}>Stok Adedi</label>
+          <input type="number" min="0" step="1" value={form.stockQuantity ?? ""} onChange={(e) => set("stockQuantity", e.target.value === "" ? null : Number(e.target.value))} placeholder="Ör: 1" className={inputCls} data-testid="input-stock-quantity" />
         </div>
         <div className="col-span-2">
           <label className={labelCls}>Açıklama</label>

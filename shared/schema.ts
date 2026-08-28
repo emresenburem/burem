@@ -27,6 +27,8 @@ export const products = pgTable("products", {
   partNumber: text("part_number"),
   condition: text("condition").default("new"),
   inStock: boolean("in_stock").default(true),
+  price: integer("price"),
+  stockQuantity: integer("stock_quantity"),
 });
 
 export const insertProductSchema = createInsertSchema(products).omit({
