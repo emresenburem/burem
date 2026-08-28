@@ -12,10 +12,9 @@ export interface CarouselProduct {
   brand: string;
   category: string;
   imageUrl?: string | null;
-  inStock?: boolean | null;
+  inStock: boolean;
   description?: string | null;
   partNumber?: string | null;
-  price?: number | null;
 }
 
 function waLink(p: CarouselProduct) {
@@ -63,11 +62,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           <p className="text-xs text-muted-foreground">
             {product.brand} · {product.category}
           </p>
-          {product.price != null && (
-            <p className="text-base font-bold tracking-tight text-foreground">
-              {new Intl.NumberFormat("tr-TR").format(product.price)} TL
-            </p>
-          )}
 
           <motion.a
             href={waLink(product)}

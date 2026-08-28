@@ -675,7 +675,7 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
 
 function DockBrandSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | undefined>(undefined);
+  const rafRef = useRef<number>();
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -761,7 +761,7 @@ function ReferencesSlider() {
   const [grabbing, setGrabbing] = useState(false);
   const dragStartX = useRef(0);
   const dragStartPos = useRef(0);
-  const rafRef = useRef<number | undefined>(undefined);
+  const rafRef = useRef<number>();
   const SPEED = 1.1;
 
   useEffect(() => {

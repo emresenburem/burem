@@ -58,7 +58,7 @@ export function Sparkles({
       color: { value: color },
       move: {
         enable: true,
-        direction: "none" as const,
+        direction: "none",
         speed: {
           min: minSpeed || speed / 10,
           max: speed,

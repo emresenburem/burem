@@ -71,7 +71,7 @@ export const InteractiveMenu: React.FC<InteractiveMenuProps> = ({
             key={item.label}
             className={`menu__item ${isActive ? "active" : ""}`}
             onClick={() => handleClick(index)}
-            ref={(el) => { itemRefs.current[index] = el; }}
+            ref={(el) => (itemRefs.current[index] = el)}
             style={{ "--lineWidth": "0px" } as React.CSSProperties}
             data-testid={`nav-menu-${item.label.toLowerCase()}`}
           >
@@ -80,7 +80,7 @@ export const InteractiveMenu: React.FC<InteractiveMenuProps> = ({
             </div>
             <strong
               className={`menu__text ${isActive ? "active" : ""}`}
-              ref={(el) => { textRefs.current[index] = el; }}
+              ref={(el) => (textRefs.current[index] = el)}
             >
               {item.label}
             </strong>
