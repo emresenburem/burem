@@ -40,8 +40,8 @@ export function TrackerCard({
       {/* Top image strip */}
       <div className="relative h-36 w-full overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
-          alt="Electronics PCB"
+          src="/service-tracker-card-bg.png"
+          alt="Burem Elektronik servis atölyesinde devre kartı onarımı"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
