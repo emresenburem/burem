@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, AlertCircle, ArrowLeft } from "lucide-react";
+import { Search, AlertCircle, ArrowRight, Menu, X } from "lucide-react";
 import { SEO } from "@/components/seo";
 import { Link } from "wouter";
+import { HeaderLogo } from "@/components/header-logo";
 import { TrackerCard } from "@/components/ui/tracker-card";
 
 interface ServiceRecord {
@@ -22,6 +23,7 @@ export default function TakipPage() {
   const [result, setResult] = useState<ServiceRecord | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const searchRecord = async (searchQuery: string) => {
     const q = searchQuery.trim();
@@ -81,16 +83,99 @@ export default function TakipPage() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/15" />
 
         <div className="relative flex min-h-screen flex-col">
-          {/* Nav */}
-          <header className="border-b border-border bg-white/75 backdrop-blur-md">
-            <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3 md:px-6">
-              <Link href="/">
-                <img src="/logo.png" alt="Burem Elektronik" className="h-9 w-auto" />
-              </Link>
-              <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors ml-auto">
-                <ArrowLeft className="h-4 w-4" /> Ana Sayfa
-              </Link>
+          {/* Ana sayfadaki header */}
+          <header className="relative sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-md">
+            <div className="relative flex w-full items-center justify-between gap-3 px-4 md:px-6">
+              <div className="-ml-25 -mt-12 mb-[-2.5rem] flex-shrink-0">
+                <HeaderLogo />
+              </div>
+
+              <nav
+                aria-label="Ana menü"
+                className="hidden md:flex absolute bottom-0 left-1/2 -translate-x-1/2 gap-0"
+              >
+                {[
+                  { label: "Hizmetler", href: "/#services" },
+                  { label: "Süreç", href: "/#process" },
+                  { label: "İletişim", href: "/#contact" },
+                  { label: "Mağaza", href: "/magaza" },
+                ].map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <a
+                  href="/takip"
+                  className="relative overflow-hidden px-4 py-1.5 text-sm font-semibold text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+                  aria-current="page"
+                >
+                  Servis Takip
+                </a>
+              </nav>
+
+              <button
+                className="md:hidden ml-auto flex items-center justify-center rounded-md p-2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+                aria-expanded={mobileMenuOpen}
+                onClick={() => setMobileMenuOpen((open) => !open)}
+                data-testid="mobile-menu-toggle"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+
+              <div className="hidden md:flex items-center gap-2 self-end pb-2">
+                <a
+                  href="/#contact"
+                  className="relative inline-flex items-center overflow-hidden rounded-md px-3 py-2 text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
+                >
+                  İletişim
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              </div>
             </div>
+
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  key="mobile-menu"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden md:hidden border-t border-border/40"
+                >
+                  <nav className="flex flex-col gap-1 px-4 py-3" aria-label="Mobil menü">
+                    {[
+                      { label: "Hizmetler", href: "/#services" },
+                      { label: "Süreç", href: "/#process" },
+                      { label: "İletişim", href: "/#contact" },
+                      { label: "Mağaza", href: "/magaza" },
+                    ].map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                    <a
+                      href="/takip"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-3 py-2.5 rounded-md text-sm font-semibold text-foreground hover:bg-foreground/5 transition-colors"
+                      aria-current="page"
+                    >
+                      Servis Takip
+                    </a>
+                  </nav>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </header>
 
           <main className="flex-1 mx-auto w-full max-w-4xl px-4 py-12 md:px-6">
