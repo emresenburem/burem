@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, AlertCircle, ArrowLeft } from "lucide-react";
-import BuremFooter from "@/components/ui/footer";
 import { SEO } from "@/components/seo";
 import { Link } from "wouter";
 import { TrackerCard } from "@/components/ui/tracker-card";
@@ -168,7 +167,6 @@ export default function TakipPage() {
           </AnimatePresence>
           </main>
 
-          <BuremFooter />
         </div>
       </div>
     </>
