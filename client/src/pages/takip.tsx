@@ -75,10 +75,10 @@ export default function TakipPage() {
       <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45"
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/service-tracking-bg.png')" }}
         />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/65" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/15" />
 
         <div className="relative flex min-h-screen flex-col">
           {/* Nav */}
