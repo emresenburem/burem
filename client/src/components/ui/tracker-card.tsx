@@ -38,7 +38,7 @@ export function TrackerCard({
       )}
     >
       {/* Top image strip */}
-      <div className="relative aspect-video w-full overflow-hidden bg-[#e7eef8]">
+      <div className="relative h-48 w-full overflow-hidden bg-[#e7eef8]">
         <img
           src="/service-tracker-card-bg.png"
           alt="Burem Elektronik servis atölyesinde devre kartı onarımı"
