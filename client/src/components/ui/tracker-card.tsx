@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { QRCodeCanvas } from "qrcode.react";
-import { Cpu, Calendar, User, Hash } from "lucide-react";
+import { Cpu, Calendar, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusStepper, STATUS_STEPS } from "./status-stepper";
 
@@ -24,7 +23,6 @@ export function TrackerCard({
   technicianNote,
   className,
 }: TrackerCardProps) {
-  const qrCodeValue = `https://buremelektronik.com/takip?takip=${trackingNo}`;
   const activeStep = STATUS_STEPS.find((s) => s.id === status);
 
   return (
@@ -68,10 +66,8 @@ export function TrackerCard({
 
       {/* Body */}
       <div className="p-5 space-y-5">
-        {/* Device + QR row */}
-        <div className="flex items-start gap-4">
-          {/* Info */}
-          <div className="flex-1 space-y-3">
+        {/* Device information */}
+        <div className="space-y-3">
             <div className="flex items-start gap-2.5">
               <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-muted">
                 <Cpu className="h-4 w-4 text-muted-foreground" />
@@ -101,24 +97,6 @@ export function TrackerCard({
                 <p className="text-sm font-semibold leading-snug">{updatedDate}</p>
               </div>
             </div>
-          </div>
-
-          {/* QR Code */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-1.5">
-            <div className="rounded-xl border border-border bg-white p-2 shadow-sm">
-              <QRCodeCanvas
-                value={qrCodeValue}
-                size={84}
-                bgColor="#ffffff"
-                fgColor="#0f172a"
-                level="M"
-              />
-            </div>
-            <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
-              <Hash className="h-2.5 w-2.5" />
-              <span>Takip QR</span>
-            </div>
-          </div>
         </div>
 
         {/* Divider */}
