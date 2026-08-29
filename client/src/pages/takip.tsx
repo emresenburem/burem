@@ -73,20 +73,28 @@ export default function TakipPage() {
         canonical="https://www.buremelektronik.com/takip"
       />
 
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
-        {/* Nav */}
-        <header className="border-b border-border bg-background/90 backdrop-blur-md">
-          <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3 md:px-6">
-            <Link href="/">
-              <img src="/logo.png" alt="Burem Elektronik" className="h-9 w-auto" />
-            </Link>
-            <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors ml-auto">
-              <ArrowLeft className="h-4 w-4" /> Ana Sayfa
-            </Link>
-          </div>
-        </header>
+      <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-45"
+          style={{ backgroundImage: "url('/service-tracking-bg.png')" }}
+        />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-white/65" />
 
-        <main className="flex-1 mx-auto w-full max-w-4xl px-4 py-12 md:px-6">
+        <div className="relative flex min-h-screen flex-col">
+          {/* Nav */}
+          <header className="border-b border-border bg-white/75 backdrop-blur-md">
+            <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3 md:px-6">
+              <Link href="/">
+                <img src="/logo.png" alt="Burem Elektronik" className="h-9 w-auto" />
+              </Link>
+              <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors ml-auto">
+                <ArrowLeft className="h-4 w-4" /> Ana Sayfa
+              </Link>
+            </div>
+          </header>
+
+          <main className="flex-1 mx-auto w-full max-w-4xl px-4 py-12 md:px-6">
           {/* Başlık */}
           <div className="mb-10 text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-1.5 text-xs font-semibold text-muted-foreground mb-4">
@@ -158,9 +166,10 @@ export default function TakipPage() {
               </motion.div>
             )}
           </AnimatePresence>
-        </main>
+          </main>
 
-        <BuremFooter />
+          <BuremFooter />
+        </div>
       </div>
     </>
   );
