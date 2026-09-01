@@ -19,7 +19,6 @@ const BuremFooter: React.FC = () => {
     { label: "Nasıl Çalışır", href: "#process" },
     { label: "Ürünler", href: "#products" },
     { label: "İletişim", href: "#contact" },
-    { label: "Servis Girişi", href: "/admin/servis" },
   ];
 
   const socials = [

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import {
@@ -6,6 +6,8 @@ import {
   MessageSquare, Settings, LogOut, Package, Wrench,
   Clock, Truck, Search, Trash2, ChevronDown,
 } from "lucide-react";
+import { adminRequest } from "@/lib/admin-auth";
+import { SEO } from "@/components/seo";
 
 /* ── Tipler ── */
 interface ServiceRecord {
@@ -42,23 +44,14 @@ const STATUS_LABELS: Record<number, { label: string; color: string; bg: string }
 
 /* ── API yardımcı ── */
 async function apiReq(method: string, url: string, body?: unknown) {
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  if (res.status === 401) throw new Error("__UNAUTHORIZED__");
-  if (!res.ok) {
-    const d = await res.json().catch(() => ({}));
-    throw new Error(d.error ?? res.statusText);
-  }
-  return res.status === 204 ? null : res.json();
+  return adminRequest(method, url, body);
 }
 
 /* ── Login ekranı ── */
 function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
+  const [totp, setTotp] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -66,10 +59,10 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
     e.preventDefault();
     setLoading(true); setErr("");
     try {
-      await apiReq("POST", "/api/admin/login", { username: user, password: pass });
+      await apiReq("POST", "/api/admin/login", { username: user, password: pass, totp: totp || undefined });
       onSuccess();
     } catch (e: any) {
-      setErr(e.message === "__UNAUTHORIZED__" ? "Kullanıcı adı veya şifre hatalı" : e.message);
+      setErr(e.message === "__UNAUTHORIZED__" ? "Giriş bilgileri hatalı" : e.message);
     } finally { setLoading(false); }
   };
 
@@ -77,6 +70,12 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <SEO
+        title="Servis Yönetimi | Burem Elektronik"
+        description="Burem Elektronik servis yönetimi."
+        canonical="/admin/servis"
+        robots="noindex,nofollow,noarchive"
+      />
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <img src="/logo.png" alt="Burem Elektronik" className="h-12 w-auto mx-auto mb-4" />
@@ -86,6 +85,7 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handle} className="space-y-3">
           <input required value={user} onChange={e => setUser(e.target.value)} placeholder="Kullanıcı adı" className={inp} data-testid="input-admin-user" />
           <input required type="password" value={pass} onChange={e => setPass(e.target.value)} placeholder="Şifre" className={inp} data-testid="input-admin-pass" />
+          <input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" value={totp} onChange={e => setTotp(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="2FA kodu (varsa)" className={inp} data-testid="input-admin-totp" />
           {err && <p className="text-sm text-red-500">{err}</p>}
           <button type="submit" disabled={loading}
             className="w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background hover:bg-foreground/80 transition-colors disabled:opacity-60"
@@ -301,7 +301,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   const handleLogout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
+    await apiReq("POST", "/api/admin/logout").catch(() => {});
     onLogout();
   };
 
@@ -309,6 +309,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Servis Yönetimi | Burem Elektronik"
+        description="Burem Elektronik servis yönetimi."
+        canonical="/admin/servis"
+        robots="noindex,nofollow,noarchive"
+      />
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
@@ -486,17 +492,20 @@ export default function AdminServisPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
 
   // Oturum kontrolü
-  useState(() => {
+  useEffect(() => {
     apiReq("GET", "/api/admin/me")
       .then(() => setAuthed(true))
       .catch(() => setAuthed(false));
-  });
+  }, []);
 
   if (authed === null) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
+      <>
+        <SEO title="Servis Yönetimi | Burem Elektronik" description="Burem Elektronik servis yönetimi." canonical="/admin/servis" robots="noindex,nofollow,noarchive" />
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </>
     );
   }
 

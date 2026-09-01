@@ -11,6 +11,7 @@ interface SEOProps {
   ogImage?: string;
   ogImageAlt?: string;
   jsonLd?: Record<string, unknown>;
+  robots?: string;
 }
 
 const DEFAULT_TITLE = "Burem Elektronik | Endüstriyel Sürücü Tamiri";
@@ -39,6 +40,7 @@ export function SEO({
   ogImage,
   ogImageAlt,
   jsonLd,
+  robots,
 }: SEOProps) {
   useEffect(() => {
     const canonicalUrl = absoluteUrl(canonical);
@@ -57,6 +59,11 @@ export function SEO({
     setMetaTag("property", "og:image", imageUrl);
     setMetaTag("property", "og:image:alt", ogImageAlt ?? "");
     setMetaTag("name", "twitter:image", imageUrl);
+    if (robots) {
+      setMetaTag("name", "robots", robots);
+    } else {
+      document.querySelector('meta[name="robots"]')?.remove();
+    }
 
     let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!link) {
@@ -80,7 +87,7 @@ export function SEO({
       document.title = DEFAULT_TITLE;
       document.getElementById("burem-product-jsonld")?.remove();
     };
-  }, [title, description, canonical, ogTitle, ogDescription, ogType, ogImage, ogImageAlt, jsonLd]);
+  }, [title, description, canonical, ogTitle, ogDescription, ogType, ogImage, ogImageAlt, jsonLd, robots]);
 
   return null;
 }

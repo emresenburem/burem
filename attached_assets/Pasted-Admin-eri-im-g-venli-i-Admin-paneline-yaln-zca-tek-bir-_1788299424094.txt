@@ -1,0 +1,73 @@
+Admin erişim güvenliği
+
+Admin paneline yalnızca tek bir yönetici, yani site sahibi erişebilmelidir.
+
+* Herkese açık kullanıcı kaydı, admin oluşturma, davet veya şifre belirleme ekranı ekleme.
+* Tek admin hesabı mevcut Render environment variables üzerinden yönetilsin.
+* Admin kullanıcı adı, parola, session secret veya diğer gizli değerleri kaynak koda, Git’e, frontend bundle’a ya da loglara yazma.
+* Admin giriş bilgilerini API yanıtlarında veya hata mesajlarında gösterme.
+* /admin bağlantısını halka açık menü, footer, sitemap veya ürün sayfalarında gösterme.
+* /admin sayfasına noindex, nofollow uygula ve robots.txt içinde taranmamasını belirt. Bunun yalnızca görünürlüğü azalttığını, gerçek güvenliğin sunucu tarafındaki yetkilendirme olduğunu dikkate al.
+
+Sunucu tarafı koruması
+
+Sadece admin arayüzünü gizlemekle yetinme. Aşağıdaki işlemlerin tamamını merkezi bir server-side admin middleware ile koru:
+
+* Ürün ekleme
+* Ürün düzenleme
+* Ürün silme
+* Görsel yükleme
+* Görsel silme
+* Görsel sıralama
+* Kapak görseli değiştirme
+* Admin bilgisi sorgulama
+* Gelecekte eklenebilecek tüm /api/admin/* endpoint’leri
+
+Yetkisiz istekler hiçbir veri değiştirmeden 401, yetkisi olmayan oturumlar 403 dönsün.
+
+Oturum güvenliği
+
+* Session cookie HttpOnly, production’da Secure ve uygun SameSite ayarlı olsun.
+* Session kimliği girişten sonra yenilensin; session fixation engellensin.
+* Oturum süresi sınırlı olsun ve belirli bir hareketsizlikten sonra yeniden giriş istesin.
+* Logout işlemi session’ı sunucu tarafında geçersiz kılsın ve cookie’yi temizlesin.
+* Production’da zayıf veya eksik SESSION_SECRET ile uygulama başlatılmasın.
+* State-changing POST, PUT, PATCH ve DELETE isteklerine CSRF koruması uygula.
+* CORS’u herkese açık yazma isteklerine izin verecek şekilde genişletme.
+
+Giriş koruması
+
+* Admin login endpoint’ine IP ve kullanıcı adı bazlı rate limit ekle.
+* Örneğin 15 dakika içinde en fazla 5 başarısız denemeye izin ver.
+* Hata mesajı “Kullanıcı adı yanlış” veya “Şifre yanlış” ayrımı yapmasın; yalnızca genel “Giriş bilgileri hatalı” mesajı göstersin.
+* Başarısız girişlerde parola, kullanıcı adı veya secret loglama.
+* Başarılı/başarısız girişleri hassas bilgi içermeden güvenlik loguna kaydet.
+* Varsayılan admin kullanıcı adı veya parola oluşturma.
+* Admin parolasının güçlü olması gerektiğini deployment notlarında belirt.
+
+İki aşamalı doğrulama
+
+Mevcut yapıyı bozmadan TOTP tabanlı iki aşamalı doğrulamayı destekle.
+
+* Secret yalnızca ADMIN_TOTP_SECRET environment variable üzerinden alınsın.
+* Secret frontend’e, API yanıtlarına veya loglara gönderilmesin.
+* ADMIN_TOTP_SECRET tanımlıysa production admin girişinde parola sonrasında 6 haneli doğrulama kodu zorunlu olsun.
+* Secret tanımlı değilse mevcut admin girişini bozma; ancak production güvenlik raporunda 2FA’nın etkin olmadığını açıkça belirt.
+* 2FA secret’ı otomatik oluşturma veya production’a yazma.
+* Kurulum için güvenli, manuel talimat ver.
+
+Kontroller
+
+Aşağıdakileri test et:
+
+* Giriş yapmadan /admin yalnızca giriş ekranını gösteriyor.
+* Yetkisiz ürün ve görsel yazma istekleri 401.
+* Normal ziyaretçi public ürün listesini görebiliyor fakat değiştiremiyor.
+* Session cookie JavaScript tarafından okunamıyor.
+* Logout sonrasında eski session tekrar kullanılamıyor.
+* Rate limit çalışıyor.
+* CSRF koruması geçersiz isteği reddediyor.
+* Admin endpoint’lerinde gizli bilgi sızıntısı yok.
+* Admin güvenliği için production veritabanına bağlanılmadı ve production verisi değiştirilmedi.
+
+Bu güvenlik değişiklikleri mevcut admin hesabını veya mağaza erişimini aniden bozabilecekse otomatik uygulama yapma; gereken Render environment variable değişikliklerini önce raporla ve deployment sırasını açıkça belirt.

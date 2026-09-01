@@ -17,6 +17,8 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "wouter";
+import { adminRequest, ensureAdminCsrfToken } from "@/lib/admin-auth";
+import { SEO } from "@/components/seo";
 
 const CATEGORIES = ["İnverter", "Servo Sürücü", "PLC", "HMI", "Elektronik Kart", "Motor", "Sensör", "Diğer"];
 const BRANDS = ["Siemens", "ABB", "Fanuc", "Yaskawa", "Mitsubishi", "Lenze", "Schneider", "Danfoss", "Omron", "SEW-Eurodrive", "Bosch Rexroth", "Beckhoff", "Allen Bradley", "Panasonic", "Diğer"];
@@ -49,19 +51,7 @@ type PendingImage = {
 
 type UploadProgress = (progress: number) => void;
 
-function apiReq(method: string, url: string, body?: unknown) {
-  return fetch(url, {
-    method,
-    headers: body ? { "Content-Type": "application/json" } : {},
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  }).then(async (response) => {
-    if (response.status === 401) throw new Error("__UNAUTHORIZED__");
-    if (!response.ok) {
-      throw new Error((await response.json().catch(() => ({}))).error ?? response.statusText);
-    }
-    return response.status === 204 ? null : response.json();
-  });
-}
+const apiReq = adminRequest;
 
 function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
@@ -83,6 +73,7 @@ function uploadProductImage(productId: string, file: File, onProgress: UploadPro
       xhr.open("POST", `/api/admin/products/${encodeURIComponent(productId)}/images`);
       xhr.withCredentials = true;
       xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("X-CSRF-Token", await ensureAdminCsrfToken());
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           onProgress(Math.max(20, Math.round((event.loaded / event.total) * 100)));
@@ -120,6 +111,7 @@ function validateImageFile(file: File) {
 function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [totp, setTotp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const inputCls = "w-full rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20";
@@ -129,11 +121,11 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true);
     setError("");
     try {
-      await apiReq("POST", "/api/admin/login", { username, password });
+      await apiReq("POST", "/api/admin/login", { username, password, totp: totp || undefined });
       onSuccess();
     } catch (error) {
       setError(error instanceof Error && error.message === "__UNAUTHORIZED__"
-        ? "Kullanıcı adı veya şifre hatalı"
+        ? "Giriş bilgileri hatalı"
         : error instanceof Error ? error.message : "Giriş yapılamadı");
     } finally {
       setLoading(false);
@@ -142,6 +134,12 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <SEO
+        title="Yönetici Girişi | Burem Elektronik"
+        description="Burem Elektronik yönetici paneli."
+        canonical="/admin"
+        robots="noindex,nofollow,noarchive"
+      />
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <img src="/logo.png" alt="Burem Elektronik" className="mx-auto mb-4 h-12 w-auto" />
@@ -151,6 +149,7 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-3">
           <input required autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} placeholder="Kullanıcı adı" className={inputCls} data-testid="input-admin-user" />
           <input required type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Şifre" className={inputCls} data-testid="input-admin-pass" />
+          <input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code" value={totp} onChange={(event) => setTotp(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="2FA kodu (varsa)" className={inputCls} data-testid="input-admin-totp" />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button type="submit" disabled={loading} className="w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-colors hover:bg-foreground/80 disabled:opacity-60" data-testid="button-login">
             {loading ? "Giriş yapılıyor…" : "Giriş Yap"}
@@ -652,6 +651,12 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Ürün Yönetimi | Burem Elektronik"
+        description="Burem Elektronik ürün yönetimi."
+        canonical="/admin"
+        robots="noindex,nofollow,noarchive"
+      />
       <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6">
           <div className="flex items-center gap-3">
@@ -770,7 +775,7 @@ export default function AdminPage() {
   }, []);
 
   if (authed === null) {
-    return <div className="flex min-h-screen items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>;
+    return <><SEO title="Yönetici Girişi | Burem Elektronik" description="Burem Elektronik yönetici paneli." canonical="/admin" robots="noindex,nofollow,noarchive" /><div className="flex min-h-screen items-center justify-center bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div></>;
   }
   if (!authed) return <LoginForm onSuccess={() => setAuthed(true)} />;
   return <ProductDashboard onLogout={() => setAuthed(false)} />;

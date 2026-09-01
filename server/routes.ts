@@ -19,6 +19,15 @@ import {
   deleteProductImageAsset,
   uploadProductImageDataUrl,
 } from "./product-images";
+import {
+  csrfProtection,
+  getCsrfToken,
+  hasActiveAdminSession,
+  isStateChangingMethod,
+  touchAdminSession,
+  verifyTotp,
+  SESSION_COOKIE_NAME,
+} from "./admin-security";
 
 const STATUS_LABELS: Record<number, string> = {
   1: "Teslim Alındı",
@@ -29,9 +38,23 @@ const STATUS_LABELS: Record<number, string> = {
   6: "Teslimata Hazır",
 };
 
+function securityLog(event: string, req: Request) {
+  console.info(`[security] ${event} ip=${req.ip ?? "unknown"}`);
+}
+
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
-  if ((req.session as any)?.adminLoggedIn) return next();
-  res.status(401).json({ error: "Yetkisiz" });
+  if (!hasActiveAdminSession(req)) {
+    if ((req.session as any)?.adminLoggedIn) {
+      req.session.destroy(() => undefined);
+    }
+    return res.status(401).json({ error: "Yetkisiz" });
+  }
+
+  touchAdminSession(req);
+  if (isStateChangingMethod(req.method)) {
+    return csrfProtection(req, res, next);
+  }
+  next();
 }
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -46,23 +69,117 @@ export async function registerRoutes(
   app.get("/Default.asp", (_req, res) => res.redirect(301, "/"));
 
   /* ══ Admin Auth ══════════════════════════════════════════════ */
+  const loginAttempts = new Map<string, { startedAt: number; failures: number }>();
+  const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+  const LOGIN_FAILURE_LIMIT = 5;
+  const attemptKey = (type: "ip" | "user", value: string) => `${type}:${value}`;
+  const normalizedLoginUser = (value: unknown) =>
+    typeof value === "string" ? value.trim().toLocaleLowerCase("tr-TR").slice(0, 120) : "";
+
+  function pruneLoginAttempts() {
+    if (loginAttempts.size < 10_000) return;
+    const now = Date.now();
+    loginAttempts.forEach((attempt, key) => {
+      if (now - attempt.startedAt >= LOGIN_WINDOW_MS) loginAttempts.delete(key);
+    });
+  }
+
+  function isLoginRateLimited(keys: string[]) {
+    const now = Date.now();
+    return keys.some((key) => {
+      const attempt = loginAttempts.get(key);
+      if (!attempt || now - attempt.startedAt >= LOGIN_WINDOW_MS) {
+        if (attempt) loginAttempts.delete(key);
+        return false;
+      }
+      return attempt.failures >= LOGIN_FAILURE_LIMIT;
+    });
+  }
+
+  function recordFailedLogin(keys: string[]) {
+    pruneLoginAttempts();
+    const now = Date.now();
+    for (const key of keys) {
+      const previous = loginAttempts.get(key);
+      if (!previous || now - previous.startedAt >= LOGIN_WINDOW_MS) {
+        loginAttempts.set(key, { startedAt: now, failures: 1 });
+      } else {
+        previous.failures += 1;
+      }
+    }
+  }
+
+  function clearLoginRateLimit(keys: string[]) {
+    keys.forEach((key) => loginAttempts.delete(key));
+  }
+
+  // Every state-changing /api/admin request gets CSRF protection. All future
+  // admin endpoints are private by default, except login, csrf and logout.
+  app.use("/api/admin", (req, res, next) => {
+    if (req.path === "/login" || req.path === "/csrf" || req.path === "/logout") {
+      return csrfProtection(req, res, next);
+    }
+    requireAdmin(req, res, next);
+  });
+
+  app.get("/api/admin/csrf", (req, res) => {
+    res.json({ csrfToken: getCsrfToken(req) });
+  });
+
   app.post("/api/admin/login", (req, res) => {
     const { username, password } = req.body ?? {};
+    const keys = [
+      attemptKey("ip", req.ip ?? "unknown"),
+      attemptKey("user", normalizedLoginUser(username)),
+    ];
+    if (isLoginRateLimited(keys)) {
+      securityLog("admin_login_rate_limited", req);
+      return res.status(429).json({ error: "Çok fazla deneme. Lütfen daha sonra tekrar deneyin." });
+    }
+
     const adminUser = process.env.ADMIN_USERNAME;
     const adminPass = process.env.ADMIN_PASSWORD;
     if (!adminUser || !adminPass) {
-      return res.status(503).json({ error: "Admin kimlik bilgileri yapılandırılmamış" });
+      securityLog("admin_login_unavailable", req);
+      return res.status(503).json({ error: "Admin girişi şu anda kullanılamıyor" });
     }
-    if (username === adminUser && password === adminPass) {
-      (req.session as any).adminLoggedIn = true;
-      return res.json({ ok: true });
+
+    const totpRequired = Boolean(process.env.ADMIN_TOTP_SECRET);
+    const totpValid = !totpRequired || verifyTotp(process.env.ADMIN_TOTP_SECRET, req.body?.totp);
+    if (username === adminUser && password === adminPass && totpValid) {
+      return req.session.regenerate((error) => {
+        if (error) {
+          securityLog("admin_login_session_error", req);
+          return res.status(500).json({ error: "Giriş yapılamadı" });
+        }
+        const nextSession = req.session as any;
+        nextSession.adminLoggedIn = true;
+        nextSession.adminLastActivity = Date.now();
+        nextSession.csrfToken = getCsrfToken(req);
+        clearLoginRateLimit(keys);
+        securityLog("admin_login_success", req);
+        req.session.save((saveError) => {
+          if (saveError) return res.status(500).json({ error: "Giriş yapılamadı" });
+          res.json({ ok: true });
+        });
+      });
     }
-    res.status(401).json({ error: "Kullanıcı adı veya şifre hatalı" });
+
+    recordFailedLogin(keys);
+    securityLog("admin_login_failed", req);
+    res.status(401).json({ error: "Giriş bilgileri hatalı" });
   });
 
   app.post("/api/admin/logout", (req, res) => {
-    req.session.destroy(() => {});
-    res.json({ ok: true });
+    req.session.destroy(() => {
+      res.clearCookie(SESSION_COOKIE_NAME, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
+      res.json({ ok: true });
+    });
   });
 
   app.get("/api/admin/me", requireAdmin, (_req, res) => {

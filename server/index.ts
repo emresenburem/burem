@@ -6,14 +6,22 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { seedProducts } from "./seed";
 import { runMigrations } from "./migrate";
+import { ADMIN_SESSION_MAX_AGE_MS } from "./admin-security";
 
 const app = express();
 app.use(express.json({ limit: "12mb" }));
 
 const PgSession = connectPgSimple(session);
 
-if (!process.env.SESSION_SECRET) {
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
   throw new Error("SESSION_SECRET ortam değişkeni tanımlanmamış — sunucu başlatılamıyor.");
+}
+if (process.env.NODE_ENV === "production" && sessionSecret.length < 32) {
+  throw new Error("Production SESSION_SECRET en az 32 karakter olmalıdır.");
+}
+if (process.env.NODE_ENV === "production" && !process.env.ADMIN_TOTP_SECRET) {
+  console.warn("[security] ADMIN_TOTP_SECRET tanımlı değil; production admin 2FA etkin değil.");
 }
 
 // Replit ve benzeri ters proxy arkasında güvenli cookie için gerekli
@@ -26,13 +34,15 @@ app.use(
       tableName: "session",
       createTableIfMissing: true,
     }),
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 gün
+      sameSite: "lax",
+      maxAge: ADMIN_SESSION_MAX_AGE_MS,
     },
   })
 );
@@ -68,12 +78,11 @@ export function log(message: string, source = "express") {
 }
 
 // Hassas endpoint'lerin yanıtları loglanmamalı
-const SENSITIVE_PATHS = ["/api/service/settings", "/api/admin/login"];
-
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
   const path = req.path;
-  const isSensitive = SENSITIVE_PATHS.some((p) => path.startsWith(p));
+  const isSensitive =
+    path.startsWith("/api/admin") || path.startsWith("/api/service/settings");
   let capturedJsonResponse: Record<string, unknown> | undefined = undefined;
 
   const originalResJson = res.json;
