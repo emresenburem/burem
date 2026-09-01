@@ -53,7 +53,7 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
-import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import ServiceBrandCarousel from "@/components/service-brand-carousel";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
@@ -1042,6 +1042,7 @@ function LocalBusinessJsonLd() {
 }
 
 export default function HomePage() {
+  const [, setLocation] = useLocation();
   const preferReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
@@ -1306,23 +1307,30 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* Kesintisiz kayan, öne çıkan markalı coverflow */}
-      <CoverflowCarousel
-        slides={BRANDS.map((brand) => ({
-          src: brand.logo,
-          alt: `${brand.name} logosu`,
-          scale: brand.scale,
-        }))}
-        label="Marka logoları"
-        cardWidth="clamp(150px, 18vw, 220px)"
-        cardHeight="74px"
-        rotate={38}
-        depth={0.3}
-        perspective={4}
-        fade={0.13}
-        gap={0.2}
-        autoPlaySpeed={0.6}
-      />
+      <section className="w-full overflow-hidden border-y border-border/60 bg-background py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-4 md:px-6">
+          <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                Tamir ettiğimiz
+              </p>
+              <h2
+                className="mt-1 text-2xl font-bold tracking-tight md:text-3xl"
+                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
+              >
+                Markalar
+              </h2>
+            </div>
+            <p className="max-w-xs text-sm leading-relaxed text-muted-foreground sm:text-right">
+              Listemizde olmayan markalar için bize danışın.
+            </p>
+          </div>
+          <ServiceBrandCarousel
+            brands={BRANDS}
+            onBrandClick={(brand) => setLocation(`/brand/${encodeURIComponent(brand.name)}`)}
+          />
+        </div>
+      </section>
 
       <main id="top">
         <AnimatedServicesSection />

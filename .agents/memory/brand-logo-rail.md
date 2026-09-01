@@ -3,8 +3,8 @@ name: Brand logo rail
 description: The visual and motion direction for the homepage brand logo strip.
 ---
 
-The homepage brand rail should look like a coverflow with a featured center logo and angled neighboring logos, while moving continuously rather than snapping one card at a time.
+The homepage service-brand rail now uses three balanced vertical columns of equal logo cards, with calm continuous looping and a static grid fallback for reduced motion. Keep customer references as a separate untouched section.
 
-**Why:** A flat marquee did not provide the requested featured-logo depth, and stepped coverflow transitions felt different from the requested smooth infinite movement.
+**Why:** The service-brand section needs to feel like a calm, technical logo carousel rather than a customer-reference marquee; the user's later direction explicitly separated these two areas.
 
-**How to apply:** Preserve the 3D perspective treatment when changing the rail; autoplay should advance a fractional position continuously and loop without a visible reset.
+**How to apply:** Use the existing service brand list and logo sources, preserve contain sizing and accessible brand links, pause visual complexity on reduced-motion devices, and do not modify the ReferencesSlider or customer logo data.
