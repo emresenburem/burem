@@ -1,1 +1,2 @@
 - [Brand logo rail](brand-logo-rail.md) — use a continuous fractional coverflow: featured center logo, angled neighbors, and no stepped autoplay.
+- [Public npm lockfiles](public-npm-lockfiles.md) — rebuild dependencies from scratch when Replit’s hidden npm lock keeps private registry URLs alive.
