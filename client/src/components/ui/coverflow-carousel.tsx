@@ -110,7 +110,7 @@ export function CoverflowCarousel({
       const ramp = Math.pow(distance, falloff);
       const tilt = Math.min(rotate * ramp, 82) * Math.sign(offset);
       const edge = Math.min(1, Math.max(0, count / 2 - distance));
-      const scale = Math.max(0.86, 1.06 - Math.min(distance, 3) * 0.055);
+      const scale = Math.max(0.74, 1.06 - Math.min(distance, 3) * 0.11);
 
       card.style.transform =
         `translateX(calc(-50% + ${offset * pitch}px)) ` +
