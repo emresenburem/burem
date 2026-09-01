@@ -78,7 +78,7 @@ const BRANDS = [
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg", scale: 2.2 },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg", scale: 0.65 },
   { name: "Mecasonic", color: "#003366", logo: new URL("../assets/logos/mecasonic.png", import.meta.url).href, w: 110 },
-  { name: "FIDA", color: "#D81F26", logo: "/fida-logo.png", scale: 1.8 },
+  { name: "FIDA", color: "#D81F26", logo: "/fida-logo.png" },
 ];
 
 
