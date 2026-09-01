@@ -81,6 +81,90 @@ const BRANDS = [
   { name: "FIDA", color: "#D81F26", logo: "/fida-logo.png" },
 ];
 
+function BrandCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (isPaused || prefersReducedMotion) return;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % BRANDS.length);
+    }, 2600);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused, prefersReducedMotion]);
+
+  const visibleBrands = BRANDS.map((brand, index) => {
+    let offset = index - activeIndex;
+    if (offset > BRANDS.length / 2) offset -= BRANDS.length;
+    if (offset < -BRANDS.length / 2) offset += BRANDS.length;
+    return { brand, index, offset };
+  }).filter(({ offset }) => Math.abs(offset) <= 3);
+
+  return (
+    <div
+      className="relative w-full overflow-hidden border-y border-border/30 py-5 md:py-6"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      data-testid="brand-carousel"
+    >
+      <div className="relative mx-auto h-16 w-full max-w-6xl [perspective:900px]">
+        {visibleBrands.map(({ brand, index, offset }) => {
+          const isFeatured = offset === 0;
+          const distance = Math.abs(offset);
+
+          return (
+            <div key={brand.name} className="absolute left-1/2 top-1/2">
+              <motion.div
+                className="absolute"
+                animate={{
+                  x: offset * 126,
+                  y: isFeatured ? -2 : distance * 2,
+                  scale: isFeatured ? 1.16 : 0.92 - distance * 0.06,
+                  opacity: isFeatured ? 1 : 0.48 - distance * 0.08,
+                  rotateY: offset * -18,
+                  filter: isFeatured ? "drop-shadow(0 8px 12px rgba(15, 23, 42, 0.18))" : "none",
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 180,
+                  damping: 22,
+                  mass: 0.8,
+                }}
+                style={{
+                  zIndex: 10 - distance,
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  title={brand.name}
+                  aria-label={`${brand.name} logosunu öne çıkar`}
+                  className={`flex h-12 w-28 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl px-3 transition-colors md:h-14 md:w-36 ${
+                    isFeatured
+                      ? "border border-border/60 bg-background/90 shadow-sm"
+                      : "border border-transparent bg-background/30"
+                  }`}
+                >
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="h-full w-full object-contain"
+                    style={(brand as any).scale ? { transform: `scale(${(brand as any).scale})` } : undefined}
+                  />
+                </button>
+              </motion.div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 
 
 function SlideNav({ items }: { items: { label: string; onClick: () => void }[] }) {
@@ -1306,32 +1390,8 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* Marka logoları sonsuz slider */}
-        <div className="relative w-full pt-8 pb-3 overflow-hidden">
-          <div className="relative h-16 w-full">
-            <InfiniteSlider
-              className="flex h-full w-full items-center"
-              duration={24}
-              durationOnHover={48}
-              gap={48}
-            >
-              {BRANDS.map((brand) => (
-                <div
-                  key={brand.name}
-                  className="flex items-center justify-center h-10 flex-shrink-0 transition-all duration-300 opacity-90 hover:opacity-100 hover:scale-105"
-                  style={{ width: (brand as any).w ? `${(brand as any).w}px` : "7rem" }}
-                >
-                  <img
-                    src={brand.logo}
-                    alt={brand.name}
-                    className="w-full h-full object-contain"
-                    style={(brand as any).scale && !(brand as any).w ? { transform: `scale(${(brand as any).scale})` } : undefined}
-                  />
-                </div>
-              ))}
-            </InfiniteSlider>
-          </div>
-        </div>
+      {/* Öne çıkan markalı 3D carousel */}
+      <BrandCarousel />
 
       <main id="top">
         <AnimatedServicesSection />
