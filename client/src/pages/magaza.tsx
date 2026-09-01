@@ -10,7 +10,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import type { Product } from "@shared/schema";
+import type { ProductWithImages } from "@shared/schema";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
 import StoreProductCard from "@/components/store-product-card";
@@ -261,7 +261,7 @@ export default function MagazaPage() {
   const [stockOnly, setStockOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const { data: allProducts = [], isLoading } = useQuery<Product[]>({
+  const { data: allProducts = [], isLoading } = useQuery<ProductWithImages[]>({
     queryKey: ["/api/products"],
   });
 

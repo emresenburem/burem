@@ -12,7 +12,8 @@
     "db:push": "drizzle-kit push",
     "migrate:products": "tsx scripts/migrate-products.ts",
     "migrate:product-images": "tsx scripts/migrate-product-images.ts",
-    "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts"
+    "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts",
+    "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

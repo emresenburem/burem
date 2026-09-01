@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, boolean, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -29,12 +29,34 @@ export const products = pgTable("products", {
   inStock: boolean("in_stock").default(true),
 });
 
+export const productImages = pgTable(
+  "product_images",
+  {
+    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+    productId: varchar("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    imageUrl: text("image_url").notNull(),
+    cloudinaryPublicId: text("cloudinary_public_id"),
+    sortOrder: integer("sort_order").default(0),
+    isPrimary: boolean("is_primary").default(false),
+    createdAt: timestamp("created_at").defaultNow(),
+  },
+  (table) => ({
+    onePrimaryPerProduct: uniqueIndex("product_images_one_primary_idx")
+      .on(table.productId)
+      .where(sql`${table.isPrimary} = true`),
+  }),
+);
+
 export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
 });
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = typeof products.$inferSelect;
+export type ProductImage = typeof productImages.$inferSelect;
+export type ProductWithImages = Product & { images: ProductImage[] };
 
 /* ── Servis Takip ───────────────────────────────────────────── */
 

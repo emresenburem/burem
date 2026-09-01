@@ -1,16 +1,19 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useRoute } from "wouter";
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  ImageOff,
   MessageCircle,
   Package,
   Phone,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
-import type { Product } from "@shared/schema";
+import type { Product, ProductWithImages } from "@shared/schema";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
 import StoreProductCard from "@/components/store-product-card";
@@ -19,12 +22,195 @@ import { PHONE_NUMBER } from "@/lib/site-contact";
 import {
   absoluteUrl,
   conditionLabel,
+  optimizedProductImageUrl,
   productAbsoluteUrl,
   productPath,
   productWhatsAppLink,
 } from "@/lib/product-utils";
 
-function ProductJsonLd({ product }: { product: Product }) {
+function ProductGallery({ product }: { product: ProductWithImages }) {
+  const images = useMemo(() => {
+    if (product.images.length > 0) {
+      return product.images.map((image) => ({
+        id: image.id,
+        url: image.imageUrl,
+      }));
+    }
+    return product.imageUrl ? [{ id: "legacy", url: product.imageUrl }] : [];
+  }, [product.imageUrl, product.images]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const activeImage = images[activeIndex];
+  const imageAlt = product.partNumber
+    ? `${product.name} — Parça no ${product.partNumber}`
+    : product.name;
+
+  useEffect(() => {
+    setActiveIndex(0);
+    setLightboxOpen(false);
+  }, [product.id]);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLightboxOpen(false);
+      if (event.key === "ArrowLeft" && images.length > 1) {
+        setActiveIndex((index) => (index - 1 + images.length) % images.length);
+      }
+      if (event.key === "ArrowRight" && images.length > 1) {
+        setActiveIndex((index) => (index + 1) % images.length);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [images.length, lightboxOpen]);
+
+  const moveImage = (direction: number) => {
+    if (images.length < 2) return;
+    setActiveIndex((index) => (index + direction + images.length) % images.length);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const distance = (event.changedTouches[0]?.clientX ?? touchStartX.current) - touchStartX.current;
+    if (Math.abs(distance) > 40) moveImage(distance > 0 ? -1 : 1);
+    touchStartX.current = null;
+  };
+
+  return (
+    <>
+      <div className="relative overflow-hidden rounded-[28px] border border-border bg-muted shadow-soft">
+        <button
+          type="button"
+          className="group block aspect-[4/3] w-full cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+          onClick={() => activeImage && setLightboxOpen(true)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          aria-label="Görseli büyüt"
+        >
+          {activeImage ? (
+            <img
+              src={optimizedProductImageUrl(activeImage.url, 1200)}
+              alt={imageAlt}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              data-testid={`img-product-detail-${product.id}`}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-muted-foreground/40">
+              <ImageOff className="h-20 w-20" />
+            </div>
+          )}
+          {images.length > 1 && (
+            <span className="absolute bottom-4 right-4 rounded-full bg-black/65 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-sm">
+              {activeIndex + 1} / {images.length}
+            </span>
+          )}
+        </button>
+
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => moveImage(-1)}
+              className="absolute left-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform hover:scale-105"
+              aria-label="Önceki görsel"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => moveImage(1)}
+              className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform hover:scale-105"
+              aria-label="Sonraki görsel"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
+      </div>
+
+      {images.length > 1 && (
+        <div className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-6">
+          {images.map((image, index) => (
+            <button
+              type="button"
+              key={image.id}
+              onClick={() => setActiveIndex(index)}
+              className={`aspect-square overflow-hidden rounded-xl border-2 bg-muted transition-colors ${
+                activeIndex === index ? "border-primary" : "border-transparent hover:border-border"
+              }`}
+              aria-label={`${index + 1}. görseli göster`}
+              aria-current={activeIndex === index}
+            >
+              <img
+                src={optimizedProductImageUrl(image.url, 240)}
+                alt={`${imageAlt} — ${index + 1}. görsel`}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {lightboxOpen && activeImage && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Ürün görseli"
+          onClick={() => setLightboxOpen(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-white/20"
+            aria-label="Görseli kapat"
+          >
+            Esc <span aria-hidden="true">×</span>
+          </button>
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(event) => { event.stopPropagation(); moveImage(-1); }}
+                className="absolute left-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-8"
+                aria-label="Önceki görsel"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                type="button"
+                onClick={(event) => { event.stopPropagation(); moveImage(1); }}
+                className="absolute right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-8"
+                aria-label="Sonraki görsel"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </>
+          )}
+          <img
+            src={optimizedProductImageUrl(activeImage.url, 1600)}
+            alt={imageAlt}
+            className="max-h-[88vh] max-w-[92vw] object-contain"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+function ProductJsonLd({ product }: { product: ProductWithImages }) {
   const jsonLd = useMemo<Record<string, unknown>>(
     () => ({
       "@context": "https://schema.org",
@@ -194,12 +380,12 @@ export default function ProductDetailPage() {
   const [, params] = useRoute("/magaza/urun/:id/:seoSlug");
   const productId = params?.id;
 
-  const { data: product, isLoading, isError } = useQuery<Product>({
+  const { data: product, isLoading, isError } = useQuery<ProductWithImages>({
     queryKey: [`/api/products/${productId ?? ""}`],
     enabled: Boolean(productId),
   });
 
-  const { data: allProducts = [] } = useQuery<Product[]>({
+  const { data: allProducts = [] } = useQuery<ProductWithImages[]>({
     queryKey: ["/api/products"],
     enabled: Boolean(product),
   });
@@ -245,22 +431,7 @@ export default function ProductDetailPage() {
             </Link>
 
             <div className="mt-7 grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="relative overflow-hidden rounded-[28px] border border-border bg-muted shadow-soft">
-                <div className="aspect-[4/3]">
-                  {product.imageUrl ? (
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="h-full w-full object-cover"
-                      data-testid={`img-product-detail-${product.id}`}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-muted-foreground/40">
-                      <Package className="h-20 w-20" />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ProductGallery product={product} />
               <ProductInfo product={product} />
             </div>
 

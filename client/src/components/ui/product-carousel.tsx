@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
-import { productWhatsAppLink } from "@/lib/product-utils";
+import { optimizedProductImageUrl, productWhatsAppLink } from "@/lib/product-utils";
 
 export interface CarouselProduct {
   id: string | number;
@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
         <div className="relative h-52 overflow-hidden bg-muted sm:h-56">
           {product.imageUrl ? (
             <img
-              src={product.imageUrl}
+              src={optimizedProductImageUrl(product.imageUrl, 640)}
               alt={product.name}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />

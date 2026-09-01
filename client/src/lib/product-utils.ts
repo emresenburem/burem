@@ -69,3 +69,8 @@ export function productWhatsAppLink(
 export function conditionLabel(condition?: string | null) {
   return condition ? CONDITION_LABELS[condition] ?? condition : null;
 }
+
+export function optimizedProductImageUrl(url: string, width: number) {
+  if (!url.includes("res.cloudinary.com") || !url.includes("/upload/")) return url;
+  return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
+}

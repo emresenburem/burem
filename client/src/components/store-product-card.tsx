@@ -1,15 +1,16 @@
 import { Link } from "wouter";
 import { CheckCircle2, MessageCircle, Package, Phone, XCircle } from "lucide-react";
-import type { Product } from "@shared/schema";
+import type { ProductWithImages } from "@shared/schema";
 import { PHONE_NUMBER } from "@/lib/site-contact";
-import { conditionLabel, productPath, productWhatsAppLink } from "@/lib/product-utils";
+import { conditionLabel, optimizedProductImageUrl, productPath, productWhatsAppLink } from "@/lib/product-utils";
 
 interface StoreProductCardProps {
-  product: Product;
+  product: ProductWithImages;
 }
 
 export default function StoreProductCard({ product }: StoreProductCardProps) {
   const condition = conditionLabel(product.condition);
+  const coverUrl = product.images[0]?.imageUrl ?? product.imageUrl;
 
   return (
     <article
@@ -22,9 +23,9 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
         data-testid={`link-product-${product.id}`}
       >
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-          {product.imageUrl ? (
+          {coverUrl ? (
             <img
-              src={product.imageUrl}
+              src={optimizedProductImageUrl(coverUrl, 720)}
               alt={product.name}
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

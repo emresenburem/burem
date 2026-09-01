@@ -102,3 +102,16 @@ export async function uploadProductImageDataUrl(
     publicId,
   );
 }
+
+export async function deleteProductImageAsset(publicId: string | null | undefined) {
+  if (!publicId) return;
+
+  const result = await getCloudinary().uploader.destroy(publicId, {
+    resource_type: "image",
+    invalidate: true,
+  });
+
+  if (result.result !== "ok" && result.result !== "not found") {
+    throw new Error(`Cloudinary asset silinemedi: ${result.result}`);
+  }
+}

@@ -1,0 +1,132 @@
+Burem Elektronik mağazasında şu anda her ürün için yalnızca bir görsel eklenebiliyor. Bir ürüne birden fazla fotoğraf eklenebilmesini ve ürün detay sayfasında profesyonel galeri olarak gösterilmesini sağla.
+
+Önce git status kontrolü yap. Başka bir görevden kalan commit edilmemiş değişiklik varsa üzerine yazma; durumu bildir ve dur.
+
+Veri modeli
+
+Mevcut products.image_url alanını geriye dönük uyumluluk için silme veya değiştirme.
+
+Drizzle şemasına ayrı bir product_images tablosu ekle:
+
+* id: varchar, primary key, varsayılan gen_random_uuid()
+* product_id: varchar, zorunlu, products.id foreign key
+* image_url: text, zorunlu
+* cloudinary_public_id: text, mümkünse zorunlu
+* sort_order: integer, varsayılan 0
+* is_primary: boolean, varsayılan false
+* created_at: timestamp, varsayılan now()
+
+Ürün silindiğinde ilgili görsel kayıtları için ON DELETE CASCADE kullan. Her üründe yalnızca bir kapak görseli bulunmasını güvenli şekilde sağla.
+
+Geriye dönük uyumluluk
+
+* Mevcut ürünlerin products.image_url değerlerini koru.
+* Bir ürünün product_images kaydı yoksa mevcut image_url alanını tek görsel olarak göstermeye devam et.
+* Kapak görseli seçildiğinde mevcut products.image_url alanını da aynı Cloudinary URL’siyle güncelle. Böylece eski kartlar ve mevcut API yapısı bozulmasın.
+* Mevcut dört ürünün kayıtlarını, isimlerini veya görsellerini development ortamında çoğaltma.
+
+Cloudinary yükleme
+
+Mevcut Cloudinary entegrasyonunu kullan.
+
+* Her ürüne en fazla 8 fotoğraf eklenebilsin.
+* PNG, JPEG, WebP ve GIF desteklensin.
+* Mevcut 6 MB dosya sınırı korunsun.
+* Dosya uzantısına değil gerçek MIME türü/dosya imzasına göre doğrulama devam etsin.
+* Her görsel için Cloudinary secure_url ve public_id saklansın.
+* API Secret istemci tarafına gönderilmesin.
+* Yükleme endpoint’leri admin oturumu korumasında kalsın.
+* Yetkisiz görsel ekleme, silme veya sıralama istekleri 401 dönsün.
+* Bir yükleme başarısız olursa diğer başarılı görselleri veya ürün kaydını bozma.
+* Silinen görselin Cloudinary asset’ini de güvenli biçimde kaldır.
+* Kapak görseli silinirse sıradaki ilk görsel otomatik kapak olsun.
+
+Admin ürün formu
+
+/admin ürün ekleme ve düzenleme ekranına çoklu görsel yönetimi ekle:
+
+* Aynı anda birden fazla dosya seçme
+* Yükleme ilerleme durumu
+* Küçük görsel önizlemeleri
+* Sürükleyerek sıralama veya erişilebilir yukarı/aşağı taşıma butonları
+* “Kapak görseli yap” seçeneği
+* Tek tek görsel silme
+* En fazla 8 görsel sınırı göstergesi
+* Kaydetmeden önce yükleme hatalarını anlaşılır toast ile gösterme
+
+Mobil görünümde de kolay kullanılabilsin. Yeni ağır bir drag-and-drop kütüphanesi ekleme; mümkünse mevcut paketler veya hafif native çözüm kullan.
+
+Mağaza görünümü
+
+* Ürün kartlarında yalnızca kapak görselini göster.
+* Ürün detay sayfasında büyük ana görsel ve altında/yanında küçük thumbnail galerisi göster.
+* Thumbnail seçildiğinde ana görsel değişsin.
+* Büyük görsele tıklanınca sade bir lightbox açılsın.
+* Lightbox klavye okları, Escape ve mobil kaydırma ile kullanılabilsin.
+* Görsel sayısı bir ise gereksiz thumbnail alanı gösterme.
+* Görsel yoksa mevcut placeholder kullan.
+* Tüm görsellerde ürün adı ve parça numarasından anlamlı alt metni oluştur.
+* Cloudinary görsellerine uygun optimizasyon parametreleri uygulayarak sayfa hızını koru.
+* Layout shift oluşmaması için aspect-ratio kullan.
+* Mevcut Burem tasarımını, renklerini ve mobil düzenini bozma.
+
+API
+
+Mevcut public ürün okuma API’sini geriye uyumlu tut ve yanıta sıralı bir images dizisi ekle.
+
+Admin tarafında güvenli endpoint’ler oluştur:
+
+* Görsel yükleme
+* Görsel silme
+* Görsel sırasını değiştirme
+* Kapak görselini değiştirme
+
+Girdi doğrulaması yap. Kullanıcının başka ürüne ait görsel kaydını değiştirmesini engelle.
+
+Production migration güvenliği
+
+Production veritabanına bağlanma ve migration çalıştırma.
+
+Yeni tablo için bağımsız, idempotent bir migration scripti hazırla:
+
+* Varsayılan olarak dry-run
+* Açıkça --apply verilmeden DDL veya DML çalıştırmasın
+* Yalnızca TARGET_DATABASE_URL kullansın
+* Bağlantı adresi ve şifreyi loglamasın
+* CREATE TABLE IF NOT EXISTS
+* CREATE INDEX IF NOT EXISTS
+* Mevcut products.image_url değerlerini product_images tablosuna yalnızca kayıt yoksa ekleyen idempotent backfill
+* Mevcut kayıtları silmesin veya ezmesin
+* DROP, TRUNCATE veya production verisini sıfırlayan işlem içermesin
+
+Schema oluşturma ve mevcut görselleri backfill etme işlemlerinin dry-run/apply sonuçlarını ayrı ayrı açıkça raporlasın.
+
+Bu migration’ı build, start, postinstall, prestart veya deploy akışına bağlama. Yalnızca manuel package scripti olarak ekle.
+
+Mevcut korumalar
+
+* seedProducts() yalnızca NODE_ENV !== "production" ve SEED_PRODUCTS === "true" koşulunda kalmalı.
+* Production seed davranışını değiştirme.
+* migrate:products veya diğer migrationları otomatik çalıştırma.
+* Production ürünlerini ekleme, silme veya güncelleme.
+* Replit Publish veya Render deploy başlatma.
+* Markalar ve Referanslarımız bölümlerine dokunma.
+
+Doğrulama
+
+Aşağıdakileri çalıştır:
+
+* npm run check
+* npm run build
+
+Ayrıca doğrula:
+
+* Tek görselli mevcut ürünler hâlâ düzgün görünüyor.
+* Çoklu görsel ekleme, sıralama, kapak seçme ve silme development ortamında çalışıyor.
+* Public ürün API’si geriye uyumlu.
+* Yetkisiz tüm görsel yazma işlemleri 401.
+* Production seed koruması değişmedi.
+* Production veritabanına hiçbir bağlantı veya işlem yapılmadı.
+* Console warning, bozuk görsel ve eksik React key kalmadı.
+
+Sonunda değiştirilen dosyaları, eklenen manuel migration komutlarını ve production’a güvenli geçiş sırasını ayrıntılı şekilde raporla.

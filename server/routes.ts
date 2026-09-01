@@ -1,6 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { Resend } from "resend";
+import { z } from "zod";
 import { storage } from "./storage";
 import { insertProductSchema } from "@shared/schema";
 import {
@@ -15,6 +16,7 @@ import {
 import { sendNotification, buildWelcomeMessage, buildStatusMessage } from "./notification";
 import {
   isProductImageStorageConfigured,
+  deleteProductImageAsset,
   uploadProductImageDataUrl,
 } from "./product-images";
 
@@ -409,6 +411,107 @@ export async function registerRoutes(
       );
       return res.status(502).json({ error: "Görsel kalıcı depolamaya yüklenemedi" });
     }
+  });
+
+  app.post("/api/admin/products/:id/images", requireAdmin, async (req, res) => {
+    const parsed = z.object({
+      dataUrl: z.string().min(1),
+      isPrimary: z.boolean().optional(),
+    }).safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Görsel verisi zorunlu" });
+    }
+
+    if (!isProductImageStorageConfigured()) {
+      return res.status(503).json({ error: "Kalıcı görsel depolama yapılandırılmamış" });
+    }
+
+    let uploaded: { url: string; publicId: string } | undefined;
+    try {
+      uploaded = await uploadProductImageDataUrl(parsed.data.dataUrl);
+      const image = await storage.createProductImage(String(req.params.id), {
+        imageUrl: uploaded.url,
+        cloudinaryPublicId: uploaded.publicId,
+        isPrimary: parsed.data.isPrimary,
+      });
+      return res.status(201).json(image);
+    } catch (error) {
+      if (uploaded?.publicId) {
+        await deleteProductImageAsset(uploaded.publicId).catch((cleanupError) => {
+          console.error(
+            "[products] Orphan Cloudinary asset cleanup failed:",
+            cleanupError instanceof Error ? cleanupError.message : "unknown error",
+          );
+        });
+      }
+      if (error instanceof Error && error.message === "Product not found") {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      if (error instanceof Error && error.message.includes("en fazla 8 görsel")) {
+        return res.status(400).json({ error: error.message });
+      }
+      console.error(
+        "[products] Product image upload failed:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+      return res.status(502).json({ error: "Görsel ürüne eklenemedi" });
+    }
+  });
+
+  app.put("/api/admin/products/:id/images/reorder", requireAdmin, async (req, res) => {
+    const parsed = z.object({
+      imageIds: z.array(z.string().min(1)).max(8),
+    }).safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Geçerli bir görsel sıralaması gönderin" });
+    }
+
+    try {
+      const images = await storage.reorderProductImages(
+        String(req.params.id),
+        parsed.data.imageIds,
+      );
+      return res.json(images);
+    } catch (error) {
+      return res.status(400).json({
+        error: error instanceof Error ? error.message : "Görseller sıralanamadı",
+      });
+    }
+  });
+
+  app.put("/api/admin/products/:id/images/:imageId/primary", requireAdmin, async (req, res) => {
+    const image = await storage.setPrimaryProductImage(
+      String(req.params.id),
+      String(req.params.imageId),
+    );
+    if (!image) {
+      return res.status(404).json({ error: "Görsel bulunamadı" });
+    }
+    res.json(image);
+  });
+
+  app.delete("/api/admin/products/:id/images/:imageId", requireAdmin, async (req, res) => {
+    const image = await storage.deleteProductImage(
+      String(req.params.id),
+      String(req.params.imageId),
+    );
+    if (!image) {
+      return res.status(404).json({ error: "Görsel bulunamadı" });
+    }
+
+    try {
+      await deleteProductImageAsset(image.cloudinaryPublicId);
+    } catch (error) {
+      console.error(
+        "[products] Cloudinary asset deletion failed:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+      return res.status(502).json({
+        error: "Görsel kaydı silindi ancak Cloudinary görseli kaldırılamadı",
+      });
+    }
+
+    res.status(204).send();
   });
 
   app.post("/api/products", requireAdmin, async (req, res) => {
