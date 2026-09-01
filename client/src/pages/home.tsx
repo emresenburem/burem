@@ -1319,7 +1319,7 @@ export default function HomePage() {
         depth={0.3}
         perspective={4}
         fade={0.13}
-        gap={0.08}
+        gap={0.2}
         autoPlaySpeed={0.6}
       />
 
