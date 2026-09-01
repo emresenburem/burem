@@ -45,7 +45,7 @@ export function CoverflowCarousel({
   gap = 0.08,
   loop = true,
   autoPlay = true,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 2400,
   showNavigation = false,
   label = "Marka logoları",
   className,
@@ -243,10 +243,6 @@ export function CoverflowCarousel({
       role="region"
       aria-roledescription="carousel"
       aria-label={label}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => {
-        if (!dragRef.current) setIsPaused(false);
-      }}
     >
       <div className="relative">
         <div
