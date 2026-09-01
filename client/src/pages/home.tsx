@@ -53,7 +53,7 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
-import { BrandLogoCarousel } from "@/components/ui/three-d-logo-carousel";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
@@ -1305,8 +1305,21 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* Öne çıkan markalı 3D carousel */}
-      <BrandLogoCarousel logos={BRANDS} />
+      {/* Öne çıkan markalı coverflow carousel */}
+      <CoverflowCarousel
+        slides={BRANDS.map((brand) => ({
+          src: brand.logo,
+          alt: `${brand.name} logosu`,
+        }))}
+        label="Marka logoları"
+        cardWidth="clamp(150px, 18vw, 220px)"
+        cardHeight="74px"
+        rotate={38}
+        depth={0.3}
+        perspective={4}
+        fade={0.13}
+        gap={0.08}
+      />
 
       <main id="top">
         <AnimatedServicesSection />
