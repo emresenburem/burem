@@ -18,6 +18,7 @@ import AbbSurucu from "@/pages/abb-surucu-tamiri";
 import LenzeSurucu from "@/pages/lenze-surucu-tamiri";
 import MitsubishiServoSurucu from "@/pages/mitsubishi-servo-surucu-tamiri";
 import MagazaPage from "@/pages/magaza";
+import ProductDetailPage from "@/pages/product-detail";
 import AdminPage from "@/pages/admin";
 import TakipPage from "@/pages/takip";
 import AdminServisPage from "@/pages/admin-servis";
@@ -25,6 +26,7 @@ import { useGlobalClickSound } from "@/hooks/use-click-sound";
 import { useTabFavicon } from "@/hooks/use-tab-favicon";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { whatsappLink } from "@/lib/site-contact";
 
 function BusinessCardModal() {
   const [open, setOpen] = useState(false);
@@ -126,7 +128,7 @@ function BusinessCardModal() {
 function WhatsAppButton() {
   return (
     <motion.a
-      href="https://wa.me/905322664764"
+      href={whatsappLink()}
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
@@ -163,6 +165,7 @@ function Router() {
       <Route path="/abb-surucu-tamiri" component={AbbSurucu} />
       <Route path="/lenze-surucu-tamiri" component={LenzeSurucu} />
       <Route path="/mitsubishi-servo-surucu-tamiri" component={MitsubishiServoSurucu} />
+      <Route path="/magaza/urun/:id/:seoSlug" component={ProductDetailPage} />
       <Route path="/magaza" component={MagazaPage} />
       <Route path="/admin" component={AdminPage} />
       <Route path="/takip" component={TakipPage} />

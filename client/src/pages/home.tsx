@@ -54,6 +54,7 @@ import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
@@ -890,7 +891,7 @@ function ProductsShowcase() {
         title="Yedek Parça Mağazası"
         products={products.map((product) => ({ ...product, inStock: product.inStock ?? false }))}
         emptyMessage="Yakında burada ürünlerimizi görebileceksiniz."
-        onProductClick={(p) => setLocation(`/brand/${encodeURIComponent(p.brand)}`)}
+        onProductClick={(p) => setLocation(productPath(p))}
       />
     </section>
   );

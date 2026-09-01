@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { SEO } from "@/components/seo";
 import { Phone, MessageCircle, ArrowRight, CheckCircle2, AlertTriangle, Wrench, Cpu } from "lucide-react";
 import BuremFooter from "@/components/ui/footer";
+import { PHONE_DISPLAY, PHONE_NUMBER, whatsappLink } from "@/lib/site-contact";
 
 export interface ServicePageData {
   title: string;
@@ -15,10 +16,6 @@ export interface ServicePageData {
   brandsModels: string[];
   relatedServices: { label: string; href: string }[];
 }
-
-const PHONE = "+905322664764";
-const PHONE_DISPLAY = "+90 532 266 47 64";
-const WA_URL = "https://wa.me/905322664764";
 
 export function ServicePageTemplate({ data }: { data: ServicePageData }) {
   return (
@@ -42,7 +39,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             </Link>
             <div className="flex items-center gap-3">
               <a
-                href={`tel:${PHONE}`}
+                href={`tel:${PHONE_NUMBER}`}
                 className="hidden sm:flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium hover:bg-white/20 transition-colors"
                 data-testid="link-phone-nav"
               >
@@ -50,7 +47,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                 {PHONE_DISPLAY}
               </a>
               <a
-                href={WA_URL}
+                href={whatsappLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-medium text-white hover:bg-[#20ba5a] transition-colors"
@@ -82,7 +79,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
-                  href={WA_URL}
+                  href={whatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 font-semibold text-white hover:bg-[#20ba5a] transition-colors"
@@ -92,7 +89,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   WhatsApp ile İletişim
                 </a>
                 <a
-                  href={`tel:${PHONE}`}
+                  href={`tel:${PHONE_NUMBER}`}
                   className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 font-semibold text-white hover:bg-white/20 transition-colors"
                   data-testid="button-phone-hero"
                 >
@@ -170,7 +167,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <a
-                  href={WA_URL}
+                  href={whatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3.5 font-semibold text-white hover:bg-[#20ba5a] transition-colors"
@@ -180,7 +177,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   WhatsApp ile Yazın
                 </a>
                 <a
-                  href={`tel:${PHONE}`}
+                  href={`tel:${PHONE_NUMBER}`}
                   className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 font-semibold text-white hover:bg-white/20 transition-colors"
                   data-testid="button-phone-contact"
                 >

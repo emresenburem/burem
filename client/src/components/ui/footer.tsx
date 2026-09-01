@@ -1,5 +1,6 @@
 import React from "react";
 import { Cpu, Phone, Mail, MapPin, MessageCircle, Linkedin, Instagram } from "lucide-react";
+import { whatsappLink } from "@/lib/site-contact";
 
 const BuremFooter: React.FC = () => {
   const year = new Date().getFullYear();
@@ -26,7 +27,7 @@ const BuremFooter: React.FC = () => {
     { icon: Instagram, href: "https://www.instagram.com/buremelektronik?igsh=amg1aHh6bTV5N2g3&utm_source=qr", label: "Instagram" },
     {
       icon: MessageCircle,
-      href: "https://wa.me/905322664764",
+      href: whatsappLink(),
       label: "WhatsApp",
     },
   ];
@@ -136,7 +137,7 @@ const BuremFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://wa.me/905322664764"
+                  href={whatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-900"

@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { SEO } from "@/components/seo";
 import { Phone, MessageCircle } from "lucide-react";
+import { PHONE_DISPLAY, PHONE_NUMBER, whatsappLink } from "@/lib/site-contact";
 
 export default function NotFound() {
   return (
@@ -24,7 +25,7 @@ export default function NotFound() {
             ← Ana Sayfaya Dön
           </Link>
           <a
-            href="https://wa.me/905322664764"
+            href={whatsappLink()}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 font-medium text-white hover:bg-[#20ba5a] transition-colors"
@@ -33,11 +34,11 @@ export default function NotFound() {
             WhatsApp
           </a>
           <a
-            href="tel:+905322664764"
+            href={`tel:${PHONE_NUMBER}`}
             className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 font-medium text-white hover:bg-white/10 transition-colors"
           >
             <Phone className="h-4 w-4" />
-            +90 532 266 47 64
+            {PHONE_DISPLAY}
           </a>
         </div>
 

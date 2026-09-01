@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
-
-const WA = "905322664764";
+import { productWhatsAppLink } from "@/lib/product-utils";
 
 export interface CarouselProduct {
   id: string | number;
@@ -15,12 +14,6 @@ export interface CarouselProduct {
   inStock: boolean;
   description?: string | null;
   partNumber?: string | null;
-}
-
-function waLink(p: CarouselProduct) {
-  const pn = p.partNumber ? ` — P/N: ${p.partNumber}` : "";
-  const msg = `Merhaba, *${p.name}* (${p.brand}${pn}) hakkında teklif almak istiyorum.`;
-  return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
 }
 
 interface ProductCardProps {
@@ -64,15 +57,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           </p>
 
           <motion.a
-            href={waLink(product)}
+            href={productWhatsAppLink(product)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
             whileTap={{ scale: 0.95 }}
             className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#25D366] py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#20ba5a]"
             data-testid={`button-add-${product.id}`}
           >
             <MessageCircle className="h-3 w-3" />
-            Teklif Al
+            WhatsApp’tan Fiyat Sor
           </motion.a>
         </div>
       </div>

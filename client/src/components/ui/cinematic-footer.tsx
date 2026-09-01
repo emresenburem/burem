@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
 import { Phone, Mail, MapPin, MessageCircle, ArrowUp } from "lucide-react";
+import { PHONE_DISPLAY, PHONE_NUMBER, whatsappLink } from "@/lib/site-contact";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -219,7 +220,7 @@ export function CinematicFooter() {
               <div className="flex flex-wrap justify-center gap-4">
                 <GsapButton
                   as="a"
-                  href="https://wa.me/905322664764"
+                  href={whatsappLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="cf-pill px-8 py-4 rounded-full text-foreground font-bold text-sm flex items-center gap-3 group"
@@ -231,12 +232,12 @@ export function CinematicFooter() {
 
                 <GsapButton
                   as="a"
-                  href="tel:+905322664764"
+                  href={`tel:${PHONE_NUMBER}`}
                   className="cf-pill px-8 py-4 rounded-full text-foreground font-bold text-sm flex items-center gap-3 group"
                   data-testid="footer-cta-phone"
                 >
                   <Phone className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                  +90 532 266 47 64
+                  {PHONE_DISPLAY}
                 </GsapButton>
 
                 <GsapButton

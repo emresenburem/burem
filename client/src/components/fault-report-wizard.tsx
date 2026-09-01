@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle } from "lucide-react";
+import { whatsappLink } from "@/lib/site-contact";
 
 /* ─────────────────────────────────────────────
    CİHAZ TÜRLERİ
@@ -277,7 +278,6 @@ const MODELS: Record<string, Record<string, string[]>> = {
 /* ─────────────────────────────────────────────
    SABİTLER
 ───────────────────────────────────────────── */
-const WA_NUMBER = "905322664764";
 const STEP_LABELS = ["Cihaz Türü", "Marka & Model", "Arıza Detayı"];
 
 interface WizardState {
@@ -431,7 +431,7 @@ export function FaultReportWizard() {
       `👤 *Ad Soyad:* ${data.name}`,
       data.phone ? `📞 *Telefon:* ${data.phone}` : null,
     ].filter(Boolean).join("\n");
-    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
+    return whatsappLink(lines);
   }
 
 

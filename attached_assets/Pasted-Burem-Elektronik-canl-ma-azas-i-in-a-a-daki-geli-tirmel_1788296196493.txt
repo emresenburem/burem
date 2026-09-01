@@ -1,0 +1,143 @@
+Burem Elektronik canlı mağazası için aşağıdaki geliştirmeleri mevcut tasarım dilini bozmadan uygula.
+
+Teknik yapı:
+
+* React + Vite
+* Wouter
+* Express API
+* Drizzle/PostgreSQL
+* Production: Render
+* Ürün görselleri: Cloudinary
+* Canlı ürün yönetimi: `/admin`
+* Mağaza: `/magaza`
+
+## 1. Arama ve filtreleme
+
+`/magaza` sayfasına:
+
+* Ürün adı
+* Marka
+* Kategori
+* Parça/model numarası
+
+üzerinden çalışan hızlı arama ekle.
+
+Filtreler:
+
+* Marka
+* Kategori
+* Ürün durumu
+* Stokta var/yok
+
+Arama Türkçe karakterlere ve büyük/küçük harfe duyarsız çalışsın. Arama ve filtreler birlikte kullanılabilsin. Sonuç sayısı gösterilsin. Sonuç yoksa kullanıcıya anlaşılır bir mesaj ve “Filtreleri temizle” butonu gösterilsin.
+
+Mobil görünümde filtreler kompakt bir açılır panel/drawer olarak çalışsın. Masaüstünde mevcut premium, sade Burem tasarımına uyum sağlasın.
+
+## 2. Ürün detay sayfası
+
+Her ürün kartı tıklanabilir olsun ve ürüne özel bir sayfa açılsın.
+
+URL yapısı mevcut veritabanına yeni zorunlu alan eklemeden güvenli biçimde şu yapıda olabilir:
+
+`/magaza/urun/:id/:seo-slug`
+
+Ürün detay sayfasında:
+
+* Büyük ürün görseli
+* Ürün adı
+* Marka
+* Kategori
+* Parça/model numarası
+* Açıklama
+* Sıfır/ikinci el durumu
+* Stok durumu
+* Mağazaya dön bağlantısı
+* Benzer ürünler
+
+gösterilsin.
+
+Ürün bulunamazsa düzgün bir 404/ürün bulunamadı ekranı göster.
+
+## 3. WhatsApp teklif butonu
+
+Her ürün kartında ve ürün detay sayfasında:
+
+`WhatsApp’tan Fiyat Sor`
+
+butonu ekle.
+
+Buton mevcut sitedeki WhatsApp numarası/yapılandırmasını kullansın; numarayı yeni bir yerde sabit olarak tekrar yazma.
+
+Hazır mesaj şu bilgileri içersin:
+
+“Merhaba, Burem Elektronik mağazanızdaki şu ürün hakkında bilgi ve fiyat almak istiyorum:
+
+Ürün: [ürün adı]
+Marka: [marka]
+Parça No: [parça numarası]
+Ürün bağlantısı: [canlı ürün URL’si]”
+
+Eksik alan varsa mesajda boş satır oluşturma.
+
+## 4. SEO
+
+Her ürün detay sayfası için dinamik olarak:
+
+* Sayfa başlığı
+* Meta description
+* Canonical URL
+* Open Graph başlığı, açıklaması ve görseli
+* `Product` JSON-LD yapılandırılmış verisi
+
+oluştur.
+
+Fiyat veya değerlendirme verisi yoksa sahte fiyat, yıldız veya yorum ekleme. Mevcut ürün bilgileriyle doğru schema üret.
+
+Google’ın ürünleri bulabilmesi için ürün detay sayfalarına mağaza listesinden normal bağlantılar ver.
+
+## Tasarım
+
+* Mevcut Burem Elektronik tasarımını, renklerini ve tipografisini koru.
+* Yeni bir tasarım sistemi oluşturma.
+* Mobil, tablet ve masaüstünde düzgün çalışsın.
+* Logo ve mevcut navigasyon yapısını değiştirme.
+* Sayfayı gereksiz animasyonlarla ağırlaştırma.
+* Görsellerde Cloudinary URL’lerini kullanmaya devam et.
+
+## Production güvenliği
+
+Bu bölüm zorunludur:
+
+* Production veritabanına bağlanma.
+* `TARGET_DATABASE_URL` isteme veya kullanma.
+* Production migration, seed veya veri aktarımı çalıştırma.
+* Mevcut ürünleri ekleme, silme, çoğaltma veya değiştirme.
+* `seedProducts()` için mevcut production korumasını kaldırma.
+* Seed yalnızca `NODE_ENV !== "production"` ve `SEED_PRODUCTS === "true"` koşullarında kalmalı.
+* `migrate:products` ve `migrate:products-schema` komutlarını build/start akışına bağlama.
+* Cloudinary entegrasyonunu veya admin yetkilendirmesini bozma.
+* Admin ürün ekleme/düzenleme/silme endpoint’leri oturum korumalı kalmalı.
+* Public ürün API’si yalnızca okuma işlemleri için açık kalmalı.
+* Yeni zorunlu veritabanı alanı ekleme. Gerekirse önce öner ve dur; production şemasını otomatik değiştirme.
+* Replit Publish yapma ve Render deploy başlatma.
+
+## Doğrulama
+
+Uygulama tamamlandığında:
+
+* `npm run check`
+* `npm run build`
+
+çalıştır.
+
+Ayrıca şunları doğrula:
+
+* Mağazada dört mevcut ürün hâlâ tek kopya olarak görünüyor.
+* Arama ve tüm filtreler çalışıyor.
+* Ürün detay sayfası açılıyor.
+* WhatsApp mesajı doğru hazırlanıyor.
+* Yetkisiz ürün yazma işlemleri hâlâ `401` dönüyor.
+* Yeni deploy sırasında ürün seed edilmesine yol açacak hiçbir değişiklik yapılmadı.
+* Production veritabanına hiçbir işlem yapılmadı.
+
+Sonunda değiştirilen dosyaları, yapılan kontrolleri ve production’a alınması için gereken Git komutlarını özetle.
