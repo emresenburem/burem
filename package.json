@@ -11,7 +11,8 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "migrate:products": "tsx scripts/migrate-products.ts",
-    "migrate:product-images": "tsx scripts/migrate-product-images.ts"
+    "migrate:product-images": "tsx scripts/migrate-product-images.ts",
+    "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
