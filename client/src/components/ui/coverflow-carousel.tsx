@@ -10,6 +10,7 @@ const useIsoLayoutEffect =
 export interface CoverflowSlide {
   src: string;
   alt: string;
+  scale?: number;
 }
 
 export interface CoverflowCarouselProps {
@@ -327,6 +328,7 @@ export function CoverflowCarousel({
                   alt={slide.alt}
                   draggable={false}
                   className="h-full w-full select-none object-contain"
+                  style={slide.scale ? { transform: `scale(${slide.scale})` } : undefined}
                 />
               </div>
             ))}

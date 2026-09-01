@@ -1310,6 +1310,7 @@ export default function HomePage() {
         slides={BRANDS.map((brand) => ({
           src: brand.logo,
           alt: `${brand.name} logosu`,
+          scale: brand.scale,
         }))}
         label="Marka logoları"
         cardWidth="clamp(150px, 18vw, 220px)"
