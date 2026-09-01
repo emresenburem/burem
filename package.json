@@ -57,8 +57,8 @@
     "cmdk": "^1.1.1",
     "connect-pg-simple": "^10.0.0",
     "date-fns": "^3.6.0",
-    "drizzle-orm": "^0.39.3",
-    "drizzle-zod": "^0.7.0",
+    "drizzle-orm": "^0.45.2",
+    "drizzle-zod": "^0.7.1",
     "embla-carousel-react": "^8.6.0",
     "express": "^5.0.1",
     "express-session": "^1.18.1",
@@ -108,8 +108,8 @@
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^5.0.4",
     "autoprefixer": "^10.4.21",
-    "drizzle-kit": "^0.18.1",
-    "esbuild": "^0.25.0",
+    "drizzle-kit": "^0.31.10",
+    "esbuild": "^0.25.12",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.20.5",
@@ -118,5 +118,10 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.12"
+    }
   }
 }

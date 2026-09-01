@@ -88,7 +88,7 @@ function totpForCounter(secret: Buffer, counter: number) {
   const counterBuffer = Buffer.alloc(8);
   counterBuffer.writeUInt32BE(Math.floor(counter / 0x100000000), 0);
   counterBuffer.writeUInt32BE(counter >>> 0, 4);
-  const digest = createHmac("sha1", secret).update(counterBuffer).digest();
+  const digest = createHmac("sha256", secret).update(counterBuffer).digest();
   const offset = digest[digest.length - 1] & 0x0f;
   const binary =
     ((digest[offset] & 0x7f) << 24) |

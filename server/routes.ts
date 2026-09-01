@@ -38,8 +38,8 @@ const STATUS_LABELS: Record<number, string> = {
   6: "Teslimata Hazır",
 };
 
-function securityLog(event: string, req: Request) {
-  console.info(`[security] ${event} ip=${req.ip ?? "unknown"}`);
+function securityLog(event: string) {
+  console.info(`[security] ${event}`);
 }
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
@@ -133,14 +133,14 @@ export async function registerRoutes(
       attemptKey("user", normalizedLoginUser(username)),
     ];
     if (isLoginRateLimited(keys)) {
-      securityLog("admin_login_rate_limited", req);
+      securityLog("admin_login_rate_limited");
       return res.status(429).json({ error: "Çok fazla deneme. Lütfen daha sonra tekrar deneyin." });
     }
 
     const adminUser = process.env.ADMIN_USERNAME;
     const adminPass = process.env.ADMIN_PASSWORD;
     if (!adminUser || !adminPass) {
-      securityLog("admin_login_unavailable", req);
+      securityLog("admin_login_unavailable");
       return res.status(503).json({ error: "Admin girişi şu anda kullanılamıyor" });
     }
 
@@ -149,7 +149,7 @@ export async function registerRoutes(
     if (username === adminUser && password === adminPass && totpValid) {
       return req.session.regenerate((error) => {
         if (error) {
-          securityLog("admin_login_session_error", req);
+          securityLog("admin_login_session_error");
           return res.status(500).json({ error: "Giriş yapılamadı" });
         }
         const nextSession = req.session as any;
@@ -157,7 +157,7 @@ export async function registerRoutes(
         nextSession.adminLastActivity = Date.now();
         nextSession.csrfToken = getCsrfToken(req);
         clearLoginRateLimit(keys);
-        securityLog("admin_login_success", req);
+        securityLog("admin_login_success");
         req.session.save((saveError) => {
           if (saveError) return res.status(500).json({ error: "Giriş yapılamadı" });
           res.json({ ok: true });
@@ -166,7 +166,7 @@ export async function registerRoutes(
     }
 
     recordFailedLogin(keys);
-    securityLog("admin_login_failed", req);
+    securityLog("admin_login_failed");
     res.status(401).json({ error: "Giriş bilgileri hatalı" });
   });
 

@@ -2,3 +2,4 @@
 - [Public npm lockfiles](public-npm-lockfiles.md) — rebuild dependencies from scratch when Replit’s hidden npm lock keeps private registry URLs alive.
 - [Product catalog SEO](product-catalog-seo.md) — omit price, review, and offer claims when the catalog has no verified values.
 - [Product gallery migration](product-gallery-migration.md) — keep the legacy cover URL as a compatibility path; gallery schema changes stay manual and dry-run by default.
+- [Admin security posture](admin-security.md) — keep credentials env-only; provision production session and optional TOTP secrets manually.

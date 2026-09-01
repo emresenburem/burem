@@ -27,6 +27,7 @@ login parola sonrasında 6 haneli TOTP kodu ister.
 Kurulum sırası:
 
 1. Authenticator uygulamasında Burem Elektronik için yeni bir TOTP kaydı açın.
+   Algorithm olarak SHA-256, 30 saniye period ve 6 hane kullanın.
 2. Verilen Base32 secret'ı güvenli bir parola yöneticisine kaydedin.
 3. Render production environment variables içine `ADMIN_TOTP_SECRET` olarak
    ekleyin ve deployment'ı yeniden başlatın.
