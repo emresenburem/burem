@@ -53,6 +53,7 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 
 const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
@@ -1304,33 +1305,22 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* Kesintisiz kayan marka logoları */}
-      <div className="relative w-full overflow-hidden border-y border-border/30 py-5 md:py-6">
-        <div className="relative h-16 w-full">
-          <InfiniteSlider
-            className="flex h-full w-full items-center"
-            duration={24}
-            durationOnHover={48}
-            gap={48}
-          >
-            {BRANDS.map((brand) => (
-              <div
-                key={brand.name}
-                className="flex h-10 flex-shrink-0 items-center justify-center opacity-90 transition-opacity duration-300 hover:opacity-100"
-                style={{ width: brand.w ? `${brand.w}px` : "7rem" }}
-              >
-                <img
-                  src={brand.logo}
-                  alt={brand.name}
-                  className="h-full w-full object-contain"
-                  style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
-                  draggable={false}
-                />
-              </div>
-            ))}
-          </InfiniteSlider>
-        </div>
-      </div>
+      {/* Kesintisiz kayan, öne çıkan markalı coverflow */}
+      <CoverflowCarousel
+        slides={BRANDS.map((brand) => ({
+          src: brand.logo,
+          alt: `${brand.name} logosu`,
+        }))}
+        label="Marka logoları"
+        cardWidth="clamp(150px, 18vw, 220px)"
+        cardHeight="74px"
+        rotate={38}
+        depth={0.3}
+        perspective={4}
+        fade={0.13}
+        gap={0.08}
+        autoPlaySpeed={0.32}
+      />
 
       <main id="top">
         <AnimatedServicesSection />

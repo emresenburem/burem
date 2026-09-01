@@ -1,0 +1,1 @@
+- [Brand logo rail](brand-logo-rail.md) — use a continuous fractional coverflow: featured center logo, angled neighbors, and no stepped autoplay.
