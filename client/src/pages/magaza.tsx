@@ -295,7 +295,7 @@ export default function MagazaPage() {
 
           {/* Ürün grid */}
           {isLoading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 10 }).map((_, i) => (
                 <div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-muted" />
               ))}
@@ -316,7 +316,7 @@ export default function MagazaPage() {
               </a>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" data-testid="grid-products">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-testid="grid-products">
               {filtered.map((p) => <ProductCard key={p.id} p={p} />)}
             </div>
           )}

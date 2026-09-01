@@ -31,13 +31,13 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   return (
     <div
-      className="group w-48 flex-shrink-0 cursor-pointer"
+      className="group w-[min(20rem,calc(100vw-3rem))] flex-shrink-0 cursor-pointer sm:w-72 lg:w-80"
       onClick={() => onClick?.(product)}
       data-testid={`carousel-card-${product.id}`}
     >
       <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
         {/* Görsel */}
-        <div className="relative h-40 overflow-hidden bg-muted">
+        <div className="relative h-52 overflow-hidden bg-muted sm:h-56">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
@@ -55,11 +55,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
         </div>
 
         {/* Detaylar */}
-        <div className="flex flex-col space-y-3 p-4">
-          <h3 className="line-clamp-2 text-sm font-medium text-foreground leading-snug h-10">
+        <div className="flex flex-col space-y-4 p-5">
+          <h3 className="line-clamp-2 h-12 text-base font-semibold leading-snug text-foreground">
             {product.name}
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {product.brand} · {product.category}
           </p>
 
@@ -68,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
             target="_blank"
             rel="noopener noreferrer"
             whileTap={{ scale: 0.95 }}
-            className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#25D366] py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#20ba5a]"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#25D366] py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#20ba5a]"
             data-testid={`button-add-${product.id}`}
           >
             <MessageCircle className="h-3 w-3" />
@@ -92,7 +92,7 @@ interface ProductCarouselProps {
 export const ProductCarousel = React.forwardRef<HTMLDivElement, ProductCarouselProps>(
   ({ title, products, viewAllHref = "#", onProductClick, className, emptyMessage }, ref) => {
     return (
-      <section className={cn("relative w-full space-y-4 py-8", className)} ref={ref}>
+      <section className={cn("relative w-full space-y-5 py-10", className)} ref={ref}>
         <div className="flex items-center justify-between px-4 sm:px-6">
           <h2
             className="text-2xl font-bold text-foreground"
@@ -115,15 +115,15 @@ export const ProductCarousel = React.forwardRef<HTMLDivElement, ProductCarouselP
             {emptyMessage ?? "Henüz ürün eklenmemiş."}
           </div>
         ) : products.length < 4 ? (
-          <div className="flex gap-4 px-4 sm:px-6">
+          <div className="flex gap-6 overflow-x-auto px-4 pb-2 sm:gap-8 sm:px-6">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} onClick={onProductClick} />
             ))}
           </div>
         ) : (
-          <div className="relative h-[290px]">
+          <div className="relative h-[370px]">
             <InfiniteSlider
-              gap={16}
+              gap={24}
               duration={45}
               durationOnHover={120}
               className="h-full px-4 sm:px-6"

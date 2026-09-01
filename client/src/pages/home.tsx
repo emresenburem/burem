@@ -871,10 +871,10 @@ function ProductsShowcase() {
           <Package className="h-6 w-6 text-primary" />
           <div className="h-7 w-48 bg-muted rounded animate-pulse" />
         </div>
-        <div className="flex gap-4 px-4 pb-4 overflow-hidden">
+        <div className="flex gap-6 overflow-hidden px-4 pb-4 sm:gap-8">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="w-48 flex-shrink-0 rounded-xl border bg-card p-4 animate-pulse">
-              <div className="h-32 bg-muted rounded-lg mb-4" />
+            <div key={i} className="w-72 flex-shrink-0 rounded-xl border bg-card p-5 animate-pulse lg:w-80">
+              <div className="mb-5 h-52 rounded-lg bg-muted sm:h-56" />
               <div className="h-3 bg-muted rounded w-3/4 mb-2" />
               <div className="h-3 bg-muted rounded w-1/2" />
             </div>
