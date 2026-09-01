@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Product, InsertProduct } from "@shared/schema";
-import { Plus, Pencil, Trash2, X, Save, Package, CheckCircle2 } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Save, Package, CheckCircle2, Loader2, LogOut, Upload } from "lucide-react";
 import { Link } from "wouter";
 
 const CATEGORIES = ["İnverter", "Servo Sürücü", "PLC", "HMI", "Elektronik Kart", "Motor", "Sensör", "Diğer"];
@@ -16,9 +16,54 @@ function apiReq(method: string, url: string, body?: unknown) {
     headers: { "Content-Type": "application/json" },
     ...(body ? { body: JSON.stringify(body) } : {}),
   }).then(async (r) => {
+    if (r.status === 401) throw new Error("__UNAUTHORIZED__");
     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error ?? r.statusText);
     return r.status === 204 ? null : r.json();
   });
+}
+
+function LoginForm({ onSuccess }: { onSuccess: () => void }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const inputCls = "w-full rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20";
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await apiReq("POST", "/api/admin/login", { username, password });
+      onSuccess();
+    } catch (error) {
+      setError(error instanceof Error && error.message === "__UNAUTHORIZED__"
+        ? "Kullanıcı adı veya şifre hatalı"
+        : error instanceof Error ? error.message : "Giriş yapılamadı");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        <div className="mb-8 text-center">
+          <img src="/logo.png" alt="Burem Elektronik" className="h-12 w-auto mx-auto mb-4" />
+          <h1 className="text-xl font-bold">Ürün Yönetimi Girişi</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Yönetici bilgilerinizle giriş yapın</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input required autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} placeholder="Kullanıcı adı" className={inputCls} data-testid="input-admin-user" />
+          <input required type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Şifre" className={inputCls} data-testid="input-admin-pass" />
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button type="submit" disabled={loading} className="w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background hover:bg-foreground/80 transition-colors disabled:opacity-60" data-testid="button-login">
+            {loading ? "Giriş yapılıyor…" : "Giriş Yap"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 function ProductForm({
@@ -33,10 +78,43 @@ function ProductForm({
   loading: boolean;
 }) {
   const [form, setForm] = useState<InsertProduct>(initial);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   const set = (k: keyof InsertProduct, v: unknown) => setForm((f) => ({ ...f, [k]: v }));
 
   const inputCls = "w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20";
   const labelCls = "mb-1 block text-xs font-medium text-muted-foreground";
+
+  async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!["image/png", "image/jpeg", "image/webp", "image/gif"].includes(file.type)) {
+      setUploadError("Sadece PNG, JPEG, WebP veya GIF yükleyebilirsiniz.");
+      return;
+    }
+    if (file.size > 6 * 1024 * 1024) {
+      setUploadError("Görsel 6 MB'dan küçük olmalıdır.");
+      return;
+    }
+
+    setUploading(true);
+    setUploadError("");
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("Görsel okunamadı"));
+        reader.readAsDataURL(file);
+      });
+      const uploaded = await apiReq("POST", "/api/admin/products/image", { dataUrl });
+      set("imageUrl", uploaded.url);
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "Görsel yüklenemedi");
+    } finally {
+      setUploading(false);
+      event.target.value = "";
+    }
+  }
 
   return (
     <form
@@ -78,6 +156,18 @@ function ProductForm({
         <div className="col-span-2">
           <label className={labelCls}>Görsel URL</label>
           <input value={form.imageUrl ?? ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="/products/siemens-g120.png" className={inputCls} data-testid="input-image-url" />
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-medium hover:bg-muted transition-colors">
+              {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+              {uploading ? "Yükleniyor…" : "Dosyadan yükle"}
+              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onChange={handleImageUpload} disabled={uploading} className="sr-only" data-testid="input-image-file" />
+            </label>
+            <span className="text-[11px] text-muted-foreground">Geçici yerel depolama · maksimum 6 MB</span>
+          </div>
+          {uploadError && <p className="mt-1 text-xs text-red-500">{uploadError}</p>}
+          {form.imageUrl && (
+            <img src={form.imageUrl} alt="Ürün önizleme" className="mt-3 h-20 w-28 rounded-lg border border-border bg-muted object-contain p-1" />
+          )}
         </div>
         <div className="col-span-2 flex items-center gap-3">
           <button
@@ -98,7 +188,7 @@ function ProductForm({
         <button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-xl border border-border bg-muted/40 px-4 py-2 text-sm font-medium hover:bg-muted transition-colors" data-testid="button-cancel">
           <X className="h-4 w-4" /> İptal
         </button>
-        <button type="submit" disabled={loading} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-2 text-sm font-semibold text-background hover:bg-foreground/80 transition-colors disabled:opacity-50" data-testid="button-save">
+        <button type="submit" disabled={loading || uploading} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-2 text-sm font-semibold text-background hover:bg-foreground/80 transition-colors disabled:opacity-50" data-testid="button-save">
           {loading ? "Kaydediliyor…" : <><Save className="h-4 w-4" /> Kaydet</>}
         </button>
       </div>
@@ -106,7 +196,7 @@ function ProductForm({
   );
 }
 
-export default function AdminPage() {
+function ProductDashboard({ onLogout }: { onLogout: () => void }) {
   const qc = useQueryClient();
   const [modal, setModal] = useState<{ mode: "add" | "edit"; product?: Product } | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -122,17 +212,25 @@ export default function AdminPage() {
   const createMut = useMutation({
     mutationFn: (d: InsertProduct) => apiReq("POST", "/api/products", d),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["/api/products"] }); setModal(null); showToast("Ürün eklendi!"); },
+    onError: (error) => showToast(`Hata: ${error instanceof Error ? error.message : "Ürün eklenemedi"}`),
   });
 
   const updateMut = useMutation({
     mutationFn: ({ id, d }: { id: string; d: InsertProduct }) => apiReq("PUT", `/api/products/${id}`, d),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["/api/products"] }); setModal(null); showToast("Ürün güncellendi!"); },
+    onError: (error) => showToast(`Hata: ${error instanceof Error ? error.message : "Ürün güncellenemedi"}`),
   });
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => apiReq("DELETE", `/api/products/${id}`),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["/api/products"] }); setDeleteId(null); showToast("Ürün silindi."); },
+    onError: (error) => showToast(`Hata: ${error instanceof Error ? error.message : "Ürün silinemedi"}`),
   });
+
+  async function handleLogout() {
+    await apiReq("POST", "/api/admin/logout").catch(() => {});
+    onLogout();
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -149,6 +247,9 @@ export default function AdminPage() {
             <Link href="/magaza" className="rounded-xl border border-border bg-muted/40 px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
               Mağazayı Gör
             </Link>
+            <button onClick={handleLogout} className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors" data-testid="button-logout">
+              <LogOut className="h-4 w-4" /> Çıkış
+            </button>
             <button
               onClick={() => setModal({ mode: "add" })}
               className="flex items-center gap-2 rounded-xl bg-foreground px-4 py-2 text-sm font-semibold text-background hover:bg-foreground/80 transition-colors"
@@ -294,4 +395,28 @@ export default function AdminPage() {
       )}
     </div>
   );
+}
+
+export default function AdminPage() {
+  const [authed, setAuthed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    apiReq("GET", "/api/admin/me")
+      .then(() => setAuthed(true))
+      .catch(() => setAuthed(false));
+  }, []);
+
+  if (authed === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return <LoginForm onSuccess={() => setAuthed(true)} />;
+  }
+
+  return <ProductDashboard onLogout={() => setAuthed(false)} />;
 }

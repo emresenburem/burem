@@ -675,7 +675,7 @@ function RefCard({ company }: { company: typeof REFERENCES[0] }) {
 
 function DockBrandSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -761,7 +761,7 @@ function ReferencesSlider() {
   const [grabbing, setGrabbing] = useState(false);
   const dragStartX = useRef(0);
   const dragStartPos = useRef(0);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
   const SPEED = 1.1;
 
   useEffect(() => {
@@ -888,7 +888,7 @@ function ProductsShowcase() {
     <section id="products" className="mx-auto w-full max-w-6xl md:px-2 scroll-mt-24" data-testid="products-showcase">
       <ProductCarousel
         title="Yedek Parça Mağazası"
-        products={products}
+        products={products.map((product) => ({ ...product, inStock: product.inStock ?? false }))}
         emptyMessage="Yakında burada ürünlerimizi görebileceksiniz."
         onProductClick={(p) => setLocation(`/brand/${encodeURIComponent(p.brand)}`)}
       />

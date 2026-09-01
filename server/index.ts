@@ -8,7 +8,7 @@ import { seedProducts } from "./seed";
 import { runMigrations } from "./migrate";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "12mb" }));
 
 const PgSession = connectPgSimple(session);
 
