@@ -10,7 +10,6 @@ const SEED_PRODUCTS = [
     category: "Frekans İnvertörü",
     description:
       "8200 Vector serisi, 30kW/40hp, 3/PE AC 400/500V, 55/55A, 50/60Hz giriş. Çıkış: 0-400/500V, 59/56A, 0-650Hz. 2. El ürün, teknik kontrol yapılmıştır.",
-    imageUrl: "/products/lenze-e82ev303-4b201-a.png",
     partNumber: "E82EV303_4B201",
     condition: "used",
     inStock: true,
@@ -22,7 +21,6 @@ const SEED_PRODUCTS = [
     category: "Servo Sürücü",
     description:
       "9300 serisi servo sürücü. Giriş: 3/PE AC 400/480V 12.0A 10kVA. Çıkış: 3/PE AC 0/480V 13.0A 10.8kVA. Overload: 1.5x IN / 60s. Made in Germany.",
-    imageUrl: "/products/lenze-evs9325-es-a.png",
     partNumber: "EVS9325-ES",
     condition: "used",
     inStock: true,

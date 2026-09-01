@@ -155,7 +155,7 @@ function ProductForm({
         </div>
         <div className="col-span-2">
           <label className={labelCls}>Görsel URL</label>
-          <input value={form.imageUrl ?? ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="/products/siemens-g120.png" className={inputCls} data-testid="input-image-url" />
+          <input value={form.imageUrl ?? ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="https://res.cloudinary.com/…" className={inputCls} data-testid="input-image-url" />
           <div className="mt-2 flex flex-wrap items-center gap-3">
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2 text-xs font-medium hover:bg-muted transition-colors">
               {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}

@@ -1,8 +1,5 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
 import { Resend } from "resend";
 import { storage } from "./storage";
 import { insertProductSchema } from "@shared/schema";
@@ -16,6 +13,10 @@ import {
   updateServiceSettings,
 } from "./service-storage";
 import { sendNotification, buildWelcomeMessage, buildStatusMessage } from "./notification";
+import {
+  isProductImageStorageConfigured,
+  uploadProductImageDataUrl,
+} from "./product-images";
 
 const STATUS_LABELS: Record<number, string> = {
   1: "Teslim Alındı",
@@ -394,40 +395,20 @@ export async function registerRoutes(
       return res.status(400).json({ error: "Görsel verisi zorunlu" });
     }
 
-    const match = dataUrl.match(/^data:image\/(png|jpeg|webp|gif);base64,(.+)$/);
-    if (!match) {
-      return res.status(400).json({ error: "Sadece PNG, JPEG, WebP veya GIF yüklenebilir" });
+    if (!isProductImageStorageConfigured()) {
+      return res.status(503).json({ error: "Kalıcı görsel depolama yapılandırılmamış" });
     }
 
-    const [, imageType, encoded] = match;
-    const bytes = Buffer.from(encoded, "base64");
-    if (!bytes.length || bytes.length > 6 * 1024 * 1024) {
-      return res.status(400).json({ error: "Görsel 6 MB'dan küçük olmalıdır" });
+    try {
+      const uploaded = await uploadProductImageDataUrl(dataUrl);
+      return res.status(201).json({ url: uploaded.url });
+    } catch (error) {
+      console.error(
+        "[products] Cloudinary upload failed:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+      return res.status(502).json({ error: "Görsel kalıcı depolamaya yüklenemedi" });
     }
-
-    const signatures: Record<string, boolean> = {
-      png: bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
-      jpeg: bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])),
-      gif: bytes.subarray(0, 4).toString("ascii") === "GIF8",
-      webp: bytes.subarray(0, 4).toString("ascii") === "RIFF" &&
-        bytes.subarray(8, 12).toString("ascii") === "WEBP",
-    };
-    if (!signatures[imageType]) {
-      return res.status(400).json({ error: "Geçersiz görsel dosyası" });
-    }
-
-    const extension = imageType === "jpeg" ? "jpg" : imageType;
-    const uploadRoot = path.resolve(
-      process.cwd(),
-      process.env.NODE_ENV === "production"
-        ? "dist/public/uploads/products"
-        : "client/public/uploads/products",
-    );
-    await mkdir(uploadRoot, { recursive: true });
-
-    const fileName = `product-${randomUUID()}.${extension}`;
-    await writeFile(path.join(uploadRoot, fileName), bytes, { flag: "wx" });
-    return res.status(201).json({ url: `/uploads/products/${fileName}` });
   });
 
   app.post("/api/products", requireAdmin, async (req, res) => {

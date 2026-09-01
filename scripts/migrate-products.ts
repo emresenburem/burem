@@ -118,7 +118,7 @@ async function migrateProducts() {
             product.brand,
             product.category,
             product.description,
-            product.image_url,
+            product.image_url?.startsWith("http") ? product.image_url : null,
             product.part_number,
             product.condition,
             product.in_stock,
