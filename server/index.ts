@@ -100,7 +100,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 (async () => {
   await runMigrations();
-  await seedProducts();
+  const shouldSeedProducts =
+    process.env.NODE_ENV !== "production" &&
+    process.env.SEED_PRODUCTS === "true";
+
+  if (shouldSeedProducts) {
+    await seedProducts();
+  }
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
