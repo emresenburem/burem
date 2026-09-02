@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface LogoCarouselItem {
@@ -51,7 +51,7 @@ function LogoColumn({
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
   const displayScale = Math.min(
-    1.25,
+    1.3,
     Math.max(0.85, currentLogo?.visualScale ?? currentLogo?.scale ?? 1),
   );
 
@@ -59,45 +59,31 @@ function LogoColumn({
 
   return (
     <div
-      className="relative h-16 min-w-0 basis-0 flex-1 overflow-hidden px-1 sm:h-20 sm:px-2 md:h-24"
+      className="relative flex h-[52px] w-[110px] flex-none items-center justify-center overflow-hidden md:h-[60px] md:w-[130px]"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={`${currentLogo.name}-${currentIndex}`}
-          className="absolute inset-0 flex items-center justify-center px-3"
-          initial={reducedMotion ? false : { y: "12%", opacity: 0, filter: "blur(7px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={reducedMotion ? undefined : { y: "-14%", opacity: 0, filter: "blur(6px)" }}
-          transition={
-            reducedMotion
-              ? { duration: 0 }
-              : {
-                  y: { type: "spring", stiffness: 240, damping: 24, mass: 0.9 },
-                  opacity: { duration: 0.5 },
-                  filter: { duration: 0.62 },
-                }
-          }
-        >
-          <img
-            src={currentLogo.logo}
-            alt={currentLogo.name}
-            draggable={false}
-            className="h-auto max-h-[46%] w-auto max-w-[80%] select-none object-contain"
-            style={displayScale !== 1 ? { transform: `scale(${displayScale})` } : undefined}
-            onError={(event) => {
-              const image = event.currentTarget;
-              image.style.display = "none";
-              const fallback = image.nextElementSibling as HTMLElement | null;
-              if (fallback) fallback.style.display = "flex";
-            }}
-          />
-          <span className="hidden items-center justify-center text-center text-xs font-bold text-foreground/70">
-            {currentLogo.name}
-          </span>
-        </motion.div>
-      </AnimatePresence>
+      <div key={`${currentLogo.name}-${currentIndex}`} className="flex h-full w-full items-center justify-center">
+        <img
+          src={currentLogo.logo}
+          alt={currentLogo.name}
+          draggable={false}
+          className="block h-auto max-h-[34px] w-auto max-w-[92px] select-none object-contain md:max-h-[40px] md:max-w-[108px]"
+          style={{
+            transform: `scale(${displayScale})`,
+            transformOrigin: "center center",
+          }}
+          onError={(event) => {
+            const image = event.currentTarget;
+            image.style.display = "none";
+            const fallback = image.nextElementSibling as HTMLElement | null;
+            if (fallback) fallback.style.display = "flex";
+          }}
+        />
+        <span className="hidden items-center justify-center text-center text-xs font-bold text-foreground/70">
+          {currentLogo.name}
+        </span>
+      </div>
     </div>
   );
 }
@@ -154,7 +140,10 @@ export function LogoCarousel({
 
   return (
     <div
-      className={cn("flex w-full items-center justify-between gap-0 sm:gap-2 md:gap-4 lg:gap-6", className)}
+      className={cn(
+        "flex w-full min-w-0 items-center justify-between gap-0 overflow-hidden md:gap-4 lg:gap-6",
+        className,
+      )}
       aria-label="Burem Elektronik’in hizmet verdiği marka logoları"
       role="region"
     >
