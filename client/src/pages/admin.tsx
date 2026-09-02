@@ -453,20 +453,20 @@ function ProductForm({
         </div>
         <div>
           <label className={labelCls}>Fiyat ve döviz birimi</label>
-          <div className="flex gap-2">
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_8.5rem] gap-2">
             <input
               type="text"
               inputMode="decimal"
               value={form.price ?? ""}
               onChange={(event) => set("price", event.target.value)}
               placeholder="Ör: 12.500,50"
-              className={`${inputCls} min-w-0 flex-1`}
+              className={`${inputCls} min-w-0 w-full`}
               data-testid="input-product-price"
             />
             <select
               value={form.currency ?? "TRY"}
               onChange={(event) => set("currency", event.target.value)}
-              className={`${inputCls} w-[8.5rem] shrink-0`}
+              className={`${inputCls} min-w-0 w-full`}
               aria-label="Fiyat döviz birimi"
               data-testid="select-product-currency"
             >
