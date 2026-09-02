@@ -8,6 +8,7 @@ export interface LogoCarouselItem {
   name: string;
   logo: string;
   scale?: number;
+  visualScale?: number;
 }
 
 interface LogoColumnProps {
@@ -49,13 +50,16 @@ function LogoColumn({
     ? 0
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
-  const displayScale = Math.min(currentLogo?.scale ?? 1, 1);
+  const displayScale = Math.min(
+    1.25,
+    Math.max(0.85, currentLogo?.visualScale ?? currentLogo?.scale ?? 1),
+  );
 
   if (!currentLogo) return null;
 
   return (
     <div
-      className="relative h-16 min-w-0 flex-1 overflow-hidden px-1 sm:h-20 sm:px-2 md:h-24"
+      className="relative h-16 min-w-0 basis-0 flex-1 overflow-hidden px-1 sm:h-20 sm:px-2 md:h-24"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
@@ -80,7 +84,7 @@ function LogoColumn({
             src={currentLogo.logo}
             alt={currentLogo.name}
             draggable={false}
-            className="max-h-full w-full select-none object-contain"
+            className="h-auto max-h-[46%] w-auto max-w-[80%] select-none object-contain"
             style={displayScale !== 1 ? { transform: `scale(${displayScale})` } : undefined}
             onError={(event) => {
               const image = event.currentTarget;

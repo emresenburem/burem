@@ -1,0 +1,44 @@
+Ana sayfadaki yalnızca Markalar logo carousel’inde logo boyutlarını görsel olarak eşitle.
+
+Ekran görüntülerinde bazı sorunlar var:
+
+* Allen‑Bradley ve Omron logoları fazla küçük görünüyor.
+* Lenze, Beckhoff ve bazı geniş logolar diğerlerine göre fazla baskın görünüyor.
+* Logoların dosya oranları ve şeffaf boşlukları farklı olduğu için tek bir width değeri yeterli olmuyor.
+
+İstenen uygulama:
+
+1. Önce mevcut Markalar carousel bileşenini ve kullanılan bütün logo dosyalarını incele.
+2. Her logo için eşit genişlik ve yükseklikte sabit bir logo kutusu oluştur.
+3. Kutularda:
+    * display: flex
+    * yatay ve dikey tam ortalama
+    * eşit flex-basis
+    * tutarlı boşluk kullan.
+4. Görsellerde:
+    * width: auto
+    * height: auto
+    * object-fit: contain
+    * ortak max-width ve max-height sınırı kullan.
+5. Logoları kesinlikle esnetme, sıkıştırma, kırpma veya en-boy oranlarını bozma.
+6. Yalnızca ortak CSS ölçüsü yeterli olmazsa logo verisine visualScale benzeri kontrollü bir değer ekle. Bu değerle:
+    * Küçük görünen Allen‑Bradley ve Omron’u ölçülü biçimde büyüt.
+    * Fazla büyük görünen Lenze, Beckhoff ve benzerlerini biraz küçült.
+    * Diğer markaları da görsel ağırlıkları birbirine yakın olacak şekilde tek tek ayarla.
+7. Marka bazlı ölçekler makul aralıkta olsun; örneğin yaklaşık 0.85–1.25. Logolar taşmasın.
+8. Aynı marka carousel içinde tekrarlandığında her kopya aynı boyutta görünmeli.
+9. Mobilde 390–430 px genişliklerde aynı anda görünen üç logonun görsel ağırlığı dengeli olsun.
+10. Masaüstü görünümünü de kontrol et; responsive ölçüler kullan.
+11. Carousel’in:
+    * otomatik kayma davranışını
+    * hızını
+    * sonsuz döngüsünü
+    * sıralamasını
+    * beyaz arka planını
+        değiştirme.
+12. Burem Elektronik ana logosuna, referanslar bölümüne, hizmet kartlarına, mağazaya, admin paneline, veritabanına ve diğer sayfalara dokunma.
+13. Logo dosyalarını düşük kaliteli hale getirme ve renklerini değiştirme.
+14. Her görselin açıklayıcı alt metni kalsın.
+15. Mobil ve masaüstü önizlemelerinde bütün marka logolarını carousel boyunca kontrol et.
+16. npm run check ve npm run build çalıştır.
+17. Otomatik push veya deploy yapma; değiştirdiğin dosyaları ve uyguladığın ölçek değerlerini özetle.
