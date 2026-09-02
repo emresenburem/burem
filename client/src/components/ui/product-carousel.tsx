@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
-import { optimizedProductImageUrl, productWhatsAppLink } from "@/lib/product-utils";
+import { formatProductPrice, optimizedProductImageUrl, productWhatsAppLink } from "@/lib/product-utils";
 
 export interface CarouselProduct {
   id: string | number;
@@ -14,6 +14,7 @@ export interface CarouselProduct {
   inStock: boolean;
   description?: string | null;
   partNumber?: string | null;
+  price?: string | number | null;
 }
 
 interface ProductCardProps {
@@ -55,6 +56,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           <p className="text-sm text-muted-foreground">
             {product.brand} · {product.category}
           </p>
+          {formatProductPrice(product.price) && (
+            <p className="text-lg font-bold tracking-tight text-foreground">
+              {formatProductPrice(product.price)}
+            </p>
+          )}
 
           <motion.a
             href={productWhatsAppLink(product)}

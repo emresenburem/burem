@@ -19,6 +19,7 @@ import {
 import { Link } from "wouter";
 import { adminRequest, ensureAdminCsrfToken } from "@/lib/admin-auth";
 import { SEO } from "@/components/seo";
+import { formatProductPrice } from "@/lib/product-utils";
 
 const CATEGORIES = ["İnverter", "Servo Sürücü", "PLC", "HMI", "Elektronik Kart", "Motor", "Sensör", "Diğer"];
 const BRANDS = ["Siemens", "ABB", "Fanuc", "Yaskawa", "Mitsubishi", "Lenze", "Schneider", "Danfoss", "Omron", "SEW-Eurodrive", "Bosch Rexroth", "Beckhoff", "Allen Bradley", "Panasonic", "Diğer"];
@@ -38,6 +39,7 @@ const EMPTY: InsertProduct = {
   description: "",
   imageUrl: "",
   partNumber: "",
+  price: null,
   condition: "new",
   inStock: true,
 };
@@ -106,6 +108,21 @@ function validateImageFile(file: File) {
     return "Her görsel 6 MB'dan küçük olmalıdır.";
   }
   return null;
+}
+
+function normalizePriceInput(value: InsertProduct["price"]) {
+  const input = String(value ?? "").trim();
+  if (!input) return null;
+
+  const normalized = input.includes(",")
+    ? input.replace(/\./g, "").replace(",", ".")
+    : input;
+
+  if (!/^\d{1,10}(\.\d{1,2})?$/.test(normalized)) {
+    throw new Error("Fiyatı TL olarak en fazla iki ondalık basamakla girin. Örnek: 12.500,50");
+  }
+
+  return Number(normalized).toFixed(2);
 }
 
 function LoginForm({ onSuccess }: { onSuccess: () => void }) {
@@ -418,6 +435,19 @@ function ProductForm({
           <input value={form.partNumber ?? ""} onChange={(event) => set("partNumber", event.target.value)} placeholder="Ör: 6SL3210-1KE21-3AF1" className={inputCls} data-testid="input-part-number" />
         </div>
         <div>
+          <label className={labelCls}>Fiyat (₺)</label>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={form.price ?? ""}
+            onChange={(event) => set("price", event.target.value)}
+            placeholder="Ör: 12.500,50"
+            className={inputCls}
+            data-testid="input-product-price"
+          />
+          <p className="mt-1 text-[11px] text-muted-foreground">İsteğe bağlı · iki ondalık basamağa kadar</p>
+        </div>
+        <div>
           <label className={labelCls}>Durum</label>
           <select value={form.condition ?? "new"} onChange={(event) => set("condition", event.target.value)} className={inputCls} data-testid="select-condition">
             {CONDITIONS.map((condition) => <option key={condition.value} value={condition.value}>{condition.label}</option>)}
@@ -618,10 +648,11 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
   });
 
   async function saveProduct(data: InsertProduct, pending: PendingImage[], onProgress: (id: string, progress: number) => void) {
+    const normalizedData = { ...data, price: normalizePriceInput(data.price) };
     const saved = modal?.mode === "add"
-      ? await createMutation.mutateAsync(data)
+      ? await createMutation.mutateAsync(normalizedData)
       : modal?.product
-        ? await updateMutation.mutateAsync({ id: modal.product.id, data })
+        ? await updateMutation.mutateAsync({ id: modal.product.id, data: normalizedData })
         : null;
 
     if (!saved) throw new Error("Ürün kaydı oluşturulamadı");
@@ -700,6 +731,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ürün</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kategori</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">P/N</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Fiyat</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Stok</th>
                   <th className="px-4 py-3" />
                 </tr>
@@ -715,6 +747,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{product.category}</td>
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{product.partNumber ?? "—"}</td>
+                    <td className="px-4 py-3 font-semibold text-foreground">{formatProductPrice(product.price) ?? "—"}</td>
                     <td className="px-4 py-3"><span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${product.inStock ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-500"}`}>{product.inStock ? <CheckCircle2 className="h-3 w-3" /> : <X className="h-3 w-3" />}{product.inStock ? "Var" : "Yok"}</span></td>
                     <td className="px-4 py-3"><div className="flex justify-end gap-1">
                       <button onClick={() => setModal({ mode: "edit", product })} className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" data-testid={`button-edit-${product.id}`} title="Düzenle"><Pencil className="h-4 w-4" /></button>

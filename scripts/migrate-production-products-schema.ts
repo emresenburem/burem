@@ -25,6 +25,7 @@ const schemaStatements = [
       description text,
       image_url text,
       part_number text,
+      price numeric(12, 2),
       condition text DEFAULT 'new',
       in_stock boolean DEFAULT true
     )

@@ -70,6 +70,20 @@ export function conditionLabel(condition?: string | null) {
   return condition ? CONDITION_LABELS[condition] ?? condition : null;
 }
 
+export function formatProductPrice(price?: string | number | null) {
+  if (price === null || price === undefined || String(price).trim() === "") return null;
+
+  const numericPrice = Number(price);
+  if (!Number.isFinite(numericPrice) || numericPrice < 0) return null;
+
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numericPrice);
+}
+
 export function optimizedProductImageUrl(url: string, width: number) {
   if (!url.includes("res.cloudinary.com") || !url.includes("/upload/")) return url;
   return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);

@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { CheckCircle2, MessageCircle, Package, Phone, XCircle } from "lucide-react";
 import type { ProductWithImages } from "@shared/schema";
 import { PHONE_NUMBER } from "@/lib/site-contact";
-import { conditionLabel, optimizedProductImageUrl, productPath, productWhatsAppLink } from "@/lib/product-utils";
+import { conditionLabel, formatProductPrice, optimizedProductImageUrl, productPath, productWhatsAppLink } from "@/lib/product-utils";
 
 interface StoreProductCardProps {
   product: ProductWithImages;
@@ -11,6 +11,7 @@ interface StoreProductCardProps {
 export default function StoreProductCard({ product }: StoreProductCardProps) {
   const condition = conditionLabel(product.condition);
   const coverUrl = product.images[0]?.imageUrl ?? product.imageUrl;
+  const formattedPrice = formatProductPrice(product.price);
 
   return (
     <article
@@ -74,6 +75,11 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
           >
             {product.name}
           </h2>
+          {formattedPrice && (
+            <p className="text-lg font-bold tracking-tight text-foreground" data-testid={`text-product-price-${product.id}`}>
+              {formattedPrice}
+            </p>
+          )}
           {product.partNumber && (
             <p className="font-mono text-[11px] font-medium text-muted-foreground">
               P/N: {product.partNumber}

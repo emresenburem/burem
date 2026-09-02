@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, boolean, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, boolean, timestamp, uniqueIndex, numeric } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -25,6 +25,7 @@ export const products = pgTable("products", {
   description: text("description"),
   imageUrl: text("image_url"),
   partNumber: text("part_number"),
+  price: numeric("price", { precision: 12, scale: 2 }),
   condition: text("condition").default("new"),
   inStock: boolean("in_stock").default(true),
 });
@@ -49,9 +50,15 @@ export const productImages = pgTable(
   }),
 );
 
-export const insertProductSchema = createInsertSchema(products).omit({
-  id: true,
-});
+export const insertProductSchema = createInsertSchema(products)
+  .omit({ id: true })
+  .extend({
+    price: z
+      .string()
+      .regex(/^\d{1,10}(\.\d{1,2})?$/, "Fiyat 0-9999999999,99 aralığında olmalıdır.")
+      .nullable()
+      .optional(),
+  });
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type Product = typeof products.$inferSelect;
