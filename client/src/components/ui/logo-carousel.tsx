@@ -54,7 +54,7 @@ function LogoColumn({
 
   return (
     <div
-      className="relative h-16 w-28 overflow-hidden sm:h-20 sm:w-40 md:h-24 md:w-48"
+      className="relative h-16 min-w-0 flex-1 overflow-hidden sm:h-20 md:h-24"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
@@ -100,22 +100,36 @@ function LogoColumn({
 export interface LogoCarouselProps {
   logos: LogoCarouselItem[];
   columnCount?: number;
+  mobileColumnCount?: number;
   cycleInterval?: number;
   className?: string;
 }
 
 export function LogoCarousel({
   logos,
-  columnCount = 3,
+  columnCount = 5,
+  mobileColumnCount = 3,
   cycleInterval = 2200,
   className,
 }: LogoCarouselProps) {
   const reducedMotion = useReducedMotion() ?? false;
-  const [currentTime, setCurrentTime] = React.useState(0);
-  const columns = React.useMemo(
-    () => distributeLogos(logos, Math.max(1, Math.min(columnCount, logos.length || 1))),
-    [logos, columnCount],
+  const [isMobile, setIsMobile] = React.useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false,
   );
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const activeColumnCount = isMobile ? mobileColumnCount : columnCount;
+  const columns = React.useMemo(
+    () => distributeLogos(logos, Math.max(1, Math.min(activeColumnCount, logos.length || 1))),
+    [logos, activeColumnCount],
+  );
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const handleChange = (event: MediaQueryListEvent) => setIsMobile(event.matches);
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   React.useEffect(() => {
     if (reducedMotion || logos.length < 2) return;
@@ -135,7 +149,7 @@ export function LogoCarousel({
 
   return (
     <div
-      className={cn("flex items-center justify-center gap-2 sm:gap-4 md:gap-6", className)}
+      className={cn("flex w-full items-center justify-between gap-2 sm:gap-8 md:gap-14 lg:gap-20", className)}
       aria-label="Burem Elektronik’in hizmet verdiği marka logoları"
       role="region"
     >

@@ -1321,7 +1321,8 @@ export default function HomePage() {
           </div>
           <LogoCarousel
             logos={BRANDS.map(({ name, logo, scale }) => ({ name, logo, scale }))}
-            columnCount={3}
+            columnCount={5}
+            mobileColumnCount={3}
           />
           <p className="text-center text-xs text-muted-foreground">
             Sektörün önde gelen markalarında servis ve onarım desteği
