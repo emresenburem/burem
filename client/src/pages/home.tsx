@@ -57,8 +57,8 @@ import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
-  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1, visualScale: 1.3 },
-  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg", scale: 1.4, visualScale: 1.0 },
+  { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1, visualScale: 2.05 },
+  { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg", scale: 1.4, visualScale: 1.2 },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.5, visualScale: 0.88 },
   { name: "Schneider", color: "#3dcd58", logo: "https://www.logo.wine/a/logo/Schneider_Electric/Schneider_Electric-Logo.wine.svg", scale: 1.4, visualScale: 0.95 },
   { name: "Fanuc", color: "#FFD700", logo: "https://www.logo.wine/a/logo/FANUC/FANUC-Logo.wine.svg", scale: 1.4, visualScale: 1.0 },
@@ -66,7 +66,7 @@ const BRANDS = [
   { name: "Omron", color: "#005EB8", logo: "https://www.logo.wine/a/logo/Omron/Omron-Logo.wine.svg", scale: 1.4, visualScale: 1.05 },
   { name: "Lenze", color: "#0046AD", logo: "https://findlogovector.com/wp-content/uploads/2019/04/lenze-logo-vector.png", visualScale: 1.0 },
   { name: "Mitsubishi", color: "#E60012", logo: "https://www.logo.wine/a/logo/Mitsubishi/Mitsubishi-Logo.wine.svg", visualScale: 1.18 },
-  { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png", scale: 1.4, visualScale: 0.98 },
+  { name: "Danfoss", color: "#E2000F", logo: "https://findlogovector.com/wp-content/uploads/2018/09/danfoss-logo-vector.png", scale: 1.4, visualScale: 1.35 },
   { name: "Delta", color: "#003A8C", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/04/delta-electronics-vector-logo.png", scale: 1.4, visualScale: 1.02 },
   { name: "Beckhoff", color: "#E30613", logo: "https://cdn.worldvectorlogo.com/logos/beckhoff-logo.svg", visualScale: 0.9 },
   { name: "Allen Bradley", color: "#000000", logo: "https://seekvectorlogo.net/wp-content/uploads/2019/02/allen-bradley-vector-logo.png", scale: 1.6, visualScale: 0.95 },

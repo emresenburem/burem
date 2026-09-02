@@ -51,7 +51,7 @@ function LogoColumn({
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
   const displayScale = Math.min(
-    1.3,
+    2.2,
     Math.max(0.85, currentLogo?.visualScale ?? currentLogo?.scale ?? 1),
   );
 
