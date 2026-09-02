@@ -49,6 +49,7 @@ function LogoColumn({
     ? 0
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
+  const displayScale = Math.min(currentLogo?.scale ?? 1, 1);
 
   if (!currentLogo) return null;
 
@@ -80,7 +81,7 @@ function LogoColumn({
             alt={currentLogo.name}
             draggable={false}
             className="max-h-full w-full select-none object-contain"
-            style={currentLogo.scale ? { transform: `scale(${currentLogo.scale})` } : undefined}
+            style={displayScale !== 1 ? { transform: `scale(${displayScale})` } : undefined}
             onError={(event) => {
               const image = event.currentTarget;
               image.style.display = "none";
