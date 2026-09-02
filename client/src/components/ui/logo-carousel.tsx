@@ -55,7 +55,7 @@ function LogoColumn({
 
   return (
     <div
-      className="relative h-16 min-w-0 flex-1 overflow-hidden sm:h-20 md:h-24"
+      className="relative h-16 min-w-0 flex-1 overflow-hidden px-1 sm:h-20 sm:px-2 md:h-24"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
@@ -70,9 +70,9 @@ function LogoColumn({
             reducedMotion
               ? { duration: 0 }
               : {
-                  y: { type: "spring", stiffness: 290, damping: 22, mass: 0.8 },
-                  opacity: { duration: 0.32 },
-                  filter: { duration: 0.42 },
+                  y: { type: "spring", stiffness: 240, damping: 24, mass: 0.9 },
+                  opacity: { duration: 0.5 },
+                  filter: { duration: 0.62 },
                 }
           }
         >
@@ -110,7 +110,7 @@ export function LogoCarousel({
   logos,
   columnCount = 5,
   mobileColumnCount = 3,
-  cycleInterval = 2200,
+  cycleInterval = 3400,
   className,
 }: LogoCarouselProps) {
   const reducedMotion = useReducedMotion() ?? false;
@@ -150,7 +150,7 @@ export function LogoCarousel({
 
   return (
     <div
-      className={cn("flex w-full items-center justify-between gap-2 sm:gap-8 md:gap-14 lg:gap-20", className)}
+      className={cn("flex w-full items-center justify-between gap-0 sm:gap-2 md:gap-4 lg:gap-6", className)}
       aria-label="Burem Elektronik’in hizmet verdiği marka logoları"
       role="region"
     >

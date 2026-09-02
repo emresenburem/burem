@@ -1308,13 +1308,14 @@ export default function HomePage() {
 
       <section
         aria-label="Marka logoları"
-        className="relative overflow-hidden border-b border-border/40 bg-background/55 px-4 py-7 backdrop-blur-sm sm:py-9"
+        className="relative overflow-hidden border-b border-border/40 bg-background/55 px-0 py-7 backdrop-blur-sm sm:py-9"
       >
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:gap-6">
+        <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
           <LogoCarousel
             logos={BRANDS.map(({ name, logo, scale }) => ({ name, logo, scale }))}
             columnCount={5}
             mobileColumnCount={3}
+            cycleInterval={3400}
           />
         </div>
       </section>
