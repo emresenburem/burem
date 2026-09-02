@@ -1,10 +1,10 @@
 ---
 name: Brand logo rail
-description: The visual and motion direction for the homepage brand logo strip.
+description: The visual and motion direction for the homepage brand logo presentation.
 ---
 
-The homepage brand rail should look like a coverflow with a featured center logo and angled neighboring logos, while moving continuously rather than snapping one card at a time.
+The homepage brand area should use the provided logo-carousel direction: three balanced columns with a featured logo in each column and soft vertical blur/fade transitions between brands. Use Burem’s real brand assets, not demo logos.
 
-**Why:** A flat marquee did not provide the requested featured-logo depth, and stepped coverflow transitions felt different from the requested smooth infinite movement.
+**Why:** The user selected the supplied logo-carousel design over the previous coverflow presentation, while still wanting the existing Burem brand list and navigation preserved.
 
-**How to apply:** Preserve the 3D perspective treatment when changing the rail; autoplay should advance a fractional position continuously and loop without a visible reset.
+**How to apply:** Keep the three-column composition, staggered transitions, reduced-motion support, and responsive sizing. Keep the separate Markalar dropdown and brand detail routes intact.

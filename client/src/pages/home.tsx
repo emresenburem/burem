@@ -53,7 +53,7 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
-import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
@@ -1306,23 +1306,28 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* Kesintisiz kayan, öne çıkan markalı coverflow */}
-      <CoverflowCarousel
-        slides={BRANDS.map((brand) => ({
-          src: brand.logo,
-          alt: `${brand.name} logosu`,
-          scale: brand.scale,
-        }))}
-        label="Marka logoları"
-        cardWidth="clamp(150px, 18vw, 220px)"
-        cardHeight="74px"
-        rotate={38}
-        depth={0.3}
-        perspective={4}
-        fade={0.13}
-        gap={0.2}
-        autoPlaySpeed={0.6}
-      />
+      <section
+        aria-labelledby="brands-heading"
+        className="relative overflow-hidden border-b border-border/40 bg-background/55 px-4 py-7 backdrop-blur-sm sm:py-9"
+      >
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:gap-6">
+          <div className="text-center">
+            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
+              Endüstriyel otomasyonda uzmanlık
+            </p>
+            <h2 id="brands-heading" className="mt-1 text-xl font-black tracking-tight text-foreground sm:text-2xl">
+              Çalıştığımız markalar
+            </h2>
+          </div>
+          <LogoCarousel
+            logos={BRANDS.map(({ name, logo, scale }) => ({ name, logo, scale }))}
+            columnCount={3}
+          />
+          <p className="text-center text-xs text-muted-foreground">
+            Sektörün önde gelen markalarında servis ve onarım desteği
+          </p>
+        </div>
+      </section>
 
       <main id="top">
         <AnimatedServicesSection />
