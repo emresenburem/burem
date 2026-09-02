@@ -49,20 +49,22 @@ function LogoColumn({
     ? 0
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
-  const displayScale = Math.min(currentLogo?.scale ?? 1, 1);
+  // Marka dosyalarındaki boşluk farklarını, KEB ile aynı görsel ağırlığa
+  // gelecek şekilde mevcut marka katsayılarıyla dengeler.
+  const displayScale = currentLogo?.scale ?? 1;
 
   if (!currentLogo) return null;
 
   return (
     <div
-      className="relative h-16 min-w-0 flex-1 overflow-hidden sm:h-20 md:h-24"
+      className="relative h-16 min-w-0 flex-1 overflow-visible sm:h-20 md:h-24"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={`${currentLogo.name}-${currentIndex}`}
-          className="absolute inset-0 flex items-center justify-center px-3"
+          className="absolute inset-0 flex items-center justify-center"
           initial={reducedMotion ? false : { y: "12%", opacity: 0, filter: "blur(7px)" }}
           animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
           exit={reducedMotion ? undefined : { y: "-14%", opacity: 0, filter: "blur(6px)" }}
@@ -76,22 +78,24 @@ function LogoColumn({
                 }
           }
         >
-          <img
-            src={currentLogo.logo}
-            alt={currentLogo.name}
-            draggable={false}
-            className="max-h-full w-full select-none object-contain"
-            style={displayScale !== 1 ? { transform: `scale(${displayScale})` } : undefined}
-            onError={(event) => {
-              const image = event.currentTarget;
-              image.style.display = "none";
-              const fallback = image.nextElementSibling as HTMLElement | null;
-              if (fallback) fallback.style.display = "flex";
-            }}
-          />
-          <span className="hidden items-center justify-center text-center text-xs font-bold text-foreground/70">
-            {currentLogo.name}
-          </span>
+          <div className="h-8 w-24 sm:h-9 sm:w-32 md:h-10 md:w-40">
+            <img
+              src={currentLogo.logo}
+              alt={currentLogo.name}
+              draggable={false}
+              className="h-full w-full select-none object-contain"
+              style={{ transform: `scale(${displayScale})` }}
+              onError={(event) => {
+                const image = event.currentTarget;
+                image.style.display = "none";
+                const fallback = image.nextElementSibling as HTMLElement | null;
+                if (fallback) fallback.style.display = "flex";
+              }}
+            />
+            <span className="hidden h-full w-full items-center justify-center text-center text-xs font-bold text-foreground/70">
+              {currentLogo.name}
+            </span>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
