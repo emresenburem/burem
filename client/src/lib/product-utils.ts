@@ -70,15 +70,19 @@ export function conditionLabel(condition?: string | null) {
   return condition ? CONDITION_LABELS[condition] ?? condition : null;
 }
 
-export function formatProductPrice(price?: string | number | null) {
+export function formatProductPrice(
+  price?: string | number | null,
+  currency?: string | null,
+) {
   if (price === null || price === undefined || String(price).trim() === "") return null;
 
   const numericPrice = Number(price);
   if (!Number.isFinite(numericPrice) || numericPrice < 0) return null;
 
-  return new Intl.NumberFormat("tr-TR", {
+  const currencyCode = currency === "USD" ? "USD" : "TRY";
+  return new Intl.NumberFormat(currencyCode === "USD" ? "en-US" : "tr-TR", {
     style: "currency",
-    currency: "TRY",
+    currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(numericPrice);

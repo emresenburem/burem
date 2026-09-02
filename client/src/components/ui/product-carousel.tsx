@@ -15,6 +15,7 @@ export interface CarouselProduct {
   description?: string | null;
   partNumber?: string | null;
   price?: string | number | null;
+  currency?: string | null;
 }
 
 interface ProductCardProps {
@@ -56,9 +57,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
           <p className="text-sm text-muted-foreground">
             {product.brand} · {product.category}
           </p>
-          {formatProductPrice(product.price) && (
+          {formatProductPrice(product.price, product.currency) && (
             <p className="text-lg font-bold tracking-tight text-foreground">
-              {formatProductPrice(product.price)}
+              {formatProductPrice(product.price, product.currency)}
             </p>
           )}
 

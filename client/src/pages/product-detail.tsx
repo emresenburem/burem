@@ -222,12 +222,12 @@ function ProductJsonLd({ product }: { product: ProductWithImages }) {
       ...(product.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
       ...(product.category ? { category: product.category } : {}),
       ...(product.partNumber ? { sku: product.partNumber, productID: product.partNumber } : {}),
-      ...(formatProductPrice(product.price)
+      ...(formatProductPrice(product.price, product.currency)
         ? {
             offers: {
               "@type": "Offer",
               price: Number(product.price).toFixed(2),
-              priceCurrency: "TRY",
+              priceCurrency: product.currency === "USD" ? "USD" : "TRY",
               availability: product.inStock
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
@@ -299,7 +299,7 @@ function NotFoundProduct() {
 
 function ProductInfo({ product }: { product: Product }) {
   const condition = conditionLabel(product.condition);
-  const formattedPrice = formatProductPrice(product.price);
+  const formattedPrice = formatProductPrice(product.price, product.currency);
 
   return (
     <div className="rounded-[28px] border border-border bg-card p-6 shadow-soft md:p-8">

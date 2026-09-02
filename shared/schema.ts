@@ -26,6 +26,7 @@ export const products = pgTable("products", {
   imageUrl: text("image_url"),
   partNumber: text("part_number"),
   price: numeric("price", { precision: 12, scale: 2 }),
+  currency: text("currency").default("TRY"),
   condition: text("condition").default("new"),
   inStock: boolean("in_stock").default(true),
 });
@@ -58,6 +59,7 @@ export const insertProductSchema = createInsertSchema(products)
       .regex(/^\d{1,10}(\.\d{1,2})?$/, "Fiyat 0-9999999999,99 aralığında olmalıdır.")
       .nullable()
       .optional(),
+    currency: z.enum(["TRY", "USD"]).nullable().optional(),
   });
 
 export type InsertProduct = z.infer<typeof insertProductSchema>;

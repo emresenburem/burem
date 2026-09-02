@@ -11,7 +11,7 @@ interface StoreProductCardProps {
 export default function StoreProductCard({ product }: StoreProductCardProps) {
   const condition = conditionLabel(product.condition);
   const coverUrl = product.images[0]?.imageUrl ?? product.imageUrl;
-  const formattedPrice = formatProductPrice(product.price);
+  const formattedPrice = formatProductPrice(product.price, product.currency);
 
   return (
     <article

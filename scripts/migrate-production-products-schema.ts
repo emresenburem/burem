@@ -47,6 +47,11 @@ const productColumnDefinitions: ProductColumnDefinition[] = [
     alterStatement: 'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "price" numeric(12, 2);',
   },
   {
+    name: "currency",
+    description: "text DEFAULT 'TRY'",
+    alterStatement: 'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "currency" text DEFAULT \'TRY\';',
+  },
+  {
     name: "condition",
     description: "text DEFAULT 'new'",
     alterStatement: 'ALTER TABLE "products" ADD COLUMN IF NOT EXISTS "condition" text DEFAULT \'new\';',
@@ -68,6 +73,7 @@ const createTableStatement = `
     "image_url" text,
     "part_number" text,
     "price" numeric(12, 2),
+    "currency" text DEFAULT 'TRY',
     "condition" text DEFAULT 'new',
     "in_stock" boolean DEFAULT true
   )

@@ -40,6 +40,7 @@ const EMPTY: InsertProduct = {
   imageUrl: "",
   partNumber: "",
   price: null,
+  currency: "TRY",
   condition: "new",
   inStock: true,
 };
@@ -114,12 +115,28 @@ function normalizePriceInput(value: InsertProduct["price"]) {
   const input = String(value ?? "").trim();
   if (!input) return null;
 
-  const normalized = input.includes(",")
-    ? input.replace(/\./g, "").replace(",", ".")
-    : input;
+  const commaIndex = input.lastIndexOf(",");
+  const dotIndex = input.lastIndexOf(".");
+  let normalized = input;
+
+  if (commaIndex >= 0 && dotIndex >= 0) {
+    const decimalSeparator = commaIndex > dotIndex ? "," : ".";
+    const thousandsSeparator = decimalSeparator === "," ? /\./g : /,/g;
+    normalized = input.replace(thousandsSeparator, "").replace(decimalSeparator, ".");
+  } else if (commaIndex >= 0) {
+    const fraction = input.slice(commaIndex + 1);
+    normalized = fraction.length <= 2
+      ? `${input.slice(0, commaIndex).replace(/,/g, "")}.${fraction}`
+      : input.replace(/,/g, "");
+  } else if (dotIndex >= 0) {
+    const fraction = input.slice(dotIndex + 1);
+    normalized = fraction.length <= 2
+      ? input
+      : input.replace(/\./g, "");
+  }
 
   if (!/^\d{1,10}(\.\d{1,2})?$/.test(normalized)) {
-    throw new Error("Fiyatı TL olarak en fazla iki ondalık basamakla girin. Örnek: 12.500,50");
+    throw new Error("Fiyatı en fazla iki ondalık basamakla girin. Örnek: 12.500,50");
   }
 
   return Number(normalized).toFixed(2);
@@ -435,16 +452,28 @@ function ProductForm({
           <input value={form.partNumber ?? ""} onChange={(event) => set("partNumber", event.target.value)} placeholder="Ör: 6SL3210-1KE21-3AF1" className={inputCls} data-testid="input-part-number" />
         </div>
         <div>
-          <label className={labelCls}>Fiyat (₺)</label>
-          <input
-            type="text"
-            inputMode="decimal"
-            value={form.price ?? ""}
-            onChange={(event) => set("price", event.target.value)}
-            placeholder="Ör: 12.500,50"
-            className={inputCls}
-            data-testid="input-product-price"
-          />
+          <label className={labelCls}>Fiyat ve döviz birimi</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              inputMode="decimal"
+              value={form.price ?? ""}
+              onChange={(event) => set("price", event.target.value)}
+              placeholder="Ör: 12.500,50"
+              className={`${inputCls} min-w-0 flex-1`}
+              data-testid="input-product-price"
+            />
+            <select
+              value={form.currency ?? "TRY"}
+              onChange={(event) => set("currency", event.target.value)}
+              className={`${inputCls} w-[8.5rem] shrink-0`}
+              aria-label="Fiyat döviz birimi"
+              data-testid="select-product-currency"
+            >
+              <option value="TRY">₺ Türk Lirası</option>
+              <option value="USD">$ Amerikan Doları</option>
+            </select>
+          </div>
           <p className="mt-1 text-[11px] text-muted-foreground">İsteğe bağlı · iki ondalık basamağa kadar</p>
         </div>
         <div>
@@ -747,7 +776,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{product.category}</td>
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{product.partNumber ?? "—"}</td>
-                    <td className="px-4 py-3 font-semibold text-foreground">{formatProductPrice(product.price) ?? "—"}</td>
+                    <td className="px-4 py-3 font-semibold text-foreground">{formatProductPrice(product.price, product.currency) ?? "—"}</td>
                     <td className="px-4 py-3"><span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${product.inStock ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-500"}`}>{product.inStock ? <CheckCircle2 className="h-3 w-3" /> : <X className="h-3 w-3" />}{product.inStock ? "Var" : "Yok"}</span></td>
                     <td className="px-4 py-3"><div className="flex justify-end gap-1">
                       <button onClick={() => setModal({ mode: "edit", product })} className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" data-testid={`button-edit-${product.id}`} title="Düzenle"><Pencil className="h-4 w-4" /></button>
@@ -769,7 +798,14 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
               <button onClick={() => setModal(null)} className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted"><X className="h-4 w-4" /></button>
             </div>
             <ProductForm
-              initial={modal.mode === "edit" && modal.product ? { ...modal.product } : EMPTY}
+              initial={
+                modal.mode === "edit" && modal.product
+                  ? {
+                      ...modal.product,
+                      currency: modal.product.currency === "USD" ? "USD" : "TRY",
+                    }
+                  : EMPTY
+              }
               product={modal.product}
               onSave={saveProduct}
               onCancel={() => setModal(null)}
