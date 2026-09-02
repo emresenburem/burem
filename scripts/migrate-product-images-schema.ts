@@ -66,36 +66,6 @@ const schemaStatements = [
   `,
 ];
 
-const backfillStatement = `
-  INSERT INTO product_images (product_id, image_url, sort_order, is_primary)
-  SELECT
-    p.id,
-    p.image_url,
-    0,
-    true
-  FROM products p
-  WHERE p.image_url IS NOT NULL
-    AND btrim(p.image_url) <> ''
-    AND NOT EXISTS (
-      SELECT 1 FROM product_images pi WHERE pi.product_id = p.id
-    )
-`;
-
-const publicIdBackfillStatement = `
-  UPDATE product_images
-  SET cloudinary_public_id = regexp_replace(
-    regexp_replace(
-      split_part(split_part(image_url, '/upload/', 2), '?', 1),
-      '^v[0-9]+/',
-      ''
-    ),
-    '\\.[^./]+$',
-    ''
-  )
-  WHERE cloudinary_public_id IS NULL
-    AND image_url LIKE 'https://res.cloudinary.com/%/image/upload/%'
-`;
-
 async function runMigration() {
   if (!targetUrl) {
     throw new Error("Hedef veritabanı bulunamadı. TARGET_DATABASE_URL tanımlayın.");
@@ -116,22 +86,14 @@ async function runMigration() {
           EXISTS (
             SELECT 1 FROM information_schema.tables
             WHERE table_schema = 'public' AND table_name = 'product_images'
-          ) AS product_images_exists,
+           ) AS product_images_exists
       `);
       const row = tables.rows[0];
-      let productsWithImages = "0";
-      if (row?.products_exists) {
-        const count = await pool.query<{ count: string }>(`
-          SELECT count(*)::text AS count FROM products
-          WHERE image_url IS NOT NULL AND btrim(image_url) <> ''
-        `);
-        productsWithImages = count.rows[0]?.count ?? "0";
-      }
       console.log(
-        `[product-images-schema] Dry-run: hedef bağlantısı başarılı; products=${row?.products_exists ? "mevcut" : "yok"}, product_images=${row?.product_images_exists ? "mevcut" : "yok"}, backfill adayı=${productsWithImages}.`,
+         `[product-images-schema] Dry-run: hedef bağlantısı başarılı; products=${row?.products_exists ? "mevcut" : "yok"}, product_images=${row?.product_images_exists ? "mevcut" : "yok"}.`,
       );
-      console.log("[product-images-schema] DDL ve backfill çalıştırılmadı. --apply olmadan production değişmez.");
-      console.log("[product-images-schema] Apply sırasında mevcut product/image satırları silinmez veya ezilmez.");
+       console.log("[product-images-schema] DDL çalıştırılmadı. --apply olmadan production değişmez.");
+       console.log("[product-images-schema] Apply yalnızca eksik gallery tablosu ve indexlerini oluşturur; mevcut ürün/image satırlarına dokunmaz.");
       return;
     }
 
@@ -141,11 +103,9 @@ async function runMigration() {
       for (const statement of schemaStatements) {
         await client.query(statement);
       }
-      const backfill = await client.query(backfillStatement);
-      const publicIdBackfill = await client.query(publicIdBackfillStatement);
       await client.query("COMMIT");
       console.log(
-        `[product-images-schema] Gallery şeması hazır; ${backfill.rowCount ?? 0} yeni kayıt ve ${publicIdBackfill.rowCount ?? 0} Cloudinary public ID güvenli ve idempotent şekilde backfill edildi.`,
+        "[product-images-schema] Gallery şeması hazır; yalnızca eksik tablo ve indexler oluşturuldu.",
       );
     } catch {
       await client.query("ROLLBACK").catch(() => undefined);
