@@ -1307,26 +1307,15 @@ export default function HomePage() {
       </header>
 
       <section
-        aria-labelledby="brands-heading"
+        aria-label="Marka logoları"
         className="relative overflow-hidden border-b border-border/40 bg-background/55 px-4 py-7 backdrop-blur-sm sm:py-9"
       >
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:gap-6">
-          <div className="text-center">
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
-              Endüstriyel otomasyonda uzmanlık
-            </p>
-            <h2 id="brands-heading" className="mt-1 text-xl font-black tracking-tight text-foreground sm:text-2xl">
-              Çalıştığımız markalar
-            </h2>
-          </div>
           <LogoCarousel
             logos={BRANDS.map(({ name, logo, scale }) => ({ name, logo, scale }))}
             columnCount={5}
             mobileColumnCount={3}
           />
-          <p className="text-center text-xs text-muted-foreground">
-            Sektörün önde gelen markalarında servis ve onarım desteği
-          </p>
         </div>
       </section>
 
