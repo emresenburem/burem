@@ -57,6 +57,25 @@ function endpointKey(connectionString: string) {
   }
 }
 
+function getTargetSslConfig(): pg.ClientConfig["ssl"] {
+  if (!targetUrl) throw new Error("TARGET_DATABASE_URL tanımlı değil.");
+
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(targetUrl);
+  } catch {
+    throw new Error("TARGET_DATABASE_URL geçerli değil.");
+  }
+
+  const sslMode = parsedUrl.searchParams.get("sslmode")?.toLowerCase();
+  if (sslMode === "disable" || sslMode === "no-verify") {
+    throw new Error("Production bağlantısında sertifika doğrulamalı SSL zorunludur.");
+  }
+
+  const ca = process.env.TARGET_DATABASE_SSL_CA;
+  return { rejectUnauthorized: true, ...(ca ? { ca } : {}) };
+}
+
 function localAssetPath(imageUrl: string) {
   if (!imageUrl.startsWith("/")) return null;
   const relativePath = imageUrl.replace(/^\/+/, "");
@@ -142,7 +161,12 @@ async function migrateProductImages() {
 
   const sourcePool = new pg.Pool({ connectionString: sourceUrl });
   const targetPool = targetUrl && !SOURCE_ONLY
-    ? new pg.Pool({ connectionString: targetUrl })
+    ? new pg.Pool({
+        connectionString: targetUrl,
+        ssl: getTargetSslConfig(),
+        connectionTimeoutMillis: 15_000,
+        max: 1,
+      })
     : null;
 
   try {
