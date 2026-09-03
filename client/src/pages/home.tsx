@@ -56,16 +56,7 @@ import { ProductCarousel } from "@/components/ui/product-carousel";
 import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { productPath } from "@/lib/product-utils";
 
-interface BrandLogoConfig {
-  name: string;
-  color: string;
-  logo: string;
-  scale?: number;
-  logoHeight?: number;
-  w?: number;
-}
-
-const BRANDS: BrandLogoConfig[] = [
+const BRANDS = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg", scale: 1.4 },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.5 },
@@ -89,6 +80,7 @@ const BRANDS: BrandLogoConfig[] = [
   { name: "Control Techniques", color: "#00A04B", logo: "https://cdn.worldvectorlogo.com/logos/control-techniques.svg", scale: 2.2 },
   { name: "KEB", color: "#E30613", logo: "https://www.keb-automation.com/_assets/d036344bd34e87e82af8c79946af49f4/Images/logo.svg", scale: 0.65 },
   { name: "Heidenhain", color: "#000000", logo: new URL("../assets/logos/heidenhain.png", import.meta.url).href },
+  { name: "Okuma", color: "#0064BD", logo: new URL("../assets/logos/okuma.png", import.meta.url).href, scale: 1 },
   { name: "Mecasonic", color: "#003366", logo: new URL("../assets/logos/mecasonic.png", import.meta.url).href, w: 110 },
   { name: "FIDA", color: "#D81F26", logo: "/fida-logo.png" },
 ];
@@ -1322,11 +1314,23 @@ export default function HomePage() {
       >
         <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
           <LogoCarousel
-            logos={BRANDS.map(({ name, logo, scale, logoHeight }) => ({
+            logos={BRANDS.map(({ name, logo, scale }) => ({
               name,
               logo,
               scale,
-              logoHeight,
+              displayScale:
+                name === "Baumüller" || name === "Baumuller" ? 1.70 :
+                name === "ABB" ? 0.5 :
+                name === "Omron" ? 1.35 :
+                name === "B&R" ? 0.68 :
+                name === "Panasonic" ? 1.35 :
+                name === "Control Techniques" ? 2.0 :
+                name === "Lenze" ? 0.72 :
+                name === "Mitsubishi" ? 0.72 :
+                name === "KEB" ? 0.6 :
+                name === "Allen Bradley" || name === "Allen-Bradley" ? 1.8 :
+                name === "Beckhoff" ? 0.4 :
+                undefined,
             }))}
             columnCount={4}
             mobileColumnCount={3}
