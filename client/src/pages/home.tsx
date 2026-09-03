@@ -1320,6 +1320,9 @@ export default function HomePage() {
                 name === "Baumüller" ? 1.45 :
                 name === "ABB" ? 0.6 :
                 name === "Omron" ? 1.35 :
+                name === "B&R" ? 0.68 :
+                name === "Panasonic" ? 1.35 :
+                name === "Control Techniques" ? 1.35 :
                 undefined,
             }))}
             columnCount={5}
