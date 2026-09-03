@@ -1319,6 +1319,7 @@ export default function HomePage() {
               displayScale:
                 name === "Baumüller" ? 1.45 :
                 name === "ABB" ? 0.6 :
+                name === "Omron" ? 1.35 :
                 undefined,
             }))}
             columnCount={5}
