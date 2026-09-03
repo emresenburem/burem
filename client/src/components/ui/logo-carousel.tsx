@@ -9,7 +9,6 @@ export interface LogoCarouselItem {
   logo: string;
   scale?: number;
   logoHeight?: number;
-  verticalOffset?: number;
 }
 
 interface LogoColumnProps {
@@ -53,12 +52,6 @@ function LogoColumn({
   const currentLogo = logos[currentIndex] ?? logos[0];
   const displayScale = Math.max(0.1, Math.min(currentLogo?.scale ?? 1, 2.5));
   const logoHeight = currentLogo?.logoHeight;
-  const transform = [
-    currentLogo?.verticalOffset ? `translateY(${currentLogo.verticalOffset}px)` : "",
-    displayScale !== 1 ? `scale(${displayScale})` : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
 
   if (!currentLogo) return null;
 
@@ -93,7 +86,7 @@ function LogoColumn({
             style={{
               width: logoHeight ? "auto" : "100%",
               height: logoHeight ? `${logoHeight}px` : undefined,
-              transform: transform || undefined,
+              transform: displayScale !== 1 ? `scale(${displayScale})` : undefined,
             }}
             onError={(event) => {
               const image = event.currentTarget;
