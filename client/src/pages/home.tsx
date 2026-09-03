@@ -1327,6 +1327,7 @@ export default function HomePage() {
                 name === "Mitsubishi" ? 0.72 :
                 name === "KEB" ? 0.6 :
                 name === "Allen Bradley" || name === "Allen-Bradley" ? 1.3 :
+                name === "Beckhoff" ? 0.7 :
                 undefined,
             }))}
             columnCount={4}
