@@ -13,8 +13,7 @@
     "migrate:products": "tsx scripts/migrate-products.ts",
     "migrate:product-images": "tsx scripts/migrate-product-images.ts",
     "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts",
-    "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts",
-    "normalize:brand-logos": "node scripts/normalize-brand-logos.mjs"
+    "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -81,7 +80,6 @@
     "react-use-measure": "^2.1.7",
     "recharts": "^2.15.4",
     "resend": "^6.9.2",
-    "sharp": "^0.35.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",

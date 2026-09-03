@@ -138,23 +138,6 @@
 }
 
 @layer utilities {
-  .logo-slot {
-    width: 120px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .logo-slot img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    user-select: none;
-  }
-
   .text-balance {
     text-wrap: balance;
   }
