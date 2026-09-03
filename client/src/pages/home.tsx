@@ -1322,14 +1322,12 @@ export default function HomePage() {
                 name === "Omron" ? 1.35 :
                 name === "B&R" ? 0.68 :
                 name === "Panasonic" ? 1.35 :
-                name === "Control Techniques" ? 1.35 :
+                name === "Control Techniques" ? 2.0 :
                 name === "Lenze" ? 0.72 :
                 name === "Mitsubishi" ? 0.72 :
                 name === "KEB" ? 0.6 :
                 name === "Allen Bradley" || name === "Allen-Bradley" ? 1.8 :
                 name === "Beckhoff" ? 0.8 :
-                name === "Mecasonic" ? 0.65 :
-                name === "FIDA" || name === "Fidia" ? 0.7 :
                 undefined,
             }))}
             columnCount={4}
