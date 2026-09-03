@@ -1328,7 +1328,7 @@ export default function HomePage() {
                 name === "KEB" ? 0.6 :
                 undefined,
             }))}
-            columnCount={5}
+            columnCount={4}
             mobileColumnCount={3}
             cycleInterval={3400}
           />
