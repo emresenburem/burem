@@ -1317,7 +1317,7 @@ export default function HomePage() {
               logo,
               scale,
               displayScale:
-                name === "Baumüller" ? 1 :
+                name === "Baumüller" || name === "Baumuller" ? 1.25 :
                 name === "ABB" ? 0.5 :
                 name === "Omron" ? 1.35 :
                 name === "B&R" ? 0.68 :
@@ -1326,7 +1326,7 @@ export default function HomePage() {
                 name === "Lenze" ? 0.72 :
                 name === "Mitsubishi" ? 0.72 :
                 name === "KEB" ? 0.6 :
-                name === "Allen Bradley" ? 0.72 :
+                name === "Allen Bradley" || name === "Allen-Bradley" ? 1.3 :
                 undefined,
             }))}
             columnCount={4}
