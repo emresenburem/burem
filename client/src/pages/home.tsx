@@ -56,7 +56,16 @@ import { ProductCarousel } from "@/components/ui/product-carousel";
 import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { productPath } from "@/lib/product-utils";
 
-const BRANDS = [
+interface BrandLogoConfig {
+  name: string;
+  color: string;
+  logo: string;
+  scale?: number;
+  logoHeight?: number;
+  w?: number;
+}
+
+const BRANDS: BrandLogoConfig[] = [
   { name: "Baumüller", color: "#009999", logo: "https://images.seeklogo.com/logo-png/1/1/baumuller-logo-png_seeklogo-17176.png", scale: 2.1 },
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg", scale: 1.4 },
   { name: "ABB", color: "#FF0000", logo: "https://upload.wikimedia.org/wikipedia/commons/0/00/ABB_logo.svg", scale: 0.5 },
@@ -1313,23 +1322,11 @@ export default function HomePage() {
       >
         <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
           <LogoCarousel
-            logos={BRANDS.map(({ name, logo, scale }) => ({
+            logos={BRANDS.map(({ name, logo, scale, logoHeight }) => ({
               name,
               logo,
               scale,
-              displayScale:
-                name === "Baumüller" || name === "Baumuller" ? 1.70 :
-                name === "ABB" ? 0.5 :
-                name === "Omron" ? 1.35 :
-                name === "B&R" ? 0.68 :
-                name === "Panasonic" ? 1.35 :
-                name === "Control Techniques" ? 2.0 :
-                name === "Lenze" ? 0.72 :
-                name === "Mitsubishi" ? 0.72 :
-                name === "KEB" ? 0.6 :
-                name === "Allen Bradley" || name === "Allen-Bradley" ? 1.8 :
-                name === "Beckhoff" ? 0.4 :
-                undefined,
+              logoHeight,
             }))}
             columnCount={4}
             mobileColumnCount={3}
