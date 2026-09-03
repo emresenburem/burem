@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
+import { currentPagePath, trackEvent } from "@/lib/analytics";
 
 const BRANDS = [
   { name: "Siemens", color: "#009999", logo: "https://www.logo.wine/a/logo/Siemens/Siemens-Logo.wine.svg" },
@@ -249,7 +250,15 @@ export default function BrandPage() {
               <Button size="lg" className="h-12 rounded-2xl px-8" onClick={() => window.location.href='/#contact'}>
                 Teklif İste
               </Button>
-              <Button variant="outline" size="lg" className="h-12 rounded-2xl px-8" onClick={() => window.open('https://wa.me/905000000000', '_blank')}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-12 rounded-2xl px-8"
+                onClick={() => {
+                  trackEvent("whatsapp_click", { page_path: currentPagePath() });
+                  window.open("https://wa.me/905000000000", "_blank");
+                }}
+              >
                 WhatsApp ile Yaz
               </Button>
             </div>

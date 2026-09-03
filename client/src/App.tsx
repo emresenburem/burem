@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -25,8 +25,49 @@ import AdminServisPage from "@/pages/admin-servis";
 import { useGlobalClickSound } from "@/hooks/use-click-sound";
 import { useTabFavicon } from "@/hooks/use-tab-favicon";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { whatsappLink } from "@/lib/site-contact";
+import { currentPagePath, trackEvent, trackPageView } from "@/lib/analytics";
+
+function AnalyticsTracker() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    trackPageView(location);
+  }, [location]);
+
+  useEffect(() => {
+    const handleTrackedClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const anchor = target.closest<HTMLAnchorElement>("a[href]");
+      const href = anchor?.getAttribute("href") ?? "";
+      const pagePath = currentPagePath();
+
+      if (href.includes("wa.me")) {
+        trackEvent("whatsapp_click", { page_path: pagePath });
+        return;
+      }
+
+      if (href.startsWith("tel:")) {
+        trackEvent("phone_click", { page_path: pagePath });
+        return;
+      }
+
+      const productTarget = target.closest<HTMLElement>("[data-analytics-product-name]");
+      const productName = productTarget?.dataset.analyticsProductName;
+      if (productName) {
+        trackEvent("product_view", { product_name: productName });
+      }
+    };
+
+    document.addEventListener("click", handleTrackedClick, true);
+    return () => document.removeEventListener("click", handleTrackedClick, true);
+  }, []);
+
+  return null;
+}
 
 function BusinessCardModal() {
   const [open, setOpen] = useState(false);
@@ -186,6 +227,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ClickSoundProvider>
+          <AnalyticsTracker />
           <Toaster />
           <Router />
           <BusinessCardModal />

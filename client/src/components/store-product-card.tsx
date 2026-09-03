@@ -22,6 +22,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
         href={productPath(product)}
         className="flex flex-1 flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
         data-testid={`link-product-${product.id}`}
+        data-analytics-product-name={product.name}
       >
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {coverUrl ? (

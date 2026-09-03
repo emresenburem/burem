@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { CheckCircle2, ChevronRight, ChevronLeft, MessageCircle } from "lucide-react";
 import { whatsappLink } from "@/lib/site-contact";
+import { currentPagePath, trackEvent } from "@/lib/analytics";
 
 /* ─────────────────────────────────────────────
    CİHAZ TÜRLERİ
@@ -456,6 +457,10 @@ export function FaultReportWizard() {
       });
 
       if (res.ok) {
+        trackEvent("quote_form_submit", {
+          page_path: currentPagePath(),
+          form_method: "service_request",
+        });
         setSentVia("job");
       }
     } catch (err) {
@@ -467,9 +472,10 @@ export function FaultReportWizard() {
 
   async function handleWhatsApp() {
     setSendingVia("whatsapp");
+    let reportSaved = false;
 
     try {
-      await fetch("/api/fault-report", {
+      const res = await fetch("/api/fault-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -483,12 +489,20 @@ export function FaultReportWizard() {
           faultDescription: data.faultDesc,
         }),
       });
+      reportSaved = res.ok;
     } catch (err) {
       console.error("Burem İş Takip kayıt hatası:", err);
     }
 
     await new Promise((r) => setTimeout(r, 1200));
 
+    if (reportSaved) {
+      trackEvent("quote_form_submit", {
+        page_path: currentPagePath(),
+        form_method: "whatsapp",
+      });
+    }
+    trackEvent("whatsapp_click", { page_path: currentPagePath() });
     window.open(buildWAMessage(), "_blank", "noopener,noreferrer");
 
     setSendingVia(null);
@@ -525,6 +539,10 @@ export function FaultReportWizard() {
       setSendingVia(null);
       return;
     }
+    trackEvent("quote_form_submit", {
+      page_path: currentPagePath(),
+      form_method: "email",
+    });
     setSendingVia(null);
     setSentVia("email");
   }

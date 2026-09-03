@@ -29,6 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
       className="group w-[min(20rem,calc(100vw-3rem))] flex-shrink-0 cursor-pointer sm:w-72 lg:w-80"
       onClick={() => onClick?.(product)}
       data-testid={`carousel-card-${product.id}`}
+      data-analytics-product-name={product.name}
     >
       <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
         {/* Görsel */}
