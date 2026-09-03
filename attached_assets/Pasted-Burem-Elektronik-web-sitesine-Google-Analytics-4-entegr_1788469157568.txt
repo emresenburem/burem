@@ -1,0 +1,66 @@
+Burem Elektronik web sitesine Google Analytics 4 entegrasyonu ekle.
+
+GA4 Measurement ID:
+G-QF33B1H2GT
+
+Proje React + Vite kullanıyor ve production Render üzerinde çalışıyor.
+
+İSTEKLER:
+
+1. Google Analytics 4 temel tracking kodunu projeye doğru şekilde entegre et.
+2. Measurement ID olarak kesinlikle:
+   G-QF33B1H2GT
+   kullan.
+
+3. React/Vite yapısına uygun, temiz bir analytics helper oluştur.
+   Örneğin src/lib/analytics.ts gibi merkezi bir dosyada:
+   - page view gönderme
+   - custom event gönderme
+   fonksiyonları olsun.
+
+4. Site ilk açıldığında page_view kaydedilsin.
+
+5. Site SPA olduğu için React/Wouter ile sayfalar arasında URL değiştiğinde de yeni page_view gönder.
+   Sadece ilk yüklemeyi ölçmekle kalmasın.
+
+6. Aşağıdaki kullanıcı aksiyonlarını GA4 custom event olarak takip et:
+
+   WhatsApp butonuna tıklama:
+   event name: whatsapp_click
+
+   Telefon numarası / ara butonuna tıklama:
+   event name: phone_click
+
+   Teklif / iletişim formunun BAŞARILI şekilde gönderilmesi:
+   event name: quote_form_submit
+
+   Ürün detayına tıklama varsa:
+   event name: product_view
+   event parameter:
+   product_name
+
+7. WhatsApp ve telefon eventlerinde mümkünse bulunduğu sayfayı da parametre olarak gönder:
+   page_path
+
+8. Form eventini kullanıcı sadece butona bastığında değil, form gerçekten başarılı şekilde gönderildiğinde tetikle.
+
+9. Aynı tıklamada eventin iki kez gönderilmesini önle.
+
+10. Google Analytics scriptinin uygulamanın performansını gereksiz yere düşürmemesine dikkat et. Script async yüklensin.
+
+11. Mevcut tasarıma, SEO yapısına, routing'e, admin paneline, ürünlere ve diğer çalışan özelliklere dokunma.
+
+12. TypeScript hatası oluşturma.
+
+13. npm build çalıştır ve production build'in başarıyla tamamlandığını doğrula.
+
+14. Değişikliklerden sonra bana:
+   - değiştirdiğin dosyaları
+   - GA4'ü nereye eklediğini
+   - hangi eventleri eklediğini
+   - test sonucunu
+   kısa şekilde raporla.
+
+ÖNEMLİ:
+Mevcut çalışan kodları gereksiz yere refactor etme.
+Sadece Analytics entegrasyonu için gereken minimum güvenli değişiklikleri yap.
