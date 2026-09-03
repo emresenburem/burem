@@ -1,0 +1,187 @@
+Marka carouselindeki logo boyut problemini artık CSS ile veya brand.scale değerleriyle çözmeye çalışma. Mevcut yaklaşımı kaldır.
+
+Sorunun kaynağı logo dosyalarının kendi canvas/viewBox alanlarının, transparent/white boşluklarının ve aspect ratio'larının farklı olması. Aynı CSS width verilmesine rağmen görünür logo alanları farklı boyutlarda kalıyor.
+
+BU TASKTA LOGO ASSETLERİNİ NORMALIZE ET.
+
+1. Projedeki carousel tarafından kullanılan bütün gerçek logo dosyalarını bul:
+
+Siemens
+ABB
+Schneider Electric
+Fanuc
+Yaskawa
+Omron
+Lenze
+Mitsubishi
+Beckhoff
+Allen-Bradley
+Fuji
+Rexroth
+Baumüller
+Haas
+SEW Eurodrive
+Mazak
+
+2. Yeni bir klasör oluştur:
+
+/public/brands/normalized/
+
+3. Her logonun görünmeyen alanlarını temizle.
+
+PNG/WebP dosyalarında:
+- transparent kenarları kırp
+- varsa gereksiz beyaz canvas boşluklarını kırp
+- logonun gerçek görünür bounding box alanını tespit et
+
+SVG dosyalarında:
+- gereksiz büyük viewBox/padding varsa düzelt
+- logonun çizildiği gerçek alanı baz al
+
+Bunu manuel tahminle CSS üzerinden yapma.
+
+4. Gerekirse Node + sharp kullanarak bir script oluştur:
+
+scripts/normalize-brand-logos.mjs
+
+Script önce logoyu trim etsin, sonra görünür logoyu ortak transparent canvas içerisine yerleştirsin.
+
+Bütün normalize edilmiş çıktı dosyalarının canvas ölçüsü aynı olsun:
+
+140 x 60 px
+
+Background:
+transparent
+
+5. ÖNEMLİ:
+Logo 140x60'a stretch edilmemeli.
+
+Aspect ratio kesinlikle korunmalı.
+
+Önce gerçek görünür alan trim edilmeli, daha sonra logo ortak canvas içerisinde ortalanmalı.
+
+6. Logo tipine göre görünür alan hedefi kullan.
+
+Yatay/yazı ağırlıklı logolar:
+Siemens
+ABB
+Schneider Electric
+Fanuc
+Yaskawa
+Omron
+Lenze
+Beckhoff
+Allen-Bradley
+Fuji
+Rexroth
+Baumüller
+SEW Eurodrive
+Mazak
+
+Bunların görünür logo alanı yaklaşık:
+max-width: 104px
+max-height: 30px
+
+Sembol ağırlıklı/daha kare logolar:
+Mitsubishi
+Haas ve benzeri
+
+Bunların görünür alanı yaklaşık:
+max-width: 80px
+max-height: 34px
+
+Ama matematiksel olarak hepsini aynı ölçüye zorlamak yerine sonuçta insan gözüyle benzer görsel ağırlıkta görünmelerini hedefle.
+
+7. Normalize işleminden sonra carousel SADECE:
+
+/brands/normalized/
+
+klasöründeki yeni logo dosyalarını kullansın.
+
+Eski logo assetlerini carousel içerisinde kullanma.
+
+8. Carousel JSX/CSS içindeki tüm marka bazlı scale hacklerini kaldır:
+
+brand.scale
+transform: scale(...)
+active scale
+inactive scale
+
+gibi yöntemleri kaldır.
+
+Logo görüntüsü için tek bir ortak stil kullan:
+
+.logo-slot {
+  width: 120px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+Çünkü normalize edilen resimlerin kendilerinin canvas ölçüsü zaten aynı olacak.
+
+9. Carousel aktif/pasif slide arasında kesinlikle:
+
+scale
+blur
+opacity
+zoom
+
+farkı olmasın.
+
+Tüm logolar aynı netlikte gösterilsin.
+
+10. Bulanık görünen ABB, Omron vb. logoları kontrol et.
+
+Eğer kaynak logo çok düşük çözünürlüklü PNG ise onu büyütme.
+
+Projede SVG versiyonu varsa SVG kullan.
+Yüksek çözünürlüklü versiyonu varsa onu kullan.
+
+Düşük çözünürlüklü raster dosyayı CSS transform ile büyütüp bulanıklaştırma.
+
+11. SONUCU MUTLAKA MOBİL VIEWPORTTA KONTROL ET.
+
+Yaklaşık 390px genişlikte screenshot/render al.
+
+Carousel ilerletilerek TÜM markaları kontrol et.
+
+Kabul kriteri:
+
+- Baumüller minicik görünmeyecek
+- ABB dev görünmeyecek
+- Mitsubishi kaybolacak kadar küçük olmayacak
+- SEW / Mazak / Rexroth diğerlerinden küçük kalmayacak
+- Beckhoff diğerlerinden çok büyük olmayacak
+- Omron ve ABB bulanık olmayacak
+- ekranda görünen üç marka aynı baseline/merkez hattında olacak
+- hepsi yaklaşık aynı görsel ağırlıkta olacak
+
+Bir marka hâlâ farklı görünüyorsa CSS ile scale ekleme.
+
+O markanın NORMALIZED ASSETİNDEKİ padding/visible size değerini düzelt.
+
+Bu çok önemli:
+LOGO BOYUT DENGESİNİ CSS İLE DEĞİL NORMALIZED LOGO ASSETLERİYLE ÇÖZ.
+
+12. Sayfanın başka hiçbir bölümünü değiştirme:
+
+Burem header logosuna dokunma.
+Menüye dokunma.
+Servis kartlarına dokunma.
+WhatsApp butonuna dokunma.
+Carousel sırasını değiştirme.
+Carousel hareket mantığını değiştirme.
+
+Sadece logo assetlerini normalize et ve carousel'i bu normalize edilmiş assetlere geçir.
+
+Task tamamlanmadan önce bütün 16 markayı mobil görünümde tek tek kontrol et.

@@ -7,8 +7,6 @@ import { cn } from "@/lib/utils";
 export interface LogoCarouselItem {
   name: string;
   logo: string;
-  scale?: number;
-  displayScale?: number;
 }
 
 interface LogoColumnProps {
@@ -50,30 +48,27 @@ function LogoColumn({
     ? 0
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
-  const displayScale = Math.min(currentLogo?.displayScale ?? 1, 1.5);
 
   if (!currentLogo) return null;
 
   return (
     <div
-      className="relative h-16 min-w-0 flex-1 overflow-hidden px-1 sm:h-20 sm:px-2 md:h-24"
+      className="flex min-w-0 flex-1 items-center justify-center overflow-hidden"
       aria-live="polite"
       aria-label={`${currentLogo.name} logosu`}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={`${currentLogo.name}-${currentIndex}`}
-          className="absolute inset-0 flex items-center justify-center px-3"
-          initial={reducedMotion ? false : { y: "12%", opacity: 0, filter: "blur(7px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={reducedMotion ? undefined : { y: "-14%", opacity: 0, filter: "blur(6px)" }}
+          className="logo-slot"
+          initial={reducedMotion ? false : { y: "12%" }}
+          animate={{ y: "0%" }}
+          exit={reducedMotion ? undefined : { y: "-14%" }}
           transition={
             reducedMotion
               ? { duration: 0 }
               : {
                   y: { type: "spring", stiffness: 240, damping: 24, mass: 0.9 },
-                  opacity: { duration: 0.5 },
-                  filter: { duration: 0.62 },
                 }
           }
         >
@@ -81,8 +76,6 @@ function LogoColumn({
             src={currentLogo.logo}
             alt={currentLogo.name}
             draggable={false}
-            className="max-h-full w-full select-none object-contain"
-            style={displayScale !== 1 ? { transform: `scale(${displayScale})` } : undefined}
             onError={(event) => {
               const image = event.currentTarget;
               image.style.display = "none";
