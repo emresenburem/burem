@@ -1318,11 +1318,14 @@ export default function HomePage() {
               scale,
               displayScale:
                 name === "Baumüller" ? 1.45 :
-                name === "ABB" ? 0.6 :
+                name === "ABB" ? 0.5 :
                 name === "Omron" ? 1.35 :
                 name === "B&R" ? 0.68 :
                 name === "Panasonic" ? 1.35 :
                 name === "Control Techniques" ? 1.35 :
+                name === "Lenze" ? 0.72 :
+                name === "Mitsubishi" ? 0.72 :
+                name === "KEB" ? 0.6 :
                 undefined,
             }))}
             columnCount={5}
