@@ -1316,7 +1316,10 @@ export default function HomePage() {
               name,
               logo,
               scale,
-              displayScale: name === "Baumüller" ? 1.45 : undefined,
+              displayScale:
+                name === "Baumüller" ? 1.45 :
+                name === "ABB" ? 0.6 :
+                undefined,
             }))}
             columnCount={5}
             mobileColumnCount={3}
