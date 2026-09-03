@@ -1312,7 +1312,12 @@ export default function HomePage() {
       >
         <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
           <LogoCarousel
-            logos={BRANDS.map(({ name, logo, scale }) => ({ name, logo, scale }))}
+            logos={BRANDS.map(({ name, logo, scale }) => ({
+              name,
+              logo,
+              scale,
+              displayScale: name === "Baumüller" ? 1.45 : undefined,
+            }))}
             columnCount={5}
             mobileColumnCount={3}
             cycleInterval={3400}

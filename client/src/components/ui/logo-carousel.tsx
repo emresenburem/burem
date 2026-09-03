@@ -8,6 +8,7 @@ export interface LogoCarouselItem {
   name: string;
   logo: string;
   scale?: number;
+  displayScale?: number;
 }
 
 interface LogoColumnProps {
@@ -49,7 +50,7 @@ function LogoColumn({
     ? 0
     : Math.floor(((currentTime + columnDelay) % (cycleInterval * logos.length)) / cycleInterval);
   const currentLogo = logos[currentIndex] ?? logos[0];
-  const displayScale = Math.min(currentLogo?.scale ?? 1, 1);
+  const displayScale = Math.min(currentLogo?.displayScale ?? 1, 1.5);
 
   if (!currentLogo) return null;
 
