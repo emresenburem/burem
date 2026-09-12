@@ -53,6 +53,7 @@ import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 import { BrandActionSearch } from "@/components/ui/brand-action-search";
+import { LogoCarousel } from "@/components/ui/logo-carousel";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
@@ -1257,6 +1258,36 @@ export default function HomePage() {
           )}
         </AnimatePresence>
       </header>
+
+      <section
+        aria-label="Burem Elektronik’in hizmet verdiği marka logoları"
+        className="relative overflow-hidden border-b border-border/40 bg-background/55 px-0 py-7 backdrop-blur-sm sm:py-9"
+      >
+        <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
+          <LogoCarousel
+            logos={BRANDS.map(({ name, logo, scale }) => ({
+              name,
+              logo,
+              scale:
+                name === "Baumüller" || name === "Baumuller" ? 1.7 :
+                name === "ABB" ? 0.5 :
+                name === "Omron" ? 1.35 :
+                name === "B&R" ? 0.68 :
+                name === "Panasonic" ? 1.35 :
+                name === "Control Techniques" ? 2 :
+                name === "Lenze" ? 0.72 :
+                name === "Mitsubishi" ? 0.72 :
+                name === "KEB" ? 0.6 :
+                name === "Allen Bradley" || name === "Allen-Bradley" ? 1.8 :
+                name === "Beckhoff" ? 0.4 :
+                scale,
+            }))}
+            columnCount={4}
+            mobileColumnCount={3}
+            cycleInterval={3000}
+          />
+        </div>
+      </section>
 
       <main id="top">
         <AnimatedServicesSection />
