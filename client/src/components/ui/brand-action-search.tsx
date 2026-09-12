@@ -231,22 +231,22 @@ export function BrandActionSearch({
                   </span>
                 </div>
                 {compactBrands.length > 0 ? (
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-1 gap-1">
                     {compactBrands.map((brand) => (
                       <motion.button
                         type="button"
                         key={brand.name}
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={() => onBrandClick?.(brand)}
-                        className="flex h-14 items-center justify-center rounded-md border border-transparent bg-muted/40 p-1.5 transition-colors hover:border-primary/30 hover:bg-background"
-                        whileHover={{ scale: 1.04, y: -2 }}
+                        className="flex h-12 w-full items-center gap-3 rounded-md border border-transparent bg-muted/40 px-3 py-1.5 text-left transition-colors hover:border-primary/30 hover:bg-background"
+                        whileHover={{ x: 2 }}
                         whileTap={{ scale: 0.97 }}
                         title={`${brand.name} detaylarını aç`}
                       >
                         <img
                           src={brand.logo}
                           alt={brand.name}
-                          className="max-h-full w-full object-contain"
+                          className="h-8 w-28 shrink-0 object-contain object-left"
                           style={{ transform: brand.scale ? `scale(${brand.scale})` : undefined }}
                           onError={(event) => {
                             const image = event.currentTarget;
@@ -256,6 +256,9 @@ export function BrandActionSearch({
                           }}
                         />
                         <span className="hidden text-center text-[8px] font-bold text-foreground">
+                          {brand.name}
+                        </span>
+                        <span className="truncate text-xs font-semibold text-foreground">
                           {brand.name}
                         </span>
                       </motion.button>
