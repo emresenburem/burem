@@ -247,7 +247,6 @@ export function BrandActionSearch({
                           src={brand.logo}
                           alt={brand.name}
                           className="h-8 w-28 shrink-0 object-contain object-left"
-                          style={{ transform: brand.scale ? `scale(${brand.scale})` : undefined }}
                           onError={(event) => {
                             const image = event.currentTarget;
                             image.style.display = "none";
