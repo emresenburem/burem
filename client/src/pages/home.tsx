@@ -20,7 +20,6 @@ import {
   Timer,
   Wrench,
   MessageCircle,
-  Search,
   TestTube2,
   Zap,
   ListTodo,
@@ -53,7 +52,7 @@ import { ShowcaseList } from "@/components/ui/project-showcase";
 import { ImageAccordion } from "@/components/ui/interactive-image-accordion";
 import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
-import { LogoCarousel } from "@/components/ui/logo-carousel";
+import { BrandActionSearch } from "@/components/ui/brand-action-search";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
@@ -1309,34 +1308,10 @@ export default function HomePage() {
       </header>
 
       <section
-        aria-label="Marka logoları"
-        className="relative overflow-hidden border-b border-border/40 bg-background/55 px-0 py-7 backdrop-blur-sm sm:py-9"
+        aria-label="Servis alanına göre marka seçimi"
+        className="relative overflow-visible border-b border-border/40 bg-background/55 backdrop-blur-sm"
       >
-        <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
-          <LogoCarousel
-            logos={BRANDS.map(({ name, logo, scale }) => ({
-              name,
-              logo,
-              scale,
-              displayScale:
-                name === "Baumüller" || name === "Baumuller" ? 1.70 :
-                name === "ABB" ? 0.5 :
-                name === "Omron" ? 1.35 :
-                name === "B&R" ? 0.68 :
-                name === "Panasonic" ? 1.35 :
-                name === "Control Techniques" ? 2.0 :
-                name === "Lenze" ? 0.72 :
-                name === "Mitsubishi" ? 0.72 :
-                name === "KEB" ? 0.6 :
-                name === "Allen Bradley" || name === "Allen-Bradley" ? 1.8 :
-                name === "Beckhoff" ? 0.4 :
-                undefined,
-            }))}
-            columnCount={4}
-            mobileColumnCount={3}
-            cycleInterval={3000}
-          />
-        </div>
+        <BrandActionSearch brands={BRANDS} />
       </section>
 
       <main id="top">
