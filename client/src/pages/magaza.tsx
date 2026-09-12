@@ -6,7 +6,6 @@ import {
   ChevronDown,
   MessageCircle,
   Package,
-  Search,
   SlidersHorizontal,
   X,
 } from "lucide-react";
@@ -14,6 +13,7 @@ import type { ProductWithImages } from "@shared/schema";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
 import StoreProductCard from "@/components/store-product-card";
+import { GooeySearchBar } from "@/components/ui/animated-search-bar";
 import { SEO } from "@/components/seo";
 import { whatsappLink } from "@/lib/site-contact";
 import {
@@ -317,6 +317,11 @@ export default function MagazaPage() {
     return filters;
   }, [brand, category, condition, search, stockOnly]);
 
+  const searchResults = useMemo(
+    () => Array.from(new Set(filtered.map((product) => product.name))),
+    [filtered],
+  );
+
   const clearFilters = () => {
     setSearch("");
     setBrand("Tümü");
@@ -384,15 +389,13 @@ export default function MagazaPage() {
               </p>
 
               <div className="relative mt-7 max-w-2xl">
-                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
-                <input
-                  type="search"
+                <GooeySearchBar
                   value={search}
-                  onChange={(event) => setSearch(event.target.value)}
+                  onChange={setSearch}
+                  results={searchResults}
+                  onResultSelect={setSearch}
                   placeholder="Ürün, marka, kategori veya parça/model no ara…"
-                  aria-label="Ürünlerde ara"
-                  className="w-full rounded-2xl border border-white/10 bg-white px-4 py-4 pl-12 text-sm text-slate-950 outline-none ring-0 placeholder:text-slate-400 focus:border-cyan-300 focus:ring-4 focus:ring-cyan-300/15"
-                  data-testid="input-search"
+                  className="w-full"
                 />
               </div>
             </div>
