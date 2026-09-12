@@ -949,64 +949,15 @@ function BrandsDropdown() {
               <div className="w-3 h-3 rotate-45 border-l border-t border-border bg-card" />
             </div>
 
-            <div className="w-[860px] rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden">
-
-              <div className="p-6">
-                {/* Başlık */}
-                <div className="flex items-center justify-between mb-5">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                    
-                  </p>
-                  <span className="text-[10px] text-muted-foreground/60">{BRANDS.length} marka</span>
-                </div>
-
-                {/* Logo grid — 5 kolon, büyük kartlar */}
-                <div className="grid grid-cols-5 gap-3">
-                  {BRANDS.map((brand, i) => (
-                    <motion.button
-                      key={brand.name}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.022, type: "spring", stiffness: 400, damping: 28 }}
-                      onClick={() => { setLocation(`/brand/${encodeURIComponent(brand.name)}`); setOpen(false); }}
-                      title={brand.name}
-                      data-testid={`brand-dropdown-${brand.name}`}
-                      className="flex items-center justify-center rounded-xl border border-transparent bg-muted/30 p-4 h-[90px] hover:border-primary/30 hover:bg-background hover:shadow-md transition-all duration-200"
-                      whileHover={{ scale: 1.07, y: -3 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <img
-                        src={brand.logo}
-                        alt={brand.name}
-                        className="w-full h-full object-contain"
-                        style={brand.scale ? { transform: `scale(${brand.scale})` } : undefined}
-                        onError={(e) => {
-                          const img = e.target as HTMLImageElement;
-                          img.style.display = "none";
-                          const fb = img.nextElementSibling as HTMLElement | null;
-                          if (fb) fb.style.display = "flex";
-                        }}
-                      />
-                      <span className="hidden items-center justify-center text-[9px] font-bold" style={{ color: brand.color }}>
-                        {brand.name}
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
-
-                {/* Alt not */}
-                <div className="mt-4 flex items-center justify-center gap-2 border-t pt-3">
-                  <span className="text-[20px] text-muted-foreground">
-                    Listemizde olmayan markalar için —
-                  </span>
-                  <button
-                    onClick={() => { scrollToId("contact"); setOpen(false); }}
-                    className="text-[20px] font-semibold text-primary hover:underline"
-                  >
-                    bize danışın →
-                  </button>
-                </div>
-              </div>
+            <div className="rounded-2xl border bg-card/95 backdrop-blur-2xl shadow-2xl">
+              <BrandActionSearch
+                brands={BRANDS}
+                compact
+                onBrandClick={(brand) => {
+                  setLocation(`/brand/${encodeURIComponent(brand.name)}`);
+                  setOpen(false);
+                }}
+              />
             </div>
           </motion.div>
         )}
@@ -1306,13 +1257,6 @@ export default function HomePage() {
           )}
         </AnimatePresence>
       </header>
-
-      <section
-        aria-label="Servis alanına göre marka seçimi"
-        className="relative overflow-visible border-b border-border/40 bg-background/55 backdrop-blur-sm"
-      >
-        <BrandActionSearch brands={BRANDS} />
-      </section>
 
       <main id="top">
         <AnimatedServicesSection />

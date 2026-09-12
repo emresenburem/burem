@@ -30,6 +30,8 @@ interface BrandAction {
 
 interface BrandActionSearchProps {
   brands: BrandLogo[];
+  compact?: boolean;
+  onBrandClick?: (brand: BrandLogo) => void;
 }
 
 const BRAND_ACTIONS: BrandAction[] = [
@@ -101,7 +103,11 @@ function useDebounce<T>(value: T, delay = 220) {
   return debouncedValue;
 }
 
-export function BrandActionSearch({ brands }: BrandActionSearchProps) {
+export function BrandActionSearch({
+  brands,
+  compact = false,
+  onBrandClick,
+}: BrandActionSearchProps) {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [selectedAction, setSelectedAction] = useState<BrandAction | null>(null);
@@ -153,6 +159,143 @@ export function BrandActionSearch({ brands }: BrandActionSearchProps) {
     setSelectedAction(null);
     setIsFocused(true);
   };
+
+  if (compact) {
+    return (
+      <div className="w-[min(92vw,440px)] p-4">
+        <div className="mb-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+            Marka bul
+          </p>
+          <p className="mt-1 text-sm font-bold text-foreground">
+            Cihaz veya servis alanı seçin
+          </p>
+        </div>
+
+        <div className="relative">
+          <label className="sr-only" htmlFor="navbar-brand-action-search">
+            Servis alanı veya marka ara
+          </label>
+          <input
+            id="navbar-brand-action-search"
+            type="search"
+            value={query}
+            placeholder="Servo, PLC, CNC veya Siemens…"
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setSelectedAction(null);
+              setIsFocused(true);
+            }}
+            onFocus={handleFocus}
+            onBlur={() => window.setTimeout(() => setIsFocused(false), 180)}
+            className="h-10 w-full rounded-lg border border-border bg-background px-3 pr-9 text-xs font-medium text-foreground outline-none transition-all placeholder:text-muted-foreground/70 focus:border-primary focus:ring-4 focus:ring-primary/10"
+            autoComplete="off"
+            data-testid="input-navbar-brand-search"
+          />
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            {query ? <Send className="h-3.5 w-3.5" /> : <Search className="h-3.5 w-3.5" />}
+          </span>
+
+          <AnimatePresence>
+            {isFocused && !selectedAction && (
+              <motion.div
+                className="absolute left-0 right-0 top-[calc(100%+5px)] z-20 max-h-72 overflow-y-auto rounded-lg border border-border bg-card p-1 shadow-xl"
+                initial={{ opacity: 0, y: -5, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -5, height: 0 }}
+              >
+                {searchResults.length > 0 ? (
+                  <ul>
+                    {searchResults.map((action) => (
+                      <li key={action.id}>
+                        <button
+                          type="button"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => handleSelect(action)}
+                          className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-muted"
+                        >
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
+                            {action.icon}
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block truncate text-xs font-bold text-foreground">
+                              {action.label}
+                            </span>
+                            <span className="block truncate text-[10px] text-muted-foreground">
+                              {action.description}
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="px-2.5 py-3 text-center text-xs text-muted-foreground">
+                    Eşleşen servis veya marka bulunamadı.
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {selectedAction && selectedBrands.length > 0 && (
+            <motion.div
+              key={selectedAction.id}
+              className="mt-4 border-t border-border/70 pt-3"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="truncate text-xs font-bold text-foreground">
+                  {selectedAction.label}
+                </span>
+                <button
+                  type="button"
+                  onClick={clearSelection}
+                  className="inline-flex shrink-0 items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3 w-3" />
+                  Değiştir
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {selectedBrands.map((brand) => (
+                  <motion.button
+                    type="button"
+                    key={brand.name}
+                    onClick={() => onBrandClick?.(brand)}
+                    className="flex h-14 items-center justify-center rounded-lg border border-transparent bg-muted/40 p-2 transition-colors hover:border-primary/30 hover:bg-background"
+                    whileHover={{ scale: 1.04, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    title={`${brand.name} detaylarını aç`}
+                  >
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="max-h-full w-full object-contain"
+                      style={{ transform: brand.scale ? `scale(${brand.scale})` : undefined }}
+                      onError={(event) => {
+                        const image = event.currentTarget;
+                        image.style.display = "none";
+                        const fallback = image.nextElementSibling as HTMLElement | null;
+                        if (fallback) fallback.style.display = "flex";
+                      }}
+                    />
+                    <span className="hidden text-center text-[9px] font-bold" style={{ color: (brand as BrandLogo & { color?: string }).color }}>
+                      {brand.name}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-7 sm:py-9">
