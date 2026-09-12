@@ -143,6 +143,24 @@ export function BrandActionSearch({
     return brands.filter((brand) => names.has(normalizeSearchText(brand.name)));
   }, [brands, selectedAction]);
 
+  const compactBrands = useMemo(() => {
+    const normalizedQuery = normalizeSearchText(query);
+    if (!normalizedQuery) return brands;
+
+    const matchingActions = BRAND_ACTIONS.filter((action) =>
+      normalizeSearchText(`${action.label} ${action.description}`).includes(normalizedQuery),
+    );
+    const actionBrandNames = new Set(
+      matchingActions.flatMap((action) => action.brandNames.map(normalizeSearchText)),
+    );
+
+    if (actionBrandNames.size > 0) {
+      return brands.filter((brand) => actionBrandNames.has(normalizeSearchText(brand.name)));
+    }
+
+    return brands.filter((brand) => normalizeSearchText(brand.name).includes(normalizedQuery));
+  }, [brands, query]);
+
   const handleFocus = () => {
     setIsFocused(true);
     setSelectedAction(null);
@@ -197,102 +215,61 @@ export function BrandActionSearch({
           </span>
 
           <AnimatePresence>
-            {isFocused && !selectedAction && (
+            {isFocused && (
               <motion.div
-                className="absolute left-0 right-0 top-[calc(100%+5px)] z-20 max-h-72 overflow-y-auto rounded-lg border border-border bg-card p-1 shadow-xl"
+                className="absolute left-0 right-0 top-[calc(100%+5px)] z-20 max-h-80 overflow-y-auto rounded-lg border border-border bg-card p-2 shadow-xl"
                 initial={{ opacity: 0, y: -5, height: 0 }}
                 animate={{ opacity: 1, y: 0, height: "auto" }}
                 exit={{ opacity: 0, y: -5, height: 0 }}
               >
-                {searchResults.length > 0 ? (
-                  <ul>
-                    {searchResults.map((action) => (
-                      <li key={action.id}>
-                        <button
-                          type="button"
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => handleSelect(action)}
-                          className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-muted"
-                        >
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted">
-                            {action.icon}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block truncate text-xs font-bold text-foreground">
-                              {action.label}
-                            </span>
-                            <span className="block truncate text-[10px] text-muted-foreground">
-                              {action.description}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
+                <div className="mb-2 flex items-center justify-between px-1">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                    {query ? "Eşleşen markalar" : "Markalar"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">
+                    {compactBrands.length} marka
+                  </span>
+                </div>
+                {compactBrands.length > 0 ? (
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {compactBrands.map((brand) => (
+                      <motion.button
+                        type="button"
+                        key={brand.name}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => onBrandClick?.(brand)}
+                        className="flex h-14 items-center justify-center rounded-md border border-transparent bg-muted/40 p-1.5 transition-colors hover:border-primary/30 hover:bg-background"
+                        whileHover={{ scale: 1.04, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        title={`${brand.name} detaylarını aç`}
+                      >
+                        <img
+                          src={brand.logo}
+                          alt={brand.name}
+                          className="max-h-full w-full object-contain"
+                          style={{ transform: brand.scale ? `scale(${brand.scale})` : undefined }}
+                          onError={(event) => {
+                            const image = event.currentTarget;
+                            image.style.display = "none";
+                            const fallback = image.nextElementSibling as HTMLElement | null;
+                            if (fallback) fallback.style.display = "flex";
+                          }}
+                        />
+                        <span className="hidden text-center text-[8px] font-bold text-foreground">
+                          {brand.name}
+                        </span>
+                      </motion.button>
                     ))}
-                  </ul>
+                  </div>
                 ) : (
-                  <p className="px-2.5 py-3 text-center text-xs text-muted-foreground">
-                    Eşleşen servis veya marka bulunamadı.
+                  <p className="px-2.5 py-4 text-center text-xs text-muted-foreground">
+                    Eşleşen marka bulunamadı.
                   </p>
                 )}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-
-        <AnimatePresence mode="wait">
-          {selectedAction && selectedBrands.length > 0 && (
-            <motion.div
-              key={selectedAction.id}
-              className="mt-4 border-t border-border/70 pt-3"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-            >
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <span className="truncate text-xs font-bold text-foreground">
-                  {selectedAction.label}
-                </span>
-                <button
-                  type="button"
-                  onClick={clearSelection}
-                  className="inline-flex shrink-0 items-center gap-1 text-[10px] font-bold text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-3 w-3" />
-                  Değiştir
-                </button>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {selectedBrands.map((brand) => (
-                  <motion.button
-                    type="button"
-                    key={brand.name}
-                    onClick={() => onBrandClick?.(brand)}
-                    className="flex h-14 items-center justify-center rounded-lg border border-transparent bg-muted/40 p-2 transition-colors hover:border-primary/30 hover:bg-background"
-                    whileHover={{ scale: 1.04, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    title={`${brand.name} detaylarını aç`}
-                  >
-                    <img
-                      src={brand.logo}
-                      alt={brand.name}
-                      className="max-h-full w-full object-contain"
-                      style={{ transform: brand.scale ? `scale(${brand.scale})` : undefined }}
-                      onError={(event) => {
-                        const image = event.currentTarget;
-                        image.style.display = "none";
-                        const fallback = image.nextElementSibling as HTMLElement | null;
-                        if (fallback) fallback.style.display = "flex";
-                      }}
-                    />
-                    <span className="hidden text-center text-[9px] font-bold" style={{ color: (brand as BrandLogo & { color?: string }).color }}>
-                      {brand.name}
-                    </span>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     );
   }
