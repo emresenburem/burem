@@ -11,7 +11,7 @@ import {
   productImages,
 } from "@shared/schema";
 import { db } from "./db";
-import { and, asc, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, asc, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -22,11 +22,13 @@ export interface IStorage {
   getAllProducts(): Promise<ProductWithImages[]>;
   getProductsByBrand(brand: string): Promise<ProductWithImages[]>;
   getProduct(id: string): Promise<ProductWithImages | undefined>;
+  getInventoryProductBySourceDeviceId(sourceInventoryDeviceId: string): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   upsertInventoryProduct(
     input: InventoryProductUpsert,
   ): Promise<{ product: Product; action: "created" | "updated" }>;
+  deleteInventoryProductBySourceDeviceId(sourceInventoryDeviceId: string): Promise<boolean>;
   deleteProduct(id: string): Promise<boolean>;
   getProductImages(productId: string): Promise<ProductImage[]>;
   createProductImage(
@@ -108,6 +110,22 @@ export class DatabaseStorage implements IStorage {
     return product ? (await this.withImages([product]))[0] : undefined;
   }
 
+  async getInventoryProductBySourceDeviceId(
+    sourceInventoryDeviceId: string,
+  ): Promise<Product | undefined> {
+    const [product] = await db
+      .select()
+      .from(products)
+      .where(
+        and(
+          eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId),
+          isNotNull(products.sourceInventoryDeviceId),
+        ),
+      )
+      .limit(1);
+    return product;
+  }
+
   async createProduct(product: InsertProduct): Promise<Product> {
     const [newProduct] = await db.insert(products).values(product).returning();
     return newProduct;
@@ -149,6 +167,40 @@ export class DatabaseStorage implements IStorage {
   async deleteProduct(id: string): Promise<boolean> {
     const result = await db.delete(products).where(eq(products.id, id)).returning();
     return result.length > 0;
+  }
+
+  async deleteInventoryProductBySourceDeviceId(
+    sourceInventoryDeviceId: string,
+  ): Promise<boolean> {
+    return db.transaction(async (tx) => {
+      const [product] = await tx
+        .select({ id: products.id })
+        .from(products)
+        .where(
+          and(
+            eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId),
+            isNotNull(products.sourceInventoryDeviceId),
+          ),
+        )
+        .for("update")
+        .limit(1);
+
+      if (!product) return false;
+
+      await tx.delete(productImages).where(eq(productImages.productId, product.id));
+      const deleted = await tx
+        .delete(products)
+        .where(
+          and(
+            eq(products.id, product.id),
+            eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId),
+            isNotNull(products.sourceInventoryDeviceId),
+          ),
+        )
+        .returning({ id: products.id });
+
+      return deleted.length === 1;
+    });
   }
 
   async getProductImages(productId: string): Promise<ProductImage[]> {

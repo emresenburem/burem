@@ -43,6 +43,19 @@ function securityLog(event: string) {
   console.info(`[security] ${event}`);
 }
 
+function authorizeInventorySyncRequest(req: Request, res: Response): boolean {
+  const configuredSecret = process.env.INVENTORY_SYNC_SECRET;
+  if (!configuredSecret) {
+    res.status(503).json({ error: "inventory_sync_not_configured" });
+    return false;
+  }
+  if (!isValidInventorySyncAuthorization(req.get("authorization"), configuredSecret)) {
+    res.status(401).json({ error: "unauthorized" });
+    return false;
+  }
+  return true;
+}
+
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!hasActiveAdminSession(req)) {
     if ((req.session as any)?.adminLoggedIn) {
@@ -344,14 +357,48 @@ export async function registerRoutes(
     res.json(publicProduct);
   });
 
+  app.get(
+    "/api/internal/inventory-products/:sourceInventoryDeviceId",
+    async (req, res) => {
+      if (!authorizeInventorySyncRequest(req, res)) return;
+
+      try {
+        const product = await storage.getInventoryProductBySourceDeviceId(
+          req.params.sourceInventoryDeviceId,
+        );
+        if (!product) {
+          return res.status(404).json({ error: "inventory_product_not_found" });
+        }
+        return res.json(product);
+      } catch {
+        console.error("[inventory-sync] Product lookup failed.");
+        return res.status(500).json({ error: "inventory_product_lookup_failed" });
+      }
+    },
+  );
+
+  app.delete(
+    "/api/internal/inventory-products/:sourceInventoryDeviceId",
+    async (req, res) => {
+      if (!authorizeInventorySyncRequest(req, res)) return;
+
+      try {
+        const deleted = await storage.deleteInventoryProductBySourceDeviceId(
+          req.params.sourceInventoryDeviceId,
+        );
+        if (!deleted) {
+          return res.status(404).json({ error: "inventory_product_not_found" });
+        }
+        return res.json({ success: true, deleted: true });
+      } catch {
+        console.error("[inventory-sync] Product cleanup failed.");
+        return res.status(500).json({ error: "inventory_product_cleanup_failed" });
+      }
+    },
+  );
+
   app.post("/api/internal/inventory-products/upsert", async (req, res) => {
-    const configuredSecret = process.env.INVENTORY_SYNC_SECRET;
-    if (!configuredSecret) {
-      return res.status(503).json({ error: "inventory_sync_not_configured" });
-    }
-    if (!isValidInventorySyncAuthorization(req.get("authorization"), configuredSecret)) {
-      return res.status(401).json({ error: "unauthorized" });
-    }
+    if (!authorizeInventorySyncRequest(req, res)) return;
 
     const parsed = inventoryProductUpsertSchema.safeParse(req.body);
     if (!parsed.success) {
