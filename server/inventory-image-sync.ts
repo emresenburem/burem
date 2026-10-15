@@ -63,7 +63,55 @@ type ExistingInventoryImage = {
   imageUrl: string;
   cloudinaryPublicId: string | null;
   isPrimary: boolean | null;
+  sortOrder?: number | null;
+  createdAt?: Date | null;
 };
+
+export function planInventoryImageDedupe<T extends ExistingInventoryImage>(
+  sourceInventoryDeviceId: string,
+  attachmentId: string,
+  currentImages: T[],
+) {
+  const expectedPublicId = inventoryImagePublicId(sourceInventoryDeviceId, attachmentId);
+  const expectedPublicIds = new Set([
+    expectedPublicId,
+    `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${expectedPublicId}`,
+  ]);
+  const synchronizedImages = currentImages.filter((image) =>
+    isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+  );
+  const manualImages = currentImages.filter(
+    (image) => !isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+  );
+  const matchingImages = synchronizedImages
+    .filter((image) => expectedPublicIds.has(image.cloudinaryPublicId ?? ""))
+    .sort((a, b) => {
+      if (Boolean(a.isPrimary) !== Boolean(b.isPrimary)) return a.isPrimary ? -1 : 1;
+      const orderDiff = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+      if (orderDiff) return orderDiff;
+      const dateDiff = (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0);
+      return dateDiff || a.id.localeCompare(b.id);
+    });
+  const canonicalImage = matchingImages[0];
+  const duplicateImages = matchingImages.slice(1);
+
+  return {
+    expectedPublicId,
+    synchronizedImages,
+    manualImages,
+    matchingImages,
+    canonicalImage,
+    duplicateImages,
+    remainingSyncedImages: synchronizedImages.length - duplicateImages.length,
+    canApply:
+      currentImages.length === 2 &&
+      manualImages.length === 0 &&
+      matchingImages.length === 2 &&
+      Boolean(canonicalImage?.isPrimary) &&
+      duplicateImages.every((image) => !image.isPrimary) &&
+      canonicalImage?.imageUrl === currentImages.find((image) => image.isPrimary)?.imageUrl,
+  };
+}
 
 export function planInventoryImageSync<T extends ExistingInventoryImage>(
   sourceInventoryDeviceId: string,

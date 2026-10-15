@@ -8,6 +8,7 @@ import {
   inventoryImagePublicId,
   isInventorySyncedImage,
   MAX_INVENTORY_IMAGES,
+  planInventoryImageDedupe,
   planInventoryImageSync,
 } from "./inventory-image-sync";
 
@@ -275,4 +276,65 @@ test("folder-qualified synced cleanup preserves manual Cloudinary image rows", (
   assert.equal(plan.removedImages.some((image) => image.cloudinaryPublicId === manualPublicId), false);
   assert.deepEqual(plan.manualImages.map((image) => image.id), ["manual-row"]);
   assert.equal(plan.primaryImageUrl, "https://res.cloudinary.example/manual.jpg");
+});
+
+test("inventory image dedupe keeps the primary synced row and plans only its duplicate", () => {
+  const publicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId("3", "4")}`;
+  const images = [
+    {
+      id: "canonical-image",
+      imageUrl: "https://images.example/shared.jpg",
+      cloudinaryPublicId: publicId,
+      isPrimary: true,
+      sortOrder: 0,
+      createdAt: new Date("2026-01-01T00:00:00Z"),
+    },
+    {
+      id: "duplicate-image",
+      imageUrl: "https://images.example/shared.jpg",
+      cloudinaryPublicId: publicId,
+      isPrimary: false,
+      sortOrder: 1,
+      createdAt: new Date("2026-01-02T00:00:00Z"),
+    },
+  ];
+  const plan = planInventoryImageDedupe("3", "4", images);
+  assert.equal(plan.canonicalImage?.id, "canonical-image");
+  assert.deepEqual(plan.duplicateImages.map((image) => image.id), ["duplicate-image"]);
+  assert.equal(plan.canApply, true);
+  assert.equal(plan.remainingSyncedImages, 1);
+
+  const retry = planInventoryImageDedupe("3", "4", [images[0]]);
+  assert.equal(retry.duplicateImages.length, 0);
+  assert.equal(retry.remainingSyncedImages, 1);
+});
+
+test("inventory image dedupe never plans a manual website image for deletion", () => {
+  const publicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId("3", "4")}`;
+  const plan = planInventoryImageDedupe("3", "4", [
+    {
+      id: "canonical-image",
+      imageUrl: "https://images.example/shared.jpg",
+      cloudinaryPublicId: publicId,
+      isPrimary: true,
+      sortOrder: 0,
+    },
+    {
+      id: "duplicate-image",
+      imageUrl: "https://images.example/shared.jpg",
+      cloudinaryPublicId: publicId,
+      isPrimary: false,
+      sortOrder: 1,
+    },
+    {
+      id: "manual-image",
+      imageUrl: "https://images.example/manual.jpg",
+      cloudinaryPublicId: "manual-cloudinary-id",
+      isPrimary: false,
+      sortOrder: 2,
+    },
+  ]);
+  assert.deepEqual(plan.duplicateImages.map((image) => image.id), ["duplicate-image"]);
+  assert.deepEqual(plan.manualImages.map((image) => image.id), ["manual-image"]);
+  assert.equal(plan.canApply, false);
 });

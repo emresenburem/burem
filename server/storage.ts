@@ -12,7 +12,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { and, asc, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
-import { planInventoryImageSync } from "./inventory-image-sync";
+import { planInventoryImageDedupe, planInventoryImageSync } from "./inventory-image-sync";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -30,6 +30,35 @@ export interface IStorage {
     input: InventoryProductUpsert,
   ): Promise<{ product: Product; action: "created" | "updated" }>;
   deleteInventoryProductBySourceDeviceId(sourceInventoryDeviceId: string): Promise<boolean>;
+  dedupeInventoryProductImages(
+    sourceInventoryDeviceId: string,
+    attachmentId: string,
+    options?: {
+      apply?: boolean;
+      expectedCanonicalImageId?: string;
+      expectedDuplicateImageIds?: string[];
+      expectedProductImageUrl?: string | null;
+    },
+  ): Promise<{
+    productId: string;
+    sourceInventoryDeviceId: string;
+    productImageUrl: string | null;
+    galleryCount: number;
+    manualImages: Array<{ id: string; imageUrl: string; cloudinaryPublicId: string | null }>;
+    matchingImages: Array<{
+      id: string;
+      imageUrl: string;
+      cloudinaryPublicId: string | null;
+      isPrimary: boolean | null;
+      sortOrder: number | null;
+    }>;
+    canonicalImageId: string | null;
+    duplicateImageIds: string[];
+    duplicatesRemoved: number;
+    remainingSyncedImages: number;
+    primaryImageUrl: string | null;
+    canApply: boolean;
+  } | undefined>;
   syncInventoryProductImages(
     sourceInventoryDeviceId: string,
     images: Array<{
@@ -219,6 +248,109 @@ export class DatabaseStorage implements IStorage {
 
       return deleted.length === 1;
     });
+  }
+
+  async dedupeInventoryProductImages(
+    sourceInventoryDeviceId: string,
+    attachmentId: string,
+    options: {
+      apply?: boolean;
+      expectedCanonicalImageId?: string;
+      expectedDuplicateImageIds?: string[];
+      expectedProductImageUrl?: string | null;
+    } = {},
+  ) {
+    const run = async (tx: Pick<typeof db, "select" | "delete">, lockRows: boolean) => {
+      let productQuery = tx
+        .select({
+          id: products.id,
+          sourceInventoryDeviceId: products.sourceInventoryDeviceId,
+          imageUrl: products.imageUrl,
+        })
+        .from(products)
+        .where(
+          and(
+            eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId),
+            isNotNull(products.sourceInventoryDeviceId),
+          ),
+        )
+        .limit(1);
+      if (lockRows) productQuery = productQuery.for("update") as typeof productQuery;
+      const [product] = await productQuery;
+      if (!product?.sourceInventoryDeviceId) return undefined;
+
+      let imageQuery = tx
+        .select()
+        .from(productImages)
+        .where(eq(productImages.productId, product.id))
+        .orderBy(asc(productImages.sortOrder), asc(productImages.createdAt));
+      if (lockRows) imageQuery = imageQuery.for("update") as typeof imageQuery;
+      const images = await imageQuery;
+      const plan = planInventoryImageDedupe(sourceInventoryDeviceId, attachmentId, images);
+      const duplicateImageIds = plan.duplicateImages.map((image) => image.id).sort();
+      const expectedDuplicates = options.expectedDuplicateImageIds ?? [];
+      const safeApply =
+        plan.canApply &&
+        options.expectedCanonicalImageId === plan.canonicalImage?.id &&
+        JSON.stringify([...expectedDuplicates].sort()) === JSON.stringify(duplicateImageIds) &&
+        options.expectedProductImageUrl === product.imageUrl;
+      const safeRetry =
+        duplicateImageIds.length === 0 &&
+        plan.matchingImages.length === 1 &&
+        plan.manualImages.length === 0 &&
+        images.length === 1 &&
+        plan.canonicalImage?.id === options.expectedCanonicalImageId &&
+        Boolean(plan.canonicalImage?.isPrimary) &&
+        expectedDuplicates.length > 0 &&
+        expectedDuplicates.every((id) => !images.some((image) => image.id === id)) &&
+        options.expectedProductImageUrl === product.imageUrl;
+
+      if (options.apply && !safeApply && !safeRetry) {
+        throw new Error("Inventory image dedupe preconditions changed");
+      }
+
+      if (options.apply && duplicateImageIds.length) {
+        await tx
+          .delete(productImages)
+          .where(
+            and(
+              eq(productImages.productId, product.id),
+              inArray(productImages.id, duplicateImageIds),
+            ),
+          );
+      }
+
+      return {
+        productId: product.id,
+        sourceInventoryDeviceId,
+        productImageUrl: product.imageUrl,
+        galleryCount: images.length - (options.apply ? duplicateImageIds.length : 0),
+        manualImages: plan.manualImages.map(({ id, imageUrl, cloudinaryPublicId }) => ({
+          id,
+          imageUrl,
+          cloudinaryPublicId,
+        })),
+        matchingImages: plan.matchingImages.map(
+          ({ id, imageUrl, cloudinaryPublicId, isPrimary, sortOrder }) => ({
+            id,
+            imageUrl,
+            cloudinaryPublicId,
+            isPrimary,
+            sortOrder,
+          }),
+        ),
+        canonicalImageId: plan.canonicalImage?.id ?? null,
+        duplicateImageIds,
+        duplicatesRemoved: options.apply ? duplicateImageIds.length : 0,
+        remainingSyncedImages: plan.remainingSyncedImages,
+        primaryImageUrl:
+          images.find((image) => image.isPrimary)?.imageUrl ?? product.imageUrl,
+        canApply: plan.canApply && duplicateImageIds.length > 0,
+      };
+    };
+
+    if (!options.apply) return run(db, false);
+    return db.transaction((tx) => run(tx, true));
   }
 
   async syncInventoryProductImages(

@@ -547,6 +547,69 @@ export async function registerRoutes(
     },
   );
 
+  app.get(
+    "/api/internal/inventory-products/:sourceInventoryDeviceId/images/dedupe",
+    async (req, res) => {
+      if (!authorizeInventorySyncRequest(req, res)) return;
+      const sourceInventoryDeviceId = String(req.params.sourceInventoryDeviceId ?? "").trim();
+      const attachmentId = String(req.query.attachmentId ?? "").trim();
+      if (!sourceInventoryDeviceId || !attachmentId) {
+        return res.status(400).json({ error: "invalid_image_dedupe_request" });
+      }
+      try {
+        const result = await storage.dedupeInventoryProductImages(
+          sourceInventoryDeviceId,
+          attachmentId,
+        );
+        if (!result) return res.status(404).json({ error: "inventory_product_not_found" });
+        return res.json({ success: true, dryRun: true, ...result });
+      } catch {
+        console.error("[inventory-sync] Image dedupe inspection failed.");
+        return res.status(500).json({ error: "inventory_image_dedupe_failed" });
+      }
+    },
+  );
+
+  app.post(
+    "/api/internal/inventory-products/:sourceInventoryDeviceId/images/dedupe",
+    async (req, res) => {
+      if (!authorizeInventorySyncRequest(req, res)) return;
+      const sourceInventoryDeviceId = String(req.params.sourceInventoryDeviceId ?? "").trim();
+      const parsed = z
+        .object({
+          attachmentId: z.string().trim().min(1).max(200),
+          canonicalImageId: z.string().min(1),
+          duplicateImageIds: z.array(z.string().min(1)).min(1).max(7),
+          expectedProductImageUrl: z.string().nullable(),
+        })
+        .strict()
+        .safeParse(req.body);
+      if (!sourceInventoryDeviceId || !parsed.success) {
+        return res.status(400).json({ error: "invalid_image_dedupe_request" });
+      }
+      try {
+        const result = await storage.dedupeInventoryProductImages(
+          sourceInventoryDeviceId,
+          parsed.data.attachmentId,
+          {
+            apply: true,
+            expectedCanonicalImageId: parsed.data.canonicalImageId,
+            expectedDuplicateImageIds: parsed.data.duplicateImageIds,
+            expectedProductImageUrl: parsed.data.expectedProductImageUrl,
+          },
+        );
+        if (!result) return res.status(404).json({ error: "inventory_product_not_found" });
+        return res.json({ success: true, dryRun: false, ...result });
+      } catch (error) {
+        if (error instanceof Error && error.message === "Inventory image dedupe preconditions changed") {
+          return res.status(409).json({ error: "inventory_image_dedupe_preconditions_changed" });
+        }
+        console.error("[inventory-sync] Image dedupe failed.");
+        return res.status(500).json({ error: "inventory_image_dedupe_failed" });
+      }
+    },
+  );
+
   app.post("/api/contact", async (req, res) => {
     try {
       const { name, email, phone, subject, message } = req.body ?? {};

@@ -20,12 +20,14 @@ test("production inventory routes remain registered and image route rejects safe
   const originalLookup = storage.getInventoryProductBySourceDeviceId;
   const originalDelete = storage.deleteInventoryProductBySourceDeviceId;
   const originalImageSync = storage.syncInventoryProductImages;
+  const originalImageDedupe = storage.dedupeInventoryProductImages;
   const originalCloudinaryEnv = {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET,
   };
   let imageProductExists = true;
+  let dedupeOptions: Record<string, unknown> | undefined;
 
   process.env.INVENTORY_SYNC_SECRET = testSecret;
   process.env.CLOUDINARY_CLOUD_NAME = "test-cloud";
@@ -143,6 +145,38 @@ test("production inventory routes remain registered and image route rejects safe
         removedPublicIds: [],
       };
     };
+  storage.dedupeInventoryProductImages = async (_sourceId, _attachmentId, options = {}) => {
+    dedupeOptions = options;
+    return {
+      productId: sampleProduct.id,
+      sourceInventoryDeviceId: sampleProduct.sourceInventoryDeviceId,
+      productImageUrl: "https://images.example/canonical.jpg",
+      galleryCount: 2,
+      manualImages: [],
+      matchingImages: [
+        {
+          id: "canonical-image",
+          imageUrl: "https://images.example/canonical.jpg",
+          cloudinaryPublicId: "burem/products/synced-id",
+          isPrimary: true,
+          sortOrder: 0,
+        },
+        {
+          id: "duplicate-image",
+          imageUrl: "https://images.example/canonical.jpg",
+          cloudinaryPublicId: "burem/products/synced-id",
+          isPrimary: false,
+          sortOrder: 1,
+        },
+      ],
+      canonicalImageId: "canonical-image",
+      duplicateImageIds: ["duplicate-image"],
+      duplicatesRemoved: options.apply ? 1 : 0,
+      remainingSyncedImages: 1,
+      primaryImageUrl: "https://images.example/canonical.jpg",
+      canApply: true,
+    };
+  };
     const emptyImageForm = new FormData();
     emptyImageForm.append("manifest", JSON.stringify([]));
     const emptyImageSync = await fetch(
@@ -165,6 +199,43 @@ test("production inventory routes remain registered and image route rejects safe
       cloudinaryCleanupPending: false,
     });
     assert.deepEqual(syncedImages, []);
+
+    const dedupePath =
+      `${base}/api/internal/inventory-products/synthetic-device-id/images/dedupe`;
+    const dedupeUnauthorized = await fetch(`${dedupePath}?attachmentId=4`);
+    assert.equal(dedupeUnauthorized.status, 401);
+    assert.match(dedupeUnauthorized.headers.get("content-type") ?? "", /application\/json/);
+    const dedupeWrongAuth = await fetch(dedupePath, {
+      method: "POST",
+      headers: { Authorization: "Bearer wrong", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        attachmentId: "4",
+        canonicalImageId: "canonical-image",
+        duplicateImageIds: ["duplicate-image"],
+        expectedProductImageUrl: "https://images.example/canonical.jpg",
+      }),
+    });
+    assert.equal(dedupeWrongAuth.status, 401);
+    assert.match(dedupeWrongAuth.headers.get("content-type") ?? "", /application\/json/);
+
+    const dedupeInspection = await fetch(`${dedupePath}?attachmentId=4`, {
+      headers: { Authorization: `Bearer ${testSecret}` },
+    });
+    assert.equal(dedupeInspection.status, 200);
+    assert.equal((await dedupeInspection.json()).dryRun, true);
+    const dedupeApply = await fetch(dedupePath, {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        attachmentId: "4",
+        canonicalImageId: "canonical-image",
+        duplicateImageIds: ["duplicate-image"],
+        expectedProductImageUrl: "https://images.example/canonical.jpg",
+      }),
+    });
+    assert.equal(dedupeApply.status, 200);
+    assert.equal((await dedupeApply.json()).duplicatesRemoved, 1);
+    assert.equal(dedupeOptions?.apply, true);
 
     imageProductExists = false;
     const form = new FormData();
@@ -193,6 +264,7 @@ test("production inventory routes remain registered and image route rejects safe
     storage.getInventoryProductBySourceDeviceId = originalLookup;
     storage.deleteInventoryProductBySourceDeviceId = originalDelete;
     storage.syncInventoryProductImages = originalImageSync;
+    storage.dedupeInventoryProductImages = originalImageDedupe;
     if (originalSecret === undefined) delete process.env.INVENTORY_SYNC_SECRET;
     else process.env.INVENTORY_SYNC_SECRET = originalSecret;
     if (originalCloudinaryEnv.cloudName === undefined) delete process.env.CLOUDINARY_CLOUD_NAME;
