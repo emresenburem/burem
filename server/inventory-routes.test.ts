@@ -1,0 +1,154 @@
+import assert from "node:assert/strict";
+import express from "express";
+import { createServer } from "node:http";
+import { test } from "node:test";
+import { storage } from "./storage";
+import { registerRoutes } from "./routes";
+
+const testSecret = "inventory-route-test-secret";
+const sampleProduct = {
+  id: "synthetic-product-id",
+  name: "Synthetic test",
+  brand: "Test",
+  category: "Test",
+  sourceInventoryDeviceId: "synthetic-device-id",
+};
+
+test("production inventory routes remain registered and image route rejects safely", async () => {
+  const originalSecret = process.env.INVENTORY_SYNC_SECRET;
+  const originalUpsert = storage.upsertInventoryProduct;
+  const originalLookup = storage.getInventoryProductBySourceDeviceId;
+  const originalDelete = storage.deleteInventoryProductBySourceDeviceId;
+  let imageProductExists = true;
+
+  process.env.INVENTORY_SYNC_SECRET = testSecret;
+  storage.upsertInventoryProduct = async () => ({ product: sampleProduct as any, action: "created" });
+  storage.getInventoryProductBySourceDeviceId = async () =>
+    imageProductExists ? (sampleProduct as any) : undefined;
+  storage.deleteInventoryProductBySourceDeviceId = async () => true;
+  let upsertAction: "created" | "updated" = "created";
+  storage.upsertInventoryProduct = async () => ({
+    product: sampleProduct as any,
+    action: upsertAction,
+  });
+
+  const app = express();
+  app.use(express.json());
+  const server = createServer(app);
+  await registerRoutes(server, app);
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address();
+  assert.ok(address && typeof address !== "string");
+  const base = `http://127.0.0.1:${address.port}`;
+
+  try {
+    const unauthorized = await fetch(`${base}/api/internal/inventory-products/upsert`, { method: "POST" });
+    assert.equal(unauthorized.status, 401);
+    assert.match(unauthorized.headers.get("content-type") ?? "", /application\/json/);
+
+    const authHeaders = {
+      Authorization: `Bearer ${testSecret}`,
+      "Content-Type": "application/json",
+    };
+    const created = await fetch(`${base}/api/internal/inventory-products/upsert`, {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        sourceInventoryDeviceId: "synthetic-device-id",
+        name: "Synthetic test",
+        brand: "Test",
+        category: "Test",
+        description: null,
+        partNumber: null,
+        price: null,
+        currency: "TRY",
+        condition: "used",
+        inStock: true,
+        isPublished: true,
+      }),
+    });
+    assert.equal(created.status, 201);
+    assert.deepEqual(await created.json(), {
+      success: true,
+      productId: sampleProduct.id,
+      sourceInventoryDeviceId: sampleProduct.sourceInventoryDeviceId,
+      action: "created",
+    });
+    upsertAction = "updated";
+    const updated = await fetch(`${base}/api/internal/inventory-products/upsert`, {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        sourceInventoryDeviceId: "synthetic-device-id",
+        name: "Synthetic test",
+        brand: "Test",
+        category: "Test",
+        description: null,
+        partNumber: null,
+        price: null,
+        currency: "TRY",
+        condition: "used",
+        inStock: true,
+        isPublished: true,
+      }),
+    });
+    assert.equal(updated.status, 200);
+    assert.equal((await updated.json()).action, "updated");
+
+    const lookup = await fetch(
+      `${base}/api/internal/inventory-products/${sampleProduct.sourceInventoryDeviceId}`,
+      { headers: { Authorization: `Bearer ${testSecret}` } },
+    );
+    assert.equal(lookup.status, 200);
+    assert.match(lookup.headers.get("content-type") ?? "", /application\/json/);
+
+    const deleted = await fetch(
+      `${base}/api/internal/inventory-products/${sampleProduct.sourceInventoryDeviceId}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${testSecret}` } },
+    );
+    assert.equal(deleted.status, 200);
+    assert.deepEqual(await deleted.json(), { success: true, deleted: true });
+
+    const imageUnauthorized = await fetch(
+      `${base}/api/internal/inventory-products/synthetic-device-id/images`,
+      { method: "POST" },
+    );
+    assert.equal(imageUnauthorized.status, 401);
+    assert.match(imageUnauthorized.headers.get("content-type") ?? "", /application\/json/);
+    const imageWrongAuth = await fetch(
+      `${base}/api/internal/inventory-products/synthetic-device-id/images`,
+      { method: "POST", headers: { Authorization: "Bearer wrong" } },
+    );
+    assert.equal(imageWrongAuth.status, 401);
+    assert.match(imageWrongAuth.headers.get("content-type") ?? "", /application\/json/);
+
+    imageProductExists = false;
+    const form = new FormData();
+    form.append("files", new Blob([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], {
+      type: "image/png",
+    }), "synthetic.png");
+    form.append("manifest", JSON.stringify([
+      { attachmentId: "synthetic-attachment", fileIndex: 0, isPrimary: true, sortOrder: 0 },
+    ]));
+    const missingImageProduct = await fetch(
+      `${base}/api/internal/inventory-products/nonexistent-source/images`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${testSecret}` },
+        body: form,
+      },
+    );
+    assert.equal(missingImageProduct.status, 404);
+    assert.match(missingImageProduct.headers.get("content-type") ?? "", /application\/json/);
+  } finally {
+    server.closeAllConnections();
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
+    storage.upsertInventoryProduct = originalUpsert;
+    storage.getInventoryProductBySourceDeviceId = originalLookup;
+    storage.deleteInventoryProductBySourceDeviceId = originalDelete;
+    if (originalSecret === undefined) delete process.env.INVENTORY_SYNC_SECRET;
+    else process.env.INVENTORY_SYNC_SECRET = originalSecret;
+  }
+});

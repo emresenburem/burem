@@ -2,6 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { Resend } from "resend";
 import { z } from "zod";
+import multer from "multer";
 import { storage } from "./storage";
 import { insertProductSchema, inventoryProductUpsertSchema } from "@shared/schema";
 import {
@@ -17,6 +18,7 @@ import { sendNotification, buildWelcomeMessage, buildStatusMessage } from "./not
 import {
   isProductImageStorageConfigured,
   deleteProductImageAsset,
+  uploadProductImageBuffer,
   uploadProductImageDataUrl,
 } from "./product-images";
 import {
@@ -29,6 +31,13 @@ import {
   SESSION_COOKIE_NAME,
 } from "./admin-security";
 import { isValidInventorySyncAuthorization } from "./inventory-sync-auth";
+import {
+  INVENTORY_IMAGE_MIME_TYPES,
+  inventoryImageManifestSchema,
+  inventoryImagePublicId,
+  MAX_INVENTORY_IMAGE_BYTES,
+  MAX_INVENTORY_IMAGES,
+} from "./inventory-image-sync";
 
 const STATUS_LABELS: Record<number, string> = {
   1: "Teslim Alındı",
@@ -55,6 +64,23 @@ function authorizeInventorySyncRequest(req: Request, res: Response): boolean {
   }
   return true;
 }
+
+const inventoryImageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    files: MAX_INVENTORY_IMAGES,
+    fileSize: MAX_INVENTORY_IMAGE_BYTES,
+    fields: 1,
+    fieldSize: 16 * 1024,
+  },
+  fileFilter: (_req, file, callback) => {
+    if (!INVENTORY_IMAGE_MIME_TYPES.includes(file.mimetype as (typeof INVENTORY_IMAGE_MIME_TYPES)[number])) {
+      callback(new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname));
+      return;
+    }
+    callback(null, true);
+  },
+});
 
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!hasActiveAdminSession(req)) {
@@ -423,6 +449,104 @@ export async function registerRoutes(
       return res.status(500).json({ error: "inventory_product_upsert_failed" });
     }
   });
+
+  app.post(
+    "/api/internal/inventory-products/:sourceInventoryDeviceId/images",
+    async (req, res) => {
+      if (!authorizeInventorySyncRequest(req, res)) return;
+      if (!req.is("multipart/form-data")) {
+        return res.status(415).json({ error: "multipart_form_data_required" });
+      }
+
+      const sourceInventoryDeviceId = String(req.params.sourceInventoryDeviceId ?? "").trim();
+      if (!sourceInventoryDeviceId) {
+        return res.status(400).json({ error: "source_inventory_device_id_required" });
+      }
+
+      try {
+        await new Promise<void>((resolve, reject) => {
+          inventoryImageUpload.array("files", MAX_INVENTORY_IMAGES)(req, res, (error) => {
+            if (error) reject(error);
+            else resolve();
+          });
+        });
+      } catch (error) {
+        const tooLarge = error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE";
+        return res.status(tooLarge ? 413 : 400).json({
+          error: tooLarge ? "image_too_large" : "invalid_multipart_upload",
+        });
+      }
+
+      const files = (req as Request & { files?: Express.Multer.File[] }).files ?? [];
+      let manifestValue: unknown;
+      try {
+        manifestValue = JSON.parse(String(req.body?.manifest ?? ""));
+      } catch {
+        return res.status(400).json({ error: "invalid_image_manifest" });
+      }
+      const parsedManifest = inventoryImageManifestSchema.safeParse(manifestValue);
+      if (
+        !parsedManifest.success ||
+        files.length === 0 ||
+        files.length !== parsedManifest.data?.length ||
+        parsedManifest.data.some((item) => item.fileIndex >= files.length) ||
+        new Set(parsedManifest.data.map((item) => item.fileIndex)).size !== files.length
+      ) {
+        return res.status(400).json({ error: "invalid_image_manifest" });
+      }
+      if (!isProductImageStorageConfigured()) {
+        return res.status(503).json({ error: "image_storage_not_configured" });
+      }
+
+      const productId = await storage.getInventoryProductBySourceDeviceId(sourceInventoryDeviceId);
+      if (!productId) {
+        return res.status(404).json({ error: "inventory_product_not_found" });
+      }
+
+      try {
+        const uploadedImages = [];
+        for (const item of parsedManifest.data) {
+          const uploaded = await uploadProductImageBuffer(
+            files[item.fileIndex].buffer,
+            files[item.fileIndex].mimetype as (typeof INVENTORY_IMAGE_MIME_TYPES)[number],
+            inventoryImagePublicId(sourceInventoryDeviceId, item.attachmentId),
+          );
+          uploadedImages.push({ ...item, imageUrl: uploaded.url, cloudinaryPublicId: uploaded.publicId });
+        }
+
+        const result = await storage.syncInventoryProductImages(sourceInventoryDeviceId, uploadedImages);
+        const cleanupResults = await Promise.allSettled(
+          result.removedPublicIds.map((publicId) => deleteProductImageAsset(publicId)),
+        );
+        const cloudinaryCleanupPending = cleanupResults.some((cleanup) => cleanup.status === "rejected");
+        if (cloudinaryCleanupPending) {
+          console.error("[inventory-sync] Stale image asset cleanup is pending.");
+        }
+
+        return res.status(200).json({
+          success: true,
+          productId: result.productId,
+          sourceInventoryDeviceId,
+          uploaded: result.uploaded,
+          updated: result.updated,
+          removed: result.removed,
+          primaryImageUrl: result.primaryImageUrl,
+          cloudinaryCleanupPending,
+        });
+      } catch (error) {
+        const limitExceeded =
+          error instanceof Error && error.message === "Inventory product image limit exceeded";
+        console.error(
+          "[inventory-sync] Product image sync failed.",
+          limitExceeded ? "image_limit_exceeded" : "upload_or_storage_error",
+        );
+        if (limitExceeded) {
+          return res.status(400).json({ error: "inventory_product_image_limit_exceeded" });
+        }
+        return res.status(502).json({ error: "inventory_product_image_sync_failed" });
+      }
+    },
+  );
 
   app.post("/api/contact", async (req, res) => {
     try {

@@ -15,7 +15,7 @@
     "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts",
     "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts",
     "migrate:inventory-source-schema": "tsx scripts/migrate-inventory-source-schema.ts",
-    "test:inventory-sync": "tsx --test server/inventory-sync.test.ts"
+    "test:inventory-sync": "tsx --test server/inventory-sync.test.ts server/inventory-routes.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -68,6 +68,7 @@
     "gsap": "^3.15.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.545.0",
+    "multer": "^2.4.0",
     "memorystore": "^1.6.7",
     "next-themes": "^0.4.6",
     "passport": "^0.7.0",
@@ -102,6 +103,7 @@
     "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
+    "@types/multer": "^2.3.0",
     "@types/node": "^20.19.0",
     "@types/passport": "^1.0.16",
     "@types/passport-local": "^1.0.38",

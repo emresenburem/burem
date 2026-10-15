@@ -12,6 +12,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { and, asc, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
+import { isInventorySyncedImage } from "./inventory-image-sync";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -29,6 +30,23 @@ export interface IStorage {
     input: InventoryProductUpsert,
   ): Promise<{ product: Product; action: "created" | "updated" }>;
   deleteInventoryProductBySourceDeviceId(sourceInventoryDeviceId: string): Promise<boolean>;
+  syncInventoryProductImages(
+    sourceInventoryDeviceId: string,
+    images: Array<{
+      attachmentId: string;
+      imageUrl: string;
+      cloudinaryPublicId: string;
+      isPrimary: boolean;
+      sortOrder: number;
+    }>,
+  ): Promise<{
+    productId: string;
+    primaryImageUrl: string;
+    uploaded: number;
+    updated: number;
+    removed: number;
+    removedPublicIds: string[];
+  }>;
   deleteProduct(id: string): Promise<boolean>;
   getProductImages(productId: string): Promise<ProductImage[]>;
   createProductImage(
@@ -200,6 +218,109 @@ export class DatabaseStorage implements IStorage {
         .returning({ id: products.id });
 
       return deleted.length === 1;
+    });
+  }
+
+  async syncInventoryProductImages(
+    sourceInventoryDeviceId: string,
+    images: Array<{
+      attachmentId: string;
+      imageUrl: string;
+      cloudinaryPublicId: string;
+      isPrimary: boolean;
+      sortOrder: number;
+    }>,
+  ) {
+    return db.transaction(async (tx) => {
+      const [product] = await tx
+        .select({ id: products.id })
+        .from(products)
+        .where(
+          and(
+            eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId),
+            isNotNull(products.sourceInventoryDeviceId),
+          ),
+        )
+        .for("update");
+      if (!product) throw new Error("Inventory product not found");
+
+      const currentImages = await tx
+        .select()
+        .from(productImages)
+        .where(eq(productImages.productId, product.id))
+        .orderBy(asc(productImages.sortOrder), asc(productImages.createdAt))
+        .for("update");
+      const synchronizedImages = currentImages.filter((image) =>
+        isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+      );
+      const manualImages = currentImages.filter(
+        (image) => !isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+      );
+      if (manualImages.length + images.length > 8) {
+        throw new Error("Inventory product image limit exceeded");
+      }
+
+      const orderedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
+      const primaryImage = orderedImages.find((image) => image.isPrimary) ?? orderedImages[0];
+      const syncPublicIds = new Set(images.map((image) => image.cloudinaryPublicId));
+      const removedImages = synchronizedImages.filter(
+        (image) => !syncPublicIds.has(image.cloudinaryPublicId ?? ""),
+      );
+      const existingByPublicId = new Map(
+        synchronizedImages
+          .filter((image) => image.cloudinaryPublicId)
+          .map((image) => [image.cloudinaryPublicId as string, image]),
+      );
+
+      await tx
+        .update(productImages)
+        .set({ isPrimary: false })
+        .where(eq(productImages.productId, product.id));
+
+      let uploaded = 0;
+      let updated = 0;
+      for (const image of orderedImages) {
+        const isPrimary = image.attachmentId === primaryImage.attachmentId;
+        const existing = existingByPublicId.get(image.cloudinaryPublicId);
+        if (existing) {
+          await tx.update(productImages).set({
+            imageUrl: image.imageUrl,
+            cloudinaryPublicId: image.cloudinaryPublicId,
+            sortOrder: image.sortOrder,
+            isPrimary,
+          }).where(eq(productImages.id, existing.id));
+          updated += 1;
+        } else {
+          await tx.insert(productImages).values({
+            productId: product.id,
+            imageUrl: image.imageUrl,
+            cloudinaryPublicId: image.cloudinaryPublicId,
+            sortOrder: image.sortOrder,
+            isPrimary,
+          });
+          uploaded += 1;
+        }
+      }
+
+      const manualSortStart = orderedImages.reduce((max, image) => Math.max(max, image.sortOrder), -1) + 1;
+      for (let index = 0; index < manualImages.length; index += 1) {
+        await tx.update(productImages).set({ sortOrder: manualSortStart + index })
+          .where(eq(productImages.id, manualImages[index].id));
+      }
+      if (removedImages.length) {
+        await tx.delete(productImages).where(inArray(productImages.id, removedImages.map((image) => image.id)));
+      }
+      await tx.update(products).set({ imageUrl: primaryImage.imageUrl }).where(eq(products.id, product.id));
+
+      return {
+        productId: product.id,
+        primaryImageUrl: primaryImage.imageUrl,
+        uploaded,
+        updated,
+        removed: removedImages.length,
+        removedPublicIds: removedImages.map((image) => image.cloudinaryPublicId)
+          .filter((publicId): publicId is string => Boolean(publicId)),
+      };
     });
   }
 

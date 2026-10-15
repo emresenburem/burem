@@ -2,6 +2,12 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { insertProductSchema, inventoryProductUpsertSchema } from "@shared/schema";
 import { isValidInventorySyncAuthorization } from "./inventory-sync-auth";
+import {
+  inventoryImageManifestSchema,
+  inventoryImagePublicId,
+  isInventorySyncedImage,
+  MAX_INVENTORY_IMAGES,
+} from "./inventory-image-sync";
 
 const payload = {
   sourceInventoryDeviceId: "123",
@@ -65,4 +71,26 @@ test("inventory bearer auth fails closed and validates exact secrets", () => {
   assert.equal(isValidInventorySyncAuthorization(undefined, "test-secret"), false);
   assert.equal(isValidInventorySyncAuthorization("Bearer wrong", "test-secret"), false);
   assert.equal(isValidInventorySyncAuthorization("Bearer test-secret", "test-secret"), true);
+});
+
+test("inventory image manifest validates ordered files and primary selection", () => {
+  const manifest = [
+    { attachmentId: "att-a", fileIndex: 0, isPrimary: true, sortOrder: 0 },
+    { attachmentId: "att-b", fileIndex: 1, isPrimary: false, sortOrder: 1 },
+  ];
+  assert.deepEqual(inventoryImageManifestSchema.parse(manifest), manifest);
+  assert.equal(MAX_INVENTORY_IMAGES, 8);
+  assert.equal(inventoryImageManifestSchema.safeParse([
+    ...manifest,
+    { attachmentId: "att-a", fileIndex: 2, isPrimary: false, sortOrder: 2 },
+  ]).success, false);
+});
+
+test("inventory image attachment public IDs are stable and source-scoped", () => {
+  const id = inventoryImagePublicId("device-a", "attachment-1");
+  assert.equal(id, inventoryImagePublicId("device-a", "attachment-1"));
+  assert.notEqual(id, inventoryImagePublicId("device-a", "attachment-2"));
+  assert.notEqual(id, inventoryImagePublicId("device-b", "attachment-1"));
+  assert.equal(isInventorySyncedImage(id, "device-a"), true);
+  assert.equal(isInventorySyncedImage("manual-image", "device-a"), false);
 });
