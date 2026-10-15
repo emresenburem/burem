@@ -19,9 +19,18 @@ test("production inventory routes remain registered and image route rejects safe
   const originalUpsert = storage.upsertInventoryProduct;
   const originalLookup = storage.getInventoryProductBySourceDeviceId;
   const originalDelete = storage.deleteInventoryProductBySourceDeviceId;
+  const originalImageSync = storage.syncInventoryProductImages;
+  const originalCloudinaryEnv = {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+  };
   let imageProductExists = true;
 
   process.env.INVENTORY_SYNC_SECRET = testSecret;
+  process.env.CLOUDINARY_CLOUD_NAME = "test-cloud";
+  process.env.CLOUDINARY_API_KEY = "test-key";
+  process.env.CLOUDINARY_API_SECRET = "test-secret";
   storage.upsertInventoryProduct = async () => ({ product: sampleProduct as any, action: "created" });
   storage.getInventoryProductBySourceDeviceId = async () =>
     imageProductExists ? (sampleProduct as any) : undefined;
@@ -122,6 +131,41 @@ test("production inventory routes remain registered and image route rejects safe
     assert.equal(imageWrongAuth.status, 401);
     assert.match(imageWrongAuth.headers.get("content-type") ?? "", /application\/json/);
 
+    let syncedImages: unknown[] | undefined;
+    storage.syncInventoryProductImages = async (_sourceId, images) => {
+      syncedImages = images;
+      return {
+        productId: sampleProduct.id,
+        primaryImageUrl: null,
+        uploaded: 0,
+        updated: 0,
+        removed: 1,
+        removedPublicIds: [],
+      };
+    };
+    const emptyImageForm = new FormData();
+    emptyImageForm.append("manifest", JSON.stringify([]));
+    const emptyImageSync = await fetch(
+      `${base}/api/internal/inventory-products/synthetic-device-id/images`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${testSecret}` },
+        body: emptyImageForm,
+      },
+    );
+    assert.equal(emptyImageSync.status, 200);
+    assert.deepEqual(await emptyImageSync.json(), {
+      success: true,
+      productId: sampleProduct.id,
+      sourceInventoryDeviceId: sampleProduct.sourceInventoryDeviceId,
+      uploaded: 0,
+      updated: 0,
+      removed: 1,
+      primaryImageUrl: null,
+      cloudinaryCleanupPending: false,
+    });
+    assert.deepEqual(syncedImages, []);
+
     imageProductExists = false;
     const form = new FormData();
     form.append("files", new Blob([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], {
@@ -148,7 +192,14 @@ test("production inventory routes remain registered and image route rejects safe
     storage.upsertInventoryProduct = originalUpsert;
     storage.getInventoryProductBySourceDeviceId = originalLookup;
     storage.deleteInventoryProductBySourceDeviceId = originalDelete;
+    storage.syncInventoryProductImages = originalImageSync;
     if (originalSecret === undefined) delete process.env.INVENTORY_SYNC_SECRET;
     else process.env.INVENTORY_SYNC_SECRET = originalSecret;
+    if (originalCloudinaryEnv.cloudName === undefined) delete process.env.CLOUDINARY_CLOUD_NAME;
+    else process.env.CLOUDINARY_CLOUD_NAME = originalCloudinaryEnv.cloudName;
+    if (originalCloudinaryEnv.apiKey === undefined) delete process.env.CLOUDINARY_API_KEY;
+    else process.env.CLOUDINARY_API_KEY = originalCloudinaryEnv.apiKey;
+    if (originalCloudinaryEnv.apiSecret === undefined) delete process.env.CLOUDINARY_API_SECRET;
+    else process.env.CLOUDINARY_API_SECRET = originalCloudinaryEnv.apiSecret;
   }
 });

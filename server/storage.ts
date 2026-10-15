@@ -12,7 +12,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { and, asc, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
-import { isInventorySyncedImage } from "./inventory-image-sync";
+import { planInventoryImageSync } from "./inventory-image-sync";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -41,7 +41,7 @@ export interface IStorage {
     }>,
   ): Promise<{
     productId: string;
-    primaryImageUrl: string;
+    primaryImageUrl: string | null;
     uploaded: number;
     updated: number;
     removed: number;
@@ -250,22 +250,20 @@ export class DatabaseStorage implements IStorage {
         .where(eq(productImages.productId, product.id))
         .orderBy(asc(productImages.sortOrder), asc(productImages.createdAt))
         .for("update");
-      const synchronizedImages = currentImages.filter((image) =>
-        isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
-      );
-      const manualImages = currentImages.filter(
-        (image) => !isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
-      );
+      const plan = planInventoryImageSync(sourceInventoryDeviceId, currentImages, images);
+      const {
+        synchronizedImages,
+        manualImages,
+        orderedImages,
+        primarySyncedImage,
+        primaryManualImage,
+        primaryImageUrl,
+        removedImages,
+      } = plan;
       if (manualImages.length + images.length > 8) {
         throw new Error("Inventory product image limit exceeded");
       }
 
-      const orderedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
-      const primaryImage = orderedImages.find((image) => image.isPrimary) ?? orderedImages[0];
-      const syncPublicIds = new Set(images.map((image) => image.cloudinaryPublicId));
-      const removedImages = synchronizedImages.filter(
-        (image) => !syncPublicIds.has(image.cloudinaryPublicId ?? ""),
-      );
       const existingByPublicId = new Map(
         synchronizedImages
           .filter((image) => image.cloudinaryPublicId)
@@ -280,7 +278,7 @@ export class DatabaseStorage implements IStorage {
       let uploaded = 0;
       let updated = 0;
       for (const image of orderedImages) {
-        const isPrimary = image.attachmentId === primaryImage.attachmentId;
+        const isPrimary = image.attachmentId === primarySyncedImage?.attachmentId;
         const existing = existingByPublicId.get(image.cloudinaryPublicId);
         if (existing) {
           await tx.update(productImages).set({
@@ -302,6 +300,11 @@ export class DatabaseStorage implements IStorage {
         }
       }
 
+      if (primaryManualImage) {
+        await tx.update(productImages).set({ isPrimary: true })
+          .where(eq(productImages.id, primaryManualImage.id));
+      }
+
       const manualSortStart = orderedImages.reduce((max, image) => Math.max(max, image.sortOrder), -1) + 1;
       for (let index = 0; index < manualImages.length; index += 1) {
         await tx.update(productImages).set({ sortOrder: manualSortStart + index })
@@ -310,11 +313,11 @@ export class DatabaseStorage implements IStorage {
       if (removedImages.length) {
         await tx.delete(productImages).where(inArray(productImages.id, removedImages.map((image) => image.id)));
       }
-      await tx.update(products).set({ imageUrl: primaryImage.imageUrl }).where(eq(products.id, product.id));
+      await tx.update(products).set({ imageUrl: primaryImageUrl }).where(eq(products.id, product.id));
 
       return {
         productId: product.id,
-        primaryImageUrl: primaryImage.imageUrl,
+        primaryImageUrl,
         uploaded,
         updated,
         removed: removedImages.length,

@@ -7,6 +7,7 @@ import {
   inventoryImagePublicId,
   isInventorySyncedImage,
   MAX_INVENTORY_IMAGES,
+  planInventoryImageSync,
 } from "./inventory-image-sync";
 
 const payload = {
@@ -84,6 +85,86 @@ test("inventory image manifest validates ordered files and primary selection", (
     ...manifest,
     { attachmentId: "att-a", fileIndex: 2, isPrimary: false, sortOrder: 2 },
   ]).success, false);
+  assert.deepEqual(inventoryImageManifestSchema.parse([]), []);
+});
+
+test("empty inventory image sync removes only synced images and falls back to a manual primary idempotently", () => {
+  const sourceId = "device-empty-sync";
+  const syncedPublicId = inventoryImagePublicId(sourceId, "synced-attachment");
+  const manualPublicId = "manual-cloudinary-asset";
+  const currentImages = [
+    {
+      id: "synced-image",
+      imageUrl: "https://cdn.example/synced.jpg",
+      cloudinaryPublicId: syncedPublicId,
+      isPrimary: true,
+    },
+    {
+      id: "manual-image-first",
+      imageUrl: "https://cdn.example/manual-first.jpg",
+      cloudinaryPublicId: manualPublicId,
+      isPrimary: false,
+    },
+    {
+      id: "manual-image-current-primary",
+      imageUrl: "https://cdn.example/manual-primary.jpg",
+      cloudinaryPublicId: "manual-cloudinary-primary",
+      isPrimary: true,
+    },
+  ];
+
+  const first = planInventoryImageSync(sourceId, currentImages, []);
+  assert.deepEqual(first.removedImages.map((image) => image.id), ["synced-image"]);
+  assert.equal(first.primaryImageUrl, "https://cdn.example/manual-primary.jpg");
+  assert.equal(first.primaryManualImage?.id, "manual-image-current-primary");
+  assert.equal(first.removedImages.some((image) => image.cloudinaryPublicId === manualPublicId), false);
+
+  const remainingImages = first.manualImages.map((image) => ({
+    ...image,
+    isPrimary: image.id === first.primaryManualImage?.id,
+  }));
+  const repeated = planInventoryImageSync(sourceId, remainingImages, []);
+  assert.deepEqual(repeated.removedImages, []);
+  assert.equal(repeated.primaryImageUrl, first.primaryImageUrl);
+  assert.equal(repeated.primaryManualImage?.id, "manual-image-current-primary");
+});
+
+test("empty inventory image sync chooses the first manual image if no manual primary exists", () => {
+  const sourceId = "device-manual-fallback";
+  const plan = planInventoryImageSync(sourceId, [
+    {
+      id: "manual-first",
+      imageUrl: "https://cdn.example/manual-first.jpg",
+      cloudinaryPublicId: "manual-first-asset",
+      isPrimary: false,
+    },
+    {
+      id: "manual-second",
+      imageUrl: "https://cdn.example/manual-second.jpg",
+      cloudinaryPublicId: "manual-second-asset",
+      isPrimary: false,
+    },
+  ], []);
+
+  assert.deepEqual(plan.removedImages, []);
+  assert.equal(plan.primaryManualImage?.id, "manual-first");
+  assert.equal(plan.primaryImageUrl, "https://cdn.example/manual-first.jpg");
+});
+
+test("empty inventory image sync without manual images clears the primary URL", () => {
+  const sourceId = "device-no-manual-images";
+  const plan = planInventoryImageSync(sourceId, [
+    {
+      id: "synced-only",
+      imageUrl: "https://cdn.example/synced.jpg",
+      cloudinaryPublicId: inventoryImagePublicId(sourceId, "attachment"),
+      isPrimary: true,
+    },
+  ], []);
+
+  assert.deepEqual(plan.removedImages.map((image) => image.id), ["synced-only"]);
+  assert.equal(plan.primaryManualImage, undefined);
+  assert.equal(plan.primaryImageUrl, null);
 });
 
 test("inventory image attachment public IDs are stable and source-scoped", () => {

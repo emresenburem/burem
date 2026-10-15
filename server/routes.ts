@@ -487,7 +487,6 @@ export async function registerRoutes(
       const parsedManifest = inventoryImageManifestSchema.safeParse(manifestValue);
       if (
         !parsedManifest.success ||
-        files.length === 0 ||
         files.length !== parsedManifest.data?.length ||
         parsedManifest.data.some((item) => item.fileIndex >= files.length) ||
         new Set(parsedManifest.data.map((item) => item.fileIndex)).size !== files.length

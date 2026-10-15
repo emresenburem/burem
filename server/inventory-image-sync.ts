@@ -21,7 +21,6 @@ export const inventoryImageManifestSchema = z
       })
       .strict(),
   )
-  .min(1)
   .max(MAX_INVENTORY_IMAGES)
   .superRefine((items, ctx) => {
     const attachmentIds = new Set<string>();
@@ -49,6 +48,53 @@ export const inventoryImageManifestSchema = z
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Only one image may be primary" });
     }
   });
+
+export type InventoryImageSyncInput = {
+  attachmentId: string;
+  imageUrl: string;
+  cloudinaryPublicId: string;
+  isPrimary: boolean;
+  sortOrder: number;
+};
+
+type ExistingInventoryImage = {
+  id: string;
+  imageUrl: string;
+  cloudinaryPublicId: string | null;
+  isPrimary: boolean | null;
+};
+
+export function planInventoryImageSync<T extends ExistingInventoryImage>(
+  sourceInventoryDeviceId: string,
+  currentImages: T[],
+  images: InventoryImageSyncInput[],
+) {
+  const synchronizedImages = currentImages.filter((image) =>
+    isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+  );
+  const manualImages = currentImages.filter(
+    (image) => !isInventorySyncedImage(image.cloudinaryPublicId, sourceInventoryDeviceId),
+  );
+  const orderedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
+  const primarySyncedImage = orderedImages.find((image) => image.isPrimary) ?? orderedImages[0];
+  const primaryManualImage = primarySyncedImage
+    ? undefined
+    : manualImages.find((image) => image.isPrimary === true) ?? manualImages[0];
+  const syncPublicIds = new Set(images.map((image) => image.cloudinaryPublicId));
+  const removedImages = synchronizedImages.filter(
+    (image) => !syncPublicIds.has(image.cloudinaryPublicId ?? ""),
+  );
+
+  return {
+    synchronizedImages,
+    manualImages,
+    orderedImages,
+    primarySyncedImage,
+    primaryManualImage,
+    primaryImageUrl: primarySyncedImage?.imageUrl ?? primaryManualImage?.imageUrl ?? null,
+    removedImages,
+  };
+}
 
 function digest(value: string) {
   return createHash("sha256").update(value).digest("hex").slice(0, 32);
