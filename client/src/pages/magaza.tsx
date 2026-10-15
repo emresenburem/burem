@@ -6,6 +6,7 @@ import {
   ChevronDown,
   MessageCircle,
   Package,
+  Search,
   SlidersHorizontal,
   X,
 } from "lucide-react";
@@ -13,7 +14,6 @@ import type { ProductWithImages } from "@shared/schema";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
 import StoreProductCard from "@/components/store-product-card";
-import { GooeySearchBar } from "@/components/ui/animated-search-bar";
 import { SEO } from "@/components/seo";
 import { whatsappLink } from "@/lib/site-contact";
 import {
@@ -21,6 +21,7 @@ import {
   conditionLabel,
   normalizeSearchText,
 } from "@/lib/product-utils";
+import BRANDS from "@/lib/brands";
 
 const FALLBACK_CATEGORIES = [
   "İnverter",
@@ -285,6 +286,17 @@ export default function MagazaPage() {
     return [...CONDITION_OPTIONS, ...extras];
   }, [allProducts]);
 
+  const brandCards = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const product of allProducts) {
+      counts.set(product.brand, (counts.get(product.brand) ?? 0) + 1);
+    }
+    return BRANDS.map((item) => ({
+      ...item,
+      productCount: counts.get(item.name) ?? 0,
+    }));
+  }, [allProducts]);
+
   const filtered = useMemo(() => {
     const query = normalizeSearchText(search);
 
@@ -316,11 +328,6 @@ export default function MagazaPage() {
     if (stockOnly) filters.push({ key: "stock", label: "Stokta" });
     return filters;
   }, [brand, category, condition, search, stockOnly]);
-
-  const searchResults = useMemo(
-    () => Array.from(new Set(filtered.map((product) => product.name))),
-    [filtered],
-  );
 
   const clearFilters = () => {
     setSearch("");
@@ -365,42 +372,6 @@ export default function MagazaPage() {
         <StoreHeader />
 
         <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">
-          <section className="relative mb-8 overflow-hidden rounded-[30px] bg-slate-950 px-6 py-8 text-white shadow-elevated md:px-10 md:py-10">
-            <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-36 left-1/3 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl" />
-            <div className="relative max-w-3xl">
-              <Link
-                href="/"
-                className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
-              >
-                ← Ana Sayfa
-              </Link>
-              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.22em] text-cyan-300">
-                Burem Elektronik / Yedek Parça
-              </p>
-              <h1
-                className="max-w-2xl text-3xl font-bold tracking-tight md:text-5xl"
-                style={{ fontFamily: "Space Grotesk, var(--font-sans)" }}
-              >
-                Aradığınız parçayı, model numarasıyla bulun.
-              </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65 md:text-base">
-                Endüstriyel elektronik yedek parçalarını marka, kategori veya parça numarasına göre filtreleyin.
-              </p>
-
-              <div className="relative mt-7 max-w-2xl">
-                <GooeySearchBar
-                  value={search}
-                  onChange={setSearch}
-                  results={searchResults}
-                  onResultSelect={setSearch}
-                  placeholder="Ürün, marka, kategori veya parça/model no ara…"
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </section>
-
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">
@@ -412,24 +383,37 @@ export default function MagazaPage() {
                 </p>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => setFiltersOpen((value) => !value)}
-              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors ${
-                filtersOpen || activeFilters.length > 0
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-card text-foreground hover:bg-muted"
-              }`}
-              data-testid="button-filters"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Filtrele
-              {activeFilters.length > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1 text-[10px] text-foreground">
-                  {activeFilters.length}
-                </span>
-              )}
-            </button>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+              <label className="relative block w-full sm:w-64">
+                <span className="sr-only">Ürün ara</span>
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Ürün veya parça no ara"
+                  className="h-11 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  data-testid="input-product-search"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setFiltersOpen((value) => !value)}
+                className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors ${
+                  filtersOpen || activeFilters.length > 0
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border bg-card text-foreground hover:bg-muted"
+                }`}
+                data-testid="button-filters"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtrele
+                {activeFilters.length > 0 && (
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1 text-[10px] text-foreground">
+                    {activeFilters.length}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
           {filtersOpen && (
@@ -522,6 +506,64 @@ export default function MagazaPage() {
               ))}
             </div>
           )}
+
+          <section className="mt-14" aria-labelledby="shop-by-brand-heading">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+                  Burem Elektronik · Marka Rehberi
+                </p>
+                <h2 id="shop-by-brand-heading" className="text-2xl font-bold tracking-tight md:text-3xl">
+                  Markaya göre keşfet
+                </h2>
+                <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                  Endüstriyel yedek parça ve ekipmanları tanıdığınız markaya göre bulun.
+                </p>
+              </div>
+              <span className="text-xs font-semibold text-muted-foreground">
+                {brandCards.length} marka
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              {brandCards.map((item) => (
+                <Link
+                  key={item.name}
+                  href={`/brand/${encodeURIComponent(item.name)}`}
+                  aria-label={`${item.name} markasını keşfet`}
+                  className="group relative flex min-h-[132px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-card px-4 py-5 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:min-h-[148px]"
+                  data-testid={`brand-card-${item.name}`}
+                >
+                  <span
+                    className="absolute inset-x-8 top-0 h-px opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ backgroundColor: item.color }}
+                    aria-hidden="true"
+                  />
+                  <div className="flex h-12 w-full items-center justify-center sm:h-14">
+                    <img
+                      src={item.logo}
+                      alt=""
+                      loading="lazy"
+                      className="max-h-full max-w-[78%] object-contain opacity-75 grayscale transition-all duration-200 group-hover:opacity-100 group-hover:grayscale-0"
+                      style={{ transform: item.scale ? `scale(${item.scale})` : undefined }}
+                      onError={(event) => {
+                        event.currentTarget.style.visibility = "hidden";
+                      }}
+                    />
+                    <span className="sr-only">{item.name}</span>
+                  </div>
+                  <span className="mt-3 text-sm font-bold text-foreground">
+                    {item.name}
+                  </span>
+                  <span className="mt-1 text-[11px] text-muted-foreground">
+                    {item.productCount > 0
+                      ? `${item.productCount} ürün`
+                      : "Markayı keşfet"}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
         </main>
 
         <BuremFooter />
