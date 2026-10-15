@@ -13,7 +13,7 @@ import {
 import type { ProductWithImages } from "@shared/schema";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
-import StoreProductCard from "@/components/store-product-card";
+import StoreProductCarousel from "@/components/store-product-carousel";
 import { SEO } from "@/components/seo";
 import { whatsappLink } from "@/lib/site-contact";
 import {
@@ -500,11 +500,11 @@ export default function MagazaPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" data-testid="grid-products">
-              {filtered.map((product) => (
-                <StoreProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <StoreProductCarousel
+              title="Ürün kataloğu"
+              subtitle="Yayındaki endüstriyel yedek parçaları marka, parça numarası ve stok bilgileriyle inceleyin."
+              products={filtered}
+            />
           )}
 
           <section className="mt-14" aria-labelledby="shop-by-brand-heading">
