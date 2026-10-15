@@ -223,6 +223,7 @@ function ProductForm({
   const set = (key: keyof InsertProduct, value: unknown) => {
     setForm((current) => ({ ...current, [key]: value }));
   };
+  const inventoryManaged = Boolean(product?.sourceInventoryDeviceId);
 
   const inputCls = "w-full rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20";
   const labelCls = "mb-1 block text-xs font-medium text-muted-foreground";
@@ -430,26 +431,41 @@ function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" data-testid="form-product">
+      {inventoryManaged && (
+        <div
+          role="note"
+          className="rounded-xl border border-sky-500/25 bg-sky-500/5 px-4 py-3 text-sm text-foreground"
+          data-testid="inventory-managed-notice"
+        >
+          <p className="font-semibold">
+            Bu ürün Burem İş Takip Cihaz Envanteri tarafından yönetiliyor.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Ürün bilgileri, stok ve yayın durumu İş Takip tarafından senkronize edilir ve burada salt okunurdur.
+            Görsellerin senkronizasyonu henüz etkin değil; mevcut görsel yönetimi kullanılabilir.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className={labelCls}>Ürün Adı *</label>
-          <input required value={form.name} onChange={(event) => set("name", event.target.value)} placeholder="Ör: SINAMICS G120 Kontrol Kartı" className={inputCls} data-testid="input-product-name" />
+          <input required disabled={inventoryManaged} value={form.name} onChange={(event) => set("name", event.target.value)} placeholder="Ör: SINAMICS G120 Kontrol Kartı" className={inputCls} data-testid="input-product-name" />
         </div>
         <div>
           <label className={labelCls}>Marka *</label>
-          <select value={form.brand} onChange={(event) => set("brand", event.target.value)} className={inputCls} data-testid="select-brand">
+          <select disabled={inventoryManaged} value={form.brand} onChange={(event) => set("brand", event.target.value)} className={inputCls} data-testid="select-brand">
             {BRANDS.map((brand) => <option key={brand}>{brand}</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls}>Kategori *</label>
-          <select value={form.category} onChange={(event) => set("category", event.target.value)} className={inputCls} data-testid="select-category">
+          <select disabled={inventoryManaged} value={form.category} onChange={(event) => set("category", event.target.value)} className={inputCls} data-testid="select-category">
             {CATEGORIES.map((category) => <option key={category}>{category}</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls}>Parça No (P/N)</label>
-          <input value={form.partNumber ?? ""} onChange={(event) => set("partNumber", event.target.value)} placeholder="Ör: 6SL3210-1KE21-3AF1" className={inputCls} data-testid="input-part-number" />
+          <input disabled={inventoryManaged} value={form.partNumber ?? ""} onChange={(event) => set("partNumber", event.target.value)} placeholder="Ör: 6SL3210-1KE21-3AF1" className={inputCls} data-testid="input-part-number" />
         </div>
         <div>
           <label className={labelCls}>Fiyat ve döviz birimi</label>
@@ -457,6 +473,7 @@ function ProductForm({
             <input
               type="text"
               inputMode="decimal"
+              disabled={inventoryManaged}
               value={form.price ?? ""}
               onChange={(event) => set("price", event.target.value)}
               placeholder="Ör: 12.500,50"
@@ -465,6 +482,7 @@ function ProductForm({
             />
             <select
               value={form.currency ?? "TRY"}
+              disabled={inventoryManaged}
               onChange={(event) => set("currency", event.target.value)}
               className={`${inputCls} min-w-0 w-full`}
               aria-label="Fiyat döviz birimi"
@@ -478,17 +496,18 @@ function ProductForm({
         </div>
         <div>
           <label className={labelCls}>Durum</label>
-          <select value={form.condition ?? "new"} onChange={(event) => set("condition", event.target.value)} className={inputCls} data-testid="select-condition">
+          <select disabled={inventoryManaged} value={form.condition ?? "new"} onChange={(event) => set("condition", event.target.value)} className={inputCls} data-testid="select-condition">
             {CONDITIONS.map((condition) => <option key={condition.value} value={condition.value}>{condition.label}</option>)}
           </select>
         </div>
         <div className="sm:col-span-2">
           <label className={labelCls}>Açıklama</label>
-          <textarea value={form.description ?? ""} onChange={(event) => set("description", event.target.value)} rows={3} placeholder="Kısa ürün açıklaması…" className={`${inputCls} resize-none`} data-testid="input-description" />
+          <textarea disabled={inventoryManaged} value={form.description ?? ""} onChange={(event) => set("description", event.target.value)} rows={3} placeholder="Kısa ürün açıklaması…" className={`${inputCls} resize-none`} data-testid="input-description" />
         </div>
         <div className="sm:col-span-2">
           <label className={labelCls}>Kapak görseli URL’si (geriye dönük uyumluluk)</label>
           <input
+            disabled={inventoryManaged}
             value={form.imageUrl ?? ""}
             onChange={(event) => {
               set("imageUrl", event.target.value);
@@ -653,7 +672,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [toast, setToast] = useState("");
 
-  const { data: products = [], isLoading } = useQuery<ProductWithImages[]>({ queryKey: ["/api/products"] });
+  const { data: products = [], isLoading } = useQuery<ProductWithImages[]>({ queryKey: ["/api/admin/products"] });
 
   function showToast(message: string) {
     setToast(message);
@@ -669,7 +688,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => apiReq("DELETE", `/api/products/${encodeURIComponent(id)}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/products"] });
       setDeleteId(null);
       showToast("Ürün silindi.");
     },
@@ -695,7 +714,7 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
       }
     }
 
-    await queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+    await queryClient.invalidateQueries({ queryKey: ["/api/admin/products"] });
     setModal(null);
     if (failedUploads.length > 0) {
       showToast(`Ürün kaydedildi; ${failedUploads.length} görsel yüklenemedi.`);
@@ -771,7 +790,17 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-10 w-10 flex-shrink-0 rounded-lg bg-muted object-contain p-1" /> : <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-muted"><Package className="h-5 w-5 text-muted-foreground/40" /></div>}
-                        <div><p className="font-medium leading-snug">{product.name}</p><p className="text-xs text-muted-foreground">{product.brand}</p></div>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium leading-snug">{product.name}</p>
+                            {product.sourceInventoryDeviceId && (
+                              <span className="inline-flex rounded-full border border-sky-500/25 bg-sky-500/10 px-2 py-0.5 text-[10px] font-semibold text-sky-700 dark:text-sky-300">
+                                Cihaz Envanteri
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{product.brand}</p>
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{product.category}</td>
@@ -780,7 +809,13 @@ function ProductDashboard({ onLogout }: { onLogout: () => void }) {
                     <td className="px-4 py-3"><span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${product.inStock ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-500"}`}>{product.inStock ? <CheckCircle2 className="h-3 w-3" /> : <X className="h-3 w-3" />}{product.inStock ? "Var" : "Yok"}</span></td>
                     <td className="px-4 py-3"><div className="flex justify-end gap-1">
                       <button onClick={() => setModal({ mode: "edit", product })} className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" data-testid={`button-edit-${product.id}`} title="Düzenle"><Pencil className="h-4 w-4" /></button>
-                      <button onClick={() => setDeleteId(product.id)} className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500" data-testid={`button-delete-${product.id}`} title="Sil"><Trash2 className="h-4 w-4" /></button>
+                      <button
+                        onClick={() => setDeleteId(product.id)}
+                        disabled={Boolean(product.sourceInventoryDeviceId)}
+                        className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-40"
+                        data-testid={`button-delete-${product.id}`}
+                        title={product.sourceInventoryDeviceId ? "İş Takip kaynaklı ürün silinemez; yayından İş Takip üzerinden kaldırın" : "Sil"}
+                      ><Trash2 className="h-4 w-4" /></button>
                     </div></td>
                   </tr>
                 ))}

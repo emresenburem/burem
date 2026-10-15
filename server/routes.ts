@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { Resend } from "resend";
 import { z } from "zod";
 import { storage } from "./storage";
-import { insertProductSchema } from "@shared/schema";
+import { insertProductSchema, inventoryProductUpsertSchema } from "@shared/schema";
 import {
   createServiceRecord,
   getServiceRecords,
@@ -28,6 +28,7 @@ import {
   verifyTotp,
   SESSION_COOKIE_NAME,
 } from "./admin-security";
+import { isValidInventorySyncAuthorization } from "./inventory-sync-auth";
 
 const STATUS_LABELS: Record<number, string> = {
   1: "Teslim Alındı",
@@ -322,20 +323,58 @@ export async function registerRoutes(
 
   app.get("/api/products", async (req, res) => {
     const products = await storage.getProducts();
-    res.json(products);
+    res.json(products.map(({ sourceInventoryDeviceId: _sourceId, ...product }) => product));
+  });
+
+  app.get("/api/admin/products", requireAdmin, async (_req, res) => {
+    res.json(await storage.getAllProducts());
   });
 
   app.get("/api/products/brand/:brand", async (req, res) => {
     const products = await storage.getProductsByBrand(req.params.brand);
-    res.json(products);
+    res.json(products.map(({ sourceInventoryDeviceId: _sourceId, ...product }) => product));
   });
 
   app.get("/api/products/:id", async (req, res) => {
     const product = await storage.getProduct(req.params.id);
-    if (!product) {
+    if (!product || product.isPublished === false) {
       return res.status(404).json({ error: "Product not found" });
     }
-    res.json(product);
+    const { sourceInventoryDeviceId: _sourceId, ...publicProduct } = product;
+    res.json(publicProduct);
+  });
+
+  app.post("/api/internal/inventory-products/upsert", async (req, res) => {
+    const configuredSecret = process.env.INVENTORY_SYNC_SECRET;
+    if (!configuredSecret) {
+      return res.status(503).json({ error: "inventory_sync_not_configured" });
+    }
+    if (!isValidInventorySyncAuthorization(req.get("authorization"), configuredSecret)) {
+      return res.status(401).json({ error: "unauthorized" });
+    }
+
+    const parsed = inventoryProductUpsertSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: "invalid_payload",
+        details: parsed.error.flatten(),
+      });
+    }
+
+    try {
+      const result = await storage.upsertInventoryProduct(parsed.data);
+      return res
+        .status(result.action === "created" ? 201 : 200)
+        .json({
+          success: true,
+          productId: result.product.id,
+          sourceInventoryDeviceId: result.product.sourceInventoryDeviceId,
+          action: result.action,
+        });
+    } catch {
+      console.error("[inventory-sync] Product upsert failed.");
+      return res.status(500).json({ error: "inventory_product_upsert_failed" });
+    }
   });
 
   app.post("/api/contact", async (req, res) => {

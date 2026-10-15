@@ -3,3 +3,4 @@
 - [Product catalog SEO](product-catalog-seo.md) — omit price, review, and offer claims when the catalog has no verified values.
 - [Product gallery migration](product-gallery-migration.md) — keep the legacy cover URL as a compatibility path; gallery schema changes stay manual and dry-run by default.
 - [Admin security posture](admin-security.md) — keep credentials env-only; provision production session and optional TOTP secrets manually.
+- [Inventory source of truth](inventory-source-of-truth.md) — İş Takip owns synced inventory fields; website edits must not override its values.

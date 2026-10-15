@@ -5,12 +5,13 @@ import {
   type ProductImage,
   type ProductWithImages,
   type InsertProduct,
+  type InventoryProductUpsert,
   users,
   products,
   productImages,
 } from "@shared/schema";
 import { db } from "./db";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull, or } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -18,10 +19,14 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   
   getProducts(): Promise<ProductWithImages[]>;
+  getAllProducts(): Promise<ProductWithImages[]>;
   getProductsByBrand(brand: string): Promise<ProductWithImages[]>;
   getProduct(id: string): Promise<ProductWithImages | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
+  upsertInventoryProduct(
+    input: InventoryProductUpsert,
+  ): Promise<{ product: Product; action: "created" | "updated" }>;
   deleteProduct(id: string): Promise<boolean>;
   getProductImages(productId: string): Promise<ProductImage[]>;
   createProductImage(
@@ -72,11 +77,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProducts(): Promise<ProductWithImages[]> {
+    return this.withImages(
+      await db
+        .select()
+        .from(products)
+        .where(or(eq(products.isPublished, true), isNull(products.isPublished))),
+    );
+  }
+
+  async getAllProducts(): Promise<ProductWithImages[]> {
     return this.withImages(await db.select().from(products));
   }
 
   async getProductsByBrand(brand: string): Promise<ProductWithImages[]> {
-    return this.withImages(await db.select().from(products).where(eq(products.brand, brand)));
+    return this.withImages(
+      await db
+        .select()
+        .from(products)
+        .where(
+          and(
+            eq(products.brand, brand),
+            or(eq(products.isPublished, true), isNull(products.isPublished)),
+          ),
+        ),
+    );
   }
 
   async getProduct(id: string): Promise<ProductWithImages | undefined> {
@@ -92,6 +116,34 @@ export class DatabaseStorage implements IStorage {
   async updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined> {
     const [updated] = await db.update(products).set(product).where(eq(products.id, id)).returning();
     return updated;
+  }
+
+  async upsertInventoryProduct(
+    input: InventoryProductUpsert,
+  ): Promise<{ product: Product; action: "created" | "updated" }> {
+    const { sourceInventoryDeviceId, ...productFields } = input;
+
+    return db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(products)
+        .values({ ...productFields, sourceInventoryDeviceId })
+        .onConflictDoNothing({ target: products.sourceInventoryDeviceId })
+        .returning();
+
+      if (created) return { product: created, action: "created" };
+
+      const [updated] = await tx
+        .update(products)
+        .set(productFields)
+        .where(eq(products.sourceInventoryDeviceId, sourceInventoryDeviceId))
+        .returning();
+
+      if (!updated) {
+        throw new Error("Inventory product upsert could not find the conflicted row");
+      }
+
+      return { product: updated, action: "updated" };
+    });
   }
 
   async deleteProduct(id: string): Promise<boolean> {

@@ -13,7 +13,9 @@
     "migrate:products": "tsx scripts/migrate-products.ts",
     "migrate:product-images": "tsx scripts/migrate-product-images.ts",
     "migrate:products-schema": "tsx scripts/migrate-production-products-schema.ts",
-    "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts"
+    "migrate:product-images-schema": "tsx scripts/migrate-product-images-schema.ts",
+    "migrate:inventory-source-schema": "tsx scripts/migrate-inventory-source-schema.ts",
+    "test:inventory-sync": "tsx --test server/inventory-sync.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
