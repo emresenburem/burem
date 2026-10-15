@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const MAX_INVENTORY_IMAGES = 8;
 export const MAX_INVENTORY_IMAGE_BYTES = 6 * 1024 * 1024;
+export const INVENTORY_IMAGE_CLOUDINARY_FOLDER = "burem/products";
 export const INVENTORY_IMAGE_MIME_TYPES = [
   "image/png",
   "image/jpeg",
@@ -80,6 +81,14 @@ export function planInventoryImageSync<T extends ExistingInventoryImage>(
   const primaryManualImage = primarySyncedImage
     ? undefined
     : manualImages.find((image) => image.isPrimary === true) ?? manualImages[0];
+  const existingByPublicId = new Map(
+    synchronizedImages
+      .filter((image) => image.cloudinaryPublicId)
+      .map((image) => [image.cloudinaryPublicId as string, image]),
+  );
+  const uploadCount = orderedImages.filter(
+    (image) => !existingByPublicId.has(image.cloudinaryPublicId),
+  ).length;
   const syncPublicIds = new Set(images.map((image) => image.cloudinaryPublicId));
   const removedImages = synchronizedImages.filter(
     (image) => !syncPublicIds.has(image.cloudinaryPublicId ?? ""),
@@ -93,6 +102,9 @@ export function planInventoryImageSync<T extends ExistingInventoryImage>(
     primaryManualImage,
     primaryImageUrl: primarySyncedImage?.imageUrl ?? primaryManualImage?.imageUrl ?? null,
     removedImages,
+    existingByPublicId,
+    uploadCount,
+    updateCount: orderedImages.length - uploadCount,
   };
 }
 
@@ -109,5 +121,11 @@ export function inventoryImagePublicId(sourceInventoryDeviceId: string, attachme
 }
 
 export function isInventorySyncedImage(publicId: string | null | undefined, sourceInventoryDeviceId: string) {
-  return Boolean(publicId?.startsWith(inventoryImagePublicIdPrefix(sourceInventoryDeviceId)));
+  if (!publicId) return false;
+  const prefix = inventoryImagePublicIdPrefix(sourceInventoryDeviceId);
+  const cloudinaryFolderPrefix = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/`;
+  const normalizedPublicId = publicId.startsWith(cloudinaryFolderPrefix)
+    ? publicId.slice(cloudinaryFolderPrefix.length)
+    : publicId;
+  return normalizedPublicId.startsWith(prefix);
 }

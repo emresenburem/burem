@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { v2 as cloudinary } from "cloudinary";
+import { INVENTORY_IMAGE_CLOUDINARY_FOLDER } from "./inventory-image-sync";
 
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
 const MIME_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"] as const;
@@ -70,7 +71,7 @@ export async function uploadProductImageBuffer(
   const result = await getCloudinary().uploader.upload(
     `data:${mimeType};base64,${encoded}`,
     {
-      folder: "burem/products",
+      folder: INVENTORY_IMAGE_CLOUDINARY_FOLDER,
       public_id: safePublicId(publicId),
       resource_type: "image",
       overwrite: true,

@@ -4,6 +4,7 @@ import { insertProductSchema, inventoryProductUpsertSchema } from "@shared/schem
 import { isValidInventorySyncAuthorization } from "./inventory-sync-auth";
 import {
   inventoryImageManifestSchema,
+  INVENTORY_IMAGE_CLOUDINARY_FOLDER,
   inventoryImagePublicId,
   isInventorySyncedImage,
   MAX_INVENTORY_IMAGES,
@@ -84,6 +85,9 @@ test("inventory image manifest validates ordered files and primary selection", (
   assert.equal(inventoryImageManifestSchema.safeParse([
     ...manifest,
     { attachmentId: "att-a", fileIndex: 2, isPrimary: false, sortOrder: 2 },
+  ]).success, false);
+  assert.equal(inventoryImageManifestSchema.safeParse([
+    { attachmentId: 4, fileIndex: 0, isPrimary: true, sortOrder: 0 },
   ]).success, false);
   assert.deepEqual(inventoryImageManifestSchema.parse([]), []);
 });
@@ -174,4 +178,101 @@ test("inventory image attachment public IDs are stable and source-scoped", () =>
   assert.notEqual(id, inventoryImagePublicId("device-b", "attachment-1"));
   assert.equal(isInventorySyncedImage(id, "device-a"), true);
   assert.equal(isInventorySyncedImage("manual-image", "device-a"), false);
+});
+
+test("folder-qualified Cloudinary IDs keep inventory attachments idempotent", () => {
+  const sourceId = "3";
+  const attachmentId = "4";
+  const publicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId(sourceId, attachmentId)}`;
+  const input = [{
+    attachmentId,
+    imageUrl: "https://res.cloudinary.example/burem/products/image.jpg",
+    cloudinaryPublicId: publicId,
+    isPrimary: true,
+    sortOrder: 0,
+  }];
+
+  const first = planInventoryImageSync(sourceId, [], input);
+  assert.equal(first.uploadCount, 1);
+  assert.equal(first.updateCount, 0);
+
+  const persistedImage = {
+    id: "same-db-image-row",
+    productId: "product-3",
+    imageUrl: input[0].imageUrl,
+    cloudinaryPublicId: publicId,
+    sortOrder: 0,
+    isPrimary: true,
+    createdAt: new Date("2026-10-15T00:00:00.000Z"),
+  };
+  const repeated = planInventoryImageSync(sourceId, [persistedImage], input);
+  assert.equal(repeated.uploadCount, 0);
+  assert.equal(repeated.updateCount, 1);
+  assert.equal(repeated.existingByPublicId.get(publicId)?.id, "same-db-image-row");
+  assert.deepEqual(repeated.removedImages, []);
+});
+
+test("same attachment updates sort order and primary state while another attachment stays separate", () => {
+  const sourceId = "3";
+  const firstPublicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId(sourceId, "4")}`;
+  const secondPublicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId(sourceId, "5")}`;
+  const existing = {
+    id: "image-4",
+    productId: "product-3",
+    imageUrl: "https://res.cloudinary.example/old.jpg",
+    cloudinaryPublicId: firstPublicId,
+    sortOrder: 0,
+    isPrimary: true,
+    createdAt: new Date("2026-10-15T00:00:00.000Z"),
+  };
+  const plan = planInventoryImageSync(sourceId, [existing], [
+    {
+      attachmentId: "4",
+      imageUrl: "https://res.cloudinary.example/updated.jpg",
+      cloudinaryPublicId: firstPublicId,
+      isPrimary: false,
+      sortOrder: 1,
+    },
+    {
+      attachmentId: "5",
+      imageUrl: "https://res.cloudinary.example/second.jpg",
+      cloudinaryPublicId: secondPublicId,
+      isPrimary: true,
+      sortOrder: 0,
+    },
+  ]);
+
+  assert.equal(plan.uploadCount, 1);
+  assert.equal(plan.updateCount, 1);
+  assert.equal(plan.existingByPublicId.get(firstPublicId)?.id, "image-4");
+  const updatedImage = plan.orderedImages.find((image) => image.attachmentId === "4");
+  assert.equal(updatedImage?.sortOrder, 1);
+  assert.equal(updatedImage?.imageUrl, "https://res.cloudinary.example/updated.jpg");
+  assert.equal(plan.primarySyncedImage?.attachmentId, "5");
+  assert.equal(isInventorySyncedImage(firstPublicId, "3"), true);
+});
+
+test("folder-qualified synced cleanup preserves manual Cloudinary image rows", () => {
+  const sourceId = "3";
+  const syncedPublicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/${inventoryImagePublicId(sourceId, "4")}`;
+  const manualPublicId = `${INVENTORY_IMAGE_CLOUDINARY_FOLDER}/manual-website-photo`;
+  const plan = planInventoryImageSync(sourceId, [
+    {
+      id: "synced-row",
+      imageUrl: "https://res.cloudinary.example/synced.jpg",
+      cloudinaryPublicId: syncedPublicId,
+      isPrimary: true,
+    },
+    {
+      id: "manual-row",
+      imageUrl: "https://res.cloudinary.example/manual.jpg",
+      cloudinaryPublicId: manualPublicId,
+      isPrimary: false,
+    },
+  ], []);
+
+  assert.deepEqual(plan.removedImages.map((image) => image.id), ["synced-row"]);
+  assert.equal(plan.removedImages.some((image) => image.cloudinaryPublicId === manualPublicId), false);
+  assert.deepEqual(plan.manualImages.map((image) => image.id), ["manual-row"]);
+  assert.equal(plan.primaryImageUrl, "https://res.cloudinary.example/manual.jpg");
 });

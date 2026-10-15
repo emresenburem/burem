@@ -259,16 +259,11 @@ export class DatabaseStorage implements IStorage {
         primaryManualImage,
         primaryImageUrl,
         removedImages,
+        existingByPublicId,
       } = plan;
       if (manualImages.length + images.length > 8) {
         throw new Error("Inventory product image limit exceeded");
       }
-
-      const existingByPublicId = new Map(
-        synchronizedImages
-          .filter((image) => image.cloudinaryPublicId)
-          .map((image) => [image.cloudinaryPublicId as string, image]),
-      );
 
       await tx
         .update(productImages)
