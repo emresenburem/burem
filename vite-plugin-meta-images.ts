@@ -1,16 +1,21 @@
 import type { Plugin } from 'vite';
 import fs from 'fs';
 import path from 'path';
+import { SITE_ORIGIN } from './shared/site-seo';
 
 /**
  * Vite plugin that updates og:image and twitter:image meta tags
  * to point to the app's opengraph image with the correct Replit domain.
  */
 export function metaImagesPlugin(): Plugin {
+  let productionBuild = false;
   return {
     name: 'vite-plugin-meta-images',
+    configResolved(config) {
+      productionBuild = config.command === 'build';
+    },
     transformIndexHtml(html) {
-      const baseUrl = getDeploymentUrl();
+      const baseUrl = productionBuild ? SITE_ORIGIN : getDeploymentUrl();
       if (!baseUrl) {
         log('[meta-images] no Replit deployment domain found, skipping meta tag updates');
         return html;

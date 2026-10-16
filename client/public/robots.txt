@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/admin
+Disallow: /api/internal/
 
 Sitemap: https://www.buremelektronik.com/sitemap.xml

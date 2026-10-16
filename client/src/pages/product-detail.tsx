@@ -14,6 +14,8 @@ import {
   XCircle,
 } from "lucide-react";
 import type { Product, ProductWithImages } from "@shared/schema";
+import { productStructuredData, productSeoDescription, productSeoTitle } from "@shared/product-seo";
+import { SITE_ORIGIN } from "@shared/site-seo";
 import BuremFooter from "@/components/ui/footer";
 import StoreHeader from "@/components/store-header";
 import StoreProductCard from "@/components/store-product-card";
@@ -213,45 +215,22 @@ function ProductGallery({ product }: { product: ProductWithImages }) {
 
 function ProductJsonLd({ product }: { product: ProductWithImages }) {
   const jsonLd = useMemo<Record<string, unknown>>(
-    () => ({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: product.name,
-      ...(product.description ? { description: product.description } : {}),
-      ...(product.imageUrl ? { image: [absoluteUrl(product.imageUrl)] } : {}),
-      ...(product.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
-      ...(product.category ? { category: product.category } : {}),
-      ...(product.partNumber ? { sku: product.partNumber, productID: product.partNumber } : {}),
-      ...(formatProductPrice(product.price, product.currency)
-        ? {
-            offers: {
-              "@type": "Offer",
-              price: Number(product.price).toFixed(2),
-              priceCurrency: product.currency === "USD" ? "USD" : "TRY",
-              availability: product.inStock
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock",
-            },
-          }
-        : {}),
-    }),
+    () => productStructuredData(product, `${SITE_ORIGIN}${productPath(product)}`),
     [product],
   );
 
   return (
     <SEO
-      title={`${product.name} | Burem Elektronik`}
-      description={
-        product.description ??
-        `${product.brand} ${product.category} yedek parçası${product.partNumber ? ` — ${product.partNumber}` : ""}.`
-      }
+      title={productSeoTitle(product)}
+      description={productSeoDescription(product)}
       canonical={productPath(product)}
-      ogTitle={`${product.name} | Burem Elektronik`}
-      ogDescription={product.description ?? `${product.brand} yedek parçası`}
+      ogTitle={productSeoTitle(product)}
+      ogDescription={productSeoDescription(product)}
       ogType="product"
-      ogImage={product.imageUrl ?? undefined}
+      ogImage={undefined}
       ogImageAlt={product.name}
       jsonLd={jsonLd}
+      robots={product.isPublished === false ? "noindex,nofollow,noarchive" : undefined}
     />
   );
 }

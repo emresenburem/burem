@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { SITE_URL } from "@/lib/site-contact";
+import { DEFAULT_OG_IMAGE } from "@shared/site-seo";
 
 interface SEOProps {
   title: string;
@@ -44,7 +45,7 @@ export function SEO({
 }: SEOProps) {
   useEffect(() => {
     const canonicalUrl = absoluteUrl(canonical);
-    const imageUrl = ogImage ? absoluteUrl(ogImage) : "";
+    const imageUrl = absoluteUrl(ogImage || DEFAULT_OG_IMAGE);
 
     document.title = title;
 
@@ -55,7 +56,7 @@ export function SEO({
     setMetaTag("property", "og:type", ogType);
     setMetaTag("name", "twitter:title", ogTitle ?? title);
     setMetaTag("name", "twitter:description", ogDescription ?? description);
-    setMetaTag("name", "twitter:card", ogImage ? "summary_large_image" : "summary");
+    setMetaTag("name", "twitter:card", "summary_large_image");
     setMetaTag("property", "og:image", imageUrl);
     setMetaTag("property", "og:image:alt", ogImageAlt ?? "");
     setMetaTag("name", "twitter:image", imageUrl);

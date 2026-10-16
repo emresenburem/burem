@@ -7,6 +7,7 @@ import { createServer } from "http";
 import { seedProducts } from "./seed";
 import { runMigrations } from "./migrate";
 import { ADMIN_SESSION_MAX_AGE_MS } from "./admin-security";
+import { getSitemapXml } from "./seo-routes";
 
 const app = express();
 app.use(express.json({ limit: "12mb" }));
@@ -118,6 +119,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
 
   await registerRoutes(httpServer, app);
+
+  app.get("/sitemap.xml", async (_req, res, next) => {
+    try {
+      res.type("application/xml").send(await getSitemapXml());
+    } catch (error) {
+      next(error);
+    }
+  });
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

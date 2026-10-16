@@ -19,6 +19,7 @@ import LenzeSurucu from "@/pages/lenze-surucu-tamiri";
 import MitsubishiServoSurucu from "@/pages/mitsubishi-servo-surucu-tamiri";
 import MagazaPage from "@/pages/magaza";
 import ProductDetailPage from "@/pages/product-detail";
+import CatalogLandingPage from "@/pages/catalog-landing";
 import AdminPage from "@/pages/admin";
 import TakipPage from "@/pages/takip";
 import AdminServisPage from "@/pages/admin-servis";
@@ -207,6 +208,8 @@ function Router() {
       <Route path="/lenze-surucu-tamiri" component={LenzeSurucu} />
       <Route path="/mitsubishi-servo-surucu-tamiri" component={MitsubishiServoSurucu} />
       <Route path="/magaza/urun/:id/:seoSlug" component={ProductDetailPage} />
+      <Route path="/magaza/marka/:slug" component={CatalogLandingPage} />
+      <Route path="/magaza/kategori/:slug" component={CatalogLandingPage} />
       <Route path="/magaza" component={MagazaPage} />
       <Route path="/admin" component={AdminPage} />
       <Route path="/takip" component={TakipPage} />

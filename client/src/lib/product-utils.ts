@@ -1,4 +1,5 @@
 import type { Product } from "@shared/schema";
+import { productSeoPath, productSeoSlug } from "@shared/product-seo";
 import { SITE_URL, whatsappLink } from "@/lib/site-contact";
 
 export const CONDITION_LABELS: Record<string, string> = {
@@ -17,21 +18,17 @@ export function normalizeSearchText(value: string) {
 }
 
 export function productSlug(name: string) {
-  return normalizeSearchText(name)
-    .replace(/&/g, " ve ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80) || "urun";
+  return productSeoSlug({ name, brand: "", partNumber: null });
 }
 
-type ProductLinkData = Pick<Product, "name"> & { id: string | number };
+type ProductLinkData = Pick<Product, "name"> & { id: string | number; brand?: string; partNumber?: string | null };
 type ProductContactData = ProductLinkData & {
   brand: string;
   partNumber?: string | null;
 };
 
 export function productPath(product: ProductLinkData) {
-  return `/magaza/urun/${encodeURIComponent(product.id)}/${productSlug(product.name)}`;
+  return productSeoPath({ id: String(product.id), name: product.name, brand: product.brand ?? "", partNumber: product.partNumber ?? null });
 }
 
 export function absoluteUrl(path: string) {
