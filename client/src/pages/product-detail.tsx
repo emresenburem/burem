@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useRoute } from "wouter";
 import {
   ArrowLeft,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   ImageOff,
@@ -11,7 +10,6 @@ import {
   Package,
   Phone,
   ShieldCheck,
-  XCircle,
 } from "lucide-react";
 import type { Product, ProductWithImages } from "@shared/schema";
 import { productStructuredData, productSeoDescription, productSeoTitle } from "@shared/product-seo";
@@ -301,46 +299,57 @@ function ProductInfo({ product }: { product: Product }) {
         </p>
       )}
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold ${
-            product.inStock
-              ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-              : "border-red-200 bg-red-50 text-red-600"
-          }`}
-        >
-          {product.inStock ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}
-          {product.inStock ? "Stokta" : "Stok Dışı"}
-        </span>
-        {condition && (
-          <span className="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground">
-            {condition}
-          </span>
-        )}
-      </div>
+      <section className="mt-6" aria-labelledby="product-information-heading">
+        <h2 id="product-information-heading" className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.18em] text-muted-foreground">
+          Ürün bilgileri
+        </h2>
+        <dl className="grid grid-cols-2 gap-2">
+          <div className="rounded-xl border border-border bg-background p-4">
+            <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Marka</dt>
+            <dd className="mt-1 text-sm font-bold text-foreground">{product.brand}</dd>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-4">
+            <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Kategori</dt>
+            <dd className="mt-1 text-sm font-bold text-foreground">{product.category}</dd>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-4">
+            <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Stok durumu</dt>
+            <dd className={`mt-1 text-sm font-bold ${product.inStock ? "text-emerald-700" : "text-red-600"}`}>
+              {product.inStock ? "Stokta" : "Stok dışı"}
+            </dd>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-4">
+            <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Ürün durumu</dt>
+            <dd className="mt-1 text-sm font-bold text-foreground">{condition || "Belirtilmemiş"}</dd>
+          </div>
+          {!formattedPrice && (
+            <div className="rounded-xl border border-border bg-background p-4">
+              <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Fiyat bilgisi</dt>
+              <dd className="mt-1 text-sm font-bold text-foreground">WhatsApp’tan sorunuz</dd>
+            </div>
+          )}
+          <div className="col-span-2 rounded-xl border border-border bg-background p-4">
+            <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Parça / model numarası</dt>
+            <dd className="mt-1 break-all font-mono text-sm font-bold text-foreground">
+              {product.partNumber || "Belirtilmemiş"}
+            </dd>
+          </div>
+        </dl>
+      </section>
 
-      <dl className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border">
-        <div className="bg-background p-4">
-          <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Marka</dt>
-          <dd className="mt-1 text-sm font-bold text-foreground">{product.brand}</dd>
-        </div>
-        <div className="bg-background p-4">
-          <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Kategori</dt>
-          <dd className="mt-1 text-sm font-bold text-foreground">{product.category}</dd>
-        </div>
-        <div className="col-span-2 bg-background p-4">
-          <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Parça / model numarası</dt>
-          <dd className="mt-1 break-all font-mono text-sm font-bold text-foreground">
-            {product.partNumber || "Belirtilmemiş"}
-          </dd>
-        </div>
-      </dl>
 
-      {product.description && (
+      {product.description ? (
         <div className="mt-7 border-t border-border pt-6">
           <h2 className="text-sm font-bold">Ürün açıklaması</h2>
           <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
             {product.description}
+          </p>
+        </div>
+      ) : (
+        <div className="mt-5 rounded-2xl bg-muted/50 p-4">
+          <h2 className="text-sm font-bold">Teknik açıklama</h2>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Bu ürün için ayrıca teknik açıklama bulunmuyor. Uyumluluk ve teknik detaylar için parça numarasıyla bize ulaşabilirsiniz.
           </p>
         </div>
       )}
