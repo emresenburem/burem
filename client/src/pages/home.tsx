@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@shared/schema";
 import useSound from "use-sound";
 import {
-  ArrowRight,
   CheckCircle2,
   Mail,
   MapPin,
@@ -1153,20 +1152,13 @@ export default function HomePage() {
             aria-label="Ana menü"
             className="hidden md:flex absolute bottom-0 left-1/2 -translate-x-1/2 gap-0"
           >
-            {[
-              { label: "Hizmetler", id: "services" },
-              { label: "Süreç",     id: "process"  },
-              { label: "İletişim",  id: "contact"  },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToId(item.id)}
-                data-testid={`nav-item-${item.id}`}
-                className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
-              >
-                {item.label}
-              </button>
-            ))}
+            <button
+              onClick={() => scrollToId("contact")}
+              data-testid="nav-item-contact"
+              className="relative overflow-hidden px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md transition-colors before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-500 before:ease-in-out"
+            >
+              İletişim
+            </button>
             <a
               href="/magaza"
               data-testid="nav-item-magaza"
@@ -1181,7 +1173,6 @@ export default function HomePage() {
             >
               Servis Takip
             </a>
-            <BrandsDropdown />
           </nav>
 
           {/* Mobil hamburger butonu */}
@@ -1195,19 +1186,6 @@ export default function HomePage() {
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
 
-          {/* CTA butonları — sağ, shimmer hover */}
-          <div className="hidden md:flex items-center gap-2 self-end pb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => scrollToId("contact")}
-              data-testid="button-cta-contact"
-              className="relative overflow-hidden text-sm font-medium before:absolute before:inset-0 before:-translate-x-full before:skew-x-[-20deg] before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent hover:before:translate-x-full before:transition-transform before:duration-600 before:ease-in-out"
-            >
-              İletişim
-              <ArrowRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
-            </Button>
-          </div>
         </div>
 
         {/* Mobil menü drawer */}
@@ -1223,20 +1201,13 @@ export default function HomePage() {
               data-testid="mobile-menu-drawer"
             >
               <nav className="flex flex-col gap-1 px-4 py-3" aria-label="Mobil menü">
-                {[
-                  { label: "Hizmetler", id: "services" },
-                  { label: "Süreç",     id: "process"  },
-                  { label: "İletişim",  id: "contact"  },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => { scrollToId(item.id); setMobileMenuOpen(false); }}
-                    className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
-                    data-testid={`mobile-nav-${item.id}`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                <button
+                  onClick={() => { scrollToId("contact"); setMobileMenuOpen(false); }}
+                  className="w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                  data-testid="mobile-nav-contact"
+                >
+                  İletişim
+                </button>
                 <a
                   href="/magaza"
                   onClick={() => setMobileMenuOpen(false)}
