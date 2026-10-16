@@ -527,7 +527,7 @@ export default function MagazaPage() {
           )}
 
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 2xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <div key={index} className="aspect-[.9] animate-pulse rounded-xl border border-slate-200 bg-white" />
               ))}
@@ -562,7 +562,7 @@ export default function MagazaPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3" data-testid="grid-products">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 2xl:grid-cols-3" data-testid="grid-products">
               {sortedProducts.map((product) => <StoreProductCard key={product.id} product={product} />)}
             </div>
           )}

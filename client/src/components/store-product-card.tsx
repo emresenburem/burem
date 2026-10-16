@@ -54,20 +54,20 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
           )}
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5 px-4 pb-3 pt-3">
+        <div className="flex flex-1 flex-col gap-1.5 px-3 pb-3 pt-3 sm:px-4">
           <div className="flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-sky-700">
             <span>{product.brand}</span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
             <span className="text-slate-500">{product.category}</span>
           </div>
           <h2
-            className="line-clamp-2 min-h-[2.6rem] text-[15px] font-extrabold leading-snug text-slate-950"
+            className="line-clamp-2 min-h-[2.4rem] text-[13px] font-extrabold leading-snug text-slate-950 sm:min-h-[2.6rem] sm:text-[15px]"
             data-testid={`text-product-name-${product.id}`}
           >
             {product.name}
           </h2>
           {formattedPrice && (
-            <p className="text-[17px] font-extrabold tracking-tight text-slate-950" data-testid={`text-product-price-${product.id}`}>
+            <p className="text-[15px] font-extrabold tracking-tight text-slate-950 sm:text-[17px]" data-testid={`text-product-price-${product.id}`}>
               {formattedPrice}
             </p>
           )}
@@ -77,7 +77,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
             </p>
           )}
           {product.description && (
-            <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+            <p className="hidden line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:block">
               {product.description}
             </p>
           )}
@@ -93,7 +93,8 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
           data-testid={`button-wa-${product.id}`}
         >
           <MessageCircle className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">WhatsApp’tan Fiyat Sor</span>
+          <span className="truncate sm:hidden">Fiyat sor</span>
+          <span className="hidden truncate sm:inline">WhatsApp’tan Fiyat Sor</span>
         </a>
         <a
           href={`tel:${PHONE_NUMBER}`}
