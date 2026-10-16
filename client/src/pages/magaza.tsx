@@ -21,7 +21,6 @@ import {
   CONDITION_LABELS,
   conditionLabel,
   normalizeSearchText,
-  optimizedProductImageUrl,
 } from "@/lib/product-utils";
 import BRANDS from "@/lib/brands";
 
@@ -404,13 +403,10 @@ export default function MagazaPage() {
     onStockChange: () => setStockOnly((value) => !value),
     onReset: clearFilters,
   };
-  const heroProduct = allProducts.find((product) => product.images?.[0]?.imageUrl || product.imageUrl);
-  const heroImage = heroProduct?.images?.[0]?.imageUrl ?? heroProduct?.imageUrl ?? "/products/siemens-g120.png";
-
   return (
     <>
       <SEO
-        title="Yedek Parça Kataloğu | Burem Elektronik"
+        title="Mağaza | Burem Elektronik"
         description="Siemens, ABB, Fanuc, Yaskawa ve daha fazla markaya ait endüstriyel elektronik yedek parçaları keşfedin."
         canonical="/magaza"
       />
@@ -418,25 +414,12 @@ export default function MagazaPage() {
       <div className="min-h-screen bg-[#f6f6f4] text-foreground">
         <StoreHeader />
 
-        <section className="relative isolate overflow-hidden border-b border-slate-200 bg-[#f1f2f0]">
-          {heroImage && (
-            <img
-              src={optimizedProductImageUrl(heroImage, 1100)}
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 right-0 h-full w-[58%] object-cover object-center opacity-25 mix-blend-multiply [mask-image:linear-gradient(to_right,transparent,black_42%)]"
-            />
-          )}
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#f1f2f0_0%,rgba(241,242,240,.94)_42%,rgba(241,242,240,.14)_100%)]" />
-          <div className="relative mx-auto flex min-h-[220px] max-w-7xl items-end px-4 py-8 md:min-h-[250px] md:px-6 md:py-10">
-            <div className="max-w-2xl">
-              <p className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.24em] text-slate-500">Burem Elektronik</p>
-              <h1 className="text-3xl font-extrabold tracking-tight text-slate-950 md:text-[42px]">Yedek Parça Kataloğu</h1>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 md:text-base">
-                Endüstriyel otomasyon ve sürücü sistemleri için yedek parçaları marka, parça numarası ve stok bilgileriyle inceleyin.
-              </p>
-            </div>
-          </div>
+        <section className="relative aspect-[2.33] overflow-hidden border-b border-slate-200 bg-[#f1f2f0] md:aspect-[2.8]">
+          <img
+            src="/assets/store-banner.webp"
+            alt="Burem Elektronik mağaza içi ve endüstriyel elektronik ürünleri"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
         </section>
 
         <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
