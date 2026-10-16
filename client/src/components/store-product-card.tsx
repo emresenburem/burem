@@ -24,13 +24,13 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
         data-testid={`link-product-${product.id}`}
         data-analytics-product-name={product.name}
       >
-        <div className="relative aspect-[1.42] overflow-hidden bg-[#f0f1ef] p-3">
+        <div className="relative aspect-[1.42] overflow-hidden bg-[#f0f1ef]">
           {coverUrl ? (
             <img
               src={optimizedProductImageUrl(coverUrl, 720)}
               alt={product.name}
               loading="lazy"
-              className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.035]"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -47,7 +47,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
             <span className={`h-1.5 w-1.5 rounded-full ${product.inStock ? "bg-emerald-500" : "bg-red-500"}`} />
             {product.inStock ? "Stokta" : "Stok dışı"}
           </span>
-          {condition && condition !== "Sıfır" && (
+          {condition && (
             <span className="absolute bottom-3 left-3 rounded-full border border-white/70 bg-white/95 px-2.5 py-1 text-[10px] font-bold text-foreground">
               {condition}
             </span>
@@ -72,12 +72,12 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
             </p>
           )}
           {product.partNumber && (
-            <p className="truncate font-mono text-[10px] font-medium tracking-[0.08em] text-slate-500">
-              P/N: {product.partNumber}
+            <p className="truncate font-mono text-[10px] font-medium tracking-[0.05em] text-slate-500">
+              Parça no: {product.partNumber}
             </p>
           )}
           {product.description && (
-            <p className="hidden line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:block">
+            <p className="line-clamp-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
               {product.description}
             </p>
           )}
