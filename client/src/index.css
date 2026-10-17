@@ -122,7 +122,7 @@
 }
 
 .store-page {
-  --muted-foreground: 220 18% 27%;
+  --muted-foreground: 220 25% 18%;
 }
 
 @layer base {
