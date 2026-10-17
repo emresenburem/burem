@@ -411,19 +411,16 @@ export default function MagazaPage() {
         canonical="/magaza"
       />
 
-      <div className="min-h-screen bg-[#f6f6f4] text-foreground">
+      <div className="relative isolate min-h-screen text-foreground">
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <img src="/assets/store-banner.webp" alt="" className="h-full w-full object-cover object-center" />
+          <div className="absolute inset-0 bg-white/40" />
+        </div>
+
         <StoreHeader />
 
-        <section className="relative aspect-[2.33] overflow-hidden border-b border-slate-200 bg-[#f1f2f0] md:aspect-[2.8]">
-          <img
-            src="/assets/store-banner.webp"
-            alt="Burem Elektronik mağaza içi ve endüstriyel elektronik ürünleri"
-            className="absolute inset-0 h-full w-full object-cover object-center"
-          />
-        </section>
-
         <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
-          <nav aria-label="İçerik yolu" className="mb-5 flex items-center gap-2 text-xs text-muted-foreground">
+          <nav aria-label="İçerik yolu" className="mb-5 inline-flex items-center gap-2 rounded-lg bg-white/85 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-sm">
             <Link href="/" className="transition-colors hover:text-foreground">Ana Sayfa</Link>
             <ChevronRight className="h-3 w-3" aria-hidden="true" />
             <span>Mağaza</span>
@@ -439,7 +436,7 @@ export default function MagazaPage() {
             </aside>
 
             <section className="min-w-0" aria-label="Ürün kataloğu">
-              <div className="mb-5 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+              <div className="mb-5 flex flex-col gap-3 rounded-xl border border-white/60 bg-white/85 p-3 shadow-sm backdrop-blur-sm xl:flex-row xl:items-center xl:justify-between">
                 <p className="text-xs font-medium text-muted-foreground">
                   {isLoading ? "Ürünler yükleniyor…" : `${sortedProducts.length} ürün listeleniyor`}
                 </p>
@@ -533,7 +530,7 @@ export default function MagazaPage() {
               ))}
             </div>
           ) : sortedProducts.length === 0 ? (
-            <div className="flex flex-col items-center rounded-[28px] border border-dashed border-border px-6 py-20 text-center">
+            <div className="flex flex-col items-center rounded-[28px] border border-dashed border-border bg-white/90 px-6 py-20 text-center shadow-sm backdrop-blur-sm">
               <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-muted-foreground/50">
                 <Package className="h-8 w-8" />
               </div>
