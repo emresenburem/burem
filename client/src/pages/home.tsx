@@ -636,7 +636,8 @@ function MagneticButton({ children, className, onClick, ...props }: any) {
 }
 
 const WC = "https://upload.wikimedia.org/wikipedia/commons/";
-const REFERENCES = [
+type ReferenceLogo = { name: string; logo: string; invert?: boolean };
+const REFERENCES: ReferenceLogo[] = [
   { name: "Bursa CNC",      logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
@@ -649,31 +650,6 @@ const REFERENCES = [
   { name: "Feka Otomotiv",  logo: "https://fekaautomotive.com/images/feka-logo.png" },
   { name: "Erkalıp",        logo: "https://www.erkalip.com.tr/images/logos/erkalip_logo_renkli.jpg" },
 ];
-
-function RefCard({ company }: { company: typeof REFERENCES[0] }) {
-  const [imgError, setImgError] = useState(false);
-  const inv = (company as any).invert;
-  const bg = (company as any).bgImg;
-  return (
-    <div className="flex-shrink-0 flex items-center justify-center rounded-2xl border bg-card px-7 h-[80px] w-[180px] shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-default group">
-      {bg ? (
-        <div
-          className={`w-full h-10 bg-contain bg-center bg-no-repeat opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
-          style={{ backgroundImage: `url(${company.logo})` }}
-        />
-      ) : !imgError ? (
-        <img
-          src={company.logo}
-          alt={company.name}
-          className={`w-full h-10 object-contain object-center opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${inv ? "invert" : ""}`}
-          onError={() => setImgError(true)}
-        />
-      ) : (
-        <span className="text-xs font-bold tracking-wide text-muted-foreground">{company.name}</span>
-      )}
-    </div>
-  );
-}
 
 function DockBrandSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -756,60 +732,7 @@ function DockBrandSlider() {
 }
 
 function ReferencesSlider() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const posRef = useRef(0);
-  const halfRef = useRef(0);
-  const draggingRef = useRef(false);
-  const [grabbing, setGrabbing] = useState(false);
-  const dragStartX = useRef(0);
-  const dragStartPos = useRef(0);
-  const rafRef = useRef<number | undefined>(undefined);
-  const SPEED = 1.1;
-
-  useEffect(() => {
-    const measure = () => {
-      if (trackRef.current) halfRef.current = trackRef.current.scrollWidth / 2;
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
-
-  useEffect(() => {
-    const tick = () => {
-      if (!draggingRef.current && trackRef.current) {
-        posRef.current -= SPEED;
-        if (halfRef.current > 0 && Math.abs(posRef.current) >= halfRef.current)
-          posRef.current += halfRef.current;
-        trackRef.current.style.transform = `translateX(${posRef.current}px)`;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current!);
-  }, []);
-
-  const startDrag = (clientX: number) => {
-    draggingRef.current = true;
-    setGrabbing(true);
-    dragStartX.current = clientX;
-    dragStartPos.current = posRef.current;
-  };
-
-  const moveDrag = (clientX: number) => {
-    if (!draggingRef.current || !trackRef.current) return;
-    let newPos = dragStartPos.current + (clientX - dragStartX.current);
-    const half = halfRef.current;
-    if (half > 0) {
-      while (newPos > 0) newPos -= half;
-      while (newPos < -half) newPos += half;
-    }
-    posRef.current = newPos;
-    trackRef.current.style.transform = `translateX(${newPos}px)`;
-  };
-
-  const endDrag = () => { draggingRef.current = false; setGrabbing(false); };
-
+  const logos = REFERENCES.map(({ name, logo, invert }) => ({ name, logo, invert }));
   return (
     <section className="w-full py-16 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 md:px-6 mb-8">
@@ -831,25 +754,14 @@ function ReferencesSlider() {
         </div>
       </div>
 
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <div
-          className="py-2 select-none overflow-hidden"
-          style={{ cursor: grabbing ? "grabbing" : "grab" }}
-          onMouseDown={(e) => startDrag(e.clientX)}
-          onMouseMove={(e) => moveDrag(e.clientX)}
-          onMouseUp={endDrag}
-          onMouseLeave={endDrag}
-          onTouchStart={(e) => startDrag(e.touches[0].clientX)}
-          onTouchMove={(e) => moveDrag(e.touches[0].clientX)}
-          onTouchEnd={endDrag}
-        >
-          <div ref={trackRef} className="flex w-max" style={{ gap: "14px" }}>
-            {REFERENCES.map((item) => <RefCard key={item.name + "_a"} company={item} />)}
-            {REFERENCES.map((item) => <RefCard key={item.name + "_b"} company={item} />)}
-          </div>
-        </div>
+      <div className="mx-auto max-w-6xl px-4 md:px-6">
+        <LogoCarousel
+          logos={logos}
+          columnCount={4}
+          mobileColumnCount={3}
+          cycleInterval={3000}
+          className="rounded-2xl border border-border/50 bg-background/55 px-2 py-2 backdrop-blur-sm"
+        />
       </div>
     </section>
   );

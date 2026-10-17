@@ -9,6 +9,7 @@ export interface LogoCarouselItem {
   logo: string;
   scale?: number;
   logoHeight?: number;
+  invert?: boolean;
 }
 
 interface LogoColumnProps {
@@ -82,7 +83,7 @@ function LogoColumn({
             src={currentLogo.logo}
             alt={currentLogo.name}
             draggable={false}
-            className="max-h-full max-w-full select-none object-contain"
+            className={cn("max-h-full max-w-full select-none object-contain", currentLogo.invert && "invert")}
             style={{
               width: logoHeight ? "auto" : "100%",
               height: logoHeight ? `${logoHeight}px` : undefined,
