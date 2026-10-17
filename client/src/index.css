@@ -121,6 +121,10 @@
   --ring: 206 84% 52%;
 }
 
+.store-page {
+  --muted-foreground: 220 18% 27%;
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -411,7 +411,7 @@ export default function MagazaPage() {
         canonical="/magaza"
       />
 
-      <div className="relative isolate min-h-screen text-foreground">
+      <div className="store-page relative isolate min-h-screen text-foreground">
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
           <picture className="block h-full w-full">
             <source media="(max-width: 767px)" srcSet="/assets/store-banner-mobile.webp" />

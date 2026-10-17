@@ -58,7 +58,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
           <div className="flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-sky-700">
             <span>{product.brand}</span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
-            <span className="text-slate-500">{product.category}</span>
+            <span className="text-slate-700">{product.category}</span>
           </div>
           <h2
             className="line-clamp-2 min-h-[2.4rem] text-[13px] font-extrabold leading-snug text-slate-950 sm:min-h-[2.6rem] sm:text-[15px]"
@@ -72,7 +72,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
             </p>
           )}
           {product.partNumber && (
-            <p className="truncate font-mono text-[10px] font-medium tracking-[0.05em] text-slate-500">
+            <p className="truncate font-mono text-[10px] font-medium tracking-[0.05em] text-slate-700">
               Parça no: {product.partNumber}
             </p>
           )}
