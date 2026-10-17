@@ -639,6 +639,9 @@ const WC = "https://upload.wikimedia.org/wikipedia/commons/";
 type ReferenceLogo = { name: string; logo: string; invert?: boolean };
 const REFERENCES: ReferenceLogo[] = [
   { name: "Bursa CNC",      logo: "https://www.bursacncmakina.com/images/29239-logo17.png" },
+  { name: "Özkaynak",       logo: new URL("../assets/logos/ozkaynak.png", import.meta.url).href },
+  { name: "Özkul",          logo: new URL("../assets/logos/ozkul.png", import.meta.url).href },
+  { name: "Şahinkul",       logo: new URL("../assets/logos/sahinkul.png", import.meta.url).href },
   { name: "Fisteks",        logo: "https://fisteks.com.tr/images/logo.png" },
   { name: "Kırayteks",      logo: "https://kirayteks.com/wp-content/uploads/2021/05/logo-3.svg" },
   { name: "Batmaz Tekstil", logo: "https://www.batmaztekstil.com.tr/wp-content/uploads/2025/03/batmaz-menu.png", invert: true },
