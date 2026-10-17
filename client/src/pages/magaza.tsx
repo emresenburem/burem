@@ -413,7 +413,14 @@ export default function MagazaPage() {
 
       <div className="relative isolate min-h-screen text-foreground">
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-          <img src="/assets/store-banner.webp" alt="" className="h-full w-full object-cover object-center" />
+          <picture className="block h-full w-full">
+            <source media="(max-width: 767px)" srcSet="/assets/store-banner-mobile.webp" />
+            <img
+              src="/assets/store-banner.webp"
+              alt=""
+              className="h-full w-full object-cover object-center"
+            />
+          </picture>
           <div className="absolute inset-0 bg-white/40" />
         </div>
 
