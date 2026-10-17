@@ -573,31 +573,14 @@ export default function MagazaPage() {
             </section>
           </div>
 
-          <section className="mt-14" aria-labelledby="shop-by-brand-heading">
-            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-                  Burem Elektronik · Marka Rehberi
-                </p>
-                <h2 id="shop-by-brand-heading" className="text-2xl font-bold tracking-tight md:text-3xl">
-                  Markaya göre keşfet
-                </h2>
-                <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-                  Endüstriyel yedek parça ve ekipmanları tanıdığınız markaya göre bulun.
-                </p>
-              </div>
-              <span className="text-xs font-semibold text-muted-foreground">
-                {brandCards.length} marka
-              </span>
-            </div>
-
+          <section className="mt-14" aria-label="Marka logoları">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
               {brandCards.map((item) => (
                 <Link
                   key={item.name}
                   href={`/brand/${encodeURIComponent(item.name)}`}
-                  aria-label={`${item.name} markasını keşfet`}
-                  className="group relative flex min-h-[132px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-card px-4 py-5 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:min-h-[148px]"
+                  aria-label={`${item.name} marka ürünlerini görüntüle`}
+                  className="group relative flex min-h-[132px] items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-card px-4 py-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:min-h-[148px]"
                   data-testid={`brand-card-${item.name}`}
                 >
                   <span
@@ -616,16 +599,8 @@ export default function MagazaPage() {
                         event.currentTarget.style.visibility = "hidden";
                       }}
                     />
-                    <span className="sr-only">{item.name}</span>
+                    
                   </div>
-                  <span className="mt-3 text-sm font-bold text-foreground">
-                    {item.name}
-                  </span>
-                  <span className="mt-1 text-[11px] text-muted-foreground">
-                    {item.productCount > 0
-                      ? `${item.productCount} ürün`
-                      : "Markayı keşfet"}
-                  </span>
                 </Link>
               ))}
             </div>
