@@ -63,6 +63,13 @@ export function productStructuredData(product: ProductSeoInput, canonical: strin
   const image = product.imageUrl
     ? (/^https?:\/\//i.test(product.imageUrl) ? product.imageUrl : new URL(product.imageUrl, origin).toString())
     : DEFAULT_OG_IMAGE;
+  const rawPrice = product.price;
+  const price = rawPrice === null || rawPrice === undefined || String(rawPrice).trim() === ""
+    ? Number.NaN
+    : Number(rawPrice);
+  const currency = product.currency === "TRY" || product.currency === "USD"
+    ? product.currency
+    : undefined;
   const item: Record<string, unknown> = {
     "@type": "Product",
     name: productSeoTitle(product).replace(/ \| Burem Elektronik$/, ""),
@@ -75,25 +82,25 @@ export function productStructuredData(product: ProductSeoInput, canonical: strin
     ...(product.condition && conditions[product.condition]
       ? { itemCondition: `https://schema.org/${conditions[product.condition]}` } : {}),
   };
-  const price = Number(product.price);
-  if (product.price !== null && product.price !== undefined && Number.isFinite(price) && price > 0) {
+  const hasVerifiedOffer = Number.isFinite(price) && price > 0 && currency !== undefined;
+  if (hasVerifiedOffer) {
     item.offers = {
       "@type": "Offer", url: canonical, price: price.toFixed(2),
-      priceCurrency: product.currency === "USD" ? "USD" : "TRY",
-      availability: product.inStock === false ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      priceCurrency: currency,
+      availability: product.inStock === true ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
     };
   }
+  const graph: Array<Record<string, unknown>> = [];
+  if (hasVerifiedOffer) graph.push(item);
+  graph.push({ "@type": "BreadcrumbList", itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: `${origin}/` },
+    { "@type": "ListItem", position: 2, name: "Yedek Parça Kataloğu", item: `${origin}/magaza` },
+    { "@type": "ListItem", position: 3, name: product.category, item: `${origin}/magaza/kategori/${encodeURIComponent(slugifyProductPart(product.category))}` },
+    { "@type": "ListItem", position: 4, name: product.brand, item: `${origin}/magaza/marka/${encodeURIComponent(slugifyProductPart(product.brand))}` },
+    { "@type": "ListItem", position: 5, name: product.partNumber || product.name, item: canonical },
+  ] });
   return {
     "@context": "https://schema.org",
-    "@graph": [
-      item,
-      { "@type": "BreadcrumbList", itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: `${origin}/` },
-        { "@type": "ListItem", position: 2, name: "Yedek Parça Kataloğu", item: `${origin}/magaza` },
-        { "@type": "ListItem", position: 3, name: product.category, item: `${origin}/magaza/kategori/${encodeURIComponent(slugifyProductPart(product.category))}` },
-        { "@type": "ListItem", position: 4, name: product.brand, item: `${origin}/magaza/marka/${encodeURIComponent(slugifyProductPart(product.brand))}` },
-        { "@type": "ListItem", position: 5, name: product.partNumber || product.name, item: canonical },
-      ] },
-    ],
+    "@graph": graph,
   };
 }

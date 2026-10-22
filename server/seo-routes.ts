@@ -39,7 +39,7 @@ export function productMeta(product: SeoProduct): PageMeta {
   return {
     title, description, canonical, h1: title.replace(/ \| Burem Elektronik$/, ""),
     intro: description, image: product.imageUrl ?? undefined,
-    stock: product.inStock === false ? "Stokta Yok" : "Stokta",
+    stock: product.inStock === true ? "Stokta" : "Stokta Yok",
     links: [
       { href: "/magaza", label: "Yedek Parça Kataloğu" },
       { href: `/magaza/kategori/${encodeURIComponent(slugifyProductPart(product.category))}`, label: product.category },
