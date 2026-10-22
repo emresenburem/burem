@@ -26,6 +26,7 @@ import {
   optimizedProductImageUrl,
   productAbsoluteUrl,
   productPath,
+  productWhatsAppButtonLabel,
   productWhatsAppLink,
 } from "@/lib/product-utils";
 
@@ -363,7 +364,7 @@ function ProductInfo({ product }: { product: Product }) {
           data-testid={`button-detail-wa-${product.id}`}
         >
           <MessageCircle className="h-5 w-5" />
-          {formattedPrice ? "WhatsApp’tan Sipariş ve Bilgi Al" : "WhatsApp’tan Fiyat Sor"}
+          {productWhatsAppButtonLabel(product.price, product.currency)}
         </a>
         <a
           href={`tel:${PHONE_NUMBER}`}
