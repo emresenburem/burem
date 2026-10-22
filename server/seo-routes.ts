@@ -1,6 +1,6 @@
 import { storage } from "./storage";
 import type { Product } from "@shared/schema";
-import { DEFAULT_OG_IMAGE, HOME_CANONICAL_URL, HOME_PAGE_DESCRIPTION, HOME_PAGE_TITLE, SITE_ORIGIN } from "@shared/site-seo";
+import { DEFAULT_OG_IMAGE, HOME_CANONICAL_URL, HOME_PAGE_DESCRIPTION, HOME_PAGE_TITLE, SITE_IDENTITY_JSONLD, SITE_ORIGIN } from "@shared/site-seo";
 import { productSeoDescription, productSeoPath, productSeoTitle, productStructuredData, slugifyProductPart } from "@shared/product-seo";
 
 type SeoProduct = Product;
@@ -10,6 +10,7 @@ type PageMeta = {
   h1?: string; intro?: string; image?: string; stock?: string;
   links?: Array<{ href: string; label: string }>;
   jsonLd?: Record<string, unknown>;
+  siteJsonLd?: Record<string, unknown>;
 };
 
 const publicStaticPages: Record<string, { title: string; description: string }> = {
@@ -31,6 +32,9 @@ const abs = (path: string) => new URL(path, `${SITE_ORIGIN}/`).toString();
 const published = (p: SeoProduct) => p.isPublished !== false;
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const itemUrl = (p: SeoProduct) => abs(productSeoPath(p));
+const serviceLinks = Object.entries(publicStaticPages)
+  .filter(([href]) => href !== "/takip")
+  .map(([href, page]) => ({ href, label: page.title.split("|")[0].trim() }));
 
 export function productMeta(product: SeoProduct): PageMeta {
   const canonical = itemUrl(product);
@@ -51,7 +55,15 @@ export function productMeta(product: SeoProduct): PageMeta {
 
 export async function resolvePageMetadata(pathname: string): Promise<PageMeta | null> {
   if (pathname === "/") {
-    return { title: HOME_PAGE_TITLE, description: HOME_PAGE_DESCRIPTION, canonical: HOME_CANONICAL_URL, h1: HOME_PAGE_TITLE, intro: HOME_PAGE_DESCRIPTION };
+    return {
+      title: HOME_PAGE_TITLE,
+      description: HOME_PAGE_DESCRIPTION,
+      canonical: HOME_CANONICAL_URL,
+      h1: HOME_PAGE_TITLE,
+      intro: HOME_PAGE_DESCRIPTION,
+      links: [...serviceLinks, { href: "/magaza", label: "Yedek Parça Mağazası" }],
+      siteJsonLd: SITE_IDENTITY_JSONLD,
+    };
   }
   if (pathname === "/magaza" || pathname === "/magaza/") {
     const products = (await storage.getProducts()).filter(published);
@@ -65,7 +77,14 @@ export async function resolvePageMetadata(pathname: string): Promise<PageMeta | 
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   if (publicStaticPages[normalizedPath]) {
     const page = publicStaticPages[normalizedPath];
-    return { ...page, canonical: abs(normalizedPath) };
+    if (normalizedPath === "/takip") return { ...page, canonical: abs(normalizedPath) };
+    return {
+      ...page,
+      canonical: abs(normalizedPath),
+      h1: page.title.split("|")[0].trim(),
+      intro: page.description,
+      links: [...serviceLinks.filter((link) => link.href !== normalizedPath), { href: "/magaza", label: "Yedek Parça Mağazası" }],
+    };
   }
   const brandServicePage = normalizedPath.match(/^\/brand\/([^/]+)$/);
   if (brandServicePage) {
@@ -149,6 +168,8 @@ export function applyPageMetadata(html: string, meta: PageMeta): string {
   if (meta.noindex) set(/<meta\s+name=["']robots["'][^>]*>/i, `<meta name="robots" content="noindex,nofollow,noarchive" />`);
   html = html.replace(/<script[^>]+id=["']burem-product-jsonld["'][^>]*>[\s\S]*?<\/script>/i, "");
   if (meta.jsonLd) html = html.replace("</head>", `<script id="burem-product-jsonld" type="application/ld+json">${JSON.stringify(meta.jsonLd).replace(/</g, "\\u003c")}</script></head>`);
+  html = html.replace(/<script[^>]+id=["']burem-site-jsonld["'][^>]*>[\s\S]*?<\/script>/i, "");
+  if (meta.siteJsonLd) html = html.replace("</head>", `<script id="burem-site-jsonld" type="application/ld+json">${JSON.stringify(meta.siteJsonLd).replace(/</g, "\\u003c")}</script></head>`);
   if (meta.h1) {
     const nav = (meta.links?.length ? `<nav aria-label="Related pages"><ul>${meta.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join("")}</ul></nav>` : "");
     const initial = `<main><h1>${esc(meta.h1)}</h1><p>${esc(meta.intro ?? "")}</p>${meta.stock ? `<p>${esc(meta.stock)}</p>` : ""}${nav}</main>`;

@@ -58,3 +58,28 @@ test("existing public service pages keep working and appear in the sitemap", asy
   assert.equal(metadata?.canonical, "https://www.buremelektronik.com/bursa-surucu-tamiri");
   assert.match(buildSitemapXml([product]), /https:\/\/www\.buremelektronik\.com\/bursa-surucu-tamiri/);
 });
+
+test("home initial HTML includes existing explanatory copy, crawlable service links, and linked site identity", async () => {
+  const metadata = await resolvePageMetadata("/");
+  assert.ok(metadata);
+  const html = applyPageMetadata('<html><head><title>old</title></head><body><div id="root"></div></body></html>', metadata);
+  assert.match(html, /<h1>Bursa Sürücü Tamiri \| Burem Elektronik<\/h1>/);
+  assert.match(html, /inverter, servo sürücü, PLC, HMI/);
+  assert.match(html, /<a href="\/lenze-surucu-tamiri">Lenze Sürücü Tamiri<\/a>/);
+  assert.match(html, /<script id="burem-site-jsonld" type="application\/ld\+json">/);
+  assert.match(html, /"@type":"LocalBusiness"/);
+  assert.match(html, /"@type":"WebSite"/);
+  assert.match(html, /#organization/);
+  assert.doesNotMatch(html, /"@type":"Organization"/);
+});
+
+test("service initial HTML includes its existing description and crawlable links to existing pages", async () => {
+  const metadata = await resolvePageMetadata("/bursa-surucu-tamiri");
+  assert.ok(metadata);
+  const html = applyPageMetadata('<html><head><title>old</title></head><body><div id="root"></div></body></html>', metadata);
+  assert.match(html, /<h1>Bursa Sürücü Tamiri<\/h1>/);
+  assert.match(html, /Bursa&#39;da endüstriyel sürücü arıza tespiti/);
+  assert.match(html, /<a href="\/servo-surucu-tamiri">Servo Sürücü Tamiri<\/a>/);
+  assert.match(html, /<a href="\/magaza">Yedek Parça Mağazası<\/a>/);
+  assert.match(html, /rel="canonical" href="https:\/\/www\.buremelektronik\.com\/bursa-surucu-tamiri"/);
+});
