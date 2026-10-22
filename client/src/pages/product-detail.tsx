@@ -363,7 +363,7 @@ function ProductInfo({ product }: { product: Product }) {
           data-testid={`button-detail-wa-${product.id}`}
         >
           <MessageCircle className="h-5 w-5" />
-          WhatsApp’tan Fiyat Sor
+          {formattedPrice ? "WhatsApp’tan Sipariş ve Bilgi Al" : "WhatsApp’tan Fiyat Sor"}
         </a>
         <a
           href={`tel:${PHONE_NUMBER}`}

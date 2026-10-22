@@ -2,12 +2,14 @@ import { storage } from "./storage";
 import type { Product } from "@shared/schema";
 import { DEFAULT_OG_IMAGE, HOME_CANONICAL_URL, HOME_PAGE_DESCRIPTION, HOME_PAGE_TITLE, SITE_IDENTITY_JSONLD, SITE_ORIGIN } from "@shared/site-seo";
 import { productSeoDescription, productSeoPath, productSeoTitle, productStructuredData, slugifyProductPart } from "@shared/product-seo";
+import { formatProductPrice } from "@shared/product-price";
 
 type SeoProduct = Product;
 type PageMeta = {
   title: string; description: string; canonical?: string; noindex?: boolean;
   status?: number;
   h1?: string; intro?: string; image?: string; stock?: string;
+  price?: string;
   links?: Array<{ href: string; label: string }>;
   jsonLd?: Record<string, unknown>;
   siteJsonLd?: Record<string, unknown>;
@@ -44,6 +46,7 @@ export function productMeta(product: SeoProduct): PageMeta {
     title, description, canonical, h1: title.replace(/ \| Burem Elektronik$/, ""),
     intro: description, image: product.imageUrl ?? undefined,
     stock: product.inStock === true ? "Stokta" : "Stokta Yok",
+    price: formatProductPrice(product.price, product.currency) ?? undefined,
     links: [
       { href: "/magaza", label: "Yedek Parça Kataloğu" },
       { href: `/magaza/kategori/${encodeURIComponent(slugifyProductPart(product.category))}`, label: product.category },
@@ -172,7 +175,7 @@ export function applyPageMetadata(html: string, meta: PageMeta): string {
   if (meta.siteJsonLd) html = html.replace("</head>", `<script id="burem-site-jsonld" type="application/ld+json">${JSON.stringify(meta.siteJsonLd).replace(/</g, "\\u003c")}</script></head>`);
   if (meta.h1) {
     const nav = (meta.links?.length ? `<nav aria-label="Related pages"><ul>${meta.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join("")}</ul></nav>` : "");
-    const initial = `<main><h1>${esc(meta.h1)}</h1><p>${esc(meta.intro ?? "")}</p>${meta.stock ? `<p>${esc(meta.stock)}</p>` : ""}${nav}</main>`;
+    const initial = `<main><h1>${esc(meta.h1)}</h1><p>${esc(meta.intro ?? "")}</p>${meta.price ? `<p>${esc(meta.price)}</p>` : ""}${meta.stock ? `<p>${esc(meta.stock)}</p>` : ""}${nav}</main>`;
     html = html.replace('<div id="root"></div>', `<div id="root">${initial}</div>`);
   }
   return html;

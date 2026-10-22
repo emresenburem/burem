@@ -1,4 +1,5 @@
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "./site-seo";
+import { formatProductPrice } from "./product-price";
 
 export type ProductSeoInput = {
   id: string;
@@ -46,11 +47,14 @@ export function productSeoTitle(product: Pick<ProductSeoInput, "name" | "brand" 
   return `${Array.from(new Set(fields.filter(Boolean))).join(" ")} | Burem Elektronik`;
 }
 
-export function productSeoDescription(product: Pick<ProductSeoInput, "name" | "brand" | "category" | "description" | "partNumber">): string {
+export function productSeoDescription(product: Pick<ProductSeoInput, "name" | "brand" | "category" | "description" | "partNumber" | "price" | "currency">): string {
   const description = product.description?.trim();
+  const hasVisiblePrice = formatProductPrice(product.price, product.currency) !== null;
   return (description || [
     product.brand.trim(), product.partNumber?.trim(), product.name.trim(), product.category.trim(),
-    "yedek parçası. Stok ve fiyat bilgisi için Burem Elektronik ile iletişime geçin.",
+    hasVisiblePrice
+      ? "yedek parçası."
+      : "yedek parçası. Stok ve fiyat bilgisi için Burem Elektronik ile iletişime geçin.",
   ].filter(Boolean).join(" ")).slice(0, 300);
 }
 

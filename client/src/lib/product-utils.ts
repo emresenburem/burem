@@ -1,5 +1,6 @@
 import type { Product } from "@shared/schema";
 import { productSeoPath, productSeoSlug } from "@shared/product-seo";
+export { formatProductPrice } from "@shared/product-price";
 import { SITE_URL, whatsappLink } from "@/lib/site-contact";
 
 export const CONDITION_LABELS: Record<string, string> = {
@@ -65,24 +66,6 @@ export function productWhatsAppLink(
 
 export function conditionLabel(condition?: string | null) {
   return condition ? CONDITION_LABELS[condition] ?? condition : null;
-}
-
-export function formatProductPrice(
-  price?: string | number | null,
-  currency?: string | null,
-) {
-  if (price === null || price === undefined || String(price).trim() === "") return null;
-
-  const numericPrice = Number(price);
-  if (!Number.isFinite(numericPrice) || numericPrice < 0) return null;
-
-  const currencyCode = currency === "USD" ? "USD" : "TRY";
-  return new Intl.NumberFormat(currencyCode === "USD" ? "en-US" : "tr-TR", {
-    style: "currency",
-    currency: currencyCode,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(numericPrice);
 }
 
 export function optimizedProductImageUrl(url: string, width: number) {

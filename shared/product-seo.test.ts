@@ -19,6 +19,12 @@ test("title and description use catalog facts without inventing specifications",
   assert.doesNotMatch(productSeoDescription(sample), /400 V|1\.5 kW/);
 });
 
+test("priced product description does not claim that customers must contact for its price", () => {
+  const description = productSeoDescription({ ...sample, price: "1200.00", currency: "USD" });
+  assert.match(description, /yedek parçası\./);
+  assert.doesNotMatch(description, /fiyat bilgisi için.*iletişime geçin/i);
+});
+
 test("unpriced product JSON-LD keeps breadcrumbs but omits the Product entity", () => {
   const ld = productStructuredData(sample, "https://www.buremelektronik.com/p");
   const graph = ld["@graph"] as Array<Record<string, any>>;

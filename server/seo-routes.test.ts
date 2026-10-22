@@ -19,12 +19,25 @@ test("unpriced product HTML retains page metadata and breadcrumbs without Produc
   assert.doesNotMatch(html, /"@type":"Product"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
   assert.match(html, /<h1>Lenze E82EV152_4C 8200 Vector Sürücü<\/h1>/);
+  assert.match(html, /Stok ve fiyat bilgisi için Burem Elektronik ile iletişime geçin/);
+  assert.doesNotMatch(html, /<p>\$1,200\.00<\/p>/);
   assert.match(html, /<a href="\/magaza\/marka\/lenze">Lenze<\/a>/);
   assert.doesNotMatch(html, /\.replit\.dev|localhost/);
 });
 
 test("priced product initial HTML embeds the exact currency, price and visible stock state", () => {
-  const metadata = productMeta({ ...product, price: "1250.50", currency: "USD", inStock: false });
+  const boschProduct = {
+    ...product,
+    id: "35155822-96ce-4912-aa5c-49c9e6144898",
+    name: "Bosch Oransal Valf Kartı",
+    brand: "Bosch",
+    category: "Kart",
+    partNumber: "0 811 405 061",
+    price: "1200.00",
+    currency: "USD",
+    inStock: true,
+  };
+  const metadata = productMeta(boschProduct);
   const html = applyPageMetadata(
     '<html><head><title>old</title><meta name="description" content="old"><link rel="canonical" href="old"></head><body><div id="root"></div></body></html>',
     metadata,
@@ -37,12 +50,18 @@ test("priced product initial HTML embeds the exact currency, price and visible s
   assert.deepEqual(graph[0].offers, {
     "@type": "Offer",
     url: metadata.canonical,
-    price: "1250.50",
+    price: "1200.00",
     priceCurrency: "USD",
-    availability: "https://schema.org/OutOfStock",
+    availability: "https://schema.org/InStock",
   });
-  assert.equal(metadata.stock, "Stokta Yok");
-  assert.match(html, /<p>Stokta Yok<\/p>/);
+  assert.equal(metadata.stock, "Stokta");
+  assert.equal(metadata.price, "$1,200.00");
+  assert.doesNotMatch(metadata.description, /fiyat bilgisi için.*iletişime geçin/i);
+  assert.match(html, /<h1>0 811 405 061 Bosch Oransal Valf Kartı<\/h1>/);
+  assert.match(html, /<p>\$1,200\.00<\/p>/);
+  assert.match(html, /<p>Stokta<\/p>/);
+  assert.match(html, /"@type":"BreadcrumbList"/);
+  assert.ok(html.includes(`<link rel="canonical" href="${metadata.canonical}" />`));
 });
 
 test("sitemap is unique, production-origin-only, and excludes drafts", () => {
