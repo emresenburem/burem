@@ -1,6 +1,7 @@
 import type { Product } from "@shared/schema";
 import { productSeoPath, productSeoSlug } from "@shared/product-seo";
 export { formatProductPrice } from "@shared/product-price";
+export { productWhatsAppButtonLabel } from "@shared/product-price";
 import { SITE_URL, whatsappLink } from "@/lib/site-contact";
 
 export const CONDITION_LABELS: Record<string, string> = {

@@ -15,3 +15,12 @@ export function formatProductPrice(
     maximumFractionDigits: 2,
   }).format(numericPrice);
 }
+
+export function productWhatsAppButtonLabel(
+  price?: string | number | null,
+  currency?: string | null,
+): string {
+  return formatProductPrice(price, currency)
+    ? "WhatsApp’tan Sipariş ve Bilgi Al"
+    : "WhatsApp’tan Fiyat Sor";
+}

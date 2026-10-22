@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { productSeoDescription, productSeoPath, productSeoSlug, productSeoTitle, productStructuredData } from "./product-seo";
+import { productWhatsAppButtonLabel } from "./product-price";
 
 const sample = {
   id: "p1", name: "8200 Vector", brand: "Lenze", category: "Sürücü",
@@ -23,6 +24,12 @@ test("priced product description does not claim that customers must contact for 
   const description = productSeoDescription({ ...sample, price: "1200.00", currency: "USD" });
   assert.match(description, /yedek parçası\./);
   assert.doesNotMatch(description, /fiyat bilgisi için.*iletişime geçin/i);
+});
+
+test("WhatsApp button wording follows whether a valid price is visible", () => {
+  assert.equal(productWhatsAppButtonLabel("1200.00", "USD"), "WhatsApp’tan Sipariş ve Bilgi Al");
+  assert.equal(productWhatsAppButtonLabel(null, "USD"), "WhatsApp’tan Fiyat Sor");
+  assert.equal(productWhatsAppButtonLabel("1200.00", "EUR"), "WhatsApp’tan Fiyat Sor");
 });
 
 test("unpriced product JSON-LD keeps breadcrumbs but omits the Product entity", () => {
