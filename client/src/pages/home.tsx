@@ -13,7 +13,6 @@ import useSound from "use-sound";
 import {
   CheckCircle2,
   Mail,
-  MapPin,
   Phone,
   ShieldCheck,
   Timer,
@@ -53,6 +52,7 @@ import { InteractiveMenu } from "@/components/ui/modern-mobile-menu";
 import { ProductCarousel } from "@/components/ui/product-carousel";
 import { BrandActionSearch } from "@/components/ui/brand-action-search";
 import { LogoCarousel } from "@/components/ui/logo-carousel";
+import { LocationMap } from "@/components/ui/location-map";
 import { productPath } from "@/lib/product-utils";
 
 const BRANDS = [
@@ -1181,53 +1181,47 @@ export default function HomePage() {
             </Card>
 
             <div className="h-full min-h-[520px]">
-              <ImageAccordion
-                direction="vertical"
-                defaultActive={0}
-                className="h-full"
-                items={[
-                  {
-                    id: 1,
-                    title: "Telefon",
-                    description: "+90 (532) 266 47 64 — Hızlı yanıt için arayabilirsiniz.",
-                    icon: <Phone strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                  {
-                    id: 2,
-                    title: "E-posta",
-                    description: "info@buremelektronik.com — Teknik bilgi ve fiyat talebi için.",
-                    icon: <Mail strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                  {
-                    id: 3,
-                    title: "Lokasyon",
-                    description: "Bursa / Türkiye — Cihazınızı kargo veya elden teslim edebilirsiniz.",
-                    icon: <MapPin strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                  {
-                    id: 4,
-                    title: "Güvenilir parça & işçilik",
-                    description: "Yalnızca kaliteli parça kullanılır, işçilik titizlikle uygulanır.",
-                    icon: <ShieldCheck strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                  {
-                    id: 5,
-                    title: "Detaylı arıza analizi",
-                    description: "Komponent düzeyinde inceleme; gereksiz parça değişimi yapılmaz.",
-                    icon: <ScanLine strokeWidth={1.3} />,
-                    particleColor: "#94a3b8",
-                    gradient: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
-                  },
-                ]}
-              />
+              <LocationMap />
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <a
+                  href="tel:+905322664764"
+                  className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
+                >
+                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span>
+                    <span className="block text-xs font-semibold text-muted-foreground">Telefon</span>
+                    <span className="mt-1 block text-sm font-semibold text-foreground">+90 (532) 266 47 64</span>
+                  </span>
+                </a>
+                <a
+                  href="mailto:info@buremelektronik.com"
+                  className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
+                >
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="min-w-0">
+                    <span className="block text-xs font-semibold text-muted-foreground">E-posta</span>
+                    <span className="mt-1 block break-all text-sm font-semibold text-foreground">info@buremelektronik.com</span>
+                  </span>
+                </a>
+                <div className="rounded-2xl border border-border bg-card p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" />
+                    Güvenilir parça & işçilik
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    Yalnızca kaliteli parça kullanılır, işçilik titizlikle uygulanır.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-border bg-card p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <ScanLine className="h-4 w-4 text-primary" aria-hidden="true" />
+                    Detaylı arıza analizi
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    Komponent düzeyinde inceleme; gereksiz parça değişimi yapılmaz.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
