@@ -1,12 +1,13 @@
 import { storage } from "./storage";
 import type { Product } from "@shared/schema";
-import { DEFAULT_OG_IMAGE, HOME_CANONICAL_URL, HOME_PAGE_DESCRIPTION, HOME_PAGE_TITLE, SITE_IDENTITY_JSONLD, SITE_ORIGIN } from "@shared/site-seo";
+import { BRAND_LOGO_IMAGE_ALT, DEFAULT_OG_IMAGE, HOME_CANONICAL_URL, HOME_PAGE_DESCRIPTION, HOME_PAGE_TITLE, SITE_IDENTITY_JSONLD, SITE_ORIGIN } from "@shared/site-seo";
 import { productSeoDescription, productSeoPath, productSeoTitle, productStructuredData, slugifyProductPart } from "@shared/product-seo";
 import { formatProductPrice } from "@shared/product-price";
 
 type SeoProduct = Product;
 type PageMeta = {
   title: string; description: string; canonical?: string; noindex?: boolean;
+  maxImagePreview?: boolean;
   status?: number;
   h1?: string; intro?: string; image?: string; stock?: string;
   price?: string;
@@ -62,6 +63,7 @@ export async function resolvePageMetadata(pathname: string): Promise<PageMeta | 
       title: HOME_PAGE_TITLE,
       description: HOME_PAGE_DESCRIPTION,
       canonical: HOME_CANONICAL_URL,
+      maxImagePreview: true,
       h1: HOME_PAGE_TITLE,
       intro: HOME_PAGE_DESCRIPTION,
       links: [...serviceLinks, { href: "/magaza", label: "Yedek Parça Mağazası" }],
@@ -150,7 +152,14 @@ export async function getSitemapXml(): Promise<string> {
 
 export function applyPageMetadata(html: string, meta: PageMeta): string {
   const set = (pattern: RegExp, tag: string) => {
-    html = pattern.test(html) ? html.replace(pattern, tag) : html.replace("</head>", `${tag}</head>`);
+    let replaced = false;
+    const allMatches = new RegExp(pattern.source, `${pattern.flags.replace("g", "")}g`);
+    html = html.replace(allMatches, () => {
+      if (replaced) return "";
+      replaced = true;
+      return tag;
+    });
+    if (!replaced) html = html.replace("</head>", `${tag}</head>`);
   };
   const title = esc(meta.title);
   html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
@@ -160,15 +169,23 @@ export function applyPageMetadata(html: string, meta: PageMeta): string {
     [/<meta\s+property=["']og:description["'][^>]*>/i, `<meta property="og:description" content="${esc(meta.description)}" />`],
     [/<meta\s+property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${esc(meta.canonical ?? SITE_ORIGIN)}" />`],
     [/<meta\s+property=["']og:image["'][^>]*>/i, `<meta property="og:image" content="${DEFAULT_OG_IMAGE}" />`],
+    [/<meta\s+property=["']og:image:width["'][^>]*>/i, `<meta property="og:image:width" content="1024" />`],
+    [/<meta\s+property=["']og:image:height["'][^>]*>/i, `<meta property="og:image:height" content="1024" />`],
+    [/<meta\s+property=["']og:image:alt["'][^>]*>/i, `<meta property="og:image:alt" content="${BRAND_LOGO_IMAGE_ALT}" />`],
     [/<meta\s+name=["']twitter:image["'][^>]*>/i, `<meta name="twitter:image" content="${DEFAULT_OG_IMAGE}" />`],
+    [/<meta\s+name=["']twitter:image:alt["'][^>]*>/i, `<meta name="twitter:image:alt" content="${BRAND_LOGO_IMAGE_ALT}" />`],
     [/<meta\s+name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${title}" />`],
     [/<meta\s+name=["']twitter:description["'][^>]*>/i, `<meta name="twitter:description" content="${esc(meta.description)}" />`],
   ];
   for (const [pattern, tag] of tags) set(pattern, tag);
   const canonical = meta.canonical ? `<link rel="canonical" href="${esc(meta.canonical)}" />` : "";
-  html = /<link\s+rel=["']canonical["'][^>]*>/i.test(html) ? html.replace(/<link\s+rel=["']canonical["'][^>]*>/i, canonical) : html.replace("</head>", `${canonical}</head>`);
-  html = html.replace(/<meta\s+name=["']robots["'][^>]*>/i, "");
-  if (meta.noindex) set(/<meta\s+name=["']robots["'][^>]*>/i, `<meta name="robots" content="noindex,nofollow,noarchive" />`);
+  set(/<link\s+rel=["']canonical["'][^>]*>/i, canonical);
+  html = html.replace(/<meta\s+name=["']robots["'][^>]*>/gi, "");
+  if (meta.noindex) {
+    set(/<meta\s+name=["']robots["'][^>]*>/i, `<meta name="robots" content="noindex,nofollow,noarchive" />`);
+  } else if (meta.maxImagePreview) {
+    set(/<meta\s+name=["']robots["'][^>]*>/i, `<meta name="robots" content="max-image-preview:large" />`);
+  }
   html = html.replace(/<script[^>]+id=["']burem-product-jsonld["'][^>]*>[\s\S]*?<\/script>/i, "");
   if (meta.jsonLd) html = html.replace("</head>", `<script id="burem-product-jsonld" type="application/ld+json">${JSON.stringify(meta.jsonLd).replace(/</g, "\\u003c")}</script></head>`);
   html = html.replace(/<script[^>]+id=["']burem-site-jsonld["'][^>]*>[\s\S]*?<\/script>/i, "");
