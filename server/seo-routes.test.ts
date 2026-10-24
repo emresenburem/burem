@@ -13,8 +13,8 @@ test("unpriced product HTML retains page metadata and breadcrumbs without Produc
   assert.match(html, /<title>Lenze E82EV152_4C 8200 Vector Sürücü \| Burem Elektronik<\/title>/);
   assert.match(html, /<meta name="description" content="Lenze E82EV152_4C 8200 Vector Sürücü yedek parçası\./);
   assert.match(html, /og:url" content="https:\/\/www\.buremelektronik\.com\/magaza\/urun\/p1\//);
-  assert.match(html, /og:image" content="https:\/\/www\.buremelektronik\.com\/logo\.png"/);
-  assert.match(html, /twitter:image" content="https:\/\/www\.buremelektronik\.com\/logo\.png"/);
+  assert.match(html, /og:image" content="https:\/\/www\.buremelektronik\.com\/burem-logo-square\.png"/);
+  assert.match(html, /twitter:image" content="https:\/\/www\.buremelektronik\.com\/burem-logo-square\.png"/);
   assert.match(html, /rel="canonical" href="https:\/\/www\.buremelektronik\.com\/magaza\/urun\/p1\//);
   assert.doesNotMatch(html, /"@type":"Product"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
@@ -81,12 +81,30 @@ test("existing public service pages keep working and appear in the sitemap", asy
 test("home initial HTML includes existing explanatory copy, crawlable service links, and linked site identity", async () => {
   const metadata = await resolvePageMetadata("/");
   assert.ok(metadata);
-  const html = applyPageMetadata('<html><head><title>old</title></head><body><div id="root"></div></body></html>', metadata);
+  const html = applyPageMetadata(
+    '<html><head><title>old</title><meta property="og:image" content="old"><meta property="og:image" content="conflict"><meta name="twitter:image" content="old"><meta name="robots" content="noindex"><meta name="robots" content="index"></head><body><div id="root"></div></body></html>',
+    metadata,
+  );
   assert.match(html, /<h1>Bursa Sürücü Tamiri \| Burem Elektronik<\/h1>/);
   assert.match(html, /inverter, servo sürücü, PLC, HMI/);
   assert.match(html, /<a href="\/lenze-surucu-tamiri">Lenze Sürücü Tamiri<\/a>/);
+  assert.match(html, /<meta name="robots" content="max-image-preview:large" \/>/);
+  assert.equal((html.match(/name="robots"/g) ?? []).length, 1);
+  assert.match(html, /<meta property="og:image" content="https:\/\/www\.buremelektronik\.com\/burem-logo-square\.png" \/>/);
+  assert.match(html, /<meta property="og:image:width" content="1024" \/>/);
+  assert.match(html, /<meta property="og:image:height" content="1024" \/>/);
+  assert.match(html, /<meta property="og:image:alt" content="Burem Elektronik'in mavi beyaz marka logosu" \/>/);
+  assert.match(html, /<meta name="twitter:image:alt" content="Burem Elektronik'in mavi beyaz marka logosu" \/>/);
+  assert.equal((html.match(/property="og:image"/g) ?? []).length, 1);
+  assert.equal((html.match(/name="twitter:image"/g) ?? []).length, 1);
   assert.match(html, /<script id="burem-site-jsonld" type="application\/ld\+json">/);
-  assert.match(html, /"@type":"LocalBusiness"/);
+  const siteJsonLdScript = html.match(/<script id="burem-site-jsonld" type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(siteJsonLdScript);
+  const siteJsonLd = JSON.parse(siteJsonLdScript[1]) as { "@graph": Array<Record<string, any>> };
+  const localBusiness = siteJsonLd["@graph"].find((item) => item["@type"] === "LocalBusiness");
+  assert.ok(localBusiness);
+  assert.equal(localBusiness.logo, "https://www.buremelektronik.com/burem-logo-square.png");
+  assert.equal(localBusiness.image, "https://www.buremelektronik.com/burem-logo-square.png");
   assert.match(html, /"@type":"WebSite"/);
   assert.match(html, /#organization/);
   assert.doesNotMatch(html, /"@type":"Organization"/);
@@ -101,4 +119,5 @@ test("service initial HTML includes its existing description and crawlable links
   assert.match(html, /<a href="\/servo-surucu-tamiri">Servo Sürücü Tamiri<\/a>/);
   assert.match(html, /<a href="\/magaza">Yedek Parça Mağazası<\/a>/);
   assert.match(html, /rel="canonical" href="https:\/\/www\.buremelektronik\.com\/bursa-surucu-tamiri"/);
+  assert.doesNotMatch(html, /max-image-preview/);
 });

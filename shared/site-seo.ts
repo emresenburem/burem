@@ -1,6 +1,8 @@
 export const SITE_ORIGIN = "https://www.buremelektronik.com";
 export const HOME_CANONICAL_URL = `${SITE_ORIGIN}/`;
-export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/logo.png`;
+export const BRAND_LOGO_IMAGE_URL = `${SITE_ORIGIN}/burem-logo-square.png`;
+export const DEFAULT_OG_IMAGE = BRAND_LOGO_IMAGE_URL;
+export const BRAND_LOGO_IMAGE_ALT = "Burem Elektronik'in mavi beyaz marka logosu";
 export const HOME_PAGE_TITLE = "Bursa Sürücü Tamiri | Burem Elektronik";
 export const HOME_PAGE_DESCRIPTION =
   "Bursa'da inverter, servo sürücü, PLC, HMI ve endüstriyel elektronik kart tamiri. Profesyonel arıza tespiti, onarım ve test hizmeti.";
@@ -17,6 +19,8 @@ export const SITE_IDENTITY_JSONLD = {
       telephone: "+90-532-266-47-64",
       email: "info@buremelektronik.com",
       url: `${SITE_ORIGIN}/`,
+      logo: BRAND_LOGO_IMAGE_URL,
+      image: BRAND_LOGO_IMAGE_URL,
       address: {
         "@type": "PostalAddress",
         streetAddress: "Alaaddinbey Mah. 626. Sk. No:22 SAM 1 Plaza İç Kapı No:B14",
