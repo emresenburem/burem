@@ -1,47 +1,242 @@
 import { useEffect, useRef, useState } from "react";
 import { ExternalLink, MapPin } from "lucide-react";
+import type { Map as MapLibreMap } from "maplibre-gl";
 
-const BUREM_LOCATION = { latitude: 40.210269, longitude: 28.9292879 };
+const BUREM_COORDINATES: [number, number] = [28.9292879, 40.210269];
 const BUSINESS_ADDRESS =
   "Alaaddinbey, 626. Sk. SAM 1 Plaza B Blok No: 22, İç Kapı No: B14, 16210 Nilüfer/Bursa";
-const GOOGLE_MAPS_EMBED_URL =
-  `https://www.google.com/maps?q=${BUREM_LOCATION.latitude},${BUREM_LOCATION.longitude}&z=18&output=embed`;
-const GOOGLE_MAPS_PLACE_URL =
-  `https://www.google.com/maps/search/?api=1&query=${BUREM_LOCATION.latitude}%2C${BUREM_LOCATION.longitude}`;
+const OPENFREEMAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+const DIRECTIONS_URL =
+  "https://www.google.com/maps/dir/?api=1&destination=40.210269%2C28.9292879";
+const PLACE_URL =
+  "https://www.google.com/maps/search/?api=1&query=40.210269%2C28.9292879";
+const MAP_ATTRIBUTION =
+  '<a href="https://maplibre.org/" target="_blank" rel="noopener">MapLibre</a>';
+const MAP_LOAD_TIMEOUT_MS = 20_000;
+
+type MapStatus = "idle" | "loading" | "loaded" | "error";
+
+function createMarkerElement() {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.setAttribute("aria-label", "Burem Elektronik konum bilgilerini göster");
+  button.title = "Burem Elektronik";
+  Object.assign(button.style, {
+    alignItems: "flex-end",
+    background: "transparent",
+    border: "0",
+    cursor: "pointer",
+    display: "flex",
+    height: "56px",
+    justifyContent: "center",
+    padding: "0",
+    width: "56px",
+  });
+
+  const logo = document.createElement("img");
+  logo.src = "/logo.png";
+  logo.alt = "";
+  logo.draggable = false;
+  Object.assign(logo.style, {
+    filter: "drop-shadow(0 2px 3px rgba(15, 23, 42, .45))",
+    height: "52px",
+    maxWidth: "56px",
+    objectFit: "contain",
+    width: "auto",
+  });
+  button.appendChild(logo);
+  return button;
+}
+
+function createPopupContent() {
+  const content = document.createElement("div");
+  content.style.cssText =
+    "color:#1e293b;font:14px/1.45 system-ui,sans-serif;max-width:250px;padding:2px 4px";
+
+  const name = document.createElement("strong");
+  name.textContent = "Burem Elektronik";
+  name.style.display = "block";
+
+  const address = document.createElement("p");
+  address.textContent = BUSINESS_ADDRESS;
+  address.style.margin = "4px 0 8px";
+
+  const directions = document.createElement("a");
+  directions.href = DIRECTIONS_URL;
+  directions.target = "_blank";
+  directions.rel = "noopener noreferrer";
+  directions.textContent = "Yol tarifi al";
+  directions.style.cssText = "color:#1d4ed8;font-weight:600";
+
+  content.append(name, address, directions);
+  return content;
+}
 
 export function LocationMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [mapStatus, setMapStatus] = useState<"loading" | "loaded" | "error">("loading");
+  const [mapStatus, setMapStatus] = useState<MapStatus>("idle");
 
   useEffect(() => {
     const container = mapContainerRef.current;
     if (!container) return;
 
+    let active = true;
+    let started = false;
+    let styleLoaded = false;
+    let mapLoaded = false;
+    let failed = false;
+    let map: MapLibreMap | undefined;
     let timeoutId: number | undefined;
-    const startLoadTimeout = () => {
-      if (timeoutId !== undefined) return;
-      timeoutId = window.setTimeout(() => {
-        setMapStatus((status) => (status === "loading" ? "error" : status));
-      }, 12000);
+    let resizeFrameId: number | undefined;
+    let observer: IntersectionObserver | undefined;
+    let resizeObserver: ResizeObserver | undefined;
+    let compactViewport = container.clientWidth < 640;
+
+    const clearLoadTimeout = () => {
+      if (timeoutId === undefined) return;
+      window.clearTimeout(timeoutId);
+      timeoutId = undefined;
+    };
+
+    const fail = () => {
+      if (!active || mapLoaded || failed) return;
+      failed = true;
+      clearLoadTimeout();
+      setMapStatus("error");
+    };
+
+    const resizeMap = () => {
+      if (!active || !map) return;
+      if (resizeFrameId !== undefined) window.cancelAnimationFrame(resizeFrameId);
+      resizeFrameId = window.requestAnimationFrame(() => {
+        resizeFrameId = undefined;
+        if (!active || !map) return;
+        map.resize();
+        const nextCompactViewport = container.clientWidth < 640;
+        if (nextCompactViewport !== compactViewport) {
+          compactViewport = nextCompactViewport;
+          map.setPadding(compactViewport ? { right: 44, bottom: 44 } : { bottom: 44 });
+          map.setZoom(compactViewport ? 15.5 : 16);
+        }
+      });
+    };
+
+    const emphasizeStreetLabels = () => {
+      if (!map) return;
+      for (const layerId of ["highway-name-major", "highway-name-minor"]) {
+        if (!map.getLayer(layerId)) continue;
+        map.setLayoutProperty(layerId, "text-size", 14);
+        map.setPaintProperty(layerId, "text-color", "#334155");
+        map.setPaintProperty(layerId, "text-halo-color", "#ffffff");
+        map.setPaintProperty(layerId, "text-halo-width", 1.25);
+      }
+    };
+
+    const handleMapLoad = () => {
+      if (!active) return;
+      mapLoaded = true;
+      failed = false;
+      clearLoadTimeout();
+      map?.off("error", handleMapError);
+      setMapStatus("loaded");
+      resizeMap();
+    };
+
+    const handleStyleLoad = () => {
+      styleLoaded = true;
+      emphasizeStreetLabels();
+      resizeMap();
+    };
+
+    const handleMapError = () => {
+      // A style failure is terminal; individual tile errors are given the full
+      // timeout window in case the map can still render useful content.
+      if (!styleLoaded && !mapLoaded) fail();
+    };
+
+    const initializeMap = async () => {
+      try {
+        const [maplibre, mapWorker] = await Promise.all([
+          import("maplibre-gl"),
+          import("maplibre-gl/dist/maplibre-gl-worker.mjs?url"),
+          import("maplibre-gl/dist/maplibre-gl.css"),
+        ]);
+        if (!active || (failed && !map)) return;
+
+        maplibre.setWorkerUrl(mapWorker.default);
+        map = new maplibre.Map({
+          container,
+          style: OPENFREEMAP_STYLE,
+          center: BUREM_COORDINATES,
+          zoom: compactViewport ? 15.5 : 16,
+          scrollZoom: false,
+          attributionControl: false,
+        });
+        map.setPadding(compactViewport ? { right: 44, bottom: 44 } : { bottom: 44 });
+        map.on("style.load", handleStyleLoad);
+        map.on("error", handleMapError);
+        map.once("load", handleMapLoad);
+
+        map.addControl(
+          new maplibre.AttributionControl({
+            compact: true,
+            customAttribution: MAP_ATTRIBUTION,
+          }),
+          "bottom-right",
+        );
+        new maplibre.Marker({
+          element: createMarkerElement(),
+          anchor: "bottom",
+        })
+          .setLngLat(BUREM_COORDINATES)
+          .setPopup(
+            new maplibre.Popup({
+              offset: 28,
+              closeButton: true,
+              closeOnClick: true,
+              maxWidth: "280px",
+            }).setDOMContent(createPopupContent()),
+          )
+          .addTo(map);
+        resizeMap();
+      } catch {
+        fail();
+      }
+    };
+
+    const startLoading = () => {
+      if (!active || started) return;
+      started = true;
+      setMapStatus("loading");
+      timeoutId = window.setTimeout(fail, MAP_LOAD_TIMEOUT_MS);
+      void initializeMap();
     };
 
     if ("IntersectionObserver" in window) {
-      const observer = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          startLoadTimeout();
-          observer.disconnect();
-        }
+      observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer?.disconnect();
+        startLoading();
       }, { rootMargin: "200px" });
       observer.observe(container);
-      return () => {
-        observer.disconnect();
-        if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-      };
+    } else {
+      startLoading();
     }
 
-    startLoadTimeout();
+    window.addEventListener("resize", resizeMap, { passive: true });
+    if ("ResizeObserver" in window) {
+      resizeObserver = new ResizeObserver(resizeMap);
+      resizeObserver.observe(container);
+    }
+
     return () => {
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+      active = false;
+      observer?.disconnect();
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", resizeMap);
+      clearLoadTimeout();
+      if (resizeFrameId !== undefined) window.cancelAnimationFrame(resizeFrameId);
+      map?.remove();
     };
   }, []);
 
@@ -67,50 +262,37 @@ export function LocationMap() {
       <div
         ref={mapContainerRef}
         className="relative h-[300px] overflow-hidden bg-slate-100 md:h-[340px]"
+        role="region"
+        aria-label="Burem Elektronik OpenFreeMap haritası"
       >
-        <iframe
-          src={GOOGLE_MAPS_EMBED_URL}
-          title="Burem Elektronik'in Alaaddinbey, Nilüfer, Bursa konumu — Google Haritalar"
-          className="absolute inset-0 h-full w-full border-0"
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-          onLoad={() => setMapStatus("loaded")}
-          onError={() => setMapStatus("error")}
-        />
         {mapStatus === "loading" && (
           <div
-            className="absolute inset-0 flex items-center justify-center gap-3 bg-slate-100 text-sm font-medium text-slate-600"
+            className="absolute inset-0 z-10 flex items-center justify-center gap-3 bg-slate-100 text-sm font-medium text-slate-600"
             role="status"
             aria-live="polite"
           >
-            <span className="size-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700" aria-hidden="true" />
-            Google Haritalar yükleniyor
+            <span
+              className="size-5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-700"
+              aria-hidden="true"
+            />
+            Harita yükleniyor
           </div>
         )}
         {mapStatus === "error" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-50 px-6 text-center">
-            <p className="text-sm text-slate-600">Harita şu anda yüklenemedi.</p>
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-slate-50 px-6 text-center">
+            <p className="text-sm text-slate-600">
+              Harita yüklenemedi. Adres ve yol tarifi bağlantısı kullanılabilir.
+            </p>
             <a
-              href={GOOGLE_MAPS_PLACE_URL}
+              href={PLACE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
             >
-              Google Maps’te görüntüle
+              Haritada aç
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
-        )}
-        {mapStatus === "loaded" && (
-          <a
-            href={GOOGLE_MAPS_PLACE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute right-3 top-3 rounded-md bg-white/95 px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm ring-1 ring-black/10 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
-          >
-            Google Maps’te aç
-          </a>
         )}
       </div>
 
@@ -122,7 +304,7 @@ export function LocationMap() {
           </span>
         </p>
         <a
-          href="https://www.google.com/maps/dir/?api=1&destination=40.210269%2C28.9292879"
+          href={DIRECTIONS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2"
